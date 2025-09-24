@@ -51,7 +51,7 @@ function conan_config_lib()
 end
 
 
-workspace "Motor"
+workspace "MotArda"
 	configurations = {"Debug", "Release", "RelWithDebInfo"}
 	architecture "x64"
 	location "build"
@@ -76,7 +76,7 @@ workspace "Motor"
 
 	filter {}
 
-	project "Motor"
+	project "MotArda"
 		kind "StaticLib"
 		targetdir "build/%{cfg.buildcfg}"
 		includedirs "include"
@@ -87,10 +87,9 @@ workspace "Motor"
 
 		files{
 			"premake5.lua",
-			"src/build/conanfile.py",
-			"src/build/conan.lua",
+			"src/build/conanfile.txt",
 			--"src/stdafx.cpp", "src/stdafx.hpp",
-			"src/Window.cpp", "include/tija/window.hpp",
+			"src/Window.cpp", "include/MotArda/window.hpp",
 			}
 
 	project "Window"
@@ -98,7 +97,7 @@ workspace "Motor"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
 		includedirs "include"
-		links "Tija"
+		links "MotArda"
 		conan_config_exec("Debug")
 		conan_config_exec("Release")
 		conan_config_exec("RelWithDebInfo")
