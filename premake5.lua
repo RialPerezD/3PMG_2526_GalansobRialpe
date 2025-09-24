@@ -52,7 +52,7 @@ end
 
 
 workspace "Motor"
-	configurations = {'Debug', 'Release', 'RelWithDebInfo'}
+	configurations = {"Debug", "Release", "RelWithDebInfo"}
 	architecture "x64"
 	location "build"
 	cppdialect "c++20"
@@ -87,7 +87,7 @@ workspace "Motor"
 
 		files{
 			"premake5.lua",
-			"src/build/conanfile",
+			"src/build/conanfile.py",
 			"src/build/conan.lua",
 			--"src/stdafx.cpp", "src/stdafx.hpp",
 			"src/Window.cpp", "include/tija/window.hpp",
