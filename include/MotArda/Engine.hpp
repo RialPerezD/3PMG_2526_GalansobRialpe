@@ -3,21 +3,21 @@
 #include <optional>
 #include "Window.hpp"
 
-namespace MADE {
+namespace MTRD {
 
 	class MotardaEng {
 
 	public:
-		~MotardaEng();
+		~MotardaEng() = default;
 
 		MotardaEng(const MotardaEng& right) = delete;
 		MotardaEng& operator=(const MotardaEng& right) = delete;
 
-		MotardaEng(MotardaEng& right);
-		MotardaEng& operator=(MotardaEng& right);
+		MotardaEng(MotardaEng&& right) = default;
+		MotardaEng& operator=(MotardaEng&& right) = default;
 
-		bool shouldWindowClose();
-		void endWindowFrame();
+		bool windowShouldClose();
+		void windowEndFrame();
 		void close();
 
 

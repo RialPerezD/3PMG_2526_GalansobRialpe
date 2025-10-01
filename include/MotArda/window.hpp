@@ -2,7 +2,7 @@
 
 #include <optional>
 
-namespace MADE {
+namespace MTRD {
     int main();
 
     class Window {
@@ -14,18 +14,18 @@ namespace MADE {
         Window(const Window& right) = delete;
         Window& operator=(const Window& right) = delete;
 
-        Window(Window& right) = default;
-        Window& operator=(Window& right) = default;
+        Window(Window&& right) = default;
+        Window& operator=(Window&& right) = default;
 
         //------------Functions-----------------------
-        static std::optional<Window> createWindow(
+        static std::optional<Window> windowCreate(
             int width,
             int height,
             const char* windowName);
 
-        bool shouldWindowClose();
+        bool windowShouldClose();
 
-        void pollEvents();
+        void windowPollEvents();
 
     private:
         struct Data;

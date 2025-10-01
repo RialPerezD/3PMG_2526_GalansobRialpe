@@ -3,30 +3,27 @@
 #include <memory>
 
 
-namespace MADE {
+namespace MTRD {
 
     std::optional<MotardaEng> MotardaEng::createEngine(int width, int height, const char* windowName) {
-        auto w = Window::createWindow(width, height, windowName);
+        auto w = Window::windowCreate(width, height, windowName);
         if (!w) return std::nullopt;
 
-        //Dunno why the optional don't accept the value in the ()
-        MotardaEng eng = MotardaEng{ w.value() };
-        return std::optional<MotardaEng>(eng);
+        return std::make_optional(MotardaEng{ w.value() });
     }
 
 
     //Default constructor
-    MotardaEng::MotardaEng(Window& window) : window_{ window }{
+    MotardaEng::MotardaEng(Window& window) : window_{ std::move(window) }{
+    }
+
+    bool MotardaEng::windowShouldClose(){
+        return window_.windowShouldClose();
     }
 
 
-    bool MotardaEng::shouldWindowClose(){
-        return window_.shouldWindowClose();
-    }
-
-
-    void MotardaEng::endWindowFrame() {
-        window_.pollEvents();
+    void MotardaEng::windowEndFrame() {
+        window_.windowPollEvents();
     }
 
 
