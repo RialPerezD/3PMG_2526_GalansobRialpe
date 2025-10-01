@@ -89,7 +89,8 @@ workspace "MotArda"
 			"premake5.lua",
 			"src/build/conanfile.txt",
 			--"src/stdafx.cpp", "src/stdafx.hpp",
-			"src/Window.cpp", "include/MotArda/window.hpp",
+			"src/Window.cpp", "include/MotArda/Window.hpp",
+			"src/Engine.cpp", "include/MotArda/Engine.hpp",
 			}
 
 	project "Window"

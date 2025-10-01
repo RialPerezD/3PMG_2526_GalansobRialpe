@@ -1,18 +1,36 @@
 #pragma once
 
-int main();
+#include <optional>
+
+namespace MADE {
+    int main();
+
+    class Window {
+    public:
+        ~Window();
 
 
-class Window {
-public:
-    Window(int width, int height, const char* windowName);
-    ~Window();
+        //--Dissable copy constructor and enable noving constructors--
+        Window(const Window& right) = delete;
+        Window& operator=(const Window& right) = delete;
 
-    bool shouldWindowClose();
+        Window(Window& right) = default;
+        Window& operator=(Window& right) = default;
 
-    void pollEvents();
+        //------------Functions-----------------------
+        static std::optional<Window> createWindow(
+            int width,
+            int height,
+            const char* windowName);
 
-private:
-    struct Data;
-    Data* data;
-};
+        bool shouldWindowClose();
+
+        void pollEvents();
+
+    private:
+        struct Data;
+        Data* data;
+
+        Window(Data* data);
+    };
+}

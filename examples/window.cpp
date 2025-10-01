@@ -2,10 +2,10 @@
 
 #include <memory>
 
-int main() {
+int MADE::main() {
 
 	// Create a blank window
-	auto window = std::make_unique<Window>(800, 600, "Motarda window");
+	auto window = std::make_unique<MADE::Window>(800, 600, "Motarda window");
 
 	// Check if not null
 	if (!window) {
