@@ -8,16 +8,15 @@ int MTRD::main() {
 	auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda window");
 
 	// Check if not null
-	if (maybeEng) {
-		/*MTRD::MotardaEng eng = maybeEng.value();
+    if (maybeEng.has_value()) {
+        auto& eng = maybeEng.value();
 
-		// Main loop, here refresh or update all
-		while (!eng.windowShouldClose()) {
-			eng.windowEndFrame();
-		}*/
+        while (!eng.windowShouldClose()) {
+            eng.windowEndFrame();
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
-	return 1;
+    return 1;
 }

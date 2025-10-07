@@ -15,11 +15,12 @@ namespace MTRD {
     };
 
 
-    std::optional<Window> Window::windowCreate(int width, int height, const char* windowName) {
+    Window::Window(Data* newData) {
+        data = newData;
+    }
 
-        if (glfwInit()) {
-            return std::nullopt;
-        }
+
+    std::optional<Window> Window::windowCreate(int width, int height, const char* windowName) {
 
         //hacerlo unique pointer
         //pimpl
@@ -30,12 +31,13 @@ namespace MTRD {
             return std::nullopt;
         }
 
-        return std::make_optional(Window{ data });
+        return std::make_optional(Window{ std::move(data) });
     }
 
 
     Window::~Window() {
-        glfwDestroyWindow(data->glfw_window);
+        //TODO que cojones esta pasando aqui?
+        //glfwDestroyWindow(data->glfw_window);
     }
 
 

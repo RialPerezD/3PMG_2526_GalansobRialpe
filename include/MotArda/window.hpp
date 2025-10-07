@@ -7,8 +7,12 @@ namespace MTRD {
 
     class Window {
     public:
-        ~Window();
+        static std::optional<Window> windowCreate(
+            int width,
+            int height,
+            const char* windowName);
 
+        ~Window();
 
         //--Dissable copy constructor and enable noving constructors--
         Window(const Window& right) = delete;
@@ -18,10 +22,6 @@ namespace MTRD {
         Window& operator=(Window&& right) = default;
 
         //------------Functions-----------------------
-        static std::optional<Window> windowCreate(
-            int width,
-            int height,
-            const char* windowName);
 
         bool windowShouldClose();
 
