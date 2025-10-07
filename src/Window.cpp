@@ -36,8 +36,15 @@ namespace MTRD {
 
 
     Window::~Window() {
-        //TODO que cojones esta pasando aqui?
-        //glfwDestroyWindow(data->glfw_window);
+        if (data) {
+            glfwDestroyWindow(data->glfw_window);
+            glfwTerminate();
+        }
+    }
+
+
+    Window::Window(Window&& right) : data{ right.data } {
+        right.data = nullptr;
     }
 
 
