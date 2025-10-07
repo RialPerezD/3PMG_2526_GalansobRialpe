@@ -24,12 +24,19 @@ namespace MTRD {
         //------------Functions-----------------------
 
         bool windowShouldClose();
-
         void windowPollEvents();
+        void windowCreateContext();
+        void windowRender();
+        double windowTimer();
+        void windowSwapBuffers();
+        void windowSetSwapInterval(int i);
 
     private:
         struct Data;
         Data* data;
+
+        int windowWidth_;
+        int windowHeight_;
 
         Window(Data* data);
     };

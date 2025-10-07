@@ -27,6 +27,16 @@ namespace MTRD {
     }
 
 
+    void MotardaEng::windowCreateContext() {
+        window_.windowCreateContext();
+    }
+
+
+    void MotardaEng::windowSetSwapInterval(int i) {
+        window_.windowSetSwapInterval(i);
+    }
+
+
     void MotardaEng::close() {
         //TODO
     }

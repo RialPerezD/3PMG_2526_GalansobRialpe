@@ -18,6 +18,8 @@ namespace MTRD {
 
 		bool windowShouldClose();
 		void windowEndFrame();
+		void windowCreateContext();
+		void windowSetSwapInterval(int i = 1);
 		void close();
 
 

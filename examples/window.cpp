@@ -2,6 +2,7 @@
 
 #include <memory>
 
+
 int MTRD::main() {
 
 	// Create a blank window
@@ -10,6 +11,8 @@ int MTRD::main() {
 	// Check if not null
     if (maybeEng.has_value()) {
         auto& eng = maybeEng.value();
+
+        eng.windowCreateContext();
 
         while (!eng.windowShouldClose()) {
             eng.windowEndFrame();

@@ -31,7 +31,11 @@ namespace MTRD {
             return std::nullopt;
         }
 
-        return std::make_optional(Window{ std::move(data) });
+        std::optional<Window> wind = std::make_optional(Window{ std::move(data) });
+        wind.value().windowWidth_ = width;
+        wind.value().windowHeight_ = height;
+
+        return wind;
     }
 
 
@@ -55,6 +59,32 @@ namespace MTRD {
 
     void Window::windowPollEvents() {
         glfwPollEvents();
+    }
+
+
+    void Window::windowCreateContext() {
+        glfwMakeContextCurrent(data->glfw_window);
+    }
+
+
+    void Window::windowRender() {
+        glfwGetFramebufferSize(data->glfw_window, &windowWidth_, &windowHeight_);
+        glViewport(0, 0, windowWidth_, windowHeight_);
+    }
+
+
+    double Window::windowTimer() {
+        return glfwGetTime();
+    }
+
+
+    void Window::windowSwapBuffers() {
+        glfwSwapBuffers(data->glfw_window);
+    }
+
+
+    void Window::windowSetSwapInterval(int i) {
+        glfwSwapInterval(i);
     }
 }
 
