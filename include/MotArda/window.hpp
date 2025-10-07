@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <GL/glew.h>
 
 namespace MTRD {
     int main();
@@ -23,17 +24,27 @@ namespace MTRD {
 
         //------------Functions-----------------------
 
-        bool windowShouldClose();
-        void windowPollEvents();
-        void windowCreateContext();
-        void windowRender();
-        double windowTimer();
-        void windowSwapBuffers();
-        void windowSetSwapInterval(int i);
+        bool shouldClose();
+        void pollEvents();
+        void createContext();
+        void render();
+        double timer();
+        void swapBuffers();
+        void setSwapInterval(int i);
+        void setErrorCallback(void(*function)(int, const char*));
+
+        //------OpenGl functions-----------------------
+        void openglGenerateBuffers(const void* vertices);
+        void openglGenerateVertexShaders(const char* text);
+        void openglGenerateFragmentShaders(const char* text);
+        void openglCreateProgram();
 
     private:
         struct Data;
         Data* data;
+
+        GLuint vertex_buffer, vertex_shader, fragment_shader, program;
+        GLint mvp_location, vpos_location, vcol_location;
 
         int windowWidth_;
         int windowHeight_;

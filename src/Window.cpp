@@ -5,6 +5,7 @@
 //Need this include to use WinMain
 #include <windows.h>
 #include "GLFW/glfw3.h"
+#include "gl/glew.h"
 
 
 namespace MTRD {
@@ -52,39 +53,73 @@ namespace MTRD {
     }
 
 
-    bool Window::windowShouldClose() {
+    bool Window::shouldClose() {
         return glfwWindowShouldClose(data->glfw_window);
     }
 
 
-    void Window::windowPollEvents() {
+    void Window::pollEvents() {
         glfwPollEvents();
     }
 
 
-    void Window::windowCreateContext() {
+    void Window::createContext() {
         glfwMakeContextCurrent(data->glfw_window);
     }
 
 
-    void Window::windowRender() {
+    void Window::render() {
         glfwGetFramebufferSize(data->glfw_window, &windowWidth_, &windowHeight_);
         glViewport(0, 0, windowWidth_, windowHeight_);
     }
 
 
-    double Window::windowTimer() {
+    double Window::timer() {
         return glfwGetTime();
     }
 
 
-    void Window::windowSwapBuffers() {
+    void Window::swapBuffers() {
         glfwSwapBuffers(data->glfw_window);
     }
 
 
-    void Window::windowSetSwapInterval(int i) {
+    void Window::setSwapInterval(int i) {
         glfwSwapInterval(i);
+    }
+
+
+    void Window::setErrorCallback(void(*function)(int, const char*)) {
+        glfwSetErrorCallback(function);
+    }
+
+
+    void Window::openglGenerateBuffers(const void* vertex) {
+        glGenBuffers(1, &vertex_buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW);
+    }
+
+
+    void Window::openglGenerateVertexShaders(const char* text) {
+        vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertex_shader, 1, &text, NULL);
+        glCompileShader(vertex_shader);
+    }
+
+
+    void Window::openglGenerateFragmentShaders(const char* text) {
+        fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragment_shader, 1, &text, NULL);
+        glCompileShader(fragment_shader);
+    }
+
+
+    void Window::openglCreateProgram() {
+        program = glCreateProgram();
+        glAttachShader(program, vertex_shader);
+        glAttachShader(program, fragment_shader);
+        glLinkProgram(program);
     }
 }
 

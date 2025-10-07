@@ -20,6 +20,11 @@ namespace MTRD {
 		void windowEndFrame();
 		void windowCreateContext();
 		void windowSetSwapInterval(int i = 1);
+		void windowSetErrorCallback(void(*function)(int, const char*));
+		void windowOpenglGenerateBuffers(const void* vertex);
+		void windowOpenglGenerateVertexShaders(const char* text);
+		void windowOpenglGenerateFragmentShaders(const char* text);
+		void windowOpenglCreateProgram();
 		void close();
 
 
