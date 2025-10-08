@@ -3,7 +3,7 @@
 #include <memory>
 #include "../deps/linmath.h-master/linmath.h"
 
-
+//Ref: https://www.glfw.org/docs/3.3/quick.html#quick_example
 //-------Triangle example data-----------------
 static const struct
 {
@@ -39,7 +39,7 @@ static const char* fragment_shader_text =
 //-------Triangle example functions------------
 static void error_callback(int error, const char* description)
 {
-    fprintf(stderr, "Error: %s\n", description);
+    fprintf(stderr, "Glfw error: %s\n", description);
 }
 
 //---------------------------------------------
@@ -48,7 +48,7 @@ static void error_callback(int error, const char* description)
 int MTRD::main() {
 
 	// Create a blank window
-	auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda window");
+	auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda triangle");
 
 	// Check if not null
     if (maybeEng.has_value()) {

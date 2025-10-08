@@ -1,7 +1,7 @@
 #pragma once
 
 #include <optional>
-#include <GL/glew.h>
+#include "glad/glad.h"
 
 namespace MTRD {
     int main();
@@ -35,12 +35,12 @@ namespace MTRD {
         float getSizeRatio();
 
         //------OpenGl functions-----------------------
-        void openglGenerateBuffers(const void* vertices);
+        void openglGenerateBuffers(const void* vertices, size_t verticeSize);
         void openglGenerateVertexShaders(const char* text);
         void openglGenerateFragmentShaders(const char* text);
         void openglCreateProgram();
-        void openglSet3AtribLocations(const char* at1, const char* at2, const char* at3);
-        void openglVertexConfig(double size);
+        void openglSet3AtribLocations(const char* uni1, const char* at1, const char* at2);
+        void openglVertexConfig(size_t size);
         void openglViewportAndClear();
         void openglProgramUniformDraw(const GLfloat* mvp);
 
@@ -55,5 +55,9 @@ namespace MTRD {
         int windowHeight_;
 
         Window(Data* data);
+
+        GLchar log[1000];
+        GLsizei log_length;
+
     };
 }

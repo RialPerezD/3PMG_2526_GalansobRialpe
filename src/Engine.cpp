@@ -57,16 +57,16 @@ namespace MTRD {
         const void* vertexBuffer,
         const char* vertexShader,
         const char* fragmentShader,
+        const char* uni1,
         const char* at1,
         const char* at2,
-        const char* at3,
-        double verticeSize
+        size_t verticeSize
     ) {
-        window_.openglGenerateBuffers(vertexBuffer);
+        window_.openglGenerateBuffers(vertexBuffer, verticeSize);
         window_.openglGenerateVertexShaders(vertexShader);
         window_.openglGenerateFragmentShaders(fragmentShader);
         window_.openglCreateProgram();
-        window_.openglSet3AtribLocations(at1, at2, at3);
+        window_.openglSet3AtribLocations(uni1, at1, at2);
         window_.openglVertexConfig(verticeSize);
     }
 

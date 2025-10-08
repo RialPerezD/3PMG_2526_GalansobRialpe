@@ -27,10 +27,10 @@ namespace MTRD {
 			const void* vertexBuffer,
 			const char* vertexShader,
 			const char* fragmentShader,
+			const char* uni1,
 			const char* at1,
 			const char* at2,
-			const char* at3,
-			double verticeSize
+			size_t verticeSize
 		);
 		void windowOpenglViewportAndClear();
 		void windowOpenglProgramUniformDraw(const GLfloat* mvp);

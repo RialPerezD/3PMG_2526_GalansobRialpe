@@ -2,10 +2,12 @@
 #include "Motarda/Window.hpp"
 #include <memory>
 
+#define GLFW_INCLUDE_NONE
+#include "GLFW/glfw3.h"
+
 //Need this include to use WinMain
 #include <windows.h>
-#include "GLFW/glfw3.h"
-#include "gl/glew.h"
+#include <iostream>
 
 
 namespace MTRD {
@@ -26,6 +28,10 @@ namespace MTRD {
         //hacerlo unique pointer
         //pimpl
         Data* data = new Data;
+
+
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
         data->glfw_window = glfwCreateWindow(width, height, windowName, NULL, NULL);
         if (data->glfw_window == nullptr) {
@@ -48,7 +54,11 @@ namespace MTRD {
     }
 
 
-    Window::Window(Window&& right) : data{ right.data } {
+    Window::Window(Window&& right) :
+        data{ right.data },
+        windowWidth_{ right.windowWidth_ },
+        windowHeight_{ right.windowHeight_ }
+    {
         right.data = nullptr;
     }
 
@@ -65,7 +75,7 @@ namespace MTRD {
 
     void Window::createContext() {
         glfwMakeContextCurrent(data->glfw_window);
-        //gladLoadGL(glfwGetProcAddress);
+        gladLoadGL();
     }
 
 
@@ -95,10 +105,12 @@ namespace MTRD {
     }
 
 
-    void Window::openglGenerateBuffers(const void* vertex) {
+    void Window::openglGenerateBuffers(const void* vertex, size_t verticeSize) {
         glGenBuffers(1, &vertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW);
+
+        //TODO ver por que *3
+        glBufferData(GL_ARRAY_BUFFER, verticeSize * 3, vertex, GL_STATIC_DRAW);
     }
 
 
@@ -106,6 +118,9 @@ namespace MTRD {
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &text, NULL);
         glCompileShader(vertexShader);
+
+        glGetShaderInfoLog(vertexShader, 1000, &log_length, log);
+        std::cout << log;
     }
 
 
@@ -113,6 +128,9 @@ namespace MTRD {
         fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragmentShader, 1, &text, NULL);
         glCompileShader(fragmentShader);
+
+        glGetShaderInfoLog(fragmentShader, 1000, &log_length, log);
+        std::cout << log;
     }
 
 
@@ -125,16 +143,16 @@ namespace MTRD {
 
 
     void Window::openglSet3AtribLocations(
+        const char* uni1,
         const char* at1,
-        const char* at2,
-        const char* at3) {
-        mvpLocation = glGetUniformLocation(program, at1);
-        vposLocation = glGetAttribLocation(program, at2);
-        vcolLocation = glGetAttribLocation(program, at3);
+        const char* at2) {
+        mvpLocation = glGetUniformLocation(program, uni1);
+        vposLocation = glGetAttribLocation(program, at1);
+        vcolLocation = glGetAttribLocation(program, at2);
     }
 
 
-    void Window::openglVertexConfig(double size) {
+    void Window::openglVertexConfig(size_t size) {
         glEnableVertexAttribArray(vposLocation);
         glVertexAttribPointer(vposLocation, 2, GL_FLOAT,
             GL_FALSE, size, (void*)0);
@@ -146,6 +164,7 @@ namespace MTRD {
 
     void Window::openglViewportAndClear() {
         glViewport(0, 0, windowWidth_, windowHeight_);
+        //glClearColor(0, 1, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
