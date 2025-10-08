@@ -22,7 +22,13 @@ namespace MTRD {
     }
 
 
+    double MotardaEng::windowGetTimer() {
+        return window_.timer();
+    }
+
+
     void MotardaEng::windowEndFrame() {
+        window_.swapBuffers();
         window_.pollEvents();
     }
 
@@ -42,23 +48,36 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowOpenglGenerateBuffers(const void* vertex) {
-        window_.openglGenerateBuffers(vertex);
+    float MotardaEng::windowGetSizeRatio() {
+        return window_.getSizeRatio();
     }
 
 
-    void MotardaEng::windowOpenglGenerateVertexShaders(const char* text) {
-        window_.openglGenerateVertexShaders(text);
-    }
-
-
-    void MotardaEng::windowOpenglGenerateFragmentShaders(const char* text) {
-        window_.openglGenerateFragmentShaders(text);
-    }
-
-
-    void MotardaEng::windowOpenglCreateProgram() {
+    void MotardaEng::windowOpenglSetup(
+        const void* vertexBuffer,
+        const char* vertexShader,
+        const char* fragmentShader,
+        const char* at1,
+        const char* at2,
+        const char* at3,
+        double verticeSize
+    ) {
+        window_.openglGenerateBuffers(vertexBuffer);
+        window_.openglGenerateVertexShaders(vertexShader);
+        window_.openglGenerateFragmentShaders(fragmentShader);
         window_.openglCreateProgram();
+        window_.openglSet3AtribLocations(at1, at2, at3);
+        window_.openglVertexConfig(verticeSize);
+    }
+
+
+    void MotardaEng::windowOpenglViewportAndClear() {
+        window_.openglViewportAndClear();
+    }
+
+
+    void MotardaEng::windowOpenglProgramUniformDraw(const GLfloat* mvp) {
+        window_.openglProgramUniformDraw(mvp);
     }
 
 

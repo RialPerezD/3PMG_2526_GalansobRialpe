@@ -17,14 +17,23 @@ namespace MTRD {
 		MotardaEng& operator=(MotardaEng&& right) = default;
 
 		bool windowShouldClose();
+		double windowGetTimer();
 		void windowEndFrame();
 		void windowCreateContext();
 		void windowSetSwapInterval(int i = 1);
 		void windowSetErrorCallback(void(*function)(int, const char*));
-		void windowOpenglGenerateBuffers(const void* vertex);
-		void windowOpenglGenerateVertexShaders(const char* text);
-		void windowOpenglGenerateFragmentShaders(const char* text);
-		void windowOpenglCreateProgram();
+		float windowGetSizeRatio();
+		void windowOpenglSetup(
+			const void* vertexBuffer,
+			const char* vertexShader,
+			const char* fragmentShader,
+			const char* at1,
+			const char* at2,
+			const char* at3,
+			double verticeSize
+		);
+		void windowOpenglViewportAndClear();
+		void windowOpenglProgramUniformDraw(const GLfloat* mvp);
 		void close();
 
 

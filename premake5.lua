@@ -93,7 +93,7 @@ workspace "MotArda"
 			"src/Engine.cpp", "include/MotArda/Engine.hpp",
 			}
 
-	project "Window"
+	project "WindowExample"
 		kind "WindowedApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
@@ -104,4 +104,16 @@ workspace "MotArda"
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
 		files "examples/window.cpp"
+
+	project "TriangleExample"
+		kind "WindowedApp"
+		language "C++"
+		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
+		includedirs "include"
+		links "MotArda"
+		conan_config_exec("Debug")
+		conan_config_exec("Release")
+		conan_config_exec("RelWithDebInfo")
+		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
+		files "examples/triangle.cpp"
 

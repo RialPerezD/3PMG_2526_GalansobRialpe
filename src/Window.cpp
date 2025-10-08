@@ -65,6 +65,7 @@ namespace MTRD {
 
     void Window::createContext() {
         glfwMakeContextCurrent(data->glfw_window);
+        //gladLoadGL(glfwGetProcAddress);
     }
 
 
@@ -95,31 +96,69 @@ namespace MTRD {
 
 
     void Window::openglGenerateBuffers(const void* vertex) {
-        glGenBuffers(1, &vertex_buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+        glGenBuffers(1, &vertexBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW);
     }
 
 
     void Window::openglGenerateVertexShaders(const char* text) {
-        vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertex_shader, 1, &text, NULL);
-        glCompileShader(vertex_shader);
+        vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertexShader, 1, &text, NULL);
+        glCompileShader(vertexShader);
     }
 
 
     void Window::openglGenerateFragmentShaders(const char* text) {
-        fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment_shader, 1, &text, NULL);
-        glCompileShader(fragment_shader);
+        fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragmentShader, 1, &text, NULL);
+        glCompileShader(fragmentShader);
     }
 
 
     void Window::openglCreateProgram() {
         program = glCreateProgram();
-        glAttachShader(program, vertex_shader);
-        glAttachShader(program, fragment_shader);
+        glAttachShader(program, vertexShader);
+        glAttachShader(program, fragmentShader);
         glLinkProgram(program);
+    }
+
+
+    void Window::openglSet3AtribLocations(
+        const char* at1,
+        const char* at2,
+        const char* at3) {
+        mvpLocation = glGetUniformLocation(program, at1);
+        vposLocation = glGetAttribLocation(program, at2);
+        vcolLocation = glGetAttribLocation(program, at3);
+    }
+
+
+    void Window::openglVertexConfig(double size) {
+        glEnableVertexAttribArray(vposLocation);
+        glVertexAttribPointer(vposLocation, 2, GL_FLOAT,
+            GL_FALSE, size, (void*)0);
+        glEnableVertexAttribArray(vcolLocation);
+        glVertexAttribPointer(vcolLocation, 3, GL_FLOAT,
+            GL_FALSE, size, (void*)(sizeof(float) * 2));
+    }
+
+
+    void Window::openglViewportAndClear() {
+        glViewport(0, 0, windowWidth_, windowHeight_);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+
+    void Window::openglProgramUniformDraw(const GLfloat* mvp) {
+        glUseProgram(program);
+        glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, mvp);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+    }
+
+
+    float Window::getSizeRatio() {
+        return windowWidth_ / (float)windowHeight_;
     }
 }
 

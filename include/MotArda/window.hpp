@@ -32,19 +32,24 @@ namespace MTRD {
         void swapBuffers();
         void setSwapInterval(int i);
         void setErrorCallback(void(*function)(int, const char*));
+        float getSizeRatio();
 
         //------OpenGl functions-----------------------
         void openglGenerateBuffers(const void* vertices);
         void openglGenerateVertexShaders(const char* text);
         void openglGenerateFragmentShaders(const char* text);
         void openglCreateProgram();
+        void openglSet3AtribLocations(const char* at1, const char* at2, const char* at3);
+        void openglVertexConfig(double size);
+        void openglViewportAndClear();
+        void openglProgramUniformDraw(const GLfloat* mvp);
 
     private:
         struct Data;
         Data* data;
 
-        GLuint vertex_buffer, vertex_shader, fragment_shader, program;
-        GLint mvp_location, vpos_location, vcol_location;
+        GLuint vertexBuffer, vertexShader, fragmentShader, program;
+        GLint mvpLocation, vposLocation, vcolLocation;
 
         int windowWidth_;
         int windowHeight_;
