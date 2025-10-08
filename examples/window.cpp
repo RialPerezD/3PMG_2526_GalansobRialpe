@@ -1,19 +1,23 @@
-#include "MotArda/Window.hpp"
+#include "MotArda/Engine.hpp"
 
 #include <memory>
 
-int main() {
+
+int MTRD::main() {
 
 	// Create a blank window
-	auto window = std::make_unique<Window>(800, 600, "Motarda window");
+	auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda window");
 
 	// Check if not null
-	if (!window) {
-		return 1;
-	}
+    if (maybeEng.has_value()) {
+        auto& eng = maybeEng.value();
 
-	// Main loop, here refresh or update all
-	while (!window->shouldWindowClose()) {
-		window->pollEvents();
-	}
+        while (!eng.windowShouldClose()) {
+            eng.windowEndFrame();
+        }
+
+        return 0;
+    }
+
+    return 1;
 }
