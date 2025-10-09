@@ -18,27 +18,25 @@ namespace MTRD {
     };
 
 
-    Window::Window(Data* newData) {
-        data = newData;
+    Window::Window(std::unique_ptr<Data> newData) : data(std::move(newData)) {
     }
 
 
     std::optional<Window> Window::windowCreate(int width, int height, const char* windowName) {
 
-        //hacerlo unique pointer
-        //pimpl
-        Data* data = new Data;
+        auto d = std::make_unique<Data>();
 
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-        data->glfw_window = glfwCreateWindow(width, height, windowName, NULL, NULL);
-        if (data->glfw_window == nullptr) {
+        d->glfw_window = glfwCreateWindow(width, height, windowName, NULL, NULL);
+
+        if (d->glfw_window == nullptr) {
             return std::nullopt;
         }
 
-        std::optional<Window> wind = std::make_optional(Window{ std::move(data) });
+        std::optional<Window> wind = std::make_optional(Window{ std::move(d) });
         wind.value().windowWidth_ = width;
         wind.value().windowHeight_ = height;
 
@@ -47,18 +45,18 @@ namespace MTRD {
 
 
     Window::~Window() {
-        if (data) {
+        if (data && data->glfw_window) {
             glfwDestroyWindow(data->glfw_window);
-            glfwTerminate();
         }
     }
 
 
     Window::Window(Window&& right) :
-        data{ right.data },
+        data{ std::move(right.data) },
         windowWidth_{ right.windowWidth_ },
         windowHeight_{ right.windowHeight_ }
     {
+
         right.data = nullptr;
     }
 
