@@ -5,7 +5,7 @@
 
 
 namespace MTRD {
-
+	std::vector<int> Input::pressedKey = {};
 
 	void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 		Input::pressedKey.push_back(key);
@@ -38,9 +38,14 @@ namespace MTRD {
 
 	bool Input::isKeyPressed(Keyboard key) {
 
+		if (pressedKey.size() > 0) {
+			printf("asd");
+		}
+
 		for (int numbr : asciiMap.find(key)->second) {
 			for (int key : pressedKey) {
 				if (numbr == key) {
+					pressedKey.erase(std::remove(pressedKey.begin(), pressedKey.end(), key), pressedKey.end());
 					return true;
 				}
 			}

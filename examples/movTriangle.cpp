@@ -75,15 +75,32 @@ int MTRD::main() {
         mat4x4 m, p, mvp;
         float ratio = eng.windowGetSizeRatio();
 
+        float yMov = 0;
+        float xMov = 0;
+
         while (!eng.windowShouldClose()) {
 
             eng.windowOpenglViewportAndClear();
 
-            //bool pressed = eng.inputIsKeyPressed(Input::Keyboard::A);
-            printf("Paco\n");
+            float speed = 0.01f;
+
+            if (eng.inputIsKeyPressed(Input::Keyboard::D)) {
+                xMov += 1 * speed;
+            }
+            else if (eng.inputIsKeyPressed(Input::Keyboard::A)) {
+                xMov += -1 * speed;
+            }
+
+            if (eng.inputIsKeyPressed(Input::Keyboard::S)) {
+                yMov += -1 * speed;
+            }
+            else if (eng.inputIsKeyPressed(Input::Keyboard::W)) {
+                yMov += 1 * speed;
+            }
 
             mat4x4_identity(m);
             mat4x4_rotate_Z(m, m, (float)eng.windowGetTimer());
+            mat4x4_translate(m, xMov, yMov, 0);
             mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
             mat4x4_mul(mvp, p, m);
 
