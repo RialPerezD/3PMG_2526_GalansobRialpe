@@ -105,6 +105,17 @@ namespace MTRD {
     }
 
 
+    float Window::getSizeRatio() {
+        return windowWidth_ / (float)windowHeight_;
+    }
+
+
+    void Window::setKeyCallback(void* keyCallback) {
+        auto parsed = reinterpret_cast<void(*)(GLFWwindow*, int, int, int, int)>(keyCallback);
+        glfwSetKeyCallback(data->glfw_window, parsed);
+    }
+
+
     void Window::openglGenerateBuffers(const void* vertex, size_t verticeSize) {
         glGenBuffers(1, &vertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -173,11 +184,6 @@ namespace MTRD {
         glUseProgram(program);
         glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, mvp);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-    }
-
-
-    float Window::getSizeRatio() {
-        return windowWidth_ / (float)windowHeight_;
     }
 }
 

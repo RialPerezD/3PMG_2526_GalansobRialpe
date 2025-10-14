@@ -2,6 +2,7 @@
 
 #include <optional>
 #include "Window.hpp"
+#include "Input.hpp"
 
 namespace MTRD {
 
@@ -36,6 +37,7 @@ namespace MTRD {
 		void windowOpenglProgramUniformDraw(const GLfloat* mvp);
 		void close();
 
+		bool inputIsKeyPressed(Input::Keyboard key);
 
 		static std::optional<MotardaEng> createEngine(
 			int width = 800,
@@ -43,7 +45,8 @@ namespace MTRD {
 			const char* windowName = "Motarda default name");
 
 	private:
-		MotardaEng(Window& window);
+		MotardaEng(Window& window, Input& input);
 		Window window_;
+		Input input_;
 	};
 }
