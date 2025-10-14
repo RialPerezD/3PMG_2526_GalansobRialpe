@@ -34,6 +34,7 @@ namespace MTRD {
         void setSwapInterval(int i);
         void setErrorCallback(void(*function)(int, const char*));
         float getSizeRatio();
+        void setKeyCallback(void* keyCallback);
 
         //------OpenGl functions-----------------------
         void openglGenerateBuffers(const void* vertices, size_t verticeSize);

@@ -9,13 +9,21 @@ namespace MTRD {
         auto w = Window::windowCreate(width, height, windowName);
         if (!w) return std::nullopt;
 
-        return std::make_optional(MotardaEng{ w.value() });
+        Input input_ = Input::inputCreate(w.value());
+
+        return std::make_optional(MotardaEng{ w.value(), input_ });
     }
 
 
     //Default constructor
-    MotardaEng::MotardaEng(Window& window) : window_{ std::move(window) }{
+    MotardaEng::MotardaEng(Window& window, Input& input)
+        :
+        window_{ std::move(window) },
+        input_{ std::move(input_) }
+    {
+        input_.generateAsciiMap();
     }
+
 
     bool MotardaEng::windowShouldClose(){
         return window_.shouldClose();
@@ -83,5 +91,10 @@ namespace MTRD {
 
     void MotardaEng::close() {
         //TODO
+    }
+
+
+    bool MotardaEng::inputIsKeyPressed(Input::Keyboard key) {
+        return input_.isKeyPressed(key);
     }
 }
