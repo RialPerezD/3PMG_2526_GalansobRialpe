@@ -1,7 +1,9 @@
 #include "MotArda/Engine.hpp"
 
 #include <memory>
-#include "../deps/linmath.h-master/linmath.h"
+#include "../deps/glm-master/glm/glm.hpp"
+#include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
+#include "../deps/glm-master/glm/gtc/type_ptr.hpp"
 
 //Ref: https://www.glfw.org/docs/3.3/quick.html#quick_example
 //-------Triangle example data-----------------
@@ -72,19 +74,19 @@ int MTRD::main() {
         );
 
 
-        mat4x4 m, p, mvp;
+        glm::mat4x4 m, p, mvp;
         float ratio = eng.windowGetSizeRatio();
 
         while (!eng.windowShouldClose()) {
 
             eng.windowOpenglViewportAndClear();
 
-            mat4x4_identity(m);
-            mat4x4_rotate_Z(m, m, (float)eng.windowGetTimer());
-            mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-            mat4x4_mul(mvp, p, m);
+            m = glm::mat4(1.0f);
+            m = glm::rotate(m, (float)eng.windowGetTimer(), glm::vec3(0.0f, 0.0f, 1.0f));
+            p = glm::ortho(-ratio, ratio, -1.0f, 1.0f, -1.0f, 1.0f);
+            mvp = p * m;
 
-            eng.windowOpenglProgramUniformDraw((const GLfloat*) mvp);
+            eng.windowOpenglProgramUniformDraw(glm::value_ptr(mvp));
 
             eng.windowEndFrame();
         }

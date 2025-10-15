@@ -38,10 +38,6 @@ namespace MTRD {
 
 	bool Input::isKeyPressed(Keyboard key) {
 
-		if (pressedKey.size() > 0) {
-			printf("asd");
-		}
-
 		for (int numbr : asciiMap.find(key)->second) {
 			for (int key : pressedKey) {
 				if (numbr == key) {
@@ -64,7 +60,8 @@ namespace MTRD {
 
 
 	Input::~Input() {
-
+		pressedKey.clear();
+		asciiMap.clear();
 	}
 
 
