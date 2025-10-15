@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <memory>
 #include "glad/glad.h"
 
 namespace MTRD {
@@ -47,7 +48,8 @@ namespace MTRD {
 
     private:
         struct Data;
-        Data* data;
+        std::unique_ptr<Data> data;
+        explicit Window(std::unique_ptr<Data> newData); 
 
         GLuint vertexBuffer, vertexShader, fragmentShader, program;
         GLint mvpLocation, vposLocation, vcolLocation;
@@ -55,7 +57,6 @@ namespace MTRD {
         int windowWidth_;
         int windowHeight_;
 
-        Window(Data* data);
 
         GLchar log[1000];
         GLsizei log_length;
