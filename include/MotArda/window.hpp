@@ -37,14 +37,14 @@ namespace MTRD {
         void setKeyCallback(void* keyCallback);
 
         //------OpenGl functions-----------------------
-        void openglGenerateBuffers(const void* vertices, size_t verticeSize);
+        void openglGenerateBuffers(const void* vertex, size_t verticeSize, int numVertex);
         void openglGenerateVertexShaders(const char* text);
         void openglGenerateFragmentShaders(const char* text);
         void openglCreateProgram();
         void openglSet3AtribLocations(const char* uni1, const char* at1, const char* at2);
         void openglVertexConfig(size_t size);
         void openglViewportAndClear();
-        void openglProgramUniformDraw(const GLfloat* mvp);
+        void openglProgramUniformDraw(const GLfloat* mvp, int ammountPoints);
 
     private:
         struct Data;
@@ -56,10 +56,6 @@ namespace MTRD {
 
         int windowWidth_;
         int windowHeight_;
-
-
-        GLchar log[1000];
-        GLsizei log_length;
 
     };
 }

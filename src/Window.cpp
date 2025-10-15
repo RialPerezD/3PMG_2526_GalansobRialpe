@@ -114,12 +114,11 @@ namespace MTRD {
     }
 
 
-    void Window::openglGenerateBuffers(const void* vertex, size_t verticeSize) {
+    void Window::openglGenerateBuffers(const void* vertex, size_t verticeSize, int numVertex) {
         glGenBuffers(1, &vertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
-        //TODO ver por que *3
-        glBufferData(GL_ARRAY_BUFFER, verticeSize * 3, vertex, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, verticeSize * numVertex, vertex, GL_STATIC_DRAW);
     }
 
 
@@ -127,9 +126,6 @@ namespace MTRD {
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &text, NULL);
         glCompileShader(vertexShader);
-
-        glGetShaderInfoLog(vertexShader, 1000, &log_length, log);
-        std::cout << log;
     }
 
 
@@ -137,9 +133,6 @@ namespace MTRD {
         fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragmentShader, 1, &text, NULL);
         glCompileShader(fragmentShader);
-
-        glGetShaderInfoLog(fragmentShader, 1000, &log_length, log);
-        std::cout << log;
     }
 
 
@@ -173,15 +166,14 @@ namespace MTRD {
 
     void Window::openglViewportAndClear() {
         glViewport(0, 0, windowWidth_, windowHeight_);
-        //glClearColor(0, 1, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
 
-    void Window::openglProgramUniformDraw(const GLfloat* mvp) {
+    void Window::openglProgramUniformDraw(const GLfloat* mvp, int ammountPoints) {
         glUseProgram(program);
         glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, mvp);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, ammountPoints);
     }
 }
 
@@ -201,7 +193,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     glfwInit();
 
     // Calls the main implemented by the usser
-    //dejalo fuera del espacio de nombres aun q se llame mtrdmain
     MTRD::main();
 
     // Ileans up and releases all resources used by the GLFW library.

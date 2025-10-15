@@ -7,11 +7,12 @@
 
 //Ref: https://www.glfw.org/docs/3.3/quick.html#quick_example
 //-------Triangle example data-----------------
+const int ammountPoints = 3;
 static const struct
 {
     float x, y;
     float r, g, b;
-} vertex[3] =
+} vertex[ammountPoints] =
 {
     { -0.6f, -0.4f, 1.f, 0.f, 0.f },
     {  0.6f, -0.4f, 0.f, 1.f, 0.f },
@@ -70,7 +71,8 @@ int MTRD::main() {
             "MVP",
             "vPos",
             "vCol",
-            sizeof(vertex[0])
+            sizeof(vertex[0]),
+            ammountPoints
         );
 
 
@@ -86,7 +88,7 @@ int MTRD::main() {
             p = glm::ortho(-ratio, ratio, -1.0f, 1.0f, -1.0f, 1.0f);
             mvp = p * m;
 
-            eng.windowOpenglProgramUniformDraw(glm::value_ptr(mvp));
+            eng.windowOpenglProgramUniformDraw(glm::value_ptr(mvp), ammountPoints);
 
             eng.windowEndFrame();
         }
