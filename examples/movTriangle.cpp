@@ -1,7 +1,9 @@
 #include "MotArda/Engine.hpp"
 
 #include <memory>
-#include "../deps/linmath.h-master/linmath.h"
+#include "../deps/glm-master/glm/glm.hpp"
+#include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
+#include "../deps/glm-master/glm/gtc/type_ptr.hpp"
 
 //Ref: https://www.glfw.org/docs/3.3/quick.html#quick_example
 //-------Triangle example data-----------------
@@ -71,40 +73,73 @@ int MTRD::main() {
             sizeof(vertex[0])
         );
 
-
-        mat4x4 m, p, mvp;
+        glm::mat4x4 m, p, mvp;
         float ratio = eng.windowGetSizeRatio();
 
-        float yMov = 0;
-        float xMov = 0;
+        float movSpeed = 0.01f;
+        float xPos = 0;
+        float yPos = 0;
+
+        float rotSpeed = 0.01f;
+        float rotationAngle = 0.0f;
+
+        float scaSpeed = 0.01f;
+        float scale = 1;
 
         while (!eng.windowShouldClose()) {
 
             eng.windowOpenglViewportAndClear();
 
-            float speed = 0.01f;
 
             if (eng.inputIsKeyPressed(Input::Keyboard::D)) {
-                xMov += 1 * speed;
+                xPos += 1 * movSpeed;
             }
             else if (eng.inputIsKeyPressed(Input::Keyboard::A)) {
-                xMov += -1 * speed;
+                xPos += -1 * movSpeed;
             }
 
             if (eng.inputIsKeyPressed(Input::Keyboard::S)) {
-                yMov += -1 * speed;
+                yPos += -1 * movSpeed;
             }
             else if (eng.inputIsKeyPressed(Input::Keyboard::W)) {
-                yMov += 1 * speed;
+                yPos += 1 * movSpeed;
             }
 
-            mat4x4_identity(m);
-            mat4x4_rotate_Z(m, m, (float)eng.windowGetTimer());
-            mat4x4_translate(m, xMov, yMov, 0);
-            mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-            mat4x4_mul(mvp, p, m);
+            if (eng.inputIsKeyPressed(Input::Keyboard::Q)) {
+                float res = rotationAngle -= 1 * rotSpeed;
+                if (res <= 0) {
+                    rotationAngle = 360 + res;
+                }
+                else {
+                    rotationAngle = res;
+                }
+            } else if(eng.inputIsKeyPressed(Input::Keyboard::E)){
+                float res = rotationAngle += 1 * rotSpeed;
+                if (res >= 360) {
+                    rotationAngle = res - 360;
+                }
+                else {
+                    rotationAngle = res;
+                }
+            }
 
-            eng.windowOpenglProgramUniformDraw((const GLfloat*) mvp);
+            if (eng.inputIsKeyPressed(Input::Keyboard::Z)) {
+                scale += scaSpeed;
+            }
+            else if (eng.inputIsKeyPressed(Input::Keyboard::X)) {
+                scale -= scaSpeed;
+            }
+
+            float a = (float)eng.windowGetTimer();
+            
+            m = glm::mat4(1.0f);
+            m = glm::scale(m, {scale, scale, scale});
+            m = glm::translate(m, {xPos, yPos, 0});
+            m = glm::rotate(m, rotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+            p = glm::ortho(-ratio, ratio, -1.0f, 1.0f, -1.0f, 1.0f);
+            mvp = p * m;
+
+            eng.windowOpenglProgramUniformDraw(glm::value_ptr(mvp));
 
             eng.windowEndFrame();
         }
