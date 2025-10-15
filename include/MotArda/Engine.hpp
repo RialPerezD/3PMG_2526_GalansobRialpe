@@ -31,10 +31,11 @@ namespace MTRD {
 			const char* uni1,
 			const char* at1,
 			const char* at2,
-			size_t verticeSize
+			size_t verticeSize,
+			int numVertex
 		);
 		void windowOpenglViewportAndClear();
-		void windowOpenglProgramUniformDraw(const GLfloat* mvp);
+		void windowOpenglProgramUniformDraw(const GLfloat* mvp, int ammountPoints);
 		void close();
 
 		bool inputIsKeyPressed(Input::Keyboard key);

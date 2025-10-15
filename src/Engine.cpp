@@ -68,9 +68,10 @@ namespace MTRD {
         const char* uni1,
         const char* at1,
         const char* at2,
-        size_t verticeSize
+        size_t verticeSize,
+        int numVertex
     ) {
-        window_.openglGenerateBuffers(vertexBuffer, verticeSize);
+        window_.openglGenerateBuffers(vertexBuffer, verticeSize, numVertex);
         window_.openglGenerateVertexShaders(vertexShader);
         window_.openglGenerateFragmentShaders(fragmentShader);
         window_.openglCreateProgram();
@@ -84,8 +85,8 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowOpenglProgramUniformDraw(const GLfloat* mvp) {
-        window_.openglProgramUniformDraw(mvp);
+    void MotardaEng::windowOpenglProgramUniformDraw(const GLfloat* mvp, int ammountPoints) {
+        window_.openglProgramUniformDraw(mvp, ammountPoints);
     }
 
 
