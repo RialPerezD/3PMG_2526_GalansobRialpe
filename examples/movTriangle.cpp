@@ -125,6 +125,13 @@ int MTRD::main() {
 				scale += scaSpeed;
 			}
 
+
+			if (eng.inputIsKeyDown(Input::Keyboard::F)) {
+				rotationAngle -= 1 * rotSpeed * 100;
+			}else if (eng.inputIsKeyUp(Input::Keyboard::F)) {
+				rotationAngle += 1 * rotSpeed * 100;
+			}
+
 			float a = (float)eng.windowGetTimer();
 
 			m = glm::mat4(1.0f);

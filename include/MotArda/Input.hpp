@@ -53,11 +53,17 @@ namespace MTRD {
 
 		//------------Functions-----------------------
 
-		void clearInputs();
 		bool isKeyPressed(Keyboard);
+        bool isKeyDown(Keyboard);
+        bool isKeyUp(Keyboard);
+
         void generateAsciiMap();
         void setKeyboardCallback(Window& window);
-		static std::vector<int> pressedKey;
+        void clearBuffers();
+
+        static std::vector<int> pressKey;
+		static std::vector<int> repeatKey;
+        static std::vector<int> releaseKey;
 
 
 	private:

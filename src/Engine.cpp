@@ -98,4 +98,14 @@ namespace MTRD {
     bool MotardaEng::inputIsKeyPressed(Input::Keyboard key) {
         return input_.isKeyPressed(key);
     }
+
+
+    bool MotardaEng::inputIsKeyDown(Input::Keyboard key) {
+        return input_.isKeyDown(key);
+    }
+
+
+    bool MotardaEng::inputIsKeyUp(Input::Keyboard key) {
+        return input_.isKeyUp(key);
+    }
 }

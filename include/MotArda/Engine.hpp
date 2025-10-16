@@ -39,6 +39,8 @@ namespace MTRD {
 		void close();
 
 		bool inputIsKeyPressed(Input::Keyboard key);
+		bool inputIsKeyDown(Input::Keyboard key);
+		bool inputIsKeyUp(Input::Keyboard key);
 
 		static std::optional<MotardaEng> createEngine(
 			int width = 800,
