@@ -81,7 +81,7 @@ int MTRD::main() {
 
         while (!eng.windowShouldClose()) {
 
-            eng.windowOpenglViewportAndClear();
+            eng.windowInitFrame();
 
             m = glm::mat4(1.0f);
             m = glm::rotate(m, (float)eng.windowGetTimer(), glm::vec3(0.0f, 0.0f, 1.0f));

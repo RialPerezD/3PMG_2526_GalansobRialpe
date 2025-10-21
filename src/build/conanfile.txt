@@ -1,7 +1,5 @@
 [requires]
 glfw/3.3.8
-glew/2.2.0
-glad/0.1.36
 
 [generators]
 premake

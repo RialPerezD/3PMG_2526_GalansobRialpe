@@ -34,8 +34,9 @@ namespace MTRD {
 			size_t verticeSize,
 			int numVertex
 		);
-		void windowOpenglViewportAndClear();
+		void windowInitFrame();
 		void windowOpenglProgramUniformDraw(const GLfloat* mvp, int ammountPoints);
+		void windowSetDebugMode(bool b);
 		void close();
 
 		bool inputIsKeyPressed(Input::Keyboard key);

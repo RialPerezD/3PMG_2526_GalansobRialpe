@@ -8,39 +8,36 @@
 //Ref: https://www.glfw.org/docs/3.3/quick.html#quick_example
 //-------Triangle example data-----------------
 
-const int ammountPoints = 6;
-static const struct
-{
+const int ammountPoints = 3;
+struct Vertex {
 	float x, y;
 	float r, g, b;
-} vertex[ammountPoints] =
+};
+
+Vertex vertex[ammountPoints] =
 {
 	{ -0.3f, -0.2f, 1.f, 0.f, 0.f },
-	{  0.3f, -0.2f, 0.f, 1.f, 0.f },
 	{  0.f,   0.3f, 0.f, 0.f, 1.f },
-	{ -0.3f, -0.3f, 1.f, 0.f, 0.f },
-	{  0.3f, -0.3f, 0.f, 1.f, 0.f },
-	{  0.f,  -0.8f, 0.f, 0.f, 1.f },
+	{  0.3f, -0.2f, 0.f, 1.f, 0.f },
 };
 
 static const char* vertex_shader_text =
-"#version 110\n"
+"#version 460 core\n"
 "uniform mat4 MVP;\n"
-"attribute vec3 vCol;\n"
-"attribute vec2 vPos;\n"
-"varying vec3 color;\n"
-"void main()\n"
-"{\n"
+"in vec2 vPos;\n"
+"in vec3 vCol;\n"
+"out vec3 color;\n"
+"void main() {\n"
 "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
 "    color = vCol;\n"
 "}\n";
 
 static const char* fragment_shader_text =
-"#version 110\n"
-"varying vec3 color;\n"
-"void main()\n"
-"{\n"
-"    gl_FragColor = vec4(color, 1.0);\n"
+"#version 460 core\n"
+"in vec3 color;\n"
+"out vec4 outColor;\n"
+"void main() {\n"
+"    outColor  = vec4(color, 1.0);\n"
 "}\n";
 //---------------------------------------------
 //-------Triangle example functions------------
@@ -61,6 +58,8 @@ int MTRD::main() {
 	if (maybeEng.has_value()) {
 		auto& eng = maybeEng.value();
 
+		eng.windowSetDebugMode(true);
+
 		eng.windowSetErrorCallback(error_callback);
 		eng.windowCreateContext();
 
@@ -75,7 +74,7 @@ int MTRD::main() {
 			"MVP",
 			"vPos",
 			"vCol",
-			sizeof(vertex[0]),
+			sizeof(Vertex),
 			ammountPoints
 		);
 
@@ -89,12 +88,12 @@ int MTRD::main() {
 		float rotSpeed = 0.01f;
 		float rotationAngle = 0.0f;
 
-		float scaSpeed = 0.01f;
+		float scaSpeed = 0.1f;
 		float scale = 1;
 
 		while (!eng.windowShouldClose()) {
 
-			eng.windowOpenglViewportAndClear();
+			eng.windowInitFrame();
 
 
 			if (eng.inputIsKeyPressed(Input::Keyboard::D)) {
@@ -136,10 +135,10 @@ int MTRD::main() {
 			float a = (float)eng.windowGetTimer();
 
 			m = glm::mat4(1.0f);
-			m = glm::scale(m, { scale, scale, scale });
-			m = glm::translate(m, { xPos, yPos, 0 });
+			m = glm::translate(m, { xPos, yPos, -1 });
 			m = glm::rotate(m, rotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
-			p = glm::ortho(-ratio, ratio, -1.0f, 1.0f, -1.0f, 1.0f);
+			m = glm::scale(m, { scale, scale, scale });
+			p = glm::perspective(90.f, ratio, 0.1f, 10000.f);
 			mvp = p * m;
 
 			eng.windowOpenglProgramUniformDraw(glm::value_ptr(mvp), ammountPoints);

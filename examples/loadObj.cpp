@@ -48,7 +48,7 @@ int MTRD::main() {
 		auto& eng = maybeEng.value();
 
 		//auto maybeObjLoader = ObjLoader::loadObj("C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/assets/teapot.obj");
-		auto maybeObjLoader = ObjLoader::loadObj("C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/assets/example.obj");
+		auto maybeObjLoader = ObjLoader::loadObj("../assets/example.obj");
 
 		if(!maybeObjLoader.has_value()) return 1;
 
@@ -90,7 +90,7 @@ int MTRD::main() {
 
 		while (!eng.windowShouldClose()) {
 
-			eng.windowOpenglViewportAndClear();
+			eng.windowInitFrame();
 
 
 			if (eng.inputIsKeyPressed(Input::Keyboard::D)) {

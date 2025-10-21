@@ -80,13 +80,17 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowOpenglViewportAndClear() {
+    void MotardaEng::windowInitFrame() {
         window_.openglViewportAndClear();
     }
 
 
     void MotardaEng::windowOpenglProgramUniformDraw(const GLfloat* mvp, int ammountPoints) {
         window_.openglProgramUniformDraw(mvp, ammountPoints);
+    }
+
+    void MotardaEng::windowSetDebugMode(bool b) {
+        window_.setDebugMode(b);
     }
 
 

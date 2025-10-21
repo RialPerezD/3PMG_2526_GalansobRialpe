@@ -26,9 +26,9 @@ namespace MTRD {
         //------------Functions-----------------------
 
         bool shouldClose();
+        void setDebugMode(bool b);
         void pollEvents();
         void createContext();
-        void render();
         double timer();
         void swapBuffers();
         void setSwapInterval(int i);
@@ -51,11 +51,13 @@ namespace MTRD {
         std::unique_ptr<Data> data;
         explicit Window(std::unique_ptr<Data> newData); 
 
-        GLuint vertexBuffer, vertexShader, fragmentShader, program;
+        GLuint vertexBuffer, vertexShader, fragmentShader, program, vao;
         GLint mvpLocation, vposLocation, vcolLocation;
 
         int windowWidth_;
         int windowHeight_;
 
+        void checkErrors();
+        bool debug_;
     };
 }
