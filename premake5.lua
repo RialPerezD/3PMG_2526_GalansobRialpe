@@ -92,6 +92,7 @@ workspace "MotArda"
 			"src/Window.cpp", "include/MotArda/Window.hpp",
 			"src/Engine.cpp", "include/MotArda/Engine.hpp",
 			"src/Input.cpp", "include/MotArda/Input.hpp",
+			"src/ObjLoader.cpp", "include/MotArda/ObjLoader.hpp",
 			}
 
 	project "WindowExample"
@@ -129,4 +130,16 @@ workspace "MotArda"
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
 		files "examples/movTriangle.cpp"
+
+	project "ObjLoader"
+		kind "WindowedApp"
+		language "C++"
+		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
+		includedirs "include"
+		links "MotArda"
+		conan_config_exec("Debug")
+		conan_config_exec("Release")
+		conan_config_exec("RelWithDebInfo")
+		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
+		files "examples/loadObj.cpp"
 

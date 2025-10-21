@@ -27,8 +27,8 @@ namespace MTRD {
         auto d = std::make_unique<Data>();
 
 
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
         d->glfw_window = glfwCreateWindow(width, height, windowName, NULL, NULL);
 
