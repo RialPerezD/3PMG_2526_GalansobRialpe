@@ -65,7 +65,7 @@ namespace MTRD {
         const void* vertexBuffer,
         const char* vertexShader,
         const char* fragmentShader,
-        const std::vector<const char*>& uniforms,
+        std::vector<Window::UniformAttrib>& uniforms,
         const std::vector<Window::VertexAttrib>& attributes,
         size_t verticeSize,
         int numVertex
@@ -75,7 +75,7 @@ namespace MTRD {
         window_.openglGenerateFragmentShaders(fragmentShader);
         window_.openglCreateProgram();
 
-        window_.openglSetAttributesAndUniforms(uniforms, attributes, verticeSize);
+        window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes, verticeSize);
     }
 
 
@@ -84,8 +84,13 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowOpenglProgramUniformDraw(const GLfloat* mvp, int ammountPoints) {
-        window_.openglProgramUniformDraw(mvp, ammountPoints);
+    void MotardaEng::windowOpenglSetUniformsValues(std::vector<Window::UniformAttrib> uniforms) {
+        window_.openglSetUniformsValues(uniforms);
+    }
+
+
+    void MotardaEng::windowOpenglProgramUniformDraw(int ammountPoints) {
+        window_.openglProgramUniformDraw(ammountPoints);
     }
 
     void MotardaEng::windowSetDebugMode(bool b) {

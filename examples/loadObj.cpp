@@ -10,22 +10,54 @@
 static const char* vertex_shader_text =
 "#version 460 core\n"
 "uniform mat4 MVP;\n"
+"uniform vec3 DIFFUSE;\n"
+"uniform vec3 SPECULAR;\n"
+"uniform vec3 AMBIENT;\n"
 "in vec3 position;\n"
-"in vec3 uv;\n"
 "in vec3 normal;\n"
+"out vec3 fragNormal;\n"
+"out vec3 fragPosition;\n"
 "out vec3 fragColor;\n"
 "void main() {\n"
 "    gl_Position = MVP * vec4(position, 1.0);\n"
-"    fragColor = uv * 0.5 + 0.5;\n"
+"    fragNormal = normalize(normal);\n"
+"    fragPosition = position;\n"
 "}\n";
+
 
 static const char* fragment_shader_text =
 "#version 460 core\n"
-"in vec3 fragColor;\n"
-"out vec4 outColor;\n"
+"uniform vec3 DIFFUSE;\n"
+"uniform vec3 SPECULAR;\n"
+"uniform vec3 AMBIENT;\n"
+"in vec3 fragNormal;\n"
+"in vec3 fragPosition;\n"
+"out vec4 fragColor;\n"
 "void main() {\n"
-"    outColor = vec4(fragColor, 1.0);\n"
+"    // Luz direccional (fija, hacia abajo en el eje Y)\n"
+"    vec3 lightDir = normalize(vec3(0.0, -1.0, 0.0));  // Direccion de la luz\n"
+"    // Cámara fija (en el eje Z)\n"
+"    vec3 viewDir = normalize(vec3(0.0, 0.0, 5.0) - fragPosition);  // Dirección de la camara\n"
+"    vec3 reflectDir = reflect(-lightDir, fragNormal);  // Direccion de la reflexión de la luz\n"
+"\n"
+"    // Componente ambiental (constantemente iluminado por una luz ambiental)\n"
+"    vec3 ambient = AMBIENT;\n"
+"\n"
+"    // Componente difusa (Lambertian)\n"
+"    float diff = max(dot(fragNormal, lightDir), 0.0);\n"
+"    vec3 diffuse = DIFFUSE * diff;\n"
+"\n"
+"    // Componente especular (Phong)\n"
+"    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);  // Exponente: 32\n"
+"    vec3 specular = SPECULAR * spec;\n"
+"\n"
+"    // Combinar los componentes de iluminación\n"
+"    vec3 color = ambient + diffuse + specular;\n"
+"\n"
+"    // El color final del fragmento\n"
+"    fragColor = vec4(color, 1.0);\n"
 "}\n";
+
 
 // Error callback
 static void error_callback(int error, const char* description)
@@ -40,11 +72,18 @@ int MTRD::main() {
 
     auto& eng = maybeEng.value();
 
-    auto maybeObjLoader = ObjLoader::loadObj("../assets/example.obj");
+    eng.windowSetDebugMode(true);
+
+    auto maybeObjLoader = ObjLoader::loadObj(
+        "../assets/indoor_plant_02.obj",
+        "../assets/"
+    );
+
     if (!maybeObjLoader.has_value()) return 1;
 
     ObjLoader objLoader = maybeObjLoader.value();
     std::vector<Vertex> vertex = objLoader.getVertices();
+    std::vector<Material> materials = objLoader.getMaterials();
     const void* vertexBuffer = static_cast<const void*>(vertex.data());
 
     eng.windowSetDebugMode(true);
@@ -53,7 +92,13 @@ int MTRD::main() {
     eng.windowSetSwapInterval();
 
     // --- Vectores de uniforms y atributos ---
-    std::vector<const char*> uniforms = { "MVP" };
+    std::vector<Window::UniformAttrib> uniforms = { 
+        {"MVP", -1, Window::UniformTypes::Mat4, nullptr},
+        {"DIFFUSE", -1, Window::UniformTypes::Vec3, nullptr},
+        {"SPECULAR", -1, Window::UniformTypes::Vec3, nullptr},
+        {"AMBIENT", -1, Window::UniformTypes::Vec3, nullptr}
+    };
+    
     std::vector<Window::VertexAttrib> attributes = {
         { "position", 3, offsetof(Vertex, position) }, // glm::vec3 -> 3 floats
         { "uv", 2, offsetof(Vertex, uv) },             // glm::vec2 -> 2 floats
@@ -72,6 +117,12 @@ int MTRD::main() {
     );
 
     glm::mat4x4 m, p, mvp;
+
+    uniforms[0].values = glm::value_ptr(mvp);
+    uniforms[1].values = glm::value_ptr(materials[0].diffuse);
+    uniforms[2].values = glm::value_ptr(materials[0].specular);
+    uniforms[3].values = glm::value_ptr(materials[0].ambient);
+
     float ratio = eng.windowGetSizeRatio();
 
     float movSpeed = 0.01f;
@@ -105,8 +156,8 @@ int MTRD::main() {
         p = glm::ortho(-ratio, ratio, -1.f, 1.f, -1.f, 1.f);
         mvp = p * m;
 
-        // MVP es el primer uniform del vector
-        eng.windowOpenglProgramUniformDraw(glm::value_ptr(mvp), vertex.size());
+        eng.windowOpenglSetUniformsValues(uniforms);
+        eng.windowOpenglProgramUniformDraw(vertex.size());
 
         eng.windowEndFrame();
     }

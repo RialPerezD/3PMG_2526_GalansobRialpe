@@ -8,10 +8,12 @@
 
 namespace MTRD {
 
-	std::optional<ObjLoader> ObjLoader::loadObj(const std::string& filepath) {
+	std::optional<ObjLoader> ObjLoader::loadObj(
+		const std::string& filepath,
+		const std::string& mtlpath) {
 		tinyobj::ObjReader reader;
 		tinyobj::ObjReaderConfig reader_config;
-		reader_config.mtl_search_path = ""; 
+		reader_config.mtl_search_path = mtlpath;
 
 		if (!reader.ParseFromFile(filepath, reader_config)) {
 			std::cerr << "Error al cargar el archivo .obj: " << filepath << std::endl;
@@ -22,7 +24,19 @@ namespace MTRD {
 		const std::vector<tinyobj::shape_t>& shapes = reader.GetShapes();
 		const std::vector<tinyobj::material_t>& materials = reader.GetMaterials();
 
+		printf(reader.Warning().c_str());
+
 		ObjLoader objLoader;
+
+		for (const auto& mat : materials) {
+			Material material;
+			material.name = mat.name;
+			material.diffuse = glm::vec3(mat.diffuse[0], mat.diffuse[1], mat.diffuse[2]);
+			material.specular = glm::vec3(mat.specular[0], mat.specular[1], mat.specular[2]);
+			material.ambient = glm::vec3(mat.ambient[0], mat.ambient[1], mat.ambient[2]);
+			material.shininess = mat.shininess;
+			objLoader.materials.push_back(material);
+		}
 
 		for (const auto& shape : shapes) {
 			for (const auto& index : shape.mesh.indices) {

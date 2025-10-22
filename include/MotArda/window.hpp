@@ -10,6 +10,15 @@ namespace MTRD {
 
     class Window {
     public:
+        enum class UniformTypes {
+            Mat2,
+            Mat3,
+            Mat4,
+            Vec2,
+            Vec3,
+            Vec4
+        };
+
         static std::optional<Window> windowCreate(
             int width,
             int height,
@@ -31,6 +40,13 @@ namespace MTRD {
             size_t offset;
         };
 
+        struct UniformAttrib {
+            const char* name;
+            GLint location;
+            UniformTypes type;
+            float* values;
+        };
+
         //------------Functions-----------------------
         bool shouldClose();
         void setDebugMode(bool b);
@@ -48,14 +64,15 @@ namespace MTRD {
         void openglGenerateVertexShaders(const char* text);
         void openglGenerateFragmentShaders(const char* text);
         void openglCreateProgram();
-        void openglSetAttributesAndUniforms(
-            const std::vector<const char*>& uniforms,
+        void openglSetUniformsLocationsAndAtributtes(
+            std::vector<Window::UniformAttrib>& uniforms,
             const std::vector<VertexAttrib>& attributes,
             size_t verticeSize
         );
 
         void openglViewportAndClear();
-        void openglProgramUniformDraw(const GLfloat* mvp, int ammountPoints);
+        void openglSetUniformsValues(const std::vector<Window::UniformAttrib>& uniforms);
+        void openglProgramUniformDraw(int ammountPoints);
 
     private:
         struct Data;
@@ -63,12 +80,10 @@ namespace MTRD {
         explicit Window(std::unique_ptr<Data> newData); 
 
         GLuint vertexBuffer, vertexShader, fragmentShader, program, vao;
-        std::vector<GLint> uniformLocations;
 
         int windowWidth_;
         int windowHeight_;
 
-        void checkErrors();
         bool debug_;
     };
 }

@@ -28,13 +28,14 @@ namespace MTRD {
 			const void* vertexBuffer,
 			const char* vertexShader,
 			const char* fragmentShader,
-			const std::vector<const char*>& uniforms,
+			std::vector<Window::UniformAttrib>& uniforms,
 			const std::vector<Window::VertexAttrib>& attributes,
 			size_t verticeSize,
 			int numVertex
 		);
 		void windowInitFrame();
-		void windowOpenglProgramUniformDraw(const GLfloat* mvp, int ammountPoints);
+		void windowOpenglSetUniformsValues(std::vector<Window::UniformAttrib> uniforms);
+		void windowOpenglProgramUniformDraw(int ammountPoints);
 		void windowSetDebugMode(bool b);
 		void close();
 

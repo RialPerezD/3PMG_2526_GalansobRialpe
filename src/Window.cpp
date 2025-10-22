@@ -89,13 +89,6 @@ namespace MTRD {
     };
 
 
-    void Window::checkErrors() {
-        if (debug_) {
-            glCheckError();
-        }
-    }
-
-
     Window::Window(std::unique_ptr<Data> newData) : data(std::move(newData)) {
     }
 
@@ -206,8 +199,10 @@ namespace MTRD {
         glGenBuffers(1, &vertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, verticeSize * numVertex, vertex, GL_STATIC_DRAW);
-        
-        checkErrors();
+
+        if (debug_) {
+            glCheckError();
+        }
     }
 
 
@@ -229,7 +224,9 @@ namespace MTRD {
             }
         }
 
-        checkErrors();
+        if (debug_) {
+            glCheckError();
+        }
     }
 
 
@@ -251,7 +248,9 @@ namespace MTRD {
             }
         }
 
-        checkErrors();
+        if (debug_) {
+            glCheckError();
+        }
     }
 
 
@@ -278,18 +277,19 @@ namespace MTRD {
 
         glUseProgram(program);
 
-        checkErrors();
+        if (debug_) {
+            glCheckError();
+        }
     }
 
-    void Window::openglSetAttributesAndUniforms(
-        const std::vector<const char*>& uniforms,
+    void Window::openglSetUniformsLocationsAndAtributtes(
+        std::vector<Window::UniformAttrib>& uniforms,
         const std::vector<VertexAttrib>& attributes,
         size_t verticeSize
     ){
         // Uniform locations
-        uniformLocations.clear();
         for (auto& u : uniforms)
-            uniformLocations.push_back(glGetUniformLocation(program, u));
+            u.location = glGetUniformLocation(program, u.name);
 
         // Attribute locations
         for (auto& attr : attributes) {
@@ -300,7 +300,9 @@ namespace MTRD {
             }
         }
 
-        checkErrors();
+        if (debug_) {
+            glCheckError();
+        }
     }
 
 
@@ -309,18 +311,52 @@ namespace MTRD {
         glViewport(0, 0, windowWidth_, windowHeight_);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        checkErrors();
-
+        if (debug_) {
+            glCheckError();
+        }
     }
 
 
-    void Window::openglProgramUniformDraw(const GLfloat* mvp, int ammountPoints) {
-        glUseProgram(program);
-        glUniformMatrix4fv(uniformLocations[0], 1, GL_FALSE, mvp);
+    void Window::openglSetUniformsValues(const std::vector<Window::UniformAttrib>& uniforms) {
+        for (int i = 0; i < uniforms.size(); i++) {
+            float f = *(uniforms[i].values);
+            switch (uniforms[i].type) {
+            case Window::UniformTypes::Vec2:
+                glUniform2fv(uniforms[i].location, 1, uniforms[i].values);
+                break;
+            case Window::UniformTypes::Vec3:
+                glUniform3fv(uniforms[i].location, 1, uniforms[i].values);
+                break;
+            case Window::UniformTypes::Vec4:
+                glUniform4fv(uniforms[i].location, 1, uniforms[i].values);
+                break;
+            case Window::UniformTypes::Mat2:
+                glUniformMatrix2fv(uniforms[i].location, 1, GL_FALSE, uniforms[i].values);
+                break;
+            case Window::UniformTypes::Mat3:
+                glUniformMatrix3fv(uniforms[i].location, 1, GL_FALSE, uniforms[i].values);
+                break;
+            case Window::UniformTypes::Mat4:
+                glUniformMatrix4fv(uniforms[i].location, 1, GL_FALSE, uniforms[i].values);
+                break;
+            default:
+                break;
+            }
+
+            if (debug_) {
+                glCheckError();
+            }
+        }
+    }
+
+
+    void Window::openglProgramUniformDraw(int ammountPoints) {
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, ammountPoints);
-        
-        checkErrors();
+
+        if (debug_) {
+            glCheckError();
+        }
 
     }
 }
