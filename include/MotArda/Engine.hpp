@@ -28,9 +28,8 @@ namespace MTRD {
 			const void* vertexBuffer,
 			const char* vertexShader,
 			const char* fragmentShader,
-			const char* uni1,
-			const char* at1,
-			const char* at2,
+			const std::vector<const char*>& uniforms,
+			const std::vector<Window::VertexAttrib>& attributes,
 			size_t verticeSize,
 			int numVertex
 		);

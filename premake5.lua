@@ -99,7 +99,7 @@ workspace "MotArda"
 			}
 
 	project "WindowExample"
-		kind "WindowedApp"
+		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
 		includedirs "include"
@@ -135,7 +135,7 @@ workspace "MotArda"
 		files "examples/movTriangle.cpp"
 
 	project "ObjLoader"
-		kind "WindowedApp"
+		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
 		includedirs "include"

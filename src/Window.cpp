@@ -1,13 +1,14 @@
 
 #include "Motarda/Window.hpp"
 #include <memory>
-
-#define GLFW_INCLUDE_NONE
-#include "GLFW/glfw3.h"
+#include <vector>
 
 //Need this include to use WinMain
 #include <windows.h>
 #include <iostream>
+
+#define GLFW_INCLUDE_NONE
+#include "GLFW/glfw3.h"
 
 
 GLenum glCheckError_(const char* file, int line)
@@ -280,31 +281,28 @@ namespace MTRD {
         checkErrors();
     }
 
+    void Window::openglSetAttributesAndUniforms(
+        const std::vector<const char*>& uniforms,
+        const std::vector<VertexAttrib>& attributes,
+        size_t verticeSize
+    ){
+        // Uniform locations
+        uniformLocations.clear();
+        for (auto& u : uniforms)
+            uniformLocations.push_back(glGetUniformLocation(program, u));
 
-    void Window::openglSet3AtribLocations(
-        const char* uni1,
-        const char* at1,
-        const char* at2) {
-        mvpLocation = glGetUniformLocation(program, uni1);
-        vposLocation = glGetAttribLocation(program, at1);
-        vcolLocation = glGetAttribLocation(program, at2);
+        // Attribute locations
+        for (auto& attr : attributes) {
+            GLint loc = glGetAttribLocation(program, attr.name);
+            if (loc >= 0) {
+                glEnableVertexAttribArray(loc);
+                glVertexAttribPointer(loc, attr.size, GL_FLOAT, GL_FALSE, verticeSize, (void*)attr.offset);
+            }
+        }
 
         checkErrors();
     }
 
-
-    void Window::openglVertexConfig(size_t size) {
-        glEnableVertexAttribArray(vposLocation);
-        glVertexAttribPointer(vposLocation, 2, GL_FLOAT, GL_FALSE, size, (void*)0);
-        
-        checkErrors();
-
-        glEnableVertexAttribArray(vcolLocation);
-        glVertexAttribPointer(vcolLocation, 3, GL_FLOAT, GL_FALSE, size, (void*)(sizeof(float) * 2));
-
-        checkErrors();
-
-    }
 
 
     void Window::openglViewportAndClear() {
@@ -318,7 +316,7 @@ namespace MTRD {
 
     void Window::openglProgramUniformDraw(const GLfloat* mvp, int ammountPoints) {
         glUseProgram(program);
-        glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, mvp);
+        glUniformMatrix4fv(uniformLocations[0], 1, GL_FALSE, mvp);
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, ammountPoints);
         

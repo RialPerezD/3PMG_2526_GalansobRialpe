@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <memory>
+#include <vector>
 #include "glad/glad.h"
 
 namespace MTRD {
@@ -23,8 +24,14 @@ namespace MTRD {
         Window(Window&& right);
         Window& operator=(Window&& right) = default;
 
-        //------------Functions-----------------------
+        //------------Structs-------------------------
+        struct VertexAttrib {
+            const char* name;
+            int size;
+            size_t offset;
+        };
 
+        //------------Functions-----------------------
         bool shouldClose();
         void setDebugMode(bool b);
         void pollEvents();
@@ -41,8 +48,12 @@ namespace MTRD {
         void openglGenerateVertexShaders(const char* text);
         void openglGenerateFragmentShaders(const char* text);
         void openglCreateProgram();
-        void openglSet3AtribLocations(const char* uni1, const char* at1, const char* at2);
-        void openglVertexConfig(size_t size);
+        void openglSetAttributesAndUniforms(
+            const std::vector<const char*>& uniforms,
+            const std::vector<VertexAttrib>& attributes,
+            size_t verticeSize
+        );
+
         void openglViewportAndClear();
         void openglProgramUniformDraw(const GLfloat* mvp, int ammountPoints);
 
@@ -52,7 +63,7 @@ namespace MTRD {
         explicit Window(std::unique_ptr<Data> newData); 
 
         GLuint vertexBuffer, vertexShader, fragmentShader, program, vao;
-        GLint mvpLocation, vposLocation, vcolLocation;
+        std::vector<GLint> uniformLocations;
 
         int windowWidth_;
         int windowHeight_;
