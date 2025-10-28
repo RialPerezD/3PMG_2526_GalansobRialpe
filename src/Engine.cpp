@@ -1,7 +1,7 @@
 
 #include "Motarda/Engine.hpp"
 #include <memory>
-
+#include "MotArda/window.hpp"
 
 namespace MTRD {
 
@@ -13,9 +13,9 @@ namespace MTRD {
 
         JobSystem js;
 
-        return std::make_optional<MotardaEng>(MotardaEng{ w.value(), std::move(input_), std::move(js )});
+        return std::make_optional<MotardaEng>(MotardaEng{ std::move(w.value()), std::move(input_), std::move(js) });
     }
-
+    MotardaEng::~MotardaEng() {}
 
     //Default constructor
     MotardaEng::MotardaEng(Window window, Input input, JobSystem js)

@@ -10,7 +10,7 @@ namespace MTRD {
 	class MotardaEng {
 
 	public:
-		~MotardaEng() = default;
+		~MotardaEng();
 
 		MotardaEng(const MotardaEng& right) = delete;
 		MotardaEng& operator=(const MotardaEng& right) = delete;

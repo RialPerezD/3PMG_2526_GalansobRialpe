@@ -31,9 +31,9 @@ namespace MTRD {
         std::vector<std::thread> workers_;
         std::queue<std::function<void()>> tasks_;
 
-        //Estos dos no tienen copia, ver porq y si da algun problema
-        std::mutex queue_mutex_;
-        std::condition_variable condition_;
+        //Estos dos no pueden copiarse ni moverse, por eso son unique_ptr
+        std::unique_ptr<std::mutex> queue_mutex_;
+        std::unique_ptr<std::condition_variable> condition_;
 
         size_t threads;
 

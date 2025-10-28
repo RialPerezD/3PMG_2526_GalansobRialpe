@@ -88,6 +88,11 @@ namespace MTRD {
         GLFWwindow* glfw_window;
     };
 
+    Window::~Window() {
+        if (data && data->glfw_window) {
+            glfwDestroyWindow(data->glfw_window);
+        }
+    }
 
     void Window::checkErrors() {
         if (debug_) {
@@ -123,21 +128,8 @@ namespace MTRD {
     }
 
 
-    Window::~Window() {
-        if (data && data->glfw_window) {
-            glfwDestroyWindow(data->glfw_window);
-        }
-    }
 
 
-    Window::Window(Window&& right) :
-        data{ std::move(right.data) },
-        windowWidth_{ right.windowWidth_ },
-        windowHeight_{ right.windowHeight_ }
-    {
-
-        right.data = nullptr;
-    }
 
 
     bool Window::shouldClose() {

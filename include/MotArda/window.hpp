@@ -21,7 +21,7 @@ namespace MTRD {
         Window(const Window& right) = delete;
         Window& operator=(const Window& right) = delete;
 
-        Window(Window&& right);
+        Window(Window&& right) = default;
         Window& operator=(Window&& right) = default;
 
         //------------Structs-------------------------
