@@ -3,6 +3,7 @@
 #include <optional>
 #include "Window.hpp"
 #include "Input.hpp"
+#include "JobSystem.hpp"
 
 namespace MTRD {
 
@@ -48,8 +49,9 @@ namespace MTRD {
 			const char* windowName = "Motarda default name");
 
 	private:
-		MotardaEng(Window& window, Input& input);
+		MotardaEng(Window window, Input input, JobSystem js);
 		Window window_;
 		Input input_;
+		JobSystem jobSystem_;
 	};
 }

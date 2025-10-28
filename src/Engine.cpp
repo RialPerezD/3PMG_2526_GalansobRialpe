@@ -11,15 +11,18 @@ namespace MTRD {
 
         Input input_ = Input::inputCreate(w.value());
 
-        return std::make_optional(MotardaEng{ w.value(), input_ });
+        JobSystem js;
+
+        return std::make_optional<MotardaEng>(MotardaEng{ w.value(), std::move(input_), std::move(js )});
     }
 
 
     //Default constructor
-    MotardaEng::MotardaEng(Window& window, Input& input)
+    MotardaEng::MotardaEng(Window window, Input input, JobSystem js)
         :
         window_{ std::move(window) },
-        input_{ std::move(input_) }
+        input_{ std::move(input_) },
+        jobSystem_{ std::move(js) }
     {
         input_.generateAsciiMap();
     }
