@@ -89,8 +89,10 @@ namespace MTRD {
     };
 
     Window::~Window() {
-        if (data && data->glfw_window) {
-            glfwDestroyWindow(data->glfw_window);
+        if (data) {
+            if (data->glfw_window) {
+                glfwDestroyWindow(data->glfw_window);
+            }
         }
     }
 
