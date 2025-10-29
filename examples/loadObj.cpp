@@ -55,7 +55,7 @@ static const char* fragment_shader_text =
 "    vec3 color = ambient + diffuse + specular;\n"
 "\n"
 "    // El color final del fragmento\n"
-"    fragColor = vec4(color, 1.0);\n"
+"    fragColor = vec4(fragPosition, 1.0);\n"
 "}\n";
 
 
