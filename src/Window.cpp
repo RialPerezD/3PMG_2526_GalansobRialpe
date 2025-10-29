@@ -88,6 +88,7 @@ namespace MTRD {
         GLFWwindow* glfw_window;
     };
 
+
     Window::~Window() {
         if (data) {
             if (data->glfw_window) {
@@ -95,6 +96,10 @@ namespace MTRD {
             }
         }
     }
+
+    // Must be defined here as Data is not defined in the header
+    Window::Window(Window&& right) = default;
+
 
     void Window::checkErrors() {
         if (debug_) {

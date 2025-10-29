@@ -15,7 +15,6 @@ namespace MTRD {
 
         return std::make_optional<MotardaEng>(MotardaEng{ std::move(w.value()), std::move(input_), std::move(js) });
     }
-    MotardaEng::~MotardaEng() {}
 
     //Default constructor
     MotardaEng::MotardaEng(Window window, Input input, JobSystem js)

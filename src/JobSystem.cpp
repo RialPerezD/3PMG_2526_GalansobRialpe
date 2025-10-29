@@ -2,42 +2,44 @@
 
 namespace MTRD {
 
-    JobSystem::JobSystem() : stop_(false) {
+    JobSystem::JobSystem()
+        : stop_(false),
+        queue_mutex_(std::make_unique<std::mutex>()),
+        condition_(std::make_unique<std::condition_variable>())
+    {
         threads = std::thread::hardware_concurrency();
 
         for (size_t i = 0; i < threads; ++i) {
-            workers_.emplace_back(&JobSystem::worker, this);
+            //TODO mirar por que peta esto
+            //workers_.emplace_back(&JobSystem::worker, this);
         }
     }
 
     JobSystem::~JobSystem() {
-        {
-            std::unique_lock<std::mutex> lock(queue_mutex_);
-            stop_ = true;
-        }
-        condition_.notify_all();
+        //std::unique_lock<std::mutex> lock(*queue_mutex_);
+        stop_ = true;
+
+        //condition_->notify_all();
         for (std::thread& worker : workers_) {
             if (worker.joinable())
                 worker.join();
         }
     }
 
-    //JobSystem::JobSystem(JobSystem&& right);
-
     void JobSystem::enqueue(std::function<void()> task) {
         {
-            std::unique_lock<std::mutex> lock(queue_mutex_);
+            std::unique_lock<std::mutex> lock(*queue_mutex_);
             tasks_.push(std::move(task));
         }
-        condition_.notify_one();
+        condition_->notify_one();
     }
 
     void JobSystem::worker() {
         while (true) {
             std::function<void()> task;
             {
-                std::unique_lock<std::mutex> lock(queue_mutex_);
-                condition_.wait(lock, [this] 
+                std::unique_lock<std::mutex> lock(*queue_mutex_);
+                condition_->wait(lock, [this]
                     {
                     return stop_ || !tasks_.empty();
                     });
