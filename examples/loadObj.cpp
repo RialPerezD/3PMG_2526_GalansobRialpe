@@ -59,7 +59,7 @@ static const char* fragment_shader_text =
 "}\n";
 
 
-// Error callback
+// Error callback...
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Glfw error: %s\n", description);
