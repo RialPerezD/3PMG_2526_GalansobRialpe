@@ -26,18 +26,21 @@ namespace MTRD {
 
 
     private:
-        void worker();
+        struct JobSystemData {
+            std::vector<std::thread> workers_;
+            std::queue<std::function<void()>> tasks_;
 
-        std::vector<std::thread> workers_;
-        std::queue<std::function<void()>> tasks_;
+            std::mutex queue_mutex_;
+            std::condition_variable condition_;
+            size_t threads;
 
-        //Estos dos no pueden copiarse ni moverse, por eso son unique_ptr
-        std::unique_ptr<std::mutex> queue_mutex_;
-        std::unique_ptr<std::condition_variable> condition_;
+            std::atomic<bool> stop_;
+        };
 
-        size_t threads;
+        static void worker(JobSystemData* data);
 
-        bool stop_;
+        std::unique_ptr<JobSystemData> data_;
+
     };
 
 } 

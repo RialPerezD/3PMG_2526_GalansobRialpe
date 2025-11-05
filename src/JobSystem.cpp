@@ -3,53 +3,60 @@
 namespace MTRD {
 
     JobSystem::JobSystem()
-        : stop_(false),
-        queue_mutex_(std::make_unique<std::mutex>()),
-        condition_(std::make_unique<std::condition_variable>())
-    {
-        threads = std::thread::hardware_concurrency();
+        : data_{ std::make_unique<JobSystemData>() } {
+        data_->stop_ = false;
+        data_->threads = std::thread::hardware_concurrency();
 
-        for (size_t i = 0; i < threads; ++i) {
-            //TODO mirar por que peta esto
-            //workers_.emplace_back(&JobSystem::worker, this);
+        for (size_t i = 0; i < data_->threads; ++i) {
+            data_->workers_.emplace_back(&JobSystem::worker, data_.get());
         }
     }
+
 
     JobSystem::~JobSystem() {
-        //std::unique_lock<std::mutex> lock(*queue_mutex_);
-        stop_ = true;
+        if (data_) {
+            {
+                std::unique_lock<std::mutex> lock(data_->queue_mutex_);
+                data_->stop_ = true;
 
-        //condition_->notify_all();
-        for (std::thread& worker : workers_) {
-            if (worker.joinable())
-                worker.join();
+                data_->condition_.notify_all();
+            }
+            for (std::thread& worker : data_->workers_) {
+                if (worker.joinable()) {
+                    worker.join();
+                }
+            }
         }
     }
+
 
     void JobSystem::enqueue(std::function<void()> task) {
         {
-            std::unique_lock<std::mutex> lock(*queue_mutex_);
-            tasks_.push(std::move(task));
+            std::unique_lock<std::mutex> lock(data_->queue_mutex_);
+            data_->tasks_.push(std::move(task));
         }
-        condition_->notify_one();
+        data_->condition_.notify_one();
     }
 
-    void JobSystem::worker() {
+
+    void JobSystem::worker(JobSystemData* data) {
         while (true) {
             std::function<void()> task;
             {
-                std::unique_lock<std::mutex> lock(*queue_mutex_);
-                condition_->wait(lock, [this]
+                std::unique_lock<std::mutex> lock(data->queue_mutex_);
+                data->condition_.wait(lock, [data]
                     {
-                    return stop_ || !tasks_.empty();
+                    return data->stop_ || !data->tasks_.empty();
                     });
 
-                if (stop_ && tasks_.empty())
+                if (data->stop_ && data->tasks_.empty()){
                     return;
-                task = std::move(tasks_.front());
-                tasks_.pop();
+                    }
+                task = std::move(data->tasks_.front());
+                data->tasks_.pop();
             }
             task();
         }
     }
+
 }
