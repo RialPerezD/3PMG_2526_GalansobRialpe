@@ -10,6 +10,8 @@ namespace MTRD {
 
     class Window {
     public:
+        struct Data;
+
         enum class UniformTypes {
             Mat2,
             Mat3,
@@ -83,6 +85,7 @@ namespace MTRD {
         int windowWidth_;
         int windowHeight_;
 
+        void checkErrors();
         bool debug_;
     };
 }
