@@ -89,6 +89,25 @@ namespace MTRD {
     };
 
 
+    Window::~Window() {
+        if (data) {
+            if (data->glfw_window) {
+                glfwDestroyWindow(data->glfw_window);
+            }
+        }
+    }
+
+    // Must be defined here as Data is not defined in the header
+    Window::Window(Window&& right) = default;
+
+
+    void Window::checkErrors() {
+        if (debug_) {
+            glCheckError();
+        }
+    }
+
+
     Window::Window(std::unique_ptr<Data> newData) : data(std::move(newData)) {
     }
 
@@ -116,21 +135,8 @@ namespace MTRD {
     }
 
 
-    Window::~Window() {
-        if (data && data->glfw_window) {
-            glfwDestroyWindow(data->glfw_window);
-        }
-    }
 
 
-    Window::Window(Window&& right) :
-        data{ std::move(right.data) },
-        windowWidth_{ right.windowWidth_ },
-        windowHeight_{ right.windowHeight_ }
-    {
-
-        right.data = nullptr;
-    }
 
 
     bool Window::shouldClose() {

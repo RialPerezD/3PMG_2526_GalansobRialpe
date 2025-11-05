@@ -31,7 +31,7 @@ namespace MTRD {
         Window& operator=(const Window& right) = delete;
 
         Window(Window&& right);
-        Window& operator=(Window&& right) = default;
+        Window& operator=(Window&& right);
 
         //------------Structs-------------------------
         struct VertexAttrib {
@@ -75,7 +75,6 @@ namespace MTRD {
         void openglProgramUniformDraw(int ammountPoints);
 
     private:
-        struct Data;
         std::unique_ptr<Data> data;
         explicit Window(std::unique_ptr<Data> newData); 
 
