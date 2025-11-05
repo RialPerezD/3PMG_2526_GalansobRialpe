@@ -5,19 +5,25 @@
 
 
 namespace MTRD {
-	std::vector<int> Input::pressedKey = {};
+	std::vector<int> Input::pressKey = {};
+	std::vector<int> Input::repeatKey = {};
+	std::vector<int> Input::releaseKey = {};
 
 	void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
 		if (action == 1) {
-			Input::pressedKey.push_back(key);
+			Input::repeatKey.push_back(key);
+
+			Input::pressKey.push_back(key);
 		}
 		else if(action == 0){
-			Input::pressedKey.erase(std::remove(
-				Input::pressedKey.begin(),
-				Input::pressedKey.end(),
+			Input::repeatKey.erase(std::remove(
+				Input::repeatKey.begin(),
+				Input::repeatKey.end(),
 				key),
-			Input::pressedKey.end());
+			Input::repeatKey.end());
+
+			Input::releaseKey.push_back(key);
 		}
 	}
 
@@ -30,9 +36,16 @@ namespace MTRD {
 		return inp;
 	}
 
+	void Input::clearBuffers() {
+		pressKey.clear();
+		releaseKey.clear();
+	}
+
 
 	Input::Input() {
-		pressedKey.clear();
+		repeatKey.clear();
+
+		clearBuffers();
 	}
 
 
@@ -41,13 +54,64 @@ namespace MTRD {
 	}
 
 
+	bool checkVector(int numbr, std::vector<int> vector) {
+		for (int key : vector) {
+			if (numbr == key) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
 	bool Input::isKeyPressed(Keyboard key) {
 
+		if (repeatKey.size() == 0) return false;
+
 		for (int numbr : asciiMap.find(key)->second) {
-			for (int key : pressedKey) {
-				if (numbr == key) {
-					return true;
-				}
+			if(checkVector(numbr, repeatKey)){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	bool Input::isKeyDown(Keyboard key) {
+
+		if (pressKey.size() == 0) return false;
+
+		for (int numbr : asciiMap.find(key)->second) {
+			if (checkVector(numbr, pressKey)) {
+				Input::pressKey.erase(std::remove(
+					Input::pressKey.begin(),
+					Input::pressKey.end(),
+					numbr),
+					Input::pressKey.end());
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	bool Input::isKeyUp(Keyboard key) {
+
+		if (releaseKey.size() == 0) return false;
+
+		for (int numbr : asciiMap.find(key)->second) {
+			if (checkVector(numbr, releaseKey)) {
+				Input::releaseKey.erase(std::remove(
+					Input::releaseKey.begin(),
+					Input::releaseKey.end(),
+					numbr),
+					Input::releaseKey.end());
+
+				return true;
 			}
 		}
 
@@ -64,7 +128,7 @@ namespace MTRD {
 
 
 	Input::~Input() {
-		pressedKey.clear();
+		repeatKey.clear();
 		asciiMap.clear();
 	}
 

@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <memory>
+#include <vector>
 #include "glad/glad.h"
 
 namespace MTRD {
@@ -9,6 +10,8 @@ namespace MTRD {
 
     class Window {
     public:
+        struct Data;
+
         static std::optional<Window> windowCreate(
             int width,
             int height,
@@ -21,14 +24,20 @@ namespace MTRD {
         Window& operator=(const Window& right) = delete;
 
         Window(Window&& right);
-        Window& operator=(Window&& right) = default;
+        Window& operator=(Window&& right);
+
+        //------------Structs-------------------------
+        struct VertexAttrib {
+            const char* name;
+            int size;
+            size_t offset;
+        };
 
         //------------Functions-----------------------
-
         bool shouldClose();
+        void setDebugMode(bool b);
         void pollEvents();
         void createContext();
-        void render();
         double timer();
         void swapBuffers();
         void setSwapInterval(int i);
@@ -41,21 +50,26 @@ namespace MTRD {
         void openglGenerateVertexShaders(const char* text);
         void openglGenerateFragmentShaders(const char* text);
         void openglCreateProgram();
-        void openglSet3AtribLocations(const char* uni1, const char* at1, const char* at2);
-        void openglVertexConfig(size_t size);
+        void openglSetAttributesAndUniforms(
+            const std::vector<const char*>& uniforms,
+            const std::vector<VertexAttrib>& attributes,
+            size_t verticeSize
+        );
+
         void openglViewportAndClear();
         void openglProgramUniformDraw(const GLfloat* mvp, int ammountPoints);
 
     private:
-        struct Data;
         std::unique_ptr<Data> data;
         explicit Window(std::unique_ptr<Data> newData); 
 
-        GLuint vertexBuffer, vertexShader, fragmentShader, program;
-        GLint mvpLocation, vposLocation, vcolLocation;
+        GLuint vertexBuffer, vertexShader, fragmentShader, program, vao;
+        std::vector<GLint> uniformLocations;
 
         int windowWidth_;
         int windowHeight_;
 
+        void checkErrors();
+        bool debug_;
     };
 }

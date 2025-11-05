@@ -5,142 +5,115 @@
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
 
-//Ref: https://www.glfw.org/docs/3.3/quick.html#quick_example
 //-------Triangle example data-----------------
+const int ammountPoints = 3;
+struct Vertex {
+    float x, y;
+    float r, g, b;
+};
 
-const int ammountPoints = 6;
-static const struct
+Vertex vertex[ammountPoints] =
 {
-	float x, y;
-	float r, g, b;
-} vertex[ammountPoints] =
-{
-	{ -0.3f, -0.2f, 1.f, 0.f, 0.f },
-	{  0.3f, -0.2f, 0.f, 1.f, 0.f },
-	{  0.f,   0.3f, 0.f, 0.f, 1.f },
-	{ -0.3f, -0.3f, 1.f, 0.f, 0.f },
-	{  0.3f, -0.3f, 0.f, 1.f, 0.f },
-	{  0.f,  -0.8f, 0.f, 0.f, 1.f },
+    { -0.3f, -0.2f, 1.f, 0.f, 0.f },
+    {  0.f,   0.3f, 0.f, 0.f, 1.f },
+    {  0.3f, -0.2f, 0.f, 1.f, 0.f },
 };
 
 static const char* vertex_shader_text =
-"#version 110\n"
+"#version 460 core\n"
 "uniform mat4 MVP;\n"
-"attribute vec3 vCol;\n"
-"attribute vec2 vPos;\n"
-"varying vec3 color;\n"
-"void main()\n"
-"{\n"
+"in vec2 vPos;\n"
+"in vec3 vCol;\n"
+"out vec3 color;\n"
+"void main() {\n"
 "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
 "    color = vCol;\n"
 "}\n";
 
 static const char* fragment_shader_text =
-"#version 110\n"
-"varying vec3 color;\n"
-"void main()\n"
-"{\n"
-"    gl_FragColor = vec4(color, 1.0);\n"
+"#version 460 core\n"
+"in vec3 color;\n"
+"out vec4 outColor;\n"
+"void main() {\n"
+"    outColor  = vec4(color, 1.0);\n"
 "}\n";
-//---------------------------------------------
+
 //-------Triangle example functions------------
 static void error_callback(int error, const char* description)
 {
-	fprintf(stderr, "Glfw error: %s\n", description);
+    fprintf(stderr, "Glfw error: %s\n", description);
 }
-
 //---------------------------------------------
-
 
 int MTRD::main() {
 
-	// Create a blank window
-	auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda triangle");
+    auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda triangle");
 
-	// Check if not null
-	if (maybeEng.has_value()) {
-		auto& eng = maybeEng.value();
+    if (!maybeEng.has_value()) return 1;
 
-		eng.windowSetErrorCallback(error_callback);
-		eng.windowCreateContext();
+    auto& eng = maybeEng.value();
 
-		//this is default set to 1
-		eng.windowSetSwapInterval();
+    eng.windowSetDebugMode(true);
+    eng.windowSetErrorCallback(error_callback);
+    eng.windowCreateContext();
+    eng.windowSetSwapInterval();
 
-		//opengl functions
-		eng.windowOpenglSetup(
-			vertex,
-			vertex_shader_text,
-			fragment_shader_text,
-			"MVP",
-			"vPos",
-			"vCol",
-			sizeof(vertex[0]),
-			ammountPoints
-		);
+    // --- Vectores de uniforms y atributos ---
+    std::vector<const char*> uniforms = { "MVP" };
+    std::vector<Window::VertexAttrib> attributes = {
+        { "vPos", 2, offsetof(Vertex, x) },
+        { "vCol", 3, offsetof(Vertex, r) }
+    };
 
-		glm::mat4x4 m, p, mvp;
-		float ratio = eng.windowGetSizeRatio();
+    eng.windowOpenglSetup(
+        vertex,
+        vertex_shader_text,
+        fragment_shader_text,
+        uniforms,
+        attributes,
+        sizeof(Vertex),
+        ammountPoints
+    );
 
-		float movSpeed = 0.01f;
-		float xPos = 0;
-		float yPos = 0;
+    glm::mat4x4 m, p, mvp;
+    float ratio = eng.windowGetSizeRatio();
 
-		float rotSpeed = 0.01f;
-		float rotationAngle = 0.0f;
+    float movSpeed = 0.01f;
+    float xPos = 0, yPos = 0;
+    float rotSpeed = 0.01f, rotationAngle = 0.f;
+    float scaSpeed = 0.1f, scale = 1.f;
 
-		float scaSpeed = 0.01f;
-		float scale = 1;
+    while (!eng.windowShouldClose()) {
 
-		while (!eng.windowShouldClose()) {
+        eng.windowInitFrame();
 
-			eng.windowOpenglViewportAndClear();
+        if (eng.inputIsKeyPressed(Input::Keyboard::D)) xPos += movSpeed;
+        else if (eng.inputIsKeyPressed(Input::Keyboard::A)) xPos -= movSpeed;
 
+        if (eng.inputIsKeyPressed(Input::Keyboard::S)) yPos -= movSpeed;
+        else if (eng.inputIsKeyPressed(Input::Keyboard::W)) yPos += movSpeed;
 
-			if (eng.inputIsKeyPressed(Input::Keyboard::D)) {
-				xPos += 1 * movSpeed;
-			}
-			else if (eng.inputIsKeyPressed(Input::Keyboard::A)) {
-				xPos += -1 * movSpeed;
-			}
+        if (eng.inputIsKeyPressed(Input::Keyboard::Q)) rotationAngle -= rotSpeed;
+        else if (eng.inputIsKeyPressed(Input::Keyboard::E)) rotationAngle += rotSpeed;
 
-			if (eng.inputIsKeyPressed(Input::Keyboard::S)) {
-				yPos += -1 * movSpeed;
-			}
-			else if (eng.inputIsKeyPressed(Input::Keyboard::W)) {
-				yPos += 1 * movSpeed;
-			}
+        if (eng.inputIsKeyPressed(Input::Keyboard::Z)) scale -= scaSpeed;
+        else if (eng.inputIsKeyPressed(Input::Keyboard::X)) scale += scaSpeed;
 
-			if (eng.inputIsKeyPressed(Input::Keyboard::Q)) {
-				rotationAngle -= 1 * rotSpeed;
-			}
-			else if (eng.inputIsKeyPressed(Input::Keyboard::E)) {
-				rotationAngle += 1 * rotSpeed;
-			}
+        if (eng.inputIsKeyDown(Input::Keyboard::F)) rotationAngle -= rotSpeed * 100;
+        else if (eng.inputIsKeyUp(Input::Keyboard::F)) rotationAngle += rotSpeed * 100;
 
-			if (eng.inputIsKeyPressed(Input::Keyboard::Z)) {
-				scale -= scaSpeed;
-			}
-			else if (eng.inputIsKeyPressed(Input::Keyboard::X)) {
-				scale += scaSpeed;
-			}
+        m = glm::mat4(1.f);
+        m = glm::translate(m, { xPos, yPos, -1.f });
+        m = glm::rotate(m, rotationAngle, glm::vec3(0.f, 0.f, 1.f));
+        m = glm::scale(m, { scale, scale, scale });
+        p = glm::perspective(90.f, ratio, 0.1f, 10000.f);
+        mvp = p * m;
 
-			float a = (float)eng.windowGetTimer();
+        // MVP es el primer uniform del vector
+        eng.windowOpenglProgramUniformDraw(glm::value_ptr(mvp), ammountPoints);
 
-			m = glm::mat4(1.0f);
-			m = glm::scale(m, { scale, scale, scale });
-			m = glm::translate(m, { xPos, yPos, 0 });
-			m = glm::rotate(m, rotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
-			p = glm::ortho(-ratio, ratio, -1.0f, 1.0f, -1.0f, 1.0f);
-			mvp = p * m;
+        eng.windowEndFrame();
+    }
 
-			eng.windowOpenglProgramUniformDraw(glm::value_ptr(mvp), ammountPoints);
-
-			eng.windowEndFrame();
-		}
-
-		return 0;
-	}
-
-	return 1;
+    return 0;
 }

@@ -1,7 +1,7 @@
 
 #include "Motarda/Engine.hpp"
 #include <memory>
-
+#include "MotArda/window.hpp"
 
 namespace MTRD {
 
@@ -11,15 +11,17 @@ namespace MTRD {
 
         Input input_ = Input::inputCreate(w.value());
 
-        return std::make_optional(MotardaEng{ w.value(), input_ });
+        JobSystem js;
+
+        return std::make_optional<MotardaEng>(MotardaEng{ std::move(w.value()), std::move(input_), std::move(js) });
     }
 
-
     //Default constructor
-    MotardaEng::MotardaEng(Window& window, Input& input)
+    MotardaEng::MotardaEng(Window window, Input input, JobSystem js)
         :
         window_{ std::move(window) },
-        input_{ std::move(input_) }
+        input_{ std::move(input_) },
+        jobSystem_{ std::move(js) }
     {
         input_.generateAsciiMap();
     }
@@ -65,9 +67,8 @@ namespace MTRD {
         const void* vertexBuffer,
         const char* vertexShader,
         const char* fragmentShader,
-        const char* uni1,
-        const char* at1,
-        const char* at2,
+        const std::vector<const char*>& uniforms,
+        const std::vector<Window::VertexAttrib>& attributes,
         size_t verticeSize,
         int numVertex
     ) {
@@ -75,18 +76,22 @@ namespace MTRD {
         window_.openglGenerateVertexShaders(vertexShader);
         window_.openglGenerateFragmentShaders(fragmentShader);
         window_.openglCreateProgram();
-        window_.openglSet3AtribLocations(uni1, at1, at2);
-        window_.openglVertexConfig(verticeSize);
+
+        window_.openglSetAttributesAndUniforms(uniforms, attributes, verticeSize);
     }
 
 
-    void MotardaEng::windowOpenglViewportAndClear() {
+    void MotardaEng::windowInitFrame() {
         window_.openglViewportAndClear();
     }
 
 
     void MotardaEng::windowOpenglProgramUniformDraw(const GLfloat* mvp, int ammountPoints) {
         window_.openglProgramUniformDraw(mvp, ammountPoints);
+    }
+
+    void MotardaEng::windowSetDebugMode(bool b) {
+        window_.setDebugMode(b);
     }
 
 
@@ -97,5 +102,15 @@ namespace MTRD {
 
     bool MotardaEng::inputIsKeyPressed(Input::Keyboard key) {
         return input_.isKeyPressed(key);
+    }
+
+
+    bool MotardaEng::inputIsKeyDown(Input::Keyboard key) {
+        return input_.isKeyDown(key);
+    }
+
+
+    bool MotardaEng::inputIsKeyUp(Input::Keyboard key) {
+        return input_.isKeyUp(key);
     }
 }

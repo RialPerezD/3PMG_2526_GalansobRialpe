@@ -58,6 +58,8 @@ workspace "MotArda"
 	cppdialect "c++20"
 	startproject "Window"
 
+	includedirs {"include", "deps/**/include/"}
+
 	filter "configurations:Debug"
 		defines { "DEBUG" }
 		symbols "On"
@@ -76,10 +78,10 @@ workspace "MotArda"
 
 	filter {}
 
+
 	project "MotArda"
 		kind "StaticLib"
 		targetdir "build/%{cfg.buildcfg}"
-		includedirs "include"
 		conan_config_lib()
 		--pchheader "stdafx.hpp"
 		--pchsource "src/stdafx.cpp"
@@ -92,10 +94,13 @@ workspace "MotArda"
 			"src/Window.cpp", "include/MotArda/Window.hpp",
 			"src/Engine.cpp", "include/MotArda/Engine.hpp",
 			"src/Input.cpp", "include/MotArda/Input.hpp",
+			"src/ObjLoader.cpp", "include/MotArda/ObjLoader.hpp",
+			"src/JobSystem.cpp", "include/MotArda/JobSystem.hpp",
+			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h"
 			}
 
 	project "WindowExample"
-		kind "WindowedApp"
+		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
 		includedirs "include"
@@ -107,7 +112,7 @@ workspace "MotArda"
 		files "examples/window.cpp"
 
 	project "TriangleExample"
-		kind "WindowedApp"
+		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
 		includedirs "include"
@@ -119,7 +124,7 @@ workspace "MotArda"
 		files "examples/triangle.cpp"
 
 	project "MovingTriangleExample"
-		kind "WindowedApp"
+		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
 		includedirs "include"
@@ -129,4 +134,16 @@ workspace "MotArda"
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
 		files "examples/movTriangle.cpp"
+
+	project "ObjLoader"
+		kind "ConsoleApp"
+		language "C++"
+		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
+		includedirs "include"
+		links "MotArda"
+		conan_config_exec("Debug")
+		conan_config_exec("Release")
+		conan_config_exec("RelWithDebInfo")
+		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
+		files "examples/loadObj.cpp"
 

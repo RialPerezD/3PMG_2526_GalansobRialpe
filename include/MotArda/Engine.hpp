@@ -3,6 +3,7 @@
 #include <optional>
 #include "Window.hpp"
 #include "Input.hpp"
+#include "JobSystem.hpp"
 
 namespace MTRD {
 
@@ -28,17 +29,19 @@ namespace MTRD {
 			const void* vertexBuffer,
 			const char* vertexShader,
 			const char* fragmentShader,
-			const char* uni1,
-			const char* at1,
-			const char* at2,
+			const std::vector<const char*>& uniforms,
+			const std::vector<Window::VertexAttrib>& attributes,
 			size_t verticeSize,
 			int numVertex
 		);
-		void windowOpenglViewportAndClear();
+		void windowInitFrame();
 		void windowOpenglProgramUniformDraw(const GLfloat* mvp, int ammountPoints);
+		void windowSetDebugMode(bool b);
 		void close();
 
 		bool inputIsKeyPressed(Input::Keyboard key);
+		bool inputIsKeyDown(Input::Keyboard key);
+		bool inputIsKeyUp(Input::Keyboard key);
 
 		static std::optional<MotardaEng> createEngine(
 			int width = 800,
@@ -46,8 +49,9 @@ namespace MTRD {
 			const char* windowName = "Motarda default name");
 
 	private:
-		MotardaEng(Window& window, Input& input);
+		MotardaEng(Window window, Input input, JobSystem js);
 		Window window_;
 		Input input_;
+		JobSystem jobSystem_;
 	};
 }

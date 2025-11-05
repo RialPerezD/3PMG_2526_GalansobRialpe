@@ -5,96 +5,93 @@
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
 
-//Ref: https://www.glfw.org/docs/3.3/quick.html#quick_example
 //-------Triangle example data-----------------
 const int ammountPoints = 3;
-static const struct
-{
+struct Vertex {
     float x, y;
     float r, g, b;
-} vertex[ammountPoints] =
+};
+
+Vertex vertex[ammountPoints] =
 {
     { -0.6f, -0.4f, 1.f, 0.f, 0.f },
     {  0.6f, -0.4f, 0.f, 1.f, 0.f },
-    {   0.f,  0.6f, 0.f, 0.f, 1.f }
+    {  0.f,  0.6f, 0.f, 0.f, 1.f }
 };
 
 static const char* vertex_shader_text =
-    "#version 110\n"
-    "uniform mat4 MVP;\n"
-    "attribute vec3 vCol;\n"
-    "attribute vec2 vPos;\n"
-    "varying vec3 color;\n"
-    "void main()\n"
-    "{\n"
-    "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-    "    color = vCol;\n"
-    "}\n";
+"#version 460 core\n"
+"uniform mat4 MVP;\n"
+"in vec2 vPos;\n"
+"in vec3 vCol;\n"
+"out vec3 color;\n"
+"void main() {\n"
+"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
+"    color = vCol;\n"
+"}\n";
 
 static const char* fragment_shader_text =
-    "#version 110\n"
-    "varying vec3 color;\n"
-    "void main()\n"
-    "{\n"
-    "    gl_FragColor = vec4(color, 1.0);\n"
-    "}\n";
+"#version 460 core\n"
+"in vec3 color;\n"
+"out vec4 outColor;\n"
+"void main() {\n"
+"    outColor = vec4(color, 1.0);\n"
+"}\n";
+
 //---------------------------------------------
 //-------Triangle example functions------------
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Glfw error: %s\n", description);
 }
-
 //---------------------------------------------
-
 
 int MTRD::main() {
 
-	// Create a blank window
-	auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda triangle");
+    auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda triangle");
+    if (!maybeEng.has_value()) return 1;
 
-	// Check if not null
-    if (maybeEng.has_value()) {
-        auto& eng = maybeEng.value();
+    auto& eng = maybeEng.value();
 
-        eng.windowSetErrorCallback(error_callback);
-        eng.windowCreateContext();
+    eng.windowSetDebugMode(true);
+    eng.windowSetErrorCallback(error_callback);
+    eng.windowCreateContext();
+    eng.windowSetSwapInterval();
 
-        //this is default set to 1
-        eng.windowSetSwapInterval();
+    // --- Vectores de uniforms y atributos ---
+    std::vector<const char*> uniforms = { "MVP" };
+    std::vector<Window::VertexAttrib> attributes = {
+        { "vPos", 2, offsetof(Vertex, x) },
+        { "vCol", 3, offsetof(Vertex, r) }
+    };
 
-        //opengl functions
-        eng.windowOpenglSetup(
-            vertex,
-            vertex_shader_text,
-            fragment_shader_text,
-            "MVP",
-            "vPos",
-            "vCol",
-            sizeof(vertex[0]),
-            ammountPoints
-        );
+    eng.windowOpenglSetup(
+        vertex,
+        vertex_shader_text,
+        fragment_shader_text,
+        uniforms,
+        attributes,
+        sizeof(Vertex),
+        ammountPoints
+    );
 
+    glm::mat4x4 m, p, mvp;
+    float ratio = eng.windowGetSizeRatio();
 
-        glm::mat4x4 m, p, mvp;
-        float ratio = eng.windowGetSizeRatio();
+    while (!eng.windowShouldClose()) {
 
-        while (!eng.windowShouldClose()) {
+        eng.windowInitFrame();
 
-            eng.windowOpenglViewportAndClear();
+        m = glm::mat4(1.f);
+        m = glm::rotate(m, (float)eng.windowGetTimer(), glm::vec3(0.f, 0.f, 1.f));
+        p = glm::ortho(-ratio, ratio, -1.f, 1.f, -1.f, 1.f);
+        mvp = p * m;
 
-            m = glm::mat4(1.0f);
-            m = glm::rotate(m, (float)eng.windowGetTimer(), glm::vec3(0.0f, 0.0f, 1.0f));
-            p = glm::ortho(-ratio, ratio, -1.0f, 1.0f, -1.0f, 1.0f);
-            mvp = p * m;
+        // MVP es el primer uniform del vector
+        eng.windowOpenglProgramUniformDraw(glm::value_ptr(mvp), ammountPoints);
 
-            eng.windowOpenglProgramUniformDraw(glm::value_ptr(mvp), ammountPoints);
-
-            eng.windowEndFrame();
-        }
-
-        return 0;
+        eng.windowEndFrame();
     }
 
-    return 1;
+    return 0;
 }
