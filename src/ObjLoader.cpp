@@ -3,8 +3,8 @@
 #include <sstream>
 #include <iostream>
 #include "../deps/glm-master/glm/glm.hpp"
-#include "../deps/tinyobjloader-release/tiny_obj_loader.h"
-#include "../deps/tinyobjloader-release/tiny_obj_loader.cc"
+#include "../deps/tiny_obj_loader.h"
+#include "../deps/tiny_obj_loader.cc"
 
 namespace MTRD {
 
@@ -35,6 +35,8 @@ namespace MTRD {
 			material.specular = glm::vec3(mat.specular[0], mat.specular[1], mat.specular[2]);
 			material.ambient = glm::vec3(mat.ambient[0], mat.ambient[1], mat.ambient[2]);
 			material.shininess = mat.shininess;
+			material.diffuseTexPath = mat.diffuse_texname;
+			material.diffuseTexID = 0;
 			objLoader.materials.push_back(material);
 		}
 

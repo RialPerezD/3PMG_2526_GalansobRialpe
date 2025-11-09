@@ -3,12 +3,16 @@
 #include <memory>
 #include <vector>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../deps/stb_image.h" 
+
 //Need this include to use WinMain
 #include <windows.h>
 #include <iostream>
 
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
+#include <algorithm>
 
 
 GLenum glCheckError_(const char* file, int line)
@@ -78,9 +82,9 @@ void APIENTRY glDebugOutput(GLenum source,
     case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "Severity: notification"; break;
     } std::cout << std::endl;
     std::cout << std::endl;
-
-
 }
+
+
 namespace MTRD {
 
     //Add more variables in body on future
@@ -96,6 +100,7 @@ namespace MTRD {
             }
         }
     }
+
 
     // Must be defined here as Data is not defined in the header
     Window::Window(Window&& right) = default;
@@ -135,10 +140,6 @@ namespace MTRD {
     }
 
 
-
-
-
-
     bool Window::shouldClose() {
         return glfwWindowShouldClose(data->glfw_window);
     }
@@ -167,6 +168,7 @@ namespace MTRD {
         }
         
     }
+
 
     double Window::timer() {
         return glfwGetTime();
@@ -288,6 +290,7 @@ namespace MTRD {
         }
     }
 
+
     void Window::openglSetUniformsLocationsAndAtributtes(
         std::vector<Window::UniformAttrib>& uniforms,
         const std::vector<VertexAttrib>& attributes,
@@ -356,28 +359,82 @@ namespace MTRD {
     }
 
 
-    void Window::openglProgramUniformDraw(int ammountPoints) {
-        glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, ammountPoints);
+    void Window::openglProgramUniformDraw(std::vector<ObjItem> objItemsList) {
+        for (ObjItem item : objItemsList) {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, item.materials[0].diffuseTexID);
+            auto loc = glGetUniformLocation(program, "diffuseTexture");
+            glUniform1i(loc, 0);
 
-        if (debug_) {
-            glCheckError();
+            glBindVertexArray(vao);
+            glDrawArrays(GL_TRIANGLES, 0, item.vertex.size());
+
+            if (debug_) {
+                glCheckError();
+            }
         }
+    }
 
+
+    void Window::openglLoadMaterials(std::vector<Material> materials) {
+        std::unordered_map<std::string, GLuint> textureCache;
+
+        for (auto& mat : materials) {
+            if (!mat.diffuseTexPath.empty()) {
+                
+                std::string route = mat.diffuseTexPath;
+
+                std::replace(route.begin(), route.end(), '\\', '/');
+                size_t pos = 0;
+                while ((pos = route.find("//", pos)) != std::string::npos) {
+                    route.replace(pos, 2, "/");
+                    pos += 1;
+                }
+
+                route = "../assets/" + route;
+
+                std::string key(route);
+                if (textureCache.find(key) != textureCache.end()) {
+                    mat.diffuseTexID = textureCache[key];
+                    continue;
+                }
+
+                GLuint tex = -1;
+                glGenTextures(1, &tex);
+                glBindTexture(GL_TEXTURE_2D, tex);
+
+                // Configuracion basica de la textura
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+                int width, height, channels;
+                stbi_set_flip_vertically_on_load(true); // Invierte verticalmente para OpenGL
+                unsigned char* data = stbi_load(route.c_str(), &width, &height, &channels, 0);
+
+                if (!data) {
+                    std::cerr << "Error cargando textura: " << route << std::endl;
+                    mat.diffuseTexID = -1; // -1 significa sin textura
+                    continue;
+                }
+
+                GLenum format = (channels == 4) ? GL_RGBA : GL_RGB;
+                glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+                glGenerateMipmap(GL_TEXTURE_2D);
+
+                stbi_image_free(data);
+
+                textureCache[key] = tex; // Guardamos la textura en la cache
+                mat.diffuseTexID = tex;
+                continue;
+            }
+        }
     }
 }
 
 
-/* Entry point for window, parameters are:
-*
-* -hInstance: handle (ID) for a program when it runs. The operating system uses it to know which EXE is in memory. Some Windows functions need it, like when loading icons or images.
-* -hPrevInstance: has no meaning. It was used in 16-bit Windows, but is now always zero.
-* -pCmdLine: contains the command-line arguments as a Unicode string.
-* -nCmdShow: a flag that indicates whether the main application window is minimized, maximized, or shown normally.
-*
-* The function returns an int value. The operating system doesn't use the return value, but you can use the value to pass a status code to another program.
-*/
-// int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PSTR lpCmdLine, _In_ int nCmdShow)
+// Entry point for window:
 int main()
 {
     // Initializes the GLFW library and prepares it for use.

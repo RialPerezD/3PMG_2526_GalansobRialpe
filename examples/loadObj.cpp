@@ -6,64 +6,12 @@
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
 
-// Shader example
-static const char* vertex_shader_text =
-"#version 460 core\n"
-"uniform mat4 MVP;\n"
-"uniform vec3 DIFFUSE;\n"
-"uniform vec3 SPECULAR;\n"
-"uniform vec3 AMBIENT;\n"
-"in vec3 position;\n"
-"in vec3 normal;\n"
-"out vec3 fragNormal;\n"
-"out vec3 fragPosition;\n"
-"out vec3 fragColor;\n"
-"void main() {\n"
-"    gl_Position = MVP * vec4(position, 1.0);\n"
-"    fragNormal = normalize(normal);\n"
-"    fragPosition = position;\n"
-"}\n";
 
-
-static const char* fragment_shader_text =
-"#version 460 core\n"
-"uniform vec3 DIFFUSE;\n"
-"uniform vec3 SPECULAR;\n"
-"uniform vec3 AMBIENT;\n"
-"in vec3 fragNormal;\n"
-"in vec3 fragPosition;\n"
-"out vec4 fragColor;\n"
-"void main() {\n"
-"    // Luz direccional (fija, hacia abajo en el eje Y)\n"
-"    vec3 lightDir = normalize(vec3(0.0, -1.0, 0.0));  // Direccion de la luz\n"
-"    // Cámara fija (en el eje Z)\n"
-"    vec3 viewDir = normalize(vec3(0.0, 0.0, 5.0) - fragPosition);  // Dirección de la camara\n"
-"    vec3 reflectDir = reflect(-lightDir, fragNormal);  // Direccion de la reflexión de la luz\n"
-"\n"
-"    // Componente ambiental (constantemente iluminado por una luz ambiental)\n"
-"    vec3 ambient = AMBIENT;\n"
-"\n"
-"    // Componente difusa (Lambertian)\n"
-"    float diff = max(dot(fragNormal, lightDir), 0.0);\n"
-"    vec3 diffuse = DIFFUSE * diff;\n"
-"\n"
-"    // Componente especular (Phong)\n"
-"    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);  // Exponente: 32\n"
-"    vec3 specular = SPECULAR * spec;\n"
-"\n"
-"    // Combinar los componentes de iluminación\n"
-"    vec3 color = ambient + diffuse + specular;\n"
-"\n"
-"    // El color final del fragmento\n"
-"    fragColor = vec4(fragPosition, 1.0);\n"
-"}\n";
-
-
-// Error callback...
-static void error_callback(int error, const char* description)
-{
+// Error callback from engine fail...
+static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
 }
+
 
 int MTRD::main() {
 
@@ -74,54 +22,56 @@ int MTRD::main() {
 
     eng.windowSetDebugMode(true);
 
-    auto maybeObjLoader = ObjLoader::loadObj(
-        "../assets/indoor_plant_02.obj",
-        "../assets/"
-    );
-
-    if (!maybeObjLoader.has_value()) return 1;
-
-    ObjLoader objLoader = maybeObjLoader.value();
-    std::vector<Vertex> vertex = objLoader.getVertices();
-    std::vector<Material> materials = objLoader.getMaterials();
-    const void* vertexBuffer = static_cast<const void*>(vertex.data());
-
     eng.windowSetDebugMode(true);
     eng.windowSetErrorCallback(error_callback);
     eng.windowCreateContext();
     eng.windowSetSwapInterval();
 
+    // --- Cargar objs ---
+    std::vector <const char*> objsRoutes = {
+        "../assets/indoor_plant_02.obj"
+    };
+
+    std::vector<MTRD::Window::ObjItem> objItemList = eng.loadObjs(objsRoutes);
+
+    if (objItemList.size() == 0) return 1;
+    const void* vertexBuffer = static_cast<const void*>(objItemList[0].vertex.data());
+
     // --- Vectores de uniforms y atributos ---
-    std::vector<Window::UniformAttrib> uniforms = { 
+    std::vector<Window::UniformAttrib> uniforms = {
         {"MVP", -1, Window::UniformTypes::Mat4, nullptr},
+        {"model", -1, Window::UniformTypes::Mat4, nullptr},
         {"DIFFUSE", -1, Window::UniformTypes::Vec3, nullptr},
         {"SPECULAR", -1, Window::UniformTypes::Vec3, nullptr},
         {"AMBIENT", -1, Window::UniformTypes::Vec3, nullptr}
     };
-    
+
     std::vector<Window::VertexAttrib> attributes = {
         { "position", 3, offsetof(Vertex, position) }, // glm::vec3 -> 3 floats
         { "uv", 2, offsetof(Vertex, uv) },             // glm::vec2 -> 2 floats
         { "normal", 3, offsetof(Vertex, normal) }      // glm::vec3 -> 3 floats
     };
 
+    const char* vertex_shader = eng.loadShaderFile("../assets/shaders/textured_obj_vertex.txt");
+    const char* fragment_shader = eng.loadShaderFile("../assets/shaders/textured_obj_fragment.txt");
 
     eng.windowOpenglSetup(
         vertexBuffer,
-        vertex_shader_text,
-        fragment_shader_text,
+        vertex_shader,
+        fragment_shader,
         uniforms,
         attributes,
         sizeof(Vertex),
-        vertex.size()
+        objItemList[0].vertex.size()
     );
 
-    glm::mat4x4 m, p, mvp;
+    glm::mat4x4 v, p, mvp, model;
 
     uniforms[0].values = glm::value_ptr(mvp);
-    uniforms[1].values = glm::value_ptr(materials[0].diffuse);
-    uniforms[2].values = glm::value_ptr(materials[0].specular);
-    uniforms[3].values = glm::value_ptr(materials[0].ambient);
+    uniforms[1].values = glm::value_ptr(model);
+    uniforms[2].values = glm::value_ptr(objItemList[0].materials[0].diffuse);
+    uniforms[3].values = glm::value_ptr(objItemList[0].materials[0].specular);
+    uniforms[4].values = glm::value_ptr(objItemList[0].materials[0].ambient);
 
     float ratio = eng.windowGetSizeRatio();
 
@@ -130,10 +80,21 @@ int MTRD::main() {
     float rotSpeed = 0.01f, rotationAngle = 0.f;
     float scaSpeed = 0.01f, scale = 0.25f;
 
+    // Camara
+    glm::vec3 camPos = glm::vec3(0.f, 0.f, 5.f); // posicion inicial
+    glm::vec3 camTarget = glm::vec3(0.f, 0.f, 0.f);
+    glm::vec3 camUp = glm::vec3(0.f, 1.f, 0.f);
+
+    // Proyeccion
+    float fov = glm::radians(45.f);
+    float near = 0.1f;
+    float far = 100.f;
+
     while (!eng.windowShouldClose()) {
 
         eng.windowInitFrame();
 
+        // --- Input del modelo ---
         if (eng.inputIsKeyPressed(Input::Keyboard::D)) xPos += movSpeed;
         else if (eng.inputIsKeyPressed(Input::Keyboard::A)) xPos -= movSpeed;
 
@@ -146,18 +107,19 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::Z)) scale -= scaSpeed;
         else if (eng.inputIsKeyPressed(Input::Keyboard::X)) scale += scaSpeed;
 
-        if (eng.inputIsKeyDown(Input::Keyboard::F)) rotationAngle -= rotSpeed * 100;
-        else if (eng.inputIsKeyUp(Input::Keyboard::F)) rotationAngle += rotSpeed * 100;
+        // --- Modelo ---
+        model = glm::mat4(1.f);
+        model = glm::translate(model, { xPos, yPos, 0.f });
+        model = glm::rotate(model, rotationAngle, glm::vec3(0.f, 1.f, 0.f));
+        model = glm::scale(model, { scale, scale, scale });
 
-        m = glm::mat4(1.f);
-        m = glm::scale(m, { scale, scale, scale });
-        m = glm::translate(m, { xPos, yPos, 0.f });
-        m = glm::rotate(m, rotationAngle, glm::vec3(0.f, 1.f, 0.f));
-        p = glm::ortho(-ratio, ratio, -1.f, 1.f, -1.f, 1.f);
-        mvp = p * m;
+        v = glm::lookAt(camPos, camTarget, camUp);
+        p = glm::perspective(fov, ratio, near, far);
+        mvp = p * v * model;
 
+        // Dibujar objetos
         eng.windowOpenglSetUniformsValues(uniforms);
-        eng.windowOpenglProgramUniformDraw(vertex.size());
+        eng.windowOpenglProgramUniformDraw(objItemList);
 
         eng.windowEndFrame();
     }

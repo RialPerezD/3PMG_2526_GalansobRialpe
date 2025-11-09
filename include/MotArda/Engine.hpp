@@ -4,6 +4,7 @@
 #include "Window.hpp"
 #include "Input.hpp"
 #include "JobSystem.hpp"
+#include "ObjLoader.hpp"
 
 namespace MTRD {
 
@@ -36,13 +37,18 @@ namespace MTRD {
 		);
 		void windowInitFrame();
 		void windowOpenglSetUniformsValues(std::vector<Window::UniformAttrib> uniforms);
-		void windowOpenglProgramUniformDraw(int ammountPoints);
+		void windowOpenglProgramUniformDraw(std::vector<MTRD::Window::ObjItem> objItemsList);
 		void windowSetDebugMode(bool b);
+		void windowLoadMaterials(std::vector<Material> materials);
 		void close();
 
 		bool inputIsKeyPressed(Input::Keyboard key);
 		bool inputIsKeyDown(Input::Keyboard key);
 		bool inputIsKeyUp(Input::Keyboard key);
+
+		std::vector<MTRD::Window::ObjItem> loadObjs(std::vector <const char*> routes);
+		const char* loadShaderFile(const char* filename);
+
 
 		static std::optional<MotardaEng> createEngine(
 			int width = 800,

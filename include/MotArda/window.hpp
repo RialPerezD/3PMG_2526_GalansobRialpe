@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include "glad/glad.h"
+#include "ObjLoader.hpp"
 
 namespace MTRD {
     int main();
@@ -49,6 +50,11 @@ namespace MTRD {
             float* values;
         };
 
+        struct ObjItem {
+            std::vector<Vertex> vertex;
+            std::vector<Material> materials;
+        };
+
         //------------Functions-----------------------
         bool shouldClose();
         void setDebugMode(bool b);
@@ -74,7 +80,9 @@ namespace MTRD {
 
         void openglViewportAndClear();
         void openglSetUniformsValues(const std::vector<Window::UniformAttrib>& uniforms);
-        void openglProgramUniformDraw(int ammountPoints);
+        void openglProgramUniformDraw(std::vector<MTRD::Window::ObjItem> objItemsList);
+        void openglLoadMaterials(std::vector<Material> materials);
+
 
     private:
         std::unique_ptr<Data> data;

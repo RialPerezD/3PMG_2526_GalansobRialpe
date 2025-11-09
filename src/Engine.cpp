@@ -1,6 +1,10 @@
 
 #include "Motarda/Engine.hpp"
 #include <memory>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <iostream>
 #include "MotArda/window.hpp"
 
 namespace MTRD {
@@ -91,12 +95,18 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowOpenglProgramUniformDraw(int ammountPoints) {
-        window_.openglProgramUniformDraw(ammountPoints);
+    void MotardaEng::windowOpenglProgramUniformDraw(std::vector<MTRD::Window::ObjItem> objItemsList) {
+        window_.openglProgramUniformDraw(objItemsList);
     }
+
 
     void MotardaEng::windowSetDebugMode(bool b) {
         window_.setDebugMode(b);
+    }
+
+
+    void MotardaEng::windowLoadMaterials(std::vector<Material> materials) {
+        window_.openglLoadMaterials(materials);
     }
 
 
@@ -117,5 +127,47 @@ namespace MTRD {
 
     bool MotardaEng::inputIsKeyUp(Input::Keyboard key) {
         return input_.isKeyUp(key);
+    }
+
+
+    std::vector<MTRD::Window::ObjItem> MotardaEng::loadObjs(std::vector<const char*> routes){
+        std::vector<MTRD::Window::ObjItem> objItemsList = {};
+
+        for (const char* route : routes) {
+            auto maybeObjLoader = ObjLoader::loadObj(
+                route,
+                "../assets/"
+            );
+
+            if (!maybeObjLoader.has_value()) continue;
+
+            ObjLoader objLoader = maybeObjLoader.value();
+            MTRD::Window::ObjItem item;
+
+            item.vertex = objLoader.getVertices();
+
+            item.materials = objLoader.getMaterials();
+            windowLoadMaterials(item.materials);
+
+            objItemsList.push_back(std::move(item));
+        }
+
+        return objItemsList;
+    }
+
+
+    const char* MotardaEng::loadShaderFile(const char* filename) {
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            std::cerr << "Error: no se pudo abrir el archivo " << filename << std::endl;
+            return nullptr;
+        }
+
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+
+        std::string* shaderSource = new std::string(buffer.str());
+
+        return shaderSource->c_str();
     }
 }

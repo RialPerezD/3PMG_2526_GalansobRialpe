@@ -3,6 +3,7 @@
 #include <optional>
 #include <vector>
 #include <string>
+#include "glad/glad.h"
 #include "../deps/glm-master/glm/glm.hpp"
 
 namespace MTRD {
@@ -19,6 +20,9 @@ namespace MTRD {
 		glm::vec3 specular;
 		glm::vec3 ambient;
 		float shininess;
+
+		std::string diffuseTexPath;
+		GLuint diffuseTexID;
 	};
 
 	class ObjLoader {

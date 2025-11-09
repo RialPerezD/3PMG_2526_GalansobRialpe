@@ -19,32 +19,14 @@ Vertex vertex[ammountPoints] =
     {  0.f,  0.6f, 0.f, 0.f, 1.f }
 };
 
-static const char* vertex_shader_text =
-"#version 460 core\n"
-"uniform mat4 MVP;\n"
-"in vec2 vPos;\n"
-"in vec3 vCol;\n"
-"out vec3 color;\n"
-"void main() {\n"
-"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-"    color = vCol;\n"
-"}\n";
-
-static const char* fragment_shader_text =
-"#version 460 core\n"
-"in vec3 color;\n"
-"out vec4 outColor;\n"
-"void main() {\n"
-"    outColor = vec4(color, 1.0);\n"
-"}\n";
-
 //---------------------------------------------
-//-------Triangle example functions------------
+
+
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Glfw error: %s\n", description);
 }
-//---------------------------------------------
+
 
 int MTRD::main() {
 
@@ -59,16 +41,22 @@ int MTRD::main() {
     eng.windowSetSwapInterval();
 
     // --- Vectores de uniforms y atributos ---
-    std::vector<const char*> uniforms = { "MVP" };
+    std::vector<Window::UniformAttrib> uniforms = {
+        {"MVP", -1, Window::UniformTypes::Mat4, nullptr}
+    };
+
     std::vector<Window::VertexAttrib> attributes = {
         { "vPos", 2, offsetof(Vertex, x) },
         { "vCol", 3, offsetof(Vertex, r) }
     };
 
+    const char* vertex_shader = eng.loadShaderFile("../assets/shaders/triangle_vertex.txt");
+    const char* fragment_shader = eng.loadShaderFile("../assets/shaders/triangle_fragment.txt");
+
     eng.windowOpenglSetup(
         vertex,
-        vertex_shader_text,
-        fragment_shader_text,
+        vertex_shader,
+        fragment_shader,
         uniforms,
         attributes,
         sizeof(Vertex),
@@ -76,6 +64,8 @@ int MTRD::main() {
     );
 
     glm::mat4x4 m, p, mvp;
+    uniforms[0].values = glm::value_ptr(mvp);
+
     float ratio = eng.windowGetSizeRatio();
 
     while (!eng.windowShouldClose()) {
@@ -87,8 +77,9 @@ int MTRD::main() {
         p = glm::ortho(-ratio, ratio, -1.f, 1.f, -1.f, 1.f);
         mvp = p * m;
 
-        // MVP es el primer uniform del vector
-        eng.windowOpenglProgramUniformDraw(glm::value_ptr(mvp), ammountPoints);
+
+        eng.windowOpenglSetUniformsValues(uniforms);
+        eng.windowOpenglProgramUniformDraw(ammountPoints);
 
         eng.windowEndFrame();
     }
