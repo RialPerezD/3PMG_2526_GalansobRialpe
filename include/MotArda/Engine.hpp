@@ -39,12 +39,14 @@ namespace MTRD {
 		void windowOpenglSetUniformsValues(std::vector<Window::UniformAttrib> uniforms);
 		void windowOpenglProgramUniformDraw(std::vector<MTRD::Window::ObjItem> objItemsList);
 		void windowSetDebugMode(bool b);
-		void windowLoadMaterials(std::vector<Material> materials);
+		void windowLoadAllMaterials(std::vector<MTRD::Window::ObjItem>& objItemsList);
 		void close();
 
 		bool inputIsKeyPressed(Input::Keyboard key);
 		bool inputIsKeyDown(Input::Keyboard key);
 		bool inputIsKeyUp(Input::Keyboard key);
+
+		void enqueueTask(std::function<void()> task);
 
 		std::vector<MTRD::Window::ObjItem> loadObjs(std::vector <const char*> routes);
 		const char* loadShaderFile(const char* filename);
@@ -60,5 +62,7 @@ namespace MTRD {
 		Window window_;
 		Input input_;
 		JobSystem jobSystem_;
+		
+		void windowLoadMaterials(std::vector<Material>& materials);
 	};
 }

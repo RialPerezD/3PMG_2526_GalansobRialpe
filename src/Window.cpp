@@ -284,6 +284,10 @@ namespace MTRD {
         }
 
         glUseProgram(program);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        //glFrontFace(GL_CW);
 
         if (debug_) {
             glCheckError();
@@ -318,7 +322,7 @@ namespace MTRD {
 
     void Window::openglViewportAndClear() {
         glViewport(0, 0, windowWidth_, windowHeight_);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (debug_) {
             glCheckError();
@@ -361,6 +365,9 @@ namespace MTRD {
 
     void Window::openglProgramUniformDraw(std::vector<ObjItem> objItemsList) {
         for (ObjItem item : objItemsList) {
+
+            if (item.materials[0].diffuseTexID == -1) return;
+
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, item.materials[0].diffuseTexID);
             auto loc = glGetUniformLocation(program, "diffuseTexture");
@@ -376,7 +383,7 @@ namespace MTRD {
     }
 
 
-    void Window::openglLoadMaterials(std::vector<Material> materials) {
+    void Window::openglLoadMaterials(std::vector<Material>& materials) {
         std::unordered_map<std::string, GLuint> textureCache;
 
         for (auto& mat : materials) {

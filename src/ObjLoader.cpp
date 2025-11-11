@@ -36,7 +36,7 @@ namespace MTRD {
 			material.ambient = glm::vec3(mat.ambient[0], mat.ambient[1], mat.ambient[2]);
 			material.shininess = mat.shininess;
 			material.diffuseTexPath = mat.diffuse_texname;
-			material.diffuseTexID = 0;
+			material.diffuseTexID = -1;
 			objLoader.materials.push_back(material);
 		}
 

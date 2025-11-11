@@ -29,10 +29,25 @@ int MTRD::main() {
 
     // --- Cargar objs ---
     std::vector <const char*> objsRoutes = {
-        "../assets/indoor_plant_02.obj"
+        "../assets/12140_Skull_v3_L2.obj"
     };
 
-    std::vector<MTRD::Window::ObjItem> objItemList = eng.loadObjs(objsRoutes);
+    std::atomic<bool> objsLoaded = false;
+    std::vector<MTRD::Window::ObjItem> objItemList;
+
+    eng.enqueueTask([&]() {
+        objItemList = eng.loadObjs(objsRoutes);
+        objsLoaded = true;
+        }
+    );
+
+    while (!objsLoaded) {
+        eng.windowInitFrame();
+        printf("Cargando maya...\n");
+        eng.windowEndFrame();
+    }
+
+    eng.windowLoadAllMaterials(objItemList);
 
     if (objItemList.size() == 0) return 1;
     const void* vertexBuffer = static_cast<const void*>(objItemList[0].vertex.data());
@@ -78,7 +93,7 @@ int MTRD::main() {
     float movSpeed = 0.01f;
     float xPos = 0, yPos = -1;
     float rotSpeed = 0.01f, rotationAngle = 0.f;
-    float scaSpeed = 0.01f, scale = 0.25f;
+    float scaSpeed = 0.01f, scale = 0.05f;
 
     // Camara
     glm::vec3 camPos = glm::vec3(0.f, 0.f, 5.f); // posicion inicial
@@ -111,6 +126,7 @@ int MTRD::main() {
         model = glm::mat4(1.f);
         model = glm::translate(model, { xPos, yPos, 0.f });
         model = glm::rotate(model, rotationAngle, glm::vec3(0.f, 1.f, 0.f));
+        model = glm::rotate(model, -90.f, glm::vec3(1.f, 0.f, 0.f));
         model = glm::scale(model, { scale, scale, scale });
 
         v = glm::lookAt(camPos, camTarget, camUp);

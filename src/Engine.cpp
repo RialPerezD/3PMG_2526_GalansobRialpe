@@ -105,7 +105,14 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowLoadMaterials(std::vector<Material> materials) {
+    void MotardaEng::windowLoadAllMaterials(std::vector<MTRD::Window::ObjItem>& objItemsList){
+        for (MTRD::Window::ObjItem& item : objItemsList) {
+            windowLoadMaterials(item.materials);
+        }
+    }
+
+
+    void MotardaEng::windowLoadMaterials(std::vector<Material>& materials) {
         window_.openglLoadMaterials(materials);
     }
 
@@ -130,6 +137,11 @@ namespace MTRD {
     }
 
 
+    void MotardaEng::enqueueTask(std::function<void()> task){
+        jobSystem_.enqueue(task);
+    }
+
+
     std::vector<MTRD::Window::ObjItem> MotardaEng::loadObjs(std::vector<const char*> routes){
         std::vector<MTRD::Window::ObjItem> objItemsList = {};
 
@@ -145,9 +157,7 @@ namespace MTRD {
             MTRD::Window::ObjItem item;
 
             item.vertex = objLoader.getVertices();
-
             item.materials = objLoader.getMaterials();
-            windowLoadMaterials(item.materials);
 
             objItemsList.push_back(std::move(item));
         }
