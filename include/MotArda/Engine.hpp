@@ -48,7 +48,7 @@ namespace MTRD {
 
 		std::vector<MTRD::Window::ObjItem> loadObjs(std::vector <const char*> routes);
 		const char* loadShaderFile(const char* filename);
-		void generateVertexBuffers(std::vector<MTRD::Window::ObjItem> objItemList);
+		void updateVertexBuffers(std::vector<MTRD::Window::ObjItem> objItemList);
 
 		static std::optional<MotardaEng> createEngine(
 			int width = 800,
