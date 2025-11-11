@@ -1,5 +1,6 @@
 #include "MotArda/ObjLoader.hpp"
 #include <fstream>
+#include <filesystem>
 #include <sstream>
 #include <iostream>
 #include "../deps/glm-master/glm/glm.hpp"
@@ -9,13 +10,17 @@
 namespace MTRD {
 
 	std::optional<ObjLoader> ObjLoader::loadObj(
-		const std::string& filepath,
-		const std::string& mtlpath) {
+		const std::string& filepath) {
 		tinyobj::ObjReader reader;
-		tinyobj::ObjReaderConfig reader_config;
-		reader_config.mtl_search_path = mtlpath;
 
-		if (!reader.ParseFromFile(filepath, reader_config)) {
+		std::string sourcePath = "../assets/";
+
+		//Obj path
+		std::filesystem::path filePathObj(filepath);
+		std::string filenameNoExt = filePathObj.stem().string();
+		std::string objPath = sourcePath+"objs/"+filenameNoExt+"/"+filepath;
+
+		if (!reader.ParseFromFile(objPath)) {
 			std::cerr << "Error al cargar el archivo .obj: " << filepath << std::endl;
 			return std::nullopt;
 		}
@@ -29,13 +34,20 @@ namespace MTRD {
 		ObjLoader objLoader;
 
 		for (const auto& mat : materials) {
+
+			if (mat.diffuse_texname.length() == 0) continue;
+
 			Material material;
 			material.name = mat.name;
 			material.diffuse = glm::vec3(mat.diffuse[0], mat.diffuse[1], mat.diffuse[2]);
 			material.specular = glm::vec3(mat.specular[0], mat.specular[1], mat.specular[2]);
 			material.ambient = glm::vec3(mat.ambient[0], mat.ambient[1], mat.ambient[2]);
 			material.shininess = mat.shininess;
-			material.diffuseTexPath = mat.diffuse_texname;
+
+			std::filesystem::path p(mat.diffuse_texname);
+			std::string texturePath = sourcePath + "textures/" + filenameNoExt + "/" + p.filename().string();
+			material.diffuseTexPath = texturePath;
+
 			material.diffuseTexID = -1;
 			objLoader.materials.push_back(material);
 		}

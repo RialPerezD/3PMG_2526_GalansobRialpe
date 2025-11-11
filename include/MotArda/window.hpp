@@ -68,14 +68,13 @@ namespace MTRD {
         void setKeyCallback(void* keyCallback);
 
         //------OpenGl functions-----------------------
-        void openglGenerateBuffers(const void* vertex, size_t verticeSize, int numVertex);
+        void openglGenerateVertexBuffers(const void* vertex, int numVertex);
         void openglGenerateVertexShaders(const char* text);
         void openglGenerateFragmentShaders(const char* text);
         void openglCreateProgram();
         void openglSetUniformsLocationsAndAtributtes(
             std::vector<Window::UniformAttrib>& uniforms,
-            const std::vector<VertexAttrib>& attributes,
-            size_t verticeSize
+            const std::vector<VertexAttrib>& attributes
         );
 
         void openglViewportAndClear();

@@ -1,0 +1,128 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v5.0.639693989)
+
+newmtl Flesh
+Kd 0.98177922 0.97254544 0.86437672
+Ka 0 0 0
+Ks 0.98177922 0.97254544 0.86437672
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 36
+illum 2
+map_Kd ..\AppData\Roaming\Maxon\Maxon Cinema 4D R21_64C2B3BD\tex\flesh.png
+bump ..\AppData\Roaming\Maxon\Maxon Cinema 4D R21_64C2B3BD\tex\flesh_normal.png
+map_bump ..\AppData\Roaming\Maxon\Maxon Cinema 4D R21_64C2B3BD\tex\flesh_normal.png
+
+newmtl FleshTeeth
+Kd 0.71595359 0.78654402 0.97553736
+Ka 0 0 0
+Ks 0.71595359 0.78654402 0.97553736
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 36
+illum 2
+map_Kd ..\AppData\Roaming\Maxon\Maxon Cinema 4D R21_64C2B3BD\tex\fleshteeth.png
+
+newmtl Pupil
+Kd 0.89124495 0.95271224 0.89322263
+Ka 0 0 0
+Ks 0.89124495 0.95271224 0.89322263
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 36
+illum 2
+map_Kd ..\AppData\Roaming\Maxon\Maxon Cinema 4D R21_64C2B3BD\tex\pupil.png
+
+newmtl Eye
+Kd 0.57763171 0.85267454 0.60923851
+Ka 0 0 0
+Ks 0.57763171 0.85267454 0.60923851
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 36
+illum 2
+map_Kd ..\AppData\Roaming\Maxon\Maxon Cinema 4D R21_64C2B3BD\tex\eye.png
+
+newmtl DefaultMaterial
+Kd 0.80000001 0.80000001 0.80000001
+illum 1
+
+newmtl Endo
+Kd 0.94380546 0.83845013 0.63523382
+Ka 0 0 0
+Ks 0.94380546 0.83845013 0.63523382
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 36
+illum 2
+map_Kd ..\AppData\Roaming\Maxon\Maxon Cinema 4D R21_64C2B3BD\tex\endo.png
+
+newmtl SB1
+Kd 0.94979483 0.59568977 0.51492023
+Ka 0 0 0
+Ks 0.94979483 0.59568977 0.51492023
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 36
+illum 2
+map_Kd ..\AppData\Roaming\Maxon\Maxon Cinema 4D R21_64C2B3BD\tex\sb1.png
+
+newmtl Bowtie
+Kd 0.58351868 0.47265947 0.96202719
+Ka 0 0 0
+Ks 0.58351868 0.47265947 0.96202719
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 36
+illum 2
+map_Kd ..\AppData\Roaming\Maxon\Maxon Cinema 4D R21_64C2B3BD\tex\bowtie.png
+
+newmtl SB2
+Kd 0.85454464 0.75076562 0.47771356
+Ka 0 0 0
+Ks 0.85454464 0.75076562 0.47771356
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 36
+illum 2
+map_Kd ..\AppData\Roaming\Maxon\Maxon Cinema 4D R21_64C2B3BD\tex\sb2.png
+
+newmtl Teeth
+Kd 0.97627097 0.97627097 0.97627097
+Ka 0 0 0
+Ks 0.79336631 0.70493078 0.97627097
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 36
+illum 2
+
+newmtl Shadeless
+Kd 0.65749711 0.95743454 0.98474061
+Ka 0 0 0
+Ks 0.65749711 0.95743454 0.98474061
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 36
+illum 2
+map_Kd ..\AppData\Roaming\Maxon\Maxon Cinema 4D R21_64C2B3BD\tex\shadeless.png
+
+newmtl Black
+Kd 0 0 0
+Ka 0 0 0
+Ks 0.85020262 0.56874073 0.67376465
+Ke 0 0 0
+Tf 0 0 0
+d 1
+Ns 36
+illum 2
+

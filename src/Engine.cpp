@@ -68,20 +68,20 @@ namespace MTRD {
 
 
     void MotardaEng::windowOpenglSetup(
-        const void* vertexBuffer,
+        std::vector<MTRD::Window::ObjItem> objItemList,
         const char* vertexShader,
         const char* fragmentShader,
         std::vector<Window::UniformAttrib>& uniforms,
-        const std::vector<Window::VertexAttrib>& attributes,
-        size_t verticeSize,
-        int numVertex
+        const std::vector<Window::VertexAttrib>& attributes
     ) {
-        window_.openglGenerateBuffers(vertexBuffer, verticeSize, numVertex);
-        window_.openglGenerateVertexShaders(vertexShader);
-        window_.openglGenerateFragmentShaders(fragmentShader);
-        window_.openglCreateProgram();
-
-        window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes, verticeSize);
+        for (int i = 0; i < objItemList.size(); i++) {
+            const void* vertexBuffer = static_cast<const void*>(objItemList[i].vertex.data());
+            window_.openglGenerateVertexBuffers(vertexBuffer, objItemList[i].vertex.size());
+            window_.openglGenerateVertexShaders(vertexShader);
+            window_.openglGenerateFragmentShaders(fragmentShader);
+            window_.openglCreateProgram();
+            window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
+        }
     }
 
 
@@ -147,8 +147,7 @@ namespace MTRD {
 
         for (const char* route : routes) {
             auto maybeObjLoader = ObjLoader::loadObj(
-                route,
-                "../assets/"
+                route
             );
 
             if (!maybeObjLoader.has_value()) continue;
@@ -179,5 +178,14 @@ namespace MTRD {
         std::string* shaderSource = new std::string(buffer.str());
 
         return shaderSource->c_str();
+    }
+
+
+    void MotardaEng::updateVertexBuffers(std::vector<MTRD::Window::ObjItem> objItemList) {
+        //delete vertex buffer opengl
+        for (int i = 0; i < objItemList.size(); i++) {
+            const void* vertexBuffer = static_cast<const void*>(objItemList[i].vertex.data());
+            window_.openglGenerateVertexBuffers(vertexBuffer, objItemList[i].vertex.size());
+        }
     }
 }

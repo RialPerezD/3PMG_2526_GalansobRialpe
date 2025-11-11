@@ -99,7 +99,7 @@ workspace "MotArda"
 			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h"
 			}
 
-	project "WindowExample"
+	project "TestWindowExample"
 		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
@@ -109,9 +109,9 @@ workspace "MotArda"
 		conan_config_exec("Release")
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/window.cpp"
+		files "examples/testWindow.cpp"
 
-	project "TriangleExample"
+	project "TestTriangleExample"
 		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
@@ -121,9 +121,9 @@ workspace "MotArda"
 		conan_config_exec("Release")
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/triangle.cpp"
+		files "examples/testTriangle.cpp"
 
-	project "MovingTriangleExample"
+	project "TestMovingTriangleExample"
 		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
@@ -133,9 +133,9 @@ workspace "MotArda"
 		conan_config_exec("Release")
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/movTriangle.cpp"
+		files "examples/testMovTriangle.cpp"
 
-	project "ObjLoader"
+	project "TestObjLoader"
 		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
@@ -145,5 +145,17 @@ workspace "MotArda"
 		conan_config_exec("Release")
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/loadObj.cpp"
+		files "examples/testLoadObj.cpp"
+
+	project "TestJobSystem"
+		kind "ConsoleApp"
+		language "C++"
+		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
+		includedirs "include"
+		links "MotArda"
+		conan_config_exec("Debug")
+		conan_config_exec("Release")
+		conan_config_exec("RelWithDebInfo")
+		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
+		files "examples/testJobSystem.cpp"
 

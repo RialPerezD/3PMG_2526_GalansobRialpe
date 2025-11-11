@@ -28,8 +28,7 @@ namespace MTRD {
 	class ObjLoader {
 	public:
 		static std::optional<ObjLoader> loadObj(
-			const std::string& filepath,
-			const std::string& mtlpath = ""
+			const std::string& filepath
 		);
 
 		const std::vector<Vertex>& getVertices() const { return vertices; }

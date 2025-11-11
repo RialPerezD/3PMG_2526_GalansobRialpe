@@ -201,12 +201,12 @@ namespace MTRD {
     }
 
 
-    void Window::openglGenerateBuffers(const void* vertex, size_t verticeSize, int numVertex) {
+    void Window::openglGenerateVertexBuffers(const void* vertex, int numVertex) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
         glGenBuffers(1, &vertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, verticeSize * numVertex, vertex, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * numVertex, vertex, GL_STATIC_DRAW);
 
         if (debug_) {
             glCheckError();
@@ -297,8 +297,7 @@ namespace MTRD {
 
     void Window::openglSetUniformsLocationsAndAtributtes(
         std::vector<Window::UniformAttrib>& uniforms,
-        const std::vector<VertexAttrib>& attributes,
-        size_t verticeSize
+        const std::vector<VertexAttrib>& attributes
     ){
         // Uniform locations
         for (auto& u : uniforms)
@@ -309,7 +308,7 @@ namespace MTRD {
             GLint loc = glGetAttribLocation(program, attr.name);
             if (loc >= 0) {
                 glEnableVertexAttribArray(loc);
-                glVertexAttribPointer(loc, attr.size, GL_FLOAT, GL_FALSE, verticeSize, (void*)attr.offset);
+                glVertexAttribPointer(loc, attr.size, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)attr.offset);
             }
         }
 
@@ -391,15 +390,6 @@ namespace MTRD {
                 
                 std::string route = mat.diffuseTexPath;
 
-                std::replace(route.begin(), route.end(), '\\', '/');
-                size_t pos = 0;
-                while ((pos = route.find("//", pos)) != std::string::npos) {
-                    route.replace(pos, 2, "/");
-                    pos += 1;
-                }
-
-                route = "../assets/" + route;
-
                 std::string key(route);
                 if (textureCache.find(key) != textureCache.end()) {
                     mat.diffuseTexID = textureCache[key];
@@ -426,7 +416,23 @@ namespace MTRD {
                     continue;
                 }
 
-                GLenum format = (channels == 4) ? GL_RGBA : GL_RGB;
+                GLenum format;
+
+                switch (channels) {
+                case 1:
+                    format = GL_RED;
+                    break;
+                case 3:
+                    format = GL_RGB;
+                    break;
+                case 4:
+                    format = GL_RGBA;
+                    break;
+                default:
+                    format = GL_RGB;
+                    break;
+                }
+
                 glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
                 glGenerateMipmap(GL_TEXTURE_2D);
 
