@@ -96,6 +96,9 @@ workspace "MotArda"
 			"src/Input.cpp", "include/MotArda/Input.hpp",
 			"src/ObjLoader.cpp", "include/MotArda/ObjLoader.hpp",
 			"src/JobSystem.cpp", "include/MotArda/JobSystem.hpp",
+			"src/Ecs.cpp", "include/MotArda/Ecs.hpp",
+			"src/Components/Render.cpp", "include/MotArda/Components/Render.hpp",
+			"src/Components/Transform.cpp", "include/MotArda/Components/Transform.hpp",
 			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h"
 			}
 
@@ -135,7 +138,7 @@ workspace "MotArda"
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
 		files "examples/testMovTriangle.cpp"
 
-	project "TestObjLoader"
+	project "TestObjLoaderExample"
 		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
@@ -147,7 +150,7 @@ workspace "MotArda"
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
 		files "examples/testLoadObj.cpp"
 
-	project "TestJobSystem"
+	project "TestJobSystemExample"
 		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
@@ -158,4 +161,16 @@ workspace "MotArda"
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
 		files "examples/testJobSystem.cpp"
+
+	project "TestEcsExample"
+		kind "ConsoleApp"
+		language "C++"
+		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
+		includedirs "include"
+		links "MotArda"
+		conan_config_exec("Debug")
+		conan_config_exec("Release")
+		conan_config_exec("RelWithDebInfo")
+		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
+		files "examples/testEcs.cpp"
 

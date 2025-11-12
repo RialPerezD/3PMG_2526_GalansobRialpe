@@ -1,7 +1,9 @@
 #include "MotArda/Engine.hpp"
 #include "MotArda/ObjLoader.hpp"
+#include <MotArda/Ecs.hpp>
 
 #include <memory>
+
 #include "../deps/glm-master/glm/glm.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
@@ -48,6 +50,27 @@ int MTRD::main() {
     eng.windowLoadAllMaterials(objItemList);
 
     if (objItemList.size() == 0) return 1;
+
+    // ---  *** ///
+    
+    // --- ECS ---
+    std::unordered_map<unsigned long, std::string> entityIdList;
+    ECSManager ecs;
+    ecs.AddComponentType<MTRD::Transform>();
+    ecs.AddComponentType<MTRD::Render>();
+
+    unsigned long entity = ecs.AddEntity();
+    entityIdList[entity] = "Entidad 1";
+
+    MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
+    t->position = glm::vec3(1.0f, 0.0f, 0.0f);
+    t->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+    t->scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+    MTRD::Render* r = ecs.AddComponent<MTRD::Render>(entity);
+    r->vertices = &objItemList[0].vertex;
+    r->materials = &objItemList[0].materials;
+    // --- *** ---
 
     // --- Vectores de uniforms y atributos ---
     std::vector<Window::UniformAttrib> uniforms = {

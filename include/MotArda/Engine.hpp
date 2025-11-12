@@ -41,7 +41,6 @@ namespace MTRD {
 		);
 		void windowInitFrame();
 		void windowOpenglSetUniformsValues(std::vector<Window::UniformAttrib> uniforms);
-		void windowNoObjectOpenglProgramUniformDraw();
 		void windowOpenglProgramUniformDraw(std::vector<MTRD::Window::ObjItem> objItemsList);
 		void windowSetDebugMode(bool b);
 		void windowLoadAllMaterials(std::vector<MTRD::Window::ObjItem>& objItemsList);
