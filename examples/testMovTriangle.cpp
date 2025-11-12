@@ -7,12 +7,12 @@
 
 //-------Triangle example data-----------------
 const int ammountPoints = 3;
-struct Vertex {
+struct Vertexes {
     float x, y;
     float r, g, b;
 };
 
-Vertex vertex[ammountPoints] =
+Vertexes vertex[ammountPoints] =
 {
     { -0.3f, -0.2f, 1.f, 0.f, 0.f },
     {  0.f,   0.3f, 0.f, 0.f, 1.f },
@@ -45,8 +45,8 @@ int MTRD::main() {
     };
 
     std::vector<Window::VertexAttrib> attributes = {
-        { "vPos", 2, offsetof(Vertex, x) },
-        { "vCol", 3, offsetof(Vertex, r) }
+        { "vPos", 2, offsetof(Vertexes, x) },
+        { "vCol", 3, offsetof(Vertexes, r) }
     };
 
     const char* vertex_shader = eng.loadShaderFile("../assets/shaders/triangle_vertex.txt");

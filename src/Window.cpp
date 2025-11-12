@@ -136,6 +136,9 @@ namespace MTRD {
         wind.value().windowHeight_ = height;
         wind.value().debug_ = false;
 
+        wind->vao = GL_INVALID_INDEX;
+        wind->vertexBuffer = GL_INVALID_INDEX;
+
         return wind;
     }
 
@@ -203,14 +206,27 @@ namespace MTRD {
 
     void Window::openglGenerateVertexBuffers(const void* vertex, int numVertex) {
         glGenVertexArrays(1, &vao);
+        //pa cuando meta mas mayas, esto tiene que ir dentro de cada maya y rellamarlo cuando la quiera pintar
         glBindVertexArray(vao);
         glGenBuffers(1, &vertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * numVertex, vertex, GL_STATIC_DRAW);
 
+
         if (debug_) {
             glCheckError();
         }
+    }
+
+
+    void Window::openglClearVertexBuffers() {
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        glDeleteBuffers(1, &vertexBuffer);
+        vertexBuffer = GL_INVALID_INDEX;
+        glDeleteVertexArrays(1, &vao);
+        vao = GL_INVALID_INDEX;
     }
 
 
@@ -287,7 +303,6 @@ namespace MTRD {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-        //glFrontFace(GL_CW);
 
         if (debug_) {
             glCheckError();

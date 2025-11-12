@@ -26,6 +26,12 @@ namespace MTRD {
 		void windowSetSwapInterval(int i = 1);
 		void windowSetErrorCallback(void(*function)(int, const char*));
 		float windowGetSizeRatio();
+		void windowNoObjectsOpenglSetup(
+			const char* vertexShader,
+			const char* fragmentShader,
+			std::vector<Window::UniformAttrib>& uniforms,
+			const std::vector<Window::VertexAttrib>& attributes
+		);
 		void windowOpenglSetup(
 			std::vector<MTRD::Window::ObjItem> objItemList,
 			const char* vertexShader,
@@ -35,6 +41,7 @@ namespace MTRD {
 		);
 		void windowInitFrame();
 		void windowOpenglSetUniformsValues(std::vector<Window::UniformAttrib> uniforms);
+		void windowNoObjectOpenglProgramUniformDraw();
 		void windowOpenglProgramUniformDraw(std::vector<MTRD::Window::ObjItem> objItemsList);
 		void windowSetDebugMode(bool b);
 		void windowLoadAllMaterials(std::vector<MTRD::Window::ObjItem>& objItemsList);
@@ -48,7 +55,11 @@ namespace MTRD {
 
 		std::vector<MTRD::Window::ObjItem> loadObjs(std::vector <const char*> routes);
 		const char* loadShaderFile(const char* filename);
-		void updateVertexBuffers(std::vector<MTRD::Window::ObjItem> objItemList);
+		void updateVertexBuffers(
+			std::vector<MTRD::Window::ObjItem>& objItemList,
+			std::vector<Window::UniformAttrib>& uniforms,
+			const std::vector<Window::VertexAttrib>& attributes
+		);
 
 		static std::optional<MotardaEng> createEngine(
 			int width = 800,

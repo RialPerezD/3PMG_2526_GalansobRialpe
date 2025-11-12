@@ -69,6 +69,7 @@ namespace MTRD {
 
         //------OpenGl functions-----------------------
         void openglGenerateVertexBuffers(const void* vertex, int numVertex);
+        void openglClearVertexBuffers();
         void openglGenerateVertexShaders(const char* text);
         void openglGenerateFragmentShaders(const char* text);
         void openglCreateProgram();

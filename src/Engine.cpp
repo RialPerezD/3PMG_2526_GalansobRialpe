@@ -67,6 +67,19 @@ namespace MTRD {
     }
 
 
+    void MotardaEng::windowNoObjectsOpenglSetup(
+        const char* vertexShader,
+        const char* fragmentShader,
+        std::vector<Window::UniformAttrib>& uniforms,
+        const std::vector<Window::VertexAttrib>& attributes
+    ) {
+        window_.openglGenerateVertexShaders(vertexShader);
+        window_.openglGenerateFragmentShaders(fragmentShader);
+        window_.openglCreateProgram();
+        window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
+    }
+
+
     void MotardaEng::windowOpenglSetup(
         std::vector<MTRD::Window::ObjItem> objItemList,
         const char* vertexShader,
@@ -74,14 +87,15 @@ namespace MTRD {
         std::vector<Window::UniformAttrib>& uniforms,
         const std::vector<Window::VertexAttrib>& attributes
     ) {
-        for (int i = 0; i < objItemList.size(); i++) {
-            const void* vertexBuffer = static_cast<const void*>(objItemList[i].vertex.data());
-            window_.openglGenerateVertexBuffers(vertexBuffer, objItemList[i].vertex.size());
-            window_.openglGenerateVertexShaders(vertexShader);
-            window_.openglGenerateFragmentShaders(fragmentShader);
-            window_.openglCreateProgram();
-            window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
-        }
+
+        window_.openglGenerateVertexShaders(vertexShader);
+        window_.openglGenerateFragmentShaders(fragmentShader);
+        window_.openglCreateProgram();
+
+        if (objItemList.size() == 0) return;
+        updateVertexBuffers(objItemList,
+            uniforms,
+            attributes);
     }
 
 
@@ -181,11 +195,17 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::updateVertexBuffers(std::vector<MTRD::Window::ObjItem> objItemList) {
-        //delete vertex buffer opengl
+    void MotardaEng::updateVertexBuffers(
+        std::vector<MTRD::Window::ObjItem>& objItemList,
+        std::vector<Window::UniformAttrib>& uniforms,
+        const std::vector<Window::VertexAttrib>& attributes
+    ) {
+        window_.openglClearVertexBuffers();
+
         for (int i = 0; i < objItemList.size(); i++) {
             const void* vertexBuffer = static_cast<const void*>(objItemList[i].vertex.data());
             window_.openglGenerateVertexBuffers(vertexBuffer, objItemList[i].vertex.size());
+            window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
         }
     }
 }
