@@ -199,7 +199,6 @@ namespace MTRD {
         std::vector<Window::UniformAttrib>& uniforms,
         const std::vector<Window::VertexAttrib>& attributes
     ) {
-
         for (int i = 0; i < renders.size(); i++) {
             for (int j = 0; j < renders[i]->shapes->size(); j++) {
                 std::vector<Vertex> vertexes = renders[i]->shapes->at(j).vertices;

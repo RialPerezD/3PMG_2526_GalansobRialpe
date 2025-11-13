@@ -83,19 +83,16 @@ workspace "MotArda"
 		kind "StaticLib"
 		targetdir "build/%{cfg.buildcfg}"
 		conan_config_lib()
-		--pchheader "stdafx.hpp"
-		--pchsource "src/stdafx.cpp"
-		--forceincludes { "stdafx.hpp" }
 
 		files{
 			"premake5.lua",
 			"src/build/conanfile.txt",
-			--"src/stdafx.cpp", "src/stdafx.hpp",
 			"src/Window.cpp", "include/MotArda/Window.hpp",
 			"src/Engine.cpp", "include/MotArda/Engine.hpp",
 			"src/Input.cpp", "include/MotArda/Input.hpp",
 			"src/ObjLoader.cpp", "include/MotArda/ObjLoader.hpp",
 			"src/JobSystem.cpp", "include/MotArda/JobSystem.hpp",
+			"src/Camera.cpp", "include/MotArda/Camera.hpp",
 			"include/MotArda/Ecs.hpp",
 			"src/Components/Render.cpp", "include/MotArda/Components/Render.hpp",
 			"src/Components/Transform.cpp", "include/MotArda/Components/Transform.hpp",

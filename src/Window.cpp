@@ -205,7 +205,7 @@ namespace MTRD {
 
     void Window::openglGenerateVertexBuffers(const void* vertex, int numVertex, GLuint& vao) {
         glGenVertexArrays(1, &vao);
-        //pa cuando meta mas mayas, esto tiene que ir dentro de cada maya y rellamarlo cuando la quiera pintar
+        
         glBindVertexArray(vao);
         glGenBuffers(1, &vertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
