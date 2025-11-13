@@ -8,6 +8,7 @@ namespace MTRD {
         glm::vec3 scale;
         glm::vec3 rotation;
 
+        Transform();
         Transform(const glm::vec3& pos, const glm::vec3& scl, const glm::vec3& rot);
     };
 }

@@ -96,7 +96,7 @@ workspace "MotArda"
 			"src/Input.cpp", "include/MotArda/Input.hpp",
 			"src/ObjLoader.cpp", "include/MotArda/ObjLoader.hpp",
 			"src/JobSystem.cpp", "include/MotArda/JobSystem.hpp",
-			"src/Ecs.cpp", "include/MotArda/Ecs.hpp",
+			"include/MotArda/Ecs.hpp",
 			"src/Components/Render.cpp", "include/MotArda/Components/Render.hpp",
 			"src/Components/Transform.cpp", "include/MotArda/Components/Transform.hpp",
 			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h"

@@ -136,7 +136,6 @@ namespace MTRD {
         wind.value().windowHeight_ = height;
         wind.value().debug_ = false;
 
-        wind->vao = GL_INVALID_INDEX;
         wind->vertexBuffer = GL_INVALID_INDEX;
 
         return wind;
@@ -204,7 +203,7 @@ namespace MTRD {
     }
 
 
-    void Window::openglGenerateVertexBuffers(const void* vertex, int numVertex) {
+    void Window::openglGenerateVertexBuffers(const void* vertex, int numVertex, GLuint& vao) {
         glGenVertexArrays(1, &vao);
         //pa cuando meta mas mayas, esto tiene que ir dentro de cada maya y rellamarlo cuando la quiera pintar
         glBindVertexArray(vao);
@@ -219,7 +218,7 @@ namespace MTRD {
     }
 
 
-    void Window::openglClearVertexBuffers() {
+    void Window::openglClearVertexBuffers(GLuint& vao) {
         glBindVertexArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -377,21 +376,35 @@ namespace MTRD {
     }
 
 
-    void Window::openglProgramUniformDraw(std::vector<ObjItem> objItemsList) {
-        for (ObjItem item : objItemsList) {
+    void Window::openglProgramUniformDraw(std::vector<Render*>& renders) {
+        glUseProgram(program);
+        auto loc = glGetUniformLocation(program, "diffuseTexture");
 
-            if (item.materials[0].diffuseTexID == -1) return;
+        for (Render* render : renders) {
+            for (size_t i = 0; i < render->shapes->size(); i++) {
+                Shape* shape = &render->shapes->at(i);
 
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, item.materials[0].diffuseTexID);
-            auto loc = glGetUniformLocation(program, "diffuseTexture");
-            glUniform1i(loc, 0);
+                if (shape->materialId != -1) {
+                    Material mat = render->materials->at(shape->materialId);
 
-            glBindVertexArray(vao);
-            glDrawArrays(GL_TRIANGLES, 0, item.vertex.size());
+                    if (!mat.loadeable) continue;
 
-            if (debug_) {
-                glCheckError();
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
+                    glUniform1i(loc, 0);
+
+                    if (debug_) {
+                        glCheckError();
+                    }
+                }
+
+                glBindVertexArray(shape->vao);
+                glDrawArrays(GL_TRIANGLES, 0, shape->vertices.size());
+
+                if (debug_) {
+                    glCheckError();
+                }
+
             }
         }
     }

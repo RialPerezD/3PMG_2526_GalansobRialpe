@@ -35,7 +35,6 @@ namespace MTRD {
 
 		for (const auto& mat : materials) {
 
-			if (mat.diffuse_texname.length() == 0) continue;
 
 			Material material;
 			material.name = mat.name;
@@ -48,14 +47,18 @@ namespace MTRD {
 			std::string texturePath = sourcePath + "textures/" + filenameNoExt + "/" + p.filename().string();
 			material.diffuseTexPath = texturePath;
 
+			if (mat.diffuse_texname.length() != 0) material.loadeable = true;
+
 			material.diffuseTexID = -1;
 			objLoader.materials.push_back(material);
 		}
 
 		for (const auto& shape : shapes) {
+			Shape futureShape;
+			futureShape.materialId = shape.mesh.material_ids[0];
+
 			for (const auto& index : shape.mesh.indices) {
 				Vertex vertex;
-
 				vertex.position = glm::vec3(
 					attrib.vertices[3 * index.vertex_index + 0],
 					attrib.vertices[3 * index.vertex_index + 1],
@@ -81,8 +84,9 @@ namespace MTRD {
 					vertex.normal = glm::vec3(0.0f, 0.0f, 0.0f);
 				}
 
-				objLoader.vertices.push_back(vertex);
+				futureShape.vertices.push_back(vertex);
 			}
+			objLoader.shapes.push_back(futureShape);
 		}
 
 		return objLoader;

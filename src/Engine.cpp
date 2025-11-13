@@ -81,7 +81,7 @@ namespace MTRD {
 
 
     void MotardaEng::windowOpenglSetup(
-        std::vector<MTRD::Window::ObjItem> objItemList,
+        std::vector<Render*>& renders,
         const char* vertexShader,
         const char* fragmentShader,
         std::vector<Window::UniformAttrib>& uniforms,
@@ -92,10 +92,12 @@ namespace MTRD {
         window_.openglGenerateFragmentShaders(fragmentShader);
         window_.openglCreateProgram();
 
-        if (objItemList.size() == 0) return;
-        updateVertexBuffers(objItemList,
+        if (renders.size() == 0) return;
+        updateVertexBuffers(
+            renders,
             uniforms,
-            attributes);
+            attributes
+        );
     }
 
 
@@ -109,8 +111,8 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowOpenglProgramUniformDraw(std::vector<MTRD::Window::ObjItem> objItemsList) {
-        window_.openglProgramUniformDraw(objItemsList);
+    void MotardaEng::windowOpenglProgramUniformDraw(std::vector<Render*>& renders) {
+        window_.openglProgramUniformDraw(renders);
     }
 
 
@@ -167,10 +169,7 @@ namespace MTRD {
             if (!maybeObjLoader.has_value()) continue;
 
             ObjLoader objLoader = maybeObjLoader.value();
-            MTRD::Window::ObjItem item;
-
-            item.vertex = objLoader.getVertices();
-            item.materials = objLoader.getMaterials();
+            MTRD::Window::ObjItem item(objLoader.getShapes(), objLoader.getMaterials());
 
             objItemsList.push_back(std::move(item));
         }
@@ -196,16 +195,20 @@ namespace MTRD {
 
 
     void MotardaEng::updateVertexBuffers(
-        std::vector<MTRD::Window::ObjItem>& objItemList,
+        std::vector<Render*>& renders,
         std::vector<Window::UniformAttrib>& uniforms,
         const std::vector<Window::VertexAttrib>& attributes
     ) {
-        window_.openglClearVertexBuffers();
 
-        for (int i = 0; i < objItemList.size(); i++) {
-            const void* vertexBuffer = static_cast<const void*>(objItemList[i].vertex.data());
-            window_.openglGenerateVertexBuffers(vertexBuffer, objItemList[i].vertex.size());
-            window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
+        for (int i = 0; i < renders.size(); i++) {
+            for (int j = 0; j < renders[i]->shapes->size(); j++) {
+                std::vector<Vertex> vertexes = renders[i]->shapes->at(j).vertices;
+                const void* vertexBuffer = static_cast<const void*> (vertexes.data());
+
+                window_.openglClearVertexBuffers(renders[i]->shapes->at(j).vao);
+                window_.openglGenerateVertexBuffers(vertexBuffer, vertexes.size(), renders[i]->shapes->at(j).vao);
+                window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
+            }
         }
     }
 }

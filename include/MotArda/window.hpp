@@ -51,8 +51,13 @@ namespace MTRD {
         };
 
         struct ObjItem {
-            std::vector<Vertex> vertex;
+            std::vector<Shape> shapes;
             std::vector<Material> materials;
+
+            ObjItem();
+            ObjItem(const std::vector<Shape>& s, const std::vector<Material>& m)
+                : shapes(s), materials(m) {
+            }
         };
 
         //------------Functions-----------------------
@@ -68,8 +73,8 @@ namespace MTRD {
         void setKeyCallback(void* keyCallback);
 
         //------OpenGl functions-----------------------
-        void openglGenerateVertexBuffers(const void* vertex, int numVertex);
-        void openglClearVertexBuffers();
+        void openglGenerateVertexBuffers(const void* vertex, int numVertex, GLuint& vao);
+        void openglClearVertexBuffers(GLuint& vao);
         void openglGenerateVertexShaders(const char* text);
         void openglGenerateFragmentShaders(const char* text);
         void openglCreateProgram();
@@ -80,7 +85,7 @@ namespace MTRD {
 
         void openglViewportAndClear();
         void openglSetUniformsValues(const std::vector<Window::UniformAttrib>& uniforms);
-        void openglProgramUniformDraw(std::vector<MTRD::Window::ObjItem> objItemsList);
+        void openglProgramUniformDraw(std::vector<Render*>& renders);
         void openglLoadMaterials(std::vector<Material>& materials);
 
 
@@ -88,7 +93,7 @@ namespace MTRD {
         std::unique_ptr<Data> data;
         explicit Window(std::unique_ptr<Data> newData); 
 
-        GLuint vertexBuffer, vertexShader, fragmentShader, program, vao;
+        GLuint vertexBuffer, vertexShader, fragmentShader, program;
 
         int windowWidth_;
         int windowHeight_;

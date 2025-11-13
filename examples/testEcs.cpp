@@ -30,7 +30,7 @@ int MTRD::main() {
     eng.windowSetSwapInterval();
 
     // --- Cargar objs ---
-    std::vector <const char*> objsRoutes = { "86jfmjiufzv2.obj" };
+    std::vector <const char*> objsRoutes = { "indoor_plant_02.obj" };
 
     std::atomic<bool> objsLoaded = false;
     std::vector<MTRD::Window::ObjItem> objItemList;
@@ -68,7 +68,7 @@ int MTRD::main() {
     t->scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
     MTRD::Render* r = ecs.AddComponent<MTRD::Render>(entity);
-    r->vertices = &objItemList[0].vertex;
+    r->shapes = &objItemList[0].shapes;
     r->materials = &objItemList[0].materials;
     // --- *** ---
 
@@ -87,8 +87,12 @@ int MTRD::main() {
     const char* vertex_shader = eng.loadShaderFile("../assets/shaders/textured_obj_vertex.txt");
     const char* fragment_shader = eng.loadShaderFile("../assets/shaders/textured_obj_fragment.txt");
 
+    std::vector<std::pair<size_t, Render>> list = ecs.GetComponentList<Render>();
+    std::vector<Render*> redners = { &list[0].second };
+
+
     eng.windowOpenglSetup(
-        objItemList,
+        redners,
         vertex_shader,
         fragment_shader,
         uniforms,
@@ -138,15 +142,6 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::Z)) scale -= scaSpeed;
         else if (eng.inputIsKeyPressed(Input::Keyboard::X)) scale += scaSpeed;
 
-        if (eng.inputIsKeyDown(Input::Keyboard::C)) {
-            needChangeObj = true;
-            objIndex = (objIndex + 1) % 3;
-        }
-        else if (eng.inputIsKeyDown(Input::Keyboard::V)) {
-            needChangeObj = true;
-            objIndex = (objIndex + 2) % 3;
-        }
-
         // --- Modelo ---
         model = glm::mat4(1.f);
         model = glm::translate(model, { xPos, yPos, 0.f });
@@ -159,59 +154,9 @@ int MTRD::main() {
 
         // Dibujar objetos
         eng.windowOpenglSetUniformsValues(uniforms);
-        eng.windowOpenglProgramUniformDraw(objItemList);
+        eng.windowOpenglProgramUniformDraw(redners);
 
         eng.windowEndFrame();
-
-
-        // Change obj if needed
-        if (needChangeObj) {
-            switch (objIndex) {
-            case 0:
-                objsRoutes = { "86jfmjiufzv2.obj" };
-                scaSpeed = 0.0001f;
-                scale = 0.0001f;
-                break;
-            case 1:
-                objsRoutes = { "12140_Skull_v3_L2.obj" };
-                scaSpeed = 0.001f;
-                scale = 0.025f;
-                break;
-            case 2:
-                objsRoutes = { "indoor_plant_02.obj" };
-                scaSpeed = 0.01f;
-                scale = 0.25f;
-                break;
-            default:
-                objsRoutes = { "86jfmjiufzv2.obj" };
-                break;
-            }
-
-            objItemList.clear();
-            objsLoaded = false;
-
-            eng.enqueueTask([&]() {
-                objItemList = eng.loadObjs(objsRoutes);
-                objsLoaded = true;
-                }
-            );
-
-            while (!objsLoaded) {
-                eng.windowInitFrame();
-                printf("Cargando maya %d...\n", objIndex);
-                eng.windowEndFrame();
-            }
-
-            printf("Maya %d cargada\n", objIndex);
-            eng.updateVertexBuffers(
-                objItemList,
-                uniforms,
-                attributes
-            );
-            eng.windowLoadAllMaterials(objItemList);
-
-            needChangeObj = false;
-        }
     }
 
     return 0;

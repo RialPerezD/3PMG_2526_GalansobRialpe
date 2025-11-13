@@ -7,14 +7,17 @@ namespace MTRD {
 
     Material::Material()
         : name(""), diffuse(0.0f), specular(0.0f), ambient(0.0f),
-        shininess(0.0f), diffuseTexPath(""), diffuseTexID(0) {}
+        shininess(0.0f), loadeable(false), diffuseTexPath(""), diffuseTexID(0) {}
 
 
-    Render::Render() : vertices(), materials() {}
+    Shape::Shape() : vertices(), materialId(-1), vao(0) {}
 
 
-    Render::Render(std::vector<Vertex>* vrts, std::vector<Material>* mats){
-        vertices = vrts;
+    Render::Render() : shapes(), materials() {}
+
+
+    Render::Render(std::vector<Shape>* shps, std::vector<Material>* mats){
+        shapes = shps;
         materials = mats;
     }
 }

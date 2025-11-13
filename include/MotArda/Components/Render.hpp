@@ -6,6 +6,7 @@
 
 namespace MTRD {
 
+
     struct Vertex {
         glm::vec3 position;
         glm::vec2 uv;
@@ -22,18 +23,28 @@ namespace MTRD {
         glm::vec3 ambient;
         float shininess;
 
+        bool loadeable;
+
         std::string diffuseTexPath;
         GLuint diffuseTexID;
 
         Material();
     };
 
+    struct Shape {
+        std::vector<Vertex> vertices;
+        int materialId;
+        GLuint vao;
+
+        Shape();
+    };
+
 
     struct Render {
-        std::vector<Vertex>* vertices;
+        std::vector<Shape>* shapes;
         std::vector<Material>* materials;
 
         Render();
-        Render(std::vector<Vertex>* vrts, std::vector<Material>* mats);
+        Render(std::vector<Shape>* shps, std::vector<Material>* mats);
     };
 }
