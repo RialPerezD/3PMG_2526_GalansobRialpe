@@ -4,19 +4,22 @@
 #include "../deps/glm-master/glm/glm.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
+#include <MotArda/Camera.hpp>
+#include <MotArda/Ecs.hpp>
 
 //-------Triangle example data-----------------
 const int ammountPoints = 3;
-struct Vertex {
-    float x, y;
+struct Vertexes {
+    float x, y, z;
+    float u, v;
     float r, g, b;
 };
 
-Vertex vertex[ammountPoints] =
+Vertexes vertex[ammountPoints] =
 {
-    { -0.6f, -0.4f, 1.f, 0.f, 0.f },
-    {  0.6f, -0.4f, 0.f, 1.f, 0.f },
-    {  0.f,  0.6f, 0.f, 0.f, 1.f }
+    { -6.f, -4.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f },
+    {  6.f, -4.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f },
+    {  0.f,  6.f, 0.f, 0.f, 0.f, 0.f, 0.f, 1.f }
 };
 
 //---------------------------------------------
@@ -38,48 +41,102 @@ int MTRD::main() {
     eng.windowSetDebugMode(true);
     eng.windowSetErrorCallback(error_callback);
     eng.windowCreateContext();
-    eng.windowSetSwapInterval();
+    eng.windowSetSwapInterval(1);
 
-    // --- Vectores de uniforms y atributos ---
+    // --- Create drawable entitys ---
+    std::unordered_map<unsigned long, std::string> entityIdList;
+    ECSManager ecs;
+    ecs.AddComponentType<MTRD::Transform>();
+    ecs.AddComponentType<MTRD::Render>();
+
+    unsigned long entity = ecs.AddEntity();
+
+    MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
+    t->position = glm::vec3(1.0f, 0.0f, 0.0f);
+    t->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+    t->scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+    MTRD::Render* r = ecs.AddComponent<MTRD::Render>(entity);
+    r->shapes->push_back(Shape());
+
+
+    for (int i = 0; i < ammountPoints; i++) {
+        Vertex vtx = Vertex();
+        vtx.position = {vertex[i].x, vertex[i].y, vertex[i].z};
+        vtx.normal = { vertex[i].r, vertex[i].g, vertex[i].b};
+
+        r->shapes->at(0).vertices.push_back(vtx);
+    }
+
+    std::vector<Render*> redners;
+    for (std::pair<size_t, Render> element : ecs.GetComponentList<Render>()) {
+        redners.push_back(&element.second);
+    }
+    // --- *** ---
+
+    // --- Load shaders ---
+    const char* vertex_shader = eng.loadShaderFile("../assets/shaders/triangle_vertex.txt");
+    const char* fragment_shader = eng.loadShaderFile("../assets/shaders/triangle_fragment.txt");
+    // --- *** ---
+
+    // --- Setup uniforms ---
+    glm::mat4x4 mvp, model;
     std::vector<Window::UniformAttrib> uniforms = {
-        {"MVP", -1, Window::UniformTypes::Mat4, nullptr}
+        {"MVP", -1, Window::UniformTypes::Mat4, glm::value_ptr(mvp)}
     };
 
     std::vector<Window::VertexAttrib> attributes = {
-        { "vPos", 2, offsetof(Vertex, x) },
-        { "vCol", 3, offsetof(Vertex, r) }
+        { "position", 3, offsetof(Vertexes, x) },
+        { "voido", 3, offsetof(Vertexes, u) },
+        { "triCol", 3, offsetof(Vertexes, r) }
     };
+    // --- *** ---
 
-    const char* vertex_shader = eng.loadShaderFile("../assets/shaders/triangle_vertex.txt");
-    const char* fragment_shader = eng.loadShaderFile("../assets/shaders/triangle_fragment.txt");
-
+    // --- Setup Window ---
     eng.windowOpenglSetup(
-        vertex,
+        redners,
         vertex_shader,
         fragment_shader,
         uniforms,
-        attributes,
-        sizeof(Vertex),
-        ammountPoints
+        attributes
     );
+    // --- *** ---
 
-    glm::mat4x4 m, p, mvp;
-    uniforms[0].values = glm::value_ptr(mvp);
-
+    // --- Drawable transform additions ---
     float ratio = eng.windowGetSizeRatio();
+    float movSpeed = 0.05f;
+    float scaSpeed = 0.01f;
+    float scale = 0.1f;
+    // --- *** ---
+
+    // --- Camera ---
+    MTRD::Camera camera(
+        glm::vec3(0.f, 0.f, 5.f),
+        glm::vec3(0.f, 0.f, 0.f),
+        glm::vec3(0.f, 1.f, 0.f),
+        glm::radians(45.f),
+        ratio,
+        0.1f,
+        100.f
+    );
+    // --- *** ---
 
     while (!eng.windowShouldClose()) {
 
         eng.windowInitFrame();
 
-        m = glm::mat4(1.f);
-        m = glm::rotate(m, (float)eng.windowGetTimer(), glm::vec3(0.f, 0.f, 1.f));
-        p = glm::ortho(-ratio, ratio, -1.f, 1.f, -1.f, 1.f);
-        mvp = p * m;
+        // --- create mvp ---
+        model = glm::mat4(1.f);
+        model = glm::scale(model, { scale, scale, scale });
+
+        mvp = camera.getProjection() * camera.getView() * model;
+        // --- *** ---
 
 
+        // --- Setup uniforms and draw ---
         eng.windowOpenglSetUniformsValues(uniforms);
-        eng.windowOpenglProgramUniformDraw(ammountPoints);
+        eng.windowOpenglProgramUniformDraw(redners);
+        // --- *** ---
 
         eng.windowEndFrame();
     }

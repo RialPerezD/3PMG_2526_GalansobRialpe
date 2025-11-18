@@ -83,17 +83,17 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Setup uniforms ---
-    glm::mat4x4 mvp, model;
+    glm::mat4x4 mvp;
 
     std::vector<Window::UniformAttrib> uniforms = {
-        {"MVP", -1, Window::UniformTypes::Mat4, glm::value_ptr(mvp)},
-        {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
+        {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(mvp)}
     };
 
     std::vector<Window::VertexAttrib> attributes = {
         { "position", 3, offsetof(Vertex, position) },
         { "uv", 2, offsetof(Vertex, uv) },
-        { "normal", 3, offsetof(Vertex, normal) }
+        { "normal", 3, offsetof(Vertex, normal) },
+        { "model", 16, offsetof(Vertex, model) }
     };
     // --- *** ---
 
@@ -149,7 +149,7 @@ int MTRD::main() {
         // --- Load shaders ---
 
         // --- create mvp ---
-        model = glm::mat4(1.f);
+        glm::mat4x4 model = glm::mat4(1.f);
         model = glm::scale(model, { scale, scale, scale });
 
         mvp = camera.getProjection() * camera.getView() * model;

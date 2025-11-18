@@ -2,7 +2,7 @@
 
 namespace MTRD {
 
-    Vertex::Vertex() : position(0.0f), uv(0.0f), normal(0.0f) {}
+    Vertex::Vertex() : position(0.0f), uv(0.0f), normal(0.0f), model(glm::mat4(1.f)) {}
 
 
     Material::Material()
@@ -13,7 +13,7 @@ namespace MTRD {
     Shape::Shape() : vertices(), materialId(-1), vao(GL_INVALID_INDEX) {}
 
 
-    Render::Render() : shapes(), materials() {}
+    Render::Render() : shapes(new std::vector<Shape>()), materials(new std::vector<Material>()) {}
 
 
     Render::Render(std::vector<Shape>* shps, std::vector<Material>* mats){
