@@ -75,6 +75,7 @@ namespace MTRD {
 
 
     // --- Movement ---
+    //update mover
     void Camera::moveForward(float delta) { position_ += front_ * delta; updateAll(); }
     void Camera::moveBackward(float delta) { position_ -= front_ * delta; updateAll(); }
     void Camera::moveRight(float delta) { position_ += right_ * delta; updateAll(); }

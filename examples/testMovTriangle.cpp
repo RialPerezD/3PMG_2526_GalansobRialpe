@@ -100,7 +100,7 @@ int MTRD::main() {
 
 
         eng.windowOpenglSetUniformsValues(uniforms);
-        eng.windowOpenglProgramUniformDraw(ammountPoints);
+        eng.windowOpenglProgramUniformDrawRender(ammountPoints);
 
         eng.windowEndFrame();
     }

@@ -2,7 +2,7 @@
 
 namespace MTRD {
 
-    Vertex::Vertex() : position(0.0f), uv(0.0f), normal(0.0f), model(glm::mat4(1.f)) {}
+    Vertex::Vertex() : position(0.0f), uv(0.0f), normal(0.0f) {}
 
 
     Material::Material()

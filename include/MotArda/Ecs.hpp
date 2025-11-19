@@ -107,14 +107,3 @@ void ECSManager::RemoveComponent(unsigned long entity) {
         list.end());
 }
 
-
-template<typename T>
-std::vector<T*>& ECSManager::GetAllComponents() {
-    auto& list = GetComponentList<T>();
-    std::vector<T*> result;
-    result.reserve(list.size());
-    for (auto& [_, comp] : list)
-        result.push_back(&comp);
-    return result;
-}
-

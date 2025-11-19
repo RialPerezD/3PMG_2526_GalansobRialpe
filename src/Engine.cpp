@@ -81,7 +81,7 @@ namespace MTRD {
 
 
     void MotardaEng::windowOpenglSetup(
-        std::vector<Render*>& renders,
+        std::vector<std::pair<size_t, Render>>& renderComponents,
         const char* vertexShader,
         const char* fragmentShader,
         std::vector<Window::UniformAttrib>& uniforms,
@@ -92,9 +92,9 @@ namespace MTRD {
         window_.openglGenerateFragmentShaders(fragmentShader);
         window_.openglCreateProgram();
 
-        if (renders.size() == 0) return;
+        if (renderComponents.size() == 0) return;
         updateVertexBuffers(
-            renders,
+            renderComponents,
             uniforms,
             attributes
         );
@@ -111,8 +111,8 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowOpenglProgramUniformDraw(std::vector<Render*>& renders) {
-        window_.openglProgramUniformDraw(renders);
+    void MotardaEng::windowOpenglProgramUniformDrawRender(Render& renderComponents) {
+        window_.openglProgramUniformDraw(renderComponents);
     }
 
 
@@ -195,17 +195,18 @@ namespace MTRD {
 
 
     void MotardaEng::updateVertexBuffers(
-        std::vector<Render*>& renders,
+        std::vector<std::pair<size_t, Render>>& renderComponents,
         std::vector<Window::UniformAttrib>& uniforms,
         const std::vector<Window::VertexAttrib>& attributes
     ) {
-        for (int i = 0; i < renders.size(); i++) {
-            for (int j = 0; j < renders[i]->shapes->size(); j++) {
-                std::vector<Vertex> vertexes = renders[i]->shapes->at(j).vertices;
+        for (int i = 0; i < renderComponents.size(); i++) {
+            Render* render = &renderComponents[i].second;
+            for (int j = 0; j < render->shapes->size(); j++) {
+                std::vector<Vertex> vertexes = render->shapes->at(j).vertices;
                 const void* vertexBuffer = static_cast<const void*> (vertexes.data());
 
-                window_.openglClearVertexBuffers(renders[i]->shapes->at(j).vao);
-                window_.openglGenerateVertexBuffers(vertexBuffer, vertexes.size(), renders[i]->shapes->at(j).vao);
+                window_.openglClearVertexBuffers(render->shapes->at(j).vao);
+                window_.openglGenerateVertexBuffers(vertexBuffer, vertexes.size(), render->shapes->at(j).vao);
                 window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
             }
         }

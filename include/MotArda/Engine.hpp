@@ -33,7 +33,7 @@ namespace MTRD {
 			const std::vector<Window::VertexAttrib>& attributes
 		);
 		void windowOpenglSetup(
-			std::vector<Render*>& renders,
+			std::vector<std::pair<size_t, Render>>& renderComponents,
 			const char* vertexShader,
 			const char* fragmentShader,
 			std::vector<Window::UniformAttrib>& uniforms,
@@ -41,7 +41,7 @@ namespace MTRD {
 		);
 		void windowInitFrame();
 		void windowOpenglSetUniformsValues(std::vector<Window::UniformAttrib> uniforms);
-		void windowOpenglProgramUniformDraw(std::vector<Render*>& renders);
+		void windowOpenglProgramUniformDrawRender(Render& render);
 		void windowSetDebugMode(bool b);
 		void windowLoadAllMaterials(std::vector<MTRD::Window::ObjItem>& objItemsList);
 		void close();
@@ -55,7 +55,7 @@ namespace MTRD {
 		std::vector<MTRD::Window::ObjItem> loadObjs(std::vector <const char*> routes);
 		const char* loadShaderFile(const char* filename);
 		void updateVertexBuffers(
-			std::vector<Render*>& renders,
+			std::vector<std::pair<size_t, Render>>& renderComponents,
 			std::vector<Window::UniformAttrib>& uniforms,
 			const std::vector<Window::VertexAttrib>& attributes
 		);

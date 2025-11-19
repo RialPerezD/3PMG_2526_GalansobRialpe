@@ -85,7 +85,7 @@ namespace MTRD {
 
         void openglViewportAndClear();
         void openglSetUniformsValues(const std::vector<Window::UniformAttrib>& uniforms);
-        void openglProgramUniformDraw(std::vector<Render*>& renders);
+        void openglProgramUniformDraw(Render& render);
         void openglLoadMaterials(std::vector<Material>& materials);
 
 

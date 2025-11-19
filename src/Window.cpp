@@ -376,35 +376,33 @@ namespace MTRD {
     }
 
 
-    void Window::openglProgramUniformDraw(std::vector<Render*>& renders) {
+    //meter esto en un render system
+    void Window::openglProgramUniformDraw(Render& render) {
         glUseProgram(program);
         auto loc = glGetUniformLocation(program, "diffuseTexture");
 
-        for (Render* render : renders) {
-            for (size_t i = 0; i < render->shapes->size(); i++) {
-                Shape* shape = &render->shapes->at(i);
+        for (size_t i = 0; i < render.shapes->size(); i++) {
+            Shape* shape = &render.shapes->at(i);
 
-                if (shape->materialId != -1) {
-                    Material mat = render->materials->at(shape->materialId);
+            if (shape->materialId != -1) {
+                Material mat = render.materials->at(shape->materialId);
 
-                    if (!mat.loadeable) continue;
+                if (!mat.loadeable) continue;
 
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
-                    glUniform1i(loc, 0);
-
-                    if (debug_) {
-                        glCheckError();
-                    }
-                }
-
-                glBindVertexArray(shape->vao);
-                glDrawArrays(GL_TRIANGLES, 0, shape->vertices.size());
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
+                glUniform1i(loc, 0);
 
                 if (debug_) {
                     glCheckError();
                 }
+            }
 
+            glBindVertexArray(shape->vao);
+            glDrawArrays(GL_TRIANGLES, 0, shape->vertices.size());
+
+            if (debug_) {
+                glCheckError();
             }
         }
     }

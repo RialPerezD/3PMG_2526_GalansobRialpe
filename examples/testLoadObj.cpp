@@ -157,7 +157,7 @@ int MTRD::main() {
 
         // --- Setup uniforms and draw ---
         eng.windowOpenglSetUniformsValues(uniforms);
-        eng.windowOpenglProgramUniformDraw(redners);
+        eng.windowOpenglProgramUniformDrawRender(redners);
         // --- *** ---
 
         eng.windowEndFrame();
