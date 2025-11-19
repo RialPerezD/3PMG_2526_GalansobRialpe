@@ -89,7 +89,7 @@ int MTRD::main() {
 
     // --- Setup uniforms ---
     glm::mat4x4 vp, model;
-
+    //empacar
     std::vector<Window::UniformAttrib> uniforms = {
         {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
         {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
