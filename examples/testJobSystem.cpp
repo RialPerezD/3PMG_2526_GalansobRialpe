@@ -107,7 +107,7 @@ int MTRD::main() {
     );
     // --- *** ---
 
-    // --- Drawable transform additions ---
+    // --- Drawable transforms additions ---
     float ratio = eng.windowGetSizeRatio();
     float movSpeed = 0.05f;
     float scaSpeed = 0.01f;
