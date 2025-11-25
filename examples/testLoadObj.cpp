@@ -8,6 +8,7 @@
 #include "../deps/glm-master/glm/glm.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
+#include <MotArda/Systems.hpp>
 
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
@@ -30,7 +31,7 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Load Objs ---
-    std::vector <const char*> objsRoutes = { "indoor_plant_02.obj" };
+    std::vector <const char*> objsRoutes = { "12140_Skull_v3_L2.obj" };
 
     std::atomic<bool> objsLoaded = false;
     std::vector<MTRD::Window::ObjItem> objItemList;
@@ -54,27 +55,27 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Create drawable entitys ---
-    std::unordered_map<unsigned long, std::string> entityIdList;
     ECSManager ecs;
     ecs.AddComponentType<MTRD::Transform>();
     ecs.AddComponentType<MTRD::Render>();
 
     unsigned long entity = ecs.AddEntity();
-    entityIdList[entity] = "Entidad 1";
 
     MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
-    t->position = glm::vec3(1.0f, 0.0f, 0.0f);
-    t->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-    t->scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    t->position = glm::vec3(0.0f);
+    t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(0.05f);
 
     MTRD::Render* r = ecs.AddComponent<MTRD::Render>(entity);
     r->shapes = &objItemList[0].shapes;
     r->materials = &objItemList[0].materials;
+    // --- *** ---
 
-    std::vector<Render*> redners;
-    for (std::pair<size_t, Render> element : ecs.GetComponentList<Render>()) {
-        redners.push_back(&element.second);
-    }
+    MTRD::Transform* asd = ecs.GetComponent<MTRD::Transform>(entity);
+
+    // --- Systems ---
+    Systems systems;
     // --- *** ---
 
     // --- Load shaders ---
@@ -83,10 +84,10 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Setup uniforms ---
-    glm::mat4x4 mvp, model;
+    glm::mat4x4 vp, model;
 
     std::vector<Window::UniformAttrib> uniforms = {
-        {"MVP", -1, Window::UniformTypes::Mat4, glm::value_ptr(mvp)},
+        {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
         {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
     };
 
@@ -99,7 +100,7 @@ int MTRD::main() {
 
     // --- Setup Window ---
     eng.windowOpenglSetup(
-        redners,
+        ecs.GetComponentList<Render>(),
         vertex_shader,
         fragment_shader,
         uniforms,
@@ -107,11 +108,16 @@ int MTRD::main() {
     );
     // --- *** ---
 
-    // --- Drawable transform additions ---
+    // --- Drawable transforms additions ---
     float ratio = eng.windowGetSizeRatio();
     float movSpeed = 0.05f;
     float scaSpeed = 0.01f;
     float scale = 0.1f;
+
+    scale = 0.025f; scaSpeed = 0.001f;
+
+    bool needChangeObj = false;
+    int objIndex = 0;
     // --- *** ---
 
     // --- Camera ---
@@ -124,6 +130,8 @@ int MTRD::main() {
         0.1f,
         100.f
     );
+
+    camera.updateAll();
     // --- *** ---
 
     // --- Main window bucle ---
@@ -142,22 +150,26 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.rotate(-10.0f, 0.0f);
         // --- *** ---
 
+        if (eng.inputIsKeyDown(Input::Keyboard::C)) {
+            needChangeObj = true;
+            objIndex = (objIndex + 1) % 3;
+        }
+        if (eng.inputIsKeyDown(Input::Keyboard::V)) {
+            needChangeObj = true;
+            objIndex = (objIndex + 2) % 3;
+        }
 
         // --- Input to scale object ---
-        if (eng.inputIsKeyPressed(Input::Keyboard::Z)) scale -= scaSpeed;
-        else if (eng.inputIsKeyPressed(Input::Keyboard::X)) scale += scaSpeed;
-        // --- Load shaders ---
+        if (eng.inputIsKeyPressed(Input::Keyboard::Z)) t->scale -= scaSpeed;
+        else if (eng.inputIsKeyPressed(Input::Keyboard::X)) t->scale += scaSpeed;
+        // --- *** ---
 
-        // --- create mvp ---
-        model = glm::mat4(1.f);
-        model = glm::scale(model, { scale, scale, scale });
-
-        mvp = camera.getProjection() * camera.getView() * model;
+        // --- update vp ---
+        vp = camera.getViewProj();
         // --- *** ---
 
         // --- Setup uniforms and draw ---
-        eng.windowOpenglSetUniformsValues(uniforms);
-        eng.windowOpenglProgramUniformDrawRender(redners);
+        systems.RunRenderSystem(ecs, eng, uniforms, model);
         // --- *** ---
 
         eng.windowEndFrame();

@@ -111,7 +111,6 @@ int MTRD::main() {
     m->rotation = glm::vec3(0, 0, 1);
     m->scale = glm::vec3(0.0f);
     m->shouldConstantMove = false;
-
     // --- *** ---
 
     // --- Systems ---
