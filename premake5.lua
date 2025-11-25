@@ -83,23 +83,25 @@ workspace "MotArda"
 		kind "StaticLib"
 		targetdir "build/%{cfg.buildcfg}"
 		conan_config_lib()
-		--pchheader "stdafx.hpp"
-		--pchsource "src/stdafx.cpp"
-		--forceincludes { "stdafx.hpp" }
 
 		files{
 			"premake5.lua",
 			"src/build/conanfile.txt",
-			--"src/stdafx.cpp", "src/stdafx.hpp",
 			"src/Window.cpp", "include/MotArda/Window.hpp",
 			"src/Engine.cpp", "include/MotArda/Engine.hpp",
 			"src/Input.cpp", "include/MotArda/Input.hpp",
 			"src/ObjLoader.cpp", "include/MotArda/ObjLoader.hpp",
 			"src/JobSystem.cpp", "include/MotArda/JobSystem.hpp",
+			"src/Camera.cpp", "include/MotArda/Camera.hpp",
+			"src/Systems.cpp", "include/MotArda/Systems.hpp",
+			"include/MotArda/Ecs.hpp",
+			"src/Components/Render.cpp", "include/MotArda/Components/Render.hpp",
+			"src/Components/Transform.cpp", "include/MotArda/Components/Transform.hpp",
+			"src/Components/Movement.cpp", "include/MotArda/Components/Movement.hpp",
 			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h"
 			}
 
-	project "WindowExample"
+	project "TestWindowExample"
 		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
@@ -109,9 +111,9 @@ workspace "MotArda"
 		conan_config_exec("Release")
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/window.cpp"
+		files "examples/testWindow.cpp"
 
-	project "TriangleExample"
+	project "TestTriangleExample"
 		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
@@ -121,9 +123,9 @@ workspace "MotArda"
 		conan_config_exec("Release")
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/triangle.cpp"
+		files "examples/testTriangle.cpp"
 
-	project "MovingTriangleExample"
+	project "TestMovingTriangleExample"
 		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
@@ -133,9 +135,9 @@ workspace "MotArda"
 		conan_config_exec("Release")
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/movTriangle.cpp"
+		files "examples/testMovTriangle.cpp"
 
-	project "ObjLoader"
+	project "TestObjLoaderExample"
 		kind "ConsoleApp"
 		language "C++"
 		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
@@ -145,5 +147,29 @@ workspace "MotArda"
 		conan_config_exec("Release")
 		conan_config_exec("RelWithDebInfo")
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/loadObj.cpp"
+		files "examples/testLoadObj.cpp"
+
+	project "TestJobSystemExample"
+		kind "ConsoleApp"
+		language "C++"
+		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
+		includedirs "include"
+		links "MotArda"
+		conan_config_exec("Debug")
+		conan_config_exec("Release")
+		conan_config_exec("RelWithDebInfo")
+		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
+		files "examples/testJobSystem.cpp"
+
+	project "TestEcsExample"
+		kind "ConsoleApp"
+		language "C++"
+		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
+		includedirs "include"
+		links "MotArda"
+		conan_config_exec("Debug")
+		conan_config_exec("Release")
+		conan_config_exec("RelWithDebInfo")
+		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
+		files "examples/testEcs.cpp"
 

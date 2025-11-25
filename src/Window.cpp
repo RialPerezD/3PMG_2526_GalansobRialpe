@@ -3,12 +3,17 @@
 #include <memory>
 #include <vector>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../deps/stb_image.h" 
+
 //Need this include to use WinMain
 #include <windows.h>
 #include <iostream>
 
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
+#include <algorithm>
+#include <MotArda/Engine.hpp>
 
 
 GLenum glCheckError_(const char* file, int line)
@@ -78,9 +83,9 @@ void APIENTRY glDebugOutput(GLenum source,
     case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "Severity: notification"; break;
     } std::cout << std::endl;
     std::cout << std::endl;
-
-
 }
+
+
 namespace MTRD {
 
     //Add more variables in body on future
@@ -96,6 +101,7 @@ namespace MTRD {
             }
         }
     }
+
 
     // Must be defined here as Data is not defined in the header
     Window::Window(Window&& right) = default;
@@ -131,12 +137,10 @@ namespace MTRD {
         wind.value().windowHeight_ = height;
         wind.value().debug_ = false;
 
+        wind->vertexBuffer = GL_INVALID_INDEX;
+
         return wind;
     }
-
-
-
-
 
 
     bool Window::shouldClose() {
@@ -167,6 +171,7 @@ namespace MTRD {
         }
         
     }
+
 
     double Window::timer() {
         return glfwGetTime();
@@ -199,16 +204,37 @@ namespace MTRD {
     }
 
 
-    void Window::openglGenerateBuffers(const void* vertex, size_t verticeSize, int numVertex) {
+    float Window::getLastFrameTime() {
+        double currentTime = timer();
+        float deltaTime = static_cast<float>(currentTime - lastFrameTime_);
+        lastFrameTime_ = currentTime;
+        return deltaTime;
+    }
+
+
+    void Window::openglGenerateVertexBuffers(const void* vertex, int numVertex, GLuint& vao) {
         glGenVertexArrays(1, &vao);
+        
         glBindVertexArray(vao);
         glGenBuffers(1, &vertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, verticeSize * numVertex, vertex, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * numVertex, vertex, GL_STATIC_DRAW);
+
 
         if (debug_) {
             glCheckError();
         }
+    }
+
+
+    void Window::openglClearVertexBuffers(GLuint& vao) {
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        glDeleteBuffers(1, &vertexBuffer);
+        vertexBuffer = GL_INVALID_INDEX;
+        glDeleteVertexArrays(1, &vao);
+        vao = GL_INVALID_INDEX;
     }
 
 
@@ -282,16 +308,19 @@ namespace MTRD {
         }
 
         glUseProgram(program);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
 
         if (debug_) {
             glCheckError();
         }
     }
 
+
     void Window::openglSetUniformsLocationsAndAtributtes(
         std::vector<Window::UniformAttrib>& uniforms,
-        const std::vector<VertexAttrib>& attributes,
-        size_t verticeSize
+        const std::vector<VertexAttrib>& attributes
     ){
         // Uniform locations
         for (auto& u : uniforms)
@@ -302,7 +331,7 @@ namespace MTRD {
             GLint loc = glGetAttribLocation(program, attr.name);
             if (loc >= 0) {
                 glEnableVertexAttribArray(loc);
-                glVertexAttribPointer(loc, attr.size, GL_FLOAT, GL_FALSE, verticeSize, (void*)attr.offset);
+                glVertexAttribPointer(loc, attr.size, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)attr.offset);
             }
         }
 
@@ -315,7 +344,7 @@ namespace MTRD {
 
     void Window::openglViewportAndClear() {
         glViewport(0, 0, windowWidth_, windowHeight_);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (debug_) {
             glCheckError();
@@ -356,28 +385,104 @@ namespace MTRD {
     }
 
 
-    void Window::openglProgramUniformDraw(int ammountPoints) {
-        glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, ammountPoints);
+    //meter esto en un render system
+    void Window::openglProgramUniformDraw(Render& render) {
+        glUseProgram(program);
+        auto loc = glGetUniformLocation(program, "diffuseTexture");
 
-        if (debug_) {
-            glCheckError();
+        for (size_t i = 0; i < render.shapes->size(); i++) {
+            Shape* shape = &render.shapes->at(i);
+
+            if (shape->materialId != -1) {
+                Material mat = render.materials->at(shape->materialId);
+
+                if (!mat.loadeable) continue;
+
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
+                glUniform1i(loc, 0);
+
+                if (debug_) {
+                    glCheckError();
+                }
+            }
+
+            glBindVertexArray(shape->vao);
+            glDrawArrays(GL_TRIANGLES, 0, shape->vertices.size());
+
+            if (debug_) {
+                glCheckError();
+            }
         }
+    }
 
+
+    void Window::openglLoadMaterials(std::vector<Material>& materials) {
+        std::unordered_map<std::string, GLuint> textureCache;
+
+        for (auto& mat : materials) {
+            if (!mat.diffuseTexPath.empty()) {
+                
+                std::string route = mat.diffuseTexPath;
+
+                std::string key(route);
+                if (textureCache.find(key) != textureCache.end()) {
+                    mat.diffuseTexID = textureCache[key];
+                    continue;
+                }
+
+                GLuint tex = -1;
+                glGenTextures(1, &tex);
+                glBindTexture(GL_TEXTURE_2D, tex);
+
+                // Configuracion basica de la textura
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+                int width, height, channels;
+                stbi_set_flip_vertically_on_load(true); // Invierte verticalmente para OpenGL
+                unsigned char* data = stbi_load(route.c_str(), &width, &height, &channels, 0);
+
+                if (!data) {
+                    std::cerr << "Error cargando textura: " << route << std::endl;
+                    mat.diffuseTexID = -1; // -1 significa sin textura
+                    continue;
+                }
+
+                GLenum format;
+
+                switch (channels) {
+                case 1:
+                    format = GL_RED;
+                    break;
+                case 3:
+                    format = GL_RGB;
+                    break;
+                case 4:
+                    format = GL_RGBA;
+                    break;
+                default:
+                    format = GL_RGB;
+                    break;
+                }
+
+                glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+                glGenerateMipmap(GL_TEXTURE_2D);
+
+                stbi_image_free(data);
+
+                textureCache[key] = tex; // Guardamos la textura en la cache
+                mat.diffuseTexID = tex;
+                continue;
+            }
+        }
     }
 }
 
 
-/* Entry point for window, parameters are:
-*
-* -hInstance: handle (ID) for a program when it runs. The operating system uses it to know which EXE is in memory. Some Windows functions need it, like when loading icons or images.
-* -hPrevInstance: has no meaning. It was used in 16-bit Windows, but is now always zero.
-* -pCmdLine: contains the command-line arguments as a Unicode string.
-* -nCmdShow: a flag that indicates whether the main application window is minimized, maximized, or shown normally.
-*
-* The function returns an int value. The operating system doesn't use the return value, but you can use the value to pass a status code to another program.
-*/
-// int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PSTR lpCmdLine, _In_ int nCmdShow)
+// Entry point for window:
 int main()
 {
     // Initializes the GLFW library and prepares it for use.
