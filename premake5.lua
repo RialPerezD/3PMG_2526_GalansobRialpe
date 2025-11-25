@@ -93,6 +93,7 @@ workspace "MotArda"
 			"src/ObjLoader.cpp", "include/MotArda/ObjLoader.hpp",
 			"src/JobSystem.cpp", "include/MotArda/JobSystem.hpp",
 			"src/Camera.cpp", "include/MotArda/Camera.hpp",
+			"src/Systems.cpp", "include/MotArda/Systems.hpp",
 			"include/MotArda/Ecs.hpp",
 			"src/Components/Render.cpp", "include/MotArda/Components/Render.hpp",
 			"src/Components/Transform.cpp", "include/MotArda/Components/Transform.hpp",

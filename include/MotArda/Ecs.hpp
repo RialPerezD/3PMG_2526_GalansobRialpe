@@ -45,7 +45,7 @@ public:
     template<typename T> T* GetComponent(unsigned long entity);
     template<typename T> T* AddComponent(unsigned long entity);
     template<typename T> void RemoveComponent(unsigned long entity);
-    template<typename T> std::vector<T*>& GetAllComponents();
+    template<typename... Components> std::vector<size_t> GetEntitiesWithComponents();
 };
 
 
@@ -106,4 +106,25 @@ void ECSManager::RemoveComponent(unsigned long entity) {
         [entity](auto& p) { return p.first == entity; }),
         list.end());
 }
+
+template<typename ... Components>
+inline std::vector<size_t> ECSManager::GetEntitiesWithComponents(){
+
+    auto lists = std::make_tuple(GetComponentList<Components>()...);
+    std::vector<size_t> result;
+    auto& firstList = std::get<0>(lists);
+
+    for (auto& [entity, _] : firstList) {
+
+        bool hasAll = true;
+
+        (..., (hasAll &= (GetComponent<Components>(entity) != nullptr)));
+
+        if (hasAll)
+            result.push_back(entity);
+    }
+
+    return result;
+}
+
 

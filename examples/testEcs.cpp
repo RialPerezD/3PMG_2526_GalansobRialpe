@@ -8,12 +8,17 @@
 #include "../deps/glm-master/glm/glm.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
+#include <MotArda/Systems.hpp>
 
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
 }
 
 int MTRD::main() {
+
+    // --- Rand seed ---
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
+    // --- *** ---
 
     // --- Create engine ---
     auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda OBJ Viewer");
@@ -59,25 +64,36 @@ int MTRD::main() {
 
 
     // --- Create drawable entitys ---
-    std::unordered_map<unsigned long, std::string> entityIdList;
     ECSManager ecs;
     ecs.AddComponentType<MTRD::Transform>();
     ecs.AddComponentType<MTRD::Render>();
 
-    for (int i = 0; i < 3; i++) {
-        unsigned long entity = ecs.AddEntity();
-        entityIdList[entity] = "Entidad "+i;
+    std::vector<MTRD::Transform> randomStats;
+    for (int y = 0; y < 10; y++) {
+        for (int x = 0; x < 10; x++) {
+            unsigned long entity = ecs.AddEntity();
 
-        MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
-        t->position = glm::vec3(1.0f + (i*50), 0.0f, 0.0f);
-        t->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-        t->scale = glm::vec3(1.0f, 1.0f, 1.0f);
+            float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
+            MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
+            t->position = glm::vec3(-3.0f + (y * 0.6), -2.0f + (x * 0.4f), 0.0f);
+            t->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+            t->scale = glm::vec3(scl, scl, scl);
 
-        MTRD::Render* r = ecs.AddComponent<MTRD::Render>(entity);
-        r->shapes = &objItemList[0].shapes;
-        r->materials = &objItemList[0].materials;
+            MTRD::Render* r = ecs.AddComponent<MTRD::Render>(entity);
+            r->shapes = &objItemList[0].shapes;
+            r->materials = &objItemList[0].materials;
+
+            randomStats.push_back(Transform(
+                { std::rand() % 3 - 1, std::rand() % 3 - 1, 0 },
+                { 0, 0, 0 },
+                { std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1 }
+            ));
+        }
     }
+    // --- *** ---
 
+    // --- Systems ---
+    Systems systems;
     // --- *** ---
 
 
@@ -118,8 +134,6 @@ int MTRD::main() {
     // --- Drawable transform additions ---
     float ratio = eng.windowGetSizeRatio();
     float movSpeed = 0.05f;
-    float scaSpeed = 0.01f;
-    float scale = 0.1f;
     // --- *** ---
 
 
@@ -138,6 +152,8 @@ int MTRD::main() {
     // --- *** ---
 
     //eng deveria decirme cuanto ha tardado el ultimo frame
+
+    float frameTime = 0;
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
@@ -173,35 +189,19 @@ int MTRD::main() {
         // --- *** ---
 
 
-        // --- Input to scale object ---
-        if (eng.inputIsKeyPressed(Input::Keyboard::Z)) scale -= scaSpeed;
-        else if (eng.inputIsKeyPressed(Input::Keyboard::X)) scale += scaSpeed;
-        // --- Load shaders ---
-
-
         // --- update vp ---
         vp = camera.getViewProj();
         // --- *** ---
 
 
         // --- Setup uniforms and draw ---
-        //--//--//--esto no es un sistema
-        int i = 0;
-        for (auto& rc : ecs.GetComponentList<Render>()) {
-            Render render = rc.second;
-
-            model = glm::mat4(1.f);
-            float newx = itemMov.x + i;
-            model = glm::translate(model, { newx, 0, 0 });
-            model = glm::scale(model, { scale, scale, scale });
-
-            eng.windowOpenglSetUniformsValues(uniforms);
-            eng.windowOpenglProgramUniformDrawRender(rc.second);
-            i += 1;
-        }
+        systems.RunRenderSystemWithTraslations(ecs, eng, uniforms, model, randomStats);
         // --- *** ---
 
         eng.windowEndFrame();
+
+        frameTime = eng.windowGetLastFrameTime();
+        //printf("Last frame time: %.4f secs\n", frameTime);
     }
 
     return 0;

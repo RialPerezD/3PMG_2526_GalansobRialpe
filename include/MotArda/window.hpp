@@ -71,6 +71,7 @@ namespace MTRD {
         void setErrorCallback(void(*function)(int, const char*));
         float getSizeRatio();
         void setKeyCallback(void* keyCallback);
+        float getLastFrameTime();
 
         //------OpenGl functions-----------------------
         void openglGenerateVertexBuffers(const void* vertex, int numVertex, GLuint& vao);
@@ -100,5 +101,7 @@ namespace MTRD {
 
         void checkErrors();
         bool debug_;
+
+        double lastFrameTime_ = 0.0;
     };
 }

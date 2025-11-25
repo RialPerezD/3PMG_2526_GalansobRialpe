@@ -128,13 +128,13 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowLoadMaterials(std::vector<Material>& materials) {
-        window_.openglLoadMaterials(materials);
+    float MotardaEng::windowGetLastFrameTime() {
+        return window_.getLastFrameTime();
     }
 
 
-    void MotardaEng::close() {
-        //TODO
+    void MotardaEng::windowLoadMaterials(std::vector<Material>& materials) {
+        window_.openglLoadMaterials(materials);
     }
 
 

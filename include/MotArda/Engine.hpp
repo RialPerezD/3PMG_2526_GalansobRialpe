@@ -44,7 +44,7 @@ namespace MTRD {
 		void windowOpenglProgramUniformDrawRender(Render& render);
 		void windowSetDebugMode(bool b);
 		void windowLoadAllMaterials(std::vector<MTRD::Window::ObjItem>& objItemsList);
-		void close();
+		float windowGetLastFrameTime();
 
 		bool inputIsKeyPressed(Input::Keyboard key);
 		bool inputIsKeyDown(Input::Keyboard key);

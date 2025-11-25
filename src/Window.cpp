@@ -13,6 +13,7 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 #include <algorithm>
+#include <MotArda/Engine.hpp>
 
 
 GLenum glCheckError_(const char* file, int line)
@@ -200,6 +201,14 @@ namespace MTRD {
     void Window::setKeyCallback(void* keyCallback) {
         auto parsed = reinterpret_cast<void(*)(GLFWwindow*, int, int, int, int)>(keyCallback);
         glfwSetKeyCallback(data->glfw_window, parsed);
+    }
+
+
+    float Window::getLastFrameTime() {
+        double currentTime = timer();
+        float deltaTime = static_cast<float>(currentTime - lastFrameTime_);
+        lastFrameTime_ = currentTime;
+        return deltaTime;
     }
 
 
