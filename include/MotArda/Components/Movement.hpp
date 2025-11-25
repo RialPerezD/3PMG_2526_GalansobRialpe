@@ -3,17 +3,21 @@
 
 namespace MTRD {
 
-    struct Transform {
+    struct Movement {
         glm::vec3 position;
         glm::vec3 scale;
         glm::vec3 rotation;
         float angleRotationRadians;
 
-        Transform();
-        Transform(
+        bool shouldConstantMove;
+
+        Movement();
+        Movement(
             const glm::vec3& pos,
             const glm::vec3& scl,
             const glm::vec3& rot,
-            float angleRotationRadians);
+            float angleRotationRadians,
+            bool should
+        );
     };
 }

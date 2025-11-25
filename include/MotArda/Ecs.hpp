@@ -8,6 +8,7 @@
 #include <cassert>
 #include "MotArda/Components/Transform.hpp"
 #include "MotArda/Components/Render.hpp"
+#include <MotArda/Components/Movement.hpp>
 
 
 class ECSListBase {

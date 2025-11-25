@@ -97,6 +97,7 @@ workspace "MotArda"
 			"include/MotArda/Ecs.hpp",
 			"src/Components/Render.cpp", "include/MotArda/Components/Render.hpp",
 			"src/Components/Transform.cpp", "include/MotArda/Components/Transform.hpp",
+			"src/Components/Movement.cpp", "include/MotArda/Components/Movement.hpp",
 			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h"
 			}
 

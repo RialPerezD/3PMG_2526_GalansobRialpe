@@ -37,7 +37,10 @@ int MTRD::main() {
 
 
     // --- Load Objs ---
-    std::vector <const char*> objsRoutes = { "indoor_plant_02.obj" };
+    std::vector <const char*> objsRoutes = {
+        "indoor_plant_02.obj",
+        "12140_Skull_v3_L2.obj"
+    };
 
     std::atomic<bool> objsLoaded = false;
     std::vector<MTRD::Window::ObjItem> objItemList;
@@ -67,8 +70,8 @@ int MTRD::main() {
     ECSManager ecs;
     ecs.AddComponentType<MTRD::Transform>();
     ecs.AddComponentType<MTRD::Render>();
+    ecs.AddComponentType<MTRD::Movement>();
 
-    std::vector<MTRD::Transform> randomStats;
     for (int y = 0; y < 10; y++) {
         for (int x = 0; x < 10; x++) {
             unsigned long entity = ecs.AddEntity();
@@ -76,20 +79,39 @@ int MTRD::main() {
             float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
             MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
             t->position = glm::vec3(-3.0f + (y * 0.6), -2.0f + (x * 0.4f), 0.0f);
-            t->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-            t->scale = glm::vec3(scl, scl, scl);
+            t->rotation = glm::vec3(0.0f);
+            t->scale = glm::vec3(scl);
 
             MTRD::Render* r = ecs.AddComponent<MTRD::Render>(entity);
             r->shapes = &objItemList[0].shapes;
             r->materials = &objItemList[0].materials;
 
-            randomStats.push_back(Transform(
-                { std::rand() % 3 - 1, std::rand() % 3 - 1, 0 },
-                { 0, 0, 0 },
-                { std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1 }
-            ));
+            MTRD::Movement* m = ecs.AddComponent<MTRD::Movement>(entity);
+            m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
+            m->rotation = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1);
+            m->scale = glm::vec3(0.0f);
         }
     }
+
+
+    unsigned long player = ecs.AddEntity();
+
+    MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(player);
+    t->position = glm::vec3(0);
+    t->rotation = glm::vec3(1,0,0);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(0.02f);
+
+    MTRD::Render* r = ecs.AddComponent<MTRD::Render>(player);
+    r->shapes = &objItemList[1].shapes;
+    r->materials = &objItemList[1].materials;
+
+    MTRD::Movement* m = ecs.AddComponent<MTRD::Movement>(player);
+    m->position = glm::vec3(0);
+    m->rotation = glm::vec3(0, 0, 1);
+    m->scale = glm::vec3(0.0f);
+    m->shouldConstantMove = false;
+
     // --- *** ---
 
     // --- Systems ---
@@ -173,6 +195,18 @@ int MTRD::main() {
         // --- *** ---
 
 
+        // --- Input to move player skull ---
+        if (eng.inputIsKeyPressed(Input::Keyboard::I)) m->position.y += 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::K)) m->position.y -= 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::L)) m->position.x += 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::J)) m->position.x -= 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::U)) m->angleRotationRadians += 0.05f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::O)) m->angleRotationRadians -= 0.05f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::N)) m->scale += glm::vec3(0.005f);
+        if (eng.inputIsKeyPressed(Input::Keyboard::M)) m->scale -= glm::vec3(0.005f);
+        // --- *** ---
+
+
         // --- Item Movement ---
         glm::vec3 itemMov = glm::vec3(0.f, 0.f, 0.f);
         if (eng.inputIsKeyPressed(Input::Keyboard::I)) {
@@ -195,7 +229,7 @@ int MTRD::main() {
 
 
         // --- Setup uniforms and draw ---
-        systems.RunRenderSystemWithTraslations(ecs, eng, uniforms, model, randomStats);
+        systems.RunRenderSystemWithTraslations(ecs, eng, uniforms, model);
         // --- *** ---
 
         eng.windowEndFrame();

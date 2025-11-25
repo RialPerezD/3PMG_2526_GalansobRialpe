@@ -18,8 +18,7 @@ namespace MTRD {
             ECSManager& ecs,
             MotardaEng& eng,
             std::vector<Window::UniformAttrib>& uniforms,
-            glm::mat4& model,
-            std::vector<MTRD::Transform>& randomStats
+            glm::mat4& model
         );
 
     private:
