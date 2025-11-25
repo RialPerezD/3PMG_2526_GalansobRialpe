@@ -16,8 +16,9 @@ namespace MTRD {
             model = glm::mat4(1.f);
             model = glm::translate(model, transform->position);
             model = glm::scale(model, transform->scale);
-            model = glm::rotate(model, transform->angleRotationRadians, transform->rotation
-            );
+            if (glm::length(transform->rotation) != 0) {
+                model = glm::rotate( model, transform->angleRotationRadians, transform->rotation);
+            }
 
             eng.windowOpenglSetUniformsValues(uniforms);
             eng.windowOpenglProgramUniformDrawRender(*render);

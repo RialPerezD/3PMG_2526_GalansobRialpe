@@ -8,6 +8,7 @@
 #include "../deps/glm-master/glm/glm.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
+#include <MotArda/Systems.hpp>
 
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
@@ -54,27 +55,27 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Create drawable entitys ---
-    std::unordered_map<unsigned long, std::string> entityIdList;
     ECSManager ecs;
     ecs.AddComponentType<MTRD::Transform>();
     ecs.AddComponentType<MTRD::Render>();
 
     unsigned long entity = ecs.AddEntity();
-    entityIdList[entity] = "Entidad 1";
 
     MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
-    t->position = glm::vec3(1.0f, 0.0f, 0.0f);
-    t->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-    t->scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    t->position = glm::vec3(0.0f);
+    t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(0.05f);
 
     MTRD::Render* r = ecs.AddComponent<MTRD::Render>(entity);
     r->shapes = &objItemList[0].shapes;
     r->materials = &objItemList[0].materials;
+    // --- *** ---
 
-    std::vector<Render*> redners;
-    for (std::pair<size_t, Render> element : ecs.GetComponentList<Render>()) {
-        redners.push_back(&element.second);
-    }
+    MTRD::Transform* asd = ecs.GetComponent<MTRD::Transform>(entity);
+
+    // --- Systems ---
+    Systems systems;
     // --- *** ---
 
     // --- Load shaders ---
@@ -83,10 +84,10 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Setup uniforms ---
-    glm::mat4x4 mvp, model;
+    glm::mat4x4 vp, model;
 
     std::vector<Window::UniformAttrib> uniforms = {
-        {"MVP", -1, Window::UniformTypes::Mat4, glm::value_ptr(mvp)},
+        {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
         {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
     };
 
@@ -99,7 +100,7 @@ int MTRD::main() {
 
     // --- Setup Window ---
     eng.windowOpenglSetup(
-        redners,
+        ecs.GetComponentList<Render>(),
         vertex_shader,
         fragment_shader,
         uniforms,
@@ -129,6 +130,8 @@ int MTRD::main() {
         0.1f,
         100.f
     );
+
+    camera.updateAll();
     // --- *** ---
 
     // --- Main window bucle ---
@@ -157,20 +160,16 @@ int MTRD::main() {
         }
 
         // --- Input to scale object ---
-        if (eng.inputIsKeyPressed(Input::Keyboard::Z)) scale -= scaSpeed;
-        else if (eng.inputIsKeyPressed(Input::Keyboard::X)) scale += scaSpeed;
-        // --- Load shaders ---
-
-        // --- create mvp ---
-        model = glm::mat4(1.f);
-        model = glm::scale(model, { scale, scale, scale });
-
-        mvp = camera.getProjection() * camera.getView() * model;
+        if (eng.inputIsKeyPressed(Input::Keyboard::Z)) t->scale -= scaSpeed;
+        else if (eng.inputIsKeyPressed(Input::Keyboard::X)) t->scale += scaSpeed;
+        // --- *** ---
+         
+        // --- update vp ---
+        vp = camera.getViewProj();
         // --- *** ---
 
         // --- Setup uniforms and draw ---
-        eng.windowOpenglSetUniformsValues(uniforms);
-        eng.windowOpenglProgramUniformDrawRender(redners);
+        systems.RunRenderSystem(ecs, eng, uniforms, model);
         // --- *** ---
 
         eng.windowEndFrame();
@@ -178,18 +177,24 @@ int MTRD::main() {
 
         // --- Cambiar objeto si es necesario ---
         if (needChangeObj) {
+
+            t->rotation = glm::vec3(0.0f);
             switch (objIndex) {
             case 0:
                 objsRoutes = { "86jfmjiufzv2.obj" };
-                scale = 0.0001f; scaSpeed = 0.0001f;
+                t->scale = glm::vec3(0.0001f);
+                scaSpeed = 0.0001f;
                 break;
             case 1:
                 objsRoutes = { "12140_Skull_v3_L2.obj" };
-                scale = 0.025f; scaSpeed = 0.001f;
+                t->scale = glm::vec3(0.025f);
+                scaSpeed = 0.001f;
+                t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
                 break;
             case 2:
                 objsRoutes = { "indoor_plant_02.obj" };
-                scale = 0.1f; scaSpeed = 0.01f;
+                t->scale = glm::vec3(0.1f);
+                scaSpeed = 0.01f;
                 break;
             }
 
@@ -209,18 +214,10 @@ int MTRD::main() {
 
             printf("Maya %d cargada\n", objIndex);
 
-            // Reconstruir redners
-            redners.clear();
-
-            MTRD::Render* r = ecs.GetComponent<MTRD::Render>(entity);
             r->shapes = &objItemList[0].shapes;
             r->materials = &objItemList[0].materials;
 
-            for (std::pair<size_t, Render> element : ecs.GetComponentList<Render>()) {
-                redners.push_back(&element.second);
-            }
-
-            eng.updateVertexBuffers(redners, uniforms, attributes);
+            eng.updateVertexBuffers(ecs.GetComponentList<Render>(), uniforms, attributes);
             eng.windowLoadAllMaterials(objItemList);
 
             needChangeObj = false;
