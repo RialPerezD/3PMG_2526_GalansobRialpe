@@ -161,25 +161,43 @@ namespace MTRD {
 
     private:
         // --- Camera properties ---
+
+        //< Camera position
         glm::vec3 position_;
+        //< Position where the camera is lookign at
         glm::vec3 target_;
+        //< Direction to go up and down
         glm::vec3 up_;
+        //< Direction to go front and back 
         glm::vec3 front_;
+        //< Direction to go right and left
         glm::vec3 right_;
 
         // --- Parameters ---
+        //< Horizontal rotation
         float yaw_;
+        //< Vertical rotation
         float pitch_;
+        //< Field of view of the camera
         float fov_;
+        //< Proportional relationship between a screen's width and height
         float aspect_;
+        //< Near plane of the camera
         float near_;
+        //< Far plane of the camera
         float far_;
+        //< Movement speed of the camera
         float moveSpeed_;
+        //< Mouse sensitivity of the camera
         float sensitivity_;
 
         // --- Matrix ---
+        
+        //< View matrix of the camera
         glm::mat4 view_;
+        //< Projection matrix of the camera
         glm::mat4 projection_;
+        //< View matrix of the camera
         glm::mat4 viewProj_;
     };
 }
