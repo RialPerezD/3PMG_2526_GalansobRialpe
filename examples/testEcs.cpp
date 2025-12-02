@@ -74,7 +74,7 @@ int MTRD::main() {
 
     for (int y = 0; y < 10; y++) {
         for (int x = 0; x < 10; x++) {
-            unsigned long entity = ecs.AddEntity();
+            size_t entity = ecs.AddEntity();
 
             float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
             MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
@@ -94,7 +94,7 @@ int MTRD::main() {
     }
 
 
-    unsigned long player = ecs.AddEntity();
+    size_t player = ecs.AddEntity();
 
     MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(player);
     t->position = glm::vec3(0);

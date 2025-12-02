@@ -206,7 +206,11 @@ namespace MTRD {
                 const void* vertexBuffer = static_cast<const void*> (vertexes.data());
 
                 window_.openglClearVertexBuffers(render->shapes->at(j).vao);
-                window_.openglGenerateVertexBuffers(vertexBuffer, vertexes.size(), render->shapes->at(j).vao);
+                window_.openglGenerateVertexBuffers(
+                    vertexBuffer,
+                    static_cast<int>(vertexes.size()),
+                    render->shapes->at(j).vao
+                );
                 window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
             }
         }

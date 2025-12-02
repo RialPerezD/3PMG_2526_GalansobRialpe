@@ -39,13 +39,13 @@ class ECSManager {
 
 public:
     template<typename T> void AddComponentType();
-    unsigned long AddEntity();
-    void RemoveEntity(unsigned long entity);
+    size_t AddEntity();
+    void RemoveEntity(size_t entity);
 
     template<typename T> std::vector<std::pair<size_t, T>>& GetComponentList();
-    template<typename T> T* GetComponent(unsigned long entity);
-    template<typename T> T* AddComponent(unsigned long entity);
-    template<typename T> void RemoveComponent(unsigned long entity);
+    template<typename T> T* GetComponent(size_t entity);
+    template<typename T> T* AddComponent(size_t entity);
+    template<typename T> void RemoveComponent(size_t entity);
     template<typename... Components> std::vector<size_t> GetEntitiesWithComponents();
 };
 
@@ -60,13 +60,13 @@ void ECSManager::AddComponentType() {
 }
 
 
-inline unsigned long ECSManager::AddEntity() {
-    static unsigned long next_id = 0;
+inline size_t ECSManager::AddEntity() {
+    static size_t next_id = 0;
     return next_id++;
 }
 
 
-inline void ECSManager::RemoveEntity(unsigned long entity) {
+inline void ECSManager::RemoveEntity(size_t entity) {
     for (auto& [_, list_ptr] : component_map_) {
         list_ptr->removeEntity(entity);
     }
@@ -84,7 +84,7 @@ std::vector<std::pair<size_t, T>>& ECSManager::GetComponentList() {
 
 
 template<typename T>
-T* ECSManager::GetComponent(unsigned long entity) {
+T* ECSManager::GetComponent(size_t entity) {
     auto& list = GetComponentList<T>();
     for (auto& [id, comp] : list)
         if (id == entity) return &comp;
@@ -93,7 +93,7 @@ T* ECSManager::GetComponent(unsigned long entity) {
 
 
 template<typename T>
-T* ECSManager::AddComponent(unsigned long entity) {
+T* ECSManager::AddComponent(size_t entity) {
     auto& list = GetComponentList<T>();
     list.emplace_back(entity, T());
     return &list.back().second;
@@ -101,7 +101,7 @@ T* ECSManager::AddComponent(unsigned long entity) {
 
 
 template<typename T>
-void ECSManager::RemoveComponent(unsigned long entity) {
+void ECSManager::RemoveComponent(size_t entity) {
     auto& list = GetComponentList<T>();
     list.erase(std::remove_if(list.begin(), list.end(),
         [entity](auto& p) { return p.first == entity; }),

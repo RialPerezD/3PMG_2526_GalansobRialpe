@@ -76,7 +76,7 @@ namespace MTRD {
         * @param Input&& right Reference to an Input type object.
         * @details --------------
         */
-		Input(Input&& right);
+		Input(Input&& right) noexcept;
 		Input& operator=(Input&& right) = default;
 
 		//------------Functions-----------------------

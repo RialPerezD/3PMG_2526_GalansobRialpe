@@ -105,6 +105,7 @@ namespace MTRD {
 
     // Must be defined here as Data is not defined in the header
     Window::Window(Window&& right) = default;
+    Window& Window::operator=(Window&& right) = default;
 
 
     void Window::checkErrors() {
@@ -114,7 +115,16 @@ namespace MTRD {
     }
 
 
-    Window::Window(std::unique_ptr<Data> newData) : data(std::move(newData)) {
+    Window::Window(std::unique_ptr<Data> newData) :
+        data(std::move(newData)),
+        vertexBuffer(GL_INVALID_INDEX),
+        vertexShader(GL_INVALID_INDEX),
+        fragmentShader(GL_INVALID_INDEX),
+        program(GL_INVALID_INDEX),
+        windowWidth_(-1),
+        windowHeight_(-1),
+        debug_(false)
+    {
     }
 
 
@@ -408,7 +418,7 @@ namespace MTRD {
             }
 
             glBindVertexArray(shape->vao);
-            glDrawArrays(GL_TRIANGLES, 0, shape->vertices.size());
+            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(shape->vertices.size()));
 
             if (debug_) {
                 glCheckError();
@@ -479,6 +489,8 @@ namespace MTRD {
             }
         }
     }
+
+    Window::ObjItem::ObjItem() : shapes(), materials() {}
 }
 
 

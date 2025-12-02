@@ -59,7 +59,7 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::Transform>();
     ecs.AddComponentType<MTRD::Render>();
 
-    unsigned long entity = ecs.AddEntity();
+    size_t entity = ecs.AddEntity();
 
     MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
     t->position = glm::vec3(0.0f);

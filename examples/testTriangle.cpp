@@ -31,7 +31,7 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::Transform>();
     ecs.AddComponentType<MTRD::Render>();
 
-    unsigned long entity = ecs.AddEntity();
+    size_t entity = ecs.AddEntity();
 
     MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
     t->position = glm::vec3(0.0f);
@@ -63,7 +63,7 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Vectores de uniforms y atributos ---
-    glm::mat4x4 mvp, model, p;
+    glm::mat4x4 mvp, model;
 
     std::vector<Window::UniformAttrib> uniforms = {
         {"MVP", -1, Window::UniformTypes::Mat4, glm::value_ptr(mvp)}

@@ -133,8 +133,8 @@ namespace MTRD {
 	}
 
 
-	Input::Input(Input&& right) : 
-		asciiMap {right.asciiMap}
+	Input::Input(Input&& right) noexcept :
+		asciiMap{ right.asciiMap }
 	{
 	}
 }
