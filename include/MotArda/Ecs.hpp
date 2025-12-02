@@ -11,14 +11,35 @@
 #include <MotArda/Components/Movement.hpp>
 
 
+/**
+* @class ECSListBase
+* @brief Manages the ECS of the engine.
+*/
+
 class ECSListBase {
 public:
+    /**
+    * @brief Destructor
+    * @details Default destructor of the ECS class
+    */
     virtual ~ECSListBase() = default;
+    /**
+    * @brief removeEntity
+    * @param size_t entity Identifier of the content in the list.
+    * @details Removes the content below the specified identifier.
+    */
     virtual void removeEntity(size_t entity) = 0;
+    /**
+    * @brief size
+    * @details Returns content's size
+    */
     virtual size_t size() const = 0;
 };
 
-
+/**
+* @class ECSList
+* @brief Class for the ECS's list
+*/
 template<typename T>
 class ECSList : public ECSListBase {
 public:
@@ -33,7 +54,10 @@ public:
     std::vector<std::pair<size_t, T>> list;
 };
 
-
+/**
+* @class ECSManager
+* @brief Class that manages the ECS
+*/
 class ECSManager {
     std::unordered_map<std::size_t, std::unique_ptr<ECSListBase>> component_map_;
 

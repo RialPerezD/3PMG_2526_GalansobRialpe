@@ -6,12 +6,18 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../deps/stb_image.h" 
 
-//Need this include to use WinMain
-#include <windows.h>
+
 #include <iostream>
 
+#pragma warning(push)
+#pragma warning(disable : 4005)
+//Need this include to use WinMain
+#include <windows.h>
 #define GLFW_INCLUDE_NONE
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
+#pragma warning(pop)
+
+
 #include <algorithm>
 #include <MotArda/Engine.hpp>
 

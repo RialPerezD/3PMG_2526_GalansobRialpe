@@ -114,6 +114,7 @@ namespace MTRD {
 
 	private:
         Input();
+        //< Map that matches a key with their ascii number
         std::map<Keyboard, std::vector<int>> asciiMap;
 	};
 }
