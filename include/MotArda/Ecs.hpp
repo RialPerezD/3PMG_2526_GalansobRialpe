@@ -43,14 +43,25 @@ public:
 template<typename T>
 class ECSList : public ECSListBase {
 public:
+    /**
+    * @brief Removes the component associated with a given entity.
+    * @details Implements the interface of ECSListBase using erase and remove.
+    */
     void removeEntity(size_t entity) override {
         list.erase(std::remove_if(list.begin(), list.end(),
             [entity](auto& p) { return p.first == entity; }),
             list.end());
     }
-
+   
+    /**
+    * @brief Returns number of stored components of this type.  
+    */
     size_t size() const override { return list.size(); }
 
+    /**
+    * @brief Actual storage of components.
+    * @details Vector of (entityID, component) pairs.
+    */
     std::vector<std::pair<size_t, T>> list;
 };
 
@@ -59,13 +70,35 @@ public:
 * @brief Class that manages the ECS
 */
 class ECSManager {
+    /**
+    * @brief Maps a type hash (component type) to its corresponding component list.
+    * @details Allows generic handling of all component types without knowing T at runtime.
+    */
     std::unordered_map<std::size_t, std::unique_ptr<ECSListBase>> component_map_;
 
 public:
+    /**
+    * @brief Registers a new component type T in the ECS.
+    * @details Adds a new ECSList<T> if it doesn't exist yet.
+    */
     template<typename T> void AddComponentType();
+    /**
+    * @brief Creates a new entity.
+    * @return Returns a unique numeric ID for the entity.
+    * @details Simple incremental counter.
+    */
     size_t AddEntity();
+    /**
+    * @brief Removes an entity from all component lists.
+    * @param entity ID of the entity to remove.
+    */
     void RemoveEntity(size_t entity);
 
+
+    /**
+    * @brief Returns the list of all components of type T.
+    * @details Throws assertion failure if type T has not been registered.
+    */
     template<typename T> std::vector<std::pair<size_t, T>>& GetComponentList();
     template<typename T> T* GetComponent(size_t entity);
     template<typename T> T* AddComponent(size_t entity);
