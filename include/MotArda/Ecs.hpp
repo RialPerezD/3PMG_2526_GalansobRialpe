@@ -96,13 +96,37 @@ public:
 
 
     /**
-    * @brief Returns the list of all components of type T.
-    * @details Throws assertion failure if type T has not been registered.
+    * @brief GetComponentList
+    * @return Returns the list of all components of type T.
+    * @details Getter that returns a list of all IDs that have 
+    * the specified component.
     */
     template<typename T> std::vector<std::pair<size_t, T>>& GetComponentList();
+    /**
+    * @brief GetComponent
+    * @return Returns the component type.
+    * @details Getter that returns the specified type of component.
+    */
     template<typename T> T* GetComponent(size_t entity);
+    /**
+    * @brief AddComponent
+    * @return Returns the newly created type of component
+    * @details Adds a new component type to the list
+    */
     template<typename T> T* AddComponent(size_t entity);
+    /**
+    * @brief RemoveComponent
+    * @return Returns the removed component from the list
+    * @details Removes a component from the list
+    */
     template<typename T> void RemoveComponent(size_t entity);
+    /**
+    * @brief GetEntitiesWithComponents
+    * @return Returns the vector of all IDs that have
+    * the specified components.
+    * @details Getter that returns a list of all IDs that matches
+    * all the specified component types.
+    */
     template<typename... Components> std::vector<size_t> GetEntitiesWithComponents();
 };
 
