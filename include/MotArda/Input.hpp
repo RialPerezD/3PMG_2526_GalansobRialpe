@@ -113,6 +113,11 @@ namespace MTRD {
 
 
 	private:
+        /**
+        * @brief Constructor
+        * @details Clears repeatKey and calls a function
+        * in order to clear all buffers.
+        */
         Input();
         //< Map that matches a key with their ascii number
         std::map<Keyboard, std::vector<int>> asciiMap;
