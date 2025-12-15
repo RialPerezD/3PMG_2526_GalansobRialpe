@@ -8,11 +8,17 @@
 
 namespace MTRD {
     int main();
-
+    /**
+    * @class Window
+    * @brief This class contains the functions to manage the engine window
+    */
     class Window {
     public:
+
+        //< Struct that contains the glfw window
         struct Data;
 
+        //< Type of values for the window
         enum class UniformTypes {
             Mat2,
             Mat3,
@@ -22,18 +28,51 @@ namespace MTRD {
             Vec4
         };
 
+        /**
+        * @brief windowCreate
+        * @param int width Horizontal size of the window.
+        * @param int height Vertical size of the window.
+        * @param const char* windowName Name for the window.
+        * @return Returns "wind", the window we have just created.
+        * @details First, it creates an unique ptr to store and create
+        * the window. Then the window is moved to a new pointer, where
+        * width and height are setted.
+        */  
         static std::optional<Window> windowCreate(
             int width,
             int height,
             const char* windowName);
-
+        /**
+        * @brief ~window
+        * @details Destructor of the window class.
+        * It calls "glfwDestroyWindow" to release it.
+        */
         ~Window();
 
-        //--Dissable copy constructor and enable noving constructors--
+        /**
+        * @brief Copy constructor
+        * @param const Window& right Reference to a Window type object
+        * @details Copy contructor has been removed.
+        */
         Window(const Window& right) = delete;
+        /**
+        * @brief Copy assignment
+        * @param const Window& right Reference to a Window type object
+        * @details Copy assignment has been removed.
+        */
         Window& operator=(const Window& right) = delete;
 
+        /**
+        * @brief Copy Constructor
+        * @param const Window& right Reference to a Window type object
+        * @details We are able to copy the window as unique_ptr allows it.
+        */
         Window(Window&& right);
+        /**
+        * @brief Copy assignment
+        * @param const Window& right Reference to a Window type object
+        * @details We are able to copy the window as unique_ptr allows it.
+        */
         Window& operator=(Window&& right);
 
         //------------Structs-------------------------
@@ -61,8 +100,24 @@ namespace MTRD {
         };
 
         //------------Functions-----------------------
+
+        /**
+        * @brief shouldClose
+        * @return Returns the value of the close flag
+        * @details Checks the close flag of the specified window.
+        */
         bool shouldClose();
+        /**
+        * @brief setDebugMode
+        * @param bool b
+        * @details Sets "debug_" to the specified boolean value
+        */
         void setDebugMode(bool b);
+        /**
+        * @brief pollEvents
+        * @details Calls glfwPollEvents, that waits until events 
+        * are queued and processes them
+        */
         void pollEvents();
         void createContext();
         double timer();
