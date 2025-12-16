@@ -63,15 +63,15 @@ namespace MTRD {
         Window& operator=(const Window& right) = delete;
 
         /**
-        * @brief Copy Constructor
-        * @param const Window& right Reference to a Window type object
-        * @details We are able to copy the window as unique_ptr allows it.
+        * @brief Move Constructor
+        * @param const Window&& right Reference to a Window type object
+        * @details We are able to Move the window as unique_ptr allows it.
         */
         Window(Window&& right);
         /**
-        * @brief Copy assignment
-        * @param const Window& right Reference to a Window type object
-        * @details We are able to copy the window as unique_ptr allows it.
+        * @brief Move assignment
+        * @param const Window&& right Reference to a Window type object
+        * @details We are able to Move the window as unique_ptr allows it.
         */
         Window& operator=(Window&& right);
 
@@ -125,7 +125,7 @@ namespace MTRD {
         /**
         * @brief pollEvents
         * @details Calls glfwPollEvents, that waits until events 
-        * are queued and processes them
+        * are queued and processes them.
         */
         void pollEvents();
         /**
