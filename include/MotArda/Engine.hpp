@@ -162,7 +162,6 @@ namespace MTRD {
 		* to load the materials for all the objects.
 		*/
 		void windowLoadAllMaterials(std::vector<MTRD::Window::ObjItem>& objItemsList);
-		void windowSetDebugMode(bool b);
 		/**
 		* @brief windowGetLastFrameTime.
 		* @details Manage the time in seconds by calling "getLastFrameTime" from
