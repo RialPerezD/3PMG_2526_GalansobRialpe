@@ -53,110 +53,12 @@ int MTRD::main() {
         objsLoaded = true;
         }
     );
-
-    while (!objsLoaded) {
-        eng.windowInitFrame();
-        printf("Cargando maya...\n");
-        eng.windowEndFrame();
-    }
-
-    eng.windowLoadAllMaterials(objItemList);
-
-    if (objItemList.size() == 0) return 1;
     // --- *** ---
-
-
-    // --- Create drawable entitys ---
-    ECSManager ecs;
-    ecs.AddComponentType<MTRD::Transform>();
-    ecs.AddComponentType<MTRD::Render>();
-    ecs.AddComponentType<MTRD::Movement>();
-
-    for (int y = 0; y < 10; y++) {
-        for (int x = 0; x < 10; x++) {
-            size_t entity = ecs.AddEntity();
-
-            float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
-            MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
-            t->position = glm::vec3(-3.0f + (y * 0.6), -2.0f + (x * 0.4f), 0.0f);
-            t->rotation = glm::vec3(0.0f);
-            t->scale = glm::vec3(scl);
-
-            MTRD::Render* r = ecs.AddComponent<MTRD::Render>(entity);
-            r->shapes = &objItemList[0].shapes;
-            r->materials = &objItemList[0].materials;
-
-            MTRD::Movement* m = ecs.AddComponent<MTRD::Movement>(entity);
-            m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
-            m->rotation = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1);
-            m->scale = glm::vec3(0.0f);
-        }
-    }
-
-
-    size_t player = ecs.AddEntity();
-
-    MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(player);
-    t->position = glm::vec3(0);
-    t->rotation = glm::vec3(1,0,0);
-    t->angleRotationRadians = -1;
-    t->scale = glm::vec3(0.02f);
-
-    MTRD::Render* r = ecs.AddComponent<MTRD::Render>(player);
-    r->shapes = &objItemList[1].shapes;
-    r->materials = &objItemList[1].materials;
-
-    MTRD::Movement* m = ecs.AddComponent<MTRD::Movement>(player);
-    m->position = glm::vec3(0);
-    m->rotation = glm::vec3(0, 0, 1);
-    m->scale = glm::vec3(0.0f);
-    m->shouldConstantMove = false;
-    // --- *** ---
-
-    // --- Systems ---
-    Systems systems;
-    // --- *** ---
-
-
-    // --- Load shaders ---
-    const char* vertex_shader = eng.loadShaderFile("../assets/shaders/textured_obj_vertex.txt");
-    const char* fragment_shader = eng.loadShaderFile("../assets/shaders/textured_obj_fragment.txt");
-    // --- *** ---
-
-
-    // --- Setup uniforms ---
-    glm::mat4x4 vp, model;
-    //empacar
-    std::vector<Window::UniformAttrib> uniforms = {
-        {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
-        {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
-    };
-
-    std::vector<Window::VertexAttrib> attributes = {
-        { "position", 3, offsetof(Vertex, position) },
-        { "uv", 2, offsetof(Vertex, uv) },
-        { "normal", 3, offsetof(Vertex, normal) }
-    };
-    // --- *** ---
-
-
-    // --- Setup Window ---
-    eng.windowOpenglSetup(
-        ecs.GetComponentList<Render>(),
-        vertex_shader,
-        fragment_shader,
-        uniforms,
-        attributes
-    );
-    //la ventana no gestio el shader, el rebder es el
-    // --- *** ---
-
 
     // --- Drawable transform additions ---
     float ratio = eng.windowGetSizeRatio();
     float movSpeed = 0.05f;
     // --- *** ---
-
 
     // --- Camera ---
     MTRD::Camera camera(
@@ -172,15 +74,114 @@ int MTRD::main() {
     camera.updateAll();
     // --- *** ---
 
-    //eng deveria decirme cuanto ha tardado el ultimo frame
+    // --- Systems ---
+    Systems systems;
+    // --- *** ---
+
+    // --- Ecs ---
+    ECSManager ecs;
+    // --- *** ---
 
     float frameTime = 0;
+    bool firstTime = true;
+    MTRD::Transform* t;
+    MTRD::Render* r;
+    MTRD::Movement* m;
+    glm::mat4x4 vp, model;
+
+    // --- Setup uniforms ---
+    std::vector<Window::UniformAttrib> uniforms = {
+        {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
+        {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
+    };
+
+    std::vector<Window::VertexAttrib> attributes = {
+        { "position", 3, offsetof(Vertex, position) },
+        { "uv", 2, offsetof(Vertex, uv) },
+        { "normal", 3, offsetof(Vertex, normal) }
+    };
+    // --- *** ---
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
 
         eng.windowInitFrame();
 
+        if (!objsLoaded) {
+            printf("Cargando maya...\n");
+            eng.windowEndFrame();
+            continue;
+
+        } else if (firstTime) {
+            firstTime = false;
+
+            eng.windowLoadAllMaterials(objItemList);
+            if (objItemList.size() == 0) return 1;
+            // --- *** ---
+
+            // --- Create drawable entitys ---
+            ecs.AddComponentType<MTRD::Transform>();
+            ecs.AddComponentType<MTRD::Render>();
+            ecs.AddComponentType<MTRD::Movement>();
+
+            for (int y = 0; y < 10; y++) {
+                for (int x = 0; x < 10; x++) {
+                    size_t entity = ecs.AddEntity();
+
+                    float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
+                    t = ecs.AddComponent<MTRD::Transform>(entity);
+                    t->position = glm::vec3(-3.0f + (y * 0.6), -2.0f + (x * 0.4f), 0.0f);
+                    t->rotation = glm::vec3(0.0f);
+                    t->scale = glm::vec3(scl);
+
+                    r = ecs.AddComponent<MTRD::Render>(entity);
+                    r->shapes = &objItemList[0].shapes;
+                    r->materials = &objItemList[0].materials;
+
+                    m = ecs.AddComponent<MTRD::Movement>(entity);
+                    m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
+                    m->rotation = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1);
+                    m->scale = glm::vec3(0.0f);
+                }
+            }
+
+            size_t player = ecs.AddEntity();
+
+            t = ecs.AddComponent<MTRD::Transform>(player);
+            t->position = glm::vec3(0);
+            t->rotation = glm::vec3(1, 0, 0);
+            t->angleRotationRadians = -1;
+            t->scale = glm::vec3(0.02f);
+
+            r = ecs.AddComponent<MTRD::Render>(player);
+            r->shapes = &objItemList[1].shapes;
+            r->materials = &objItemList[1].materials;
+
+            m = ecs.AddComponent<MTRD::Movement>(player);
+            m->position = glm::vec3(0);
+            m->rotation = glm::vec3(0, 0, 1);
+            m->scale = glm::vec3(0.0f);
+            m->shouldConstantMove = false;
+            // --- *** ---
+
+
+            // --- Load shaders ---
+            const char* vertex_shader = eng.loadShaderFile("../assets/shaders/textured_obj_vertex.txt");
+            const char* fragment_shader = eng.loadShaderFile("../assets/shaders/textured_obj_fragment.txt");
+            // --- *** ---
+
+
+            // --- Setup Window ---
+            eng.windowOpenglSetup(
+                ecs.GetComponentList<Render>(),
+                vertex_shader,
+                fragment_shader,
+                uniforms,
+                attributes
+            );
+            //la ventana no gestiona el shader, el render es el q deberia hacerlo
+            // --- *** ---
+        }
 
         // --- Input to move camera ---
         if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);

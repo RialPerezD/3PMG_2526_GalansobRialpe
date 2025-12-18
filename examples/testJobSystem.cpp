@@ -43,69 +43,12 @@ int MTRD::main() {
         }
     );
 
-    while (!objsLoaded) {
-        eng.windowInitFrame();
-        printf("Cargando maya...\n");
-        eng.windowEndFrame();
-    }
-
-    eng.windowLoadAllMaterials(objItemList);
-
-    if (objItemList.size() == 0) return 1;
-    // --- *** ---
-
-    // --- Create drawable entitys ---
-    ECSManager ecs;
-    ecs.AddComponentType<MTRD::Transform>();
-    ecs.AddComponentType<MTRD::Render>();
-
-    size_t entity = ecs.AddEntity();
-
-    MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
-    t->position = glm::vec3(0.0f);
-    t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
-    t->angleRotationRadians = -1;
-    t->scale = glm::vec3(0.05f);
-
-    MTRD::Render* r = ecs.AddComponent<MTRD::Render>(entity);
-    r->shapes = &objItemList[0].shapes;
-    r->materials = &objItemList[0].materials;
-    // --- *** ---
-
-    MTRD::Transform* asd = ecs.GetComponent<MTRD::Transform>(entity);
-
     // --- Systems ---
     Systems systems;
     // --- *** ---
 
-    // --- Load shaders ---
-    const char* vertex_shader = eng.loadShaderFile("../assets/shaders/textured_obj_vertex.txt");
-    const char* fragment_shader = eng.loadShaderFile("../assets/shaders/textured_obj_fragment.txt");
-    // --- *** ---
-
-    // --- Setup uniforms ---
-    glm::mat4x4 vp, model;
-
-    std::vector<Window::UniformAttrib> uniforms = {
-        {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
-        {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
-    };
-
-    std::vector<Window::VertexAttrib> attributes = {
-        { "position", 3, offsetof(Vertex, position) },
-        { "uv", 2, offsetof(Vertex, uv) },
-        { "normal", 3, offsetof(Vertex, normal) }
-    };
-    // --- *** ---
-
-    // --- Setup Window ---
-    eng.windowOpenglSetup(
-        ecs.GetComponentList<Render>(),
-        vertex_shader,
-        fragment_shader,
-        uniforms,
-        attributes
-    );
+    // --- Ecs ---
+    ECSManager ecs;
     // --- *** ---
 
     // --- Drawable transforms additions ---
@@ -117,7 +60,25 @@ int MTRD::main() {
     scale = 0.025f; scaSpeed = 0.001f;
 
     bool needChangeObj = false;
-    int objIndex = 0;
+    int objIndex = 1;
+    bool firstTime = true;
+    MTRD::Transform* t;
+    MTRD::Render* r;
+    MTRD::Movement* m;
+    glm::mat4x4 vp, model;
+    // --- *** ---
+
+    // --- Setup uniforms ---
+    std::vector<Window::UniformAttrib> uniforms = {
+        {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
+        {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
+    };
+
+    std::vector<Window::VertexAttrib> attributes = {
+        { "position", 3, offsetof(Vertex, position) },
+        { "uv", 2, offsetof(Vertex, uv) },
+        { "normal", 3, offsetof(Vertex, normal) }
+    };
     // --- *** ---
 
     // --- Camera ---
@@ -138,6 +99,53 @@ int MTRD::main() {
     while (!eng.windowShouldClose()) {
 
         eng.windowInitFrame();
+
+        if (!objsLoaded) {
+            printf("Cargando maya...\n");
+            eng.windowEndFrame();
+            continue;
+
+        }
+        else if (firstTime) {
+            firstTime = false;
+
+            eng.windowLoadAllMaterials(objItemList);
+            if (objItemList.size() == 0) return 1;
+            // --- *** ---
+
+            // --- Create drawable entitys ---
+            ecs.AddComponentType<MTRD::Transform>();
+            ecs.AddComponentType<MTRD::Render>();
+
+            size_t entity = ecs.AddEntity();
+
+            t = ecs.AddComponent<MTRD::Transform>(entity);
+            t->position = glm::vec3(0.0f);
+            t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
+            t->angleRotationRadians = -1;
+            t->scale = glm::vec3(0.05f);
+
+            r = ecs.AddComponent<MTRD::Render>(entity);
+            r->shapes = &objItemList[0].shapes;
+            r->materials = &objItemList[0].materials;
+            // --- *** ---
+
+            // --- Load shaders ---
+            const char* vertex_shader = eng.loadShaderFile("../assets/shaders/textured_obj_vertex.txt");
+            const char* fragment_shader = eng.loadShaderFile("../assets/shaders/textured_obj_fragment.txt");
+            // --- *** ---
+
+            // --- Setup Window ---
+            eng.windowOpenglSetup(
+                ecs.GetComponentList<Render>(),
+                vertex_shader,
+                fragment_shader,
+                uniforms,
+                attributes
+            );
+            // --- *** ---
+        }
+
 
         // --- Input to move camera ---
         if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
