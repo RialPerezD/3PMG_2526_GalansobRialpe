@@ -1,5 +1,6 @@
 [requires]
 glfw/3.3.8
+sol2/3.3.0
 
 [generators]
 premake

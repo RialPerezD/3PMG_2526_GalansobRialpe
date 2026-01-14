@@ -173,3 +173,15 @@ workspace "MotArda"
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
 		files "examples/testEcs.cpp"
 
+	project "TestScripting"
+		kind "ConsoleApp"
+		language "C++"
+		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
+		includedirs "include"
+		links "MotArda"
+		conan_config_exec("Debug")
+		conan_config_exec("Release")
+		conan_config_exec("RelWithDebInfo")
+		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
+		files "examples/testScripting.cpp"
+
