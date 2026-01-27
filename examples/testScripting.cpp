@@ -158,6 +158,12 @@ int MTRD::main() {
     lua["KEY_J"] = (int)Input::Keyboard::J;
     lua["KEY_L"] = (int)Input::Keyboard::L;
 
+    lua["KEY_U"] = (int)Input::Keyboard::U;
+    lua["KEY_O"] = (int)Input::Keyboard::O;
+
+    lua["KEY_N"] = (int)Input::Keyboard::N;
+    lua["KEY_M"] = (int)Input::Keyboard::M;
+
     sol::load_result chunk = lua.load(lua_program);
     if (!chunk.valid()) {
         sol::error err = chunk;
@@ -327,17 +333,6 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.rotate(-10.0f, 0.0f);
         // --- *** ---
 
-
-        // --- Input to move player skull ---
-        //if (eng.inputIsKeyPressed(Input::Keyboard::I)) m->position.y += 0.1f;
-        //if (eng.inputIsKeyPressed(Input::Keyboard::K)) m->position.y -= 0.1f;
-        //if (eng.inputIsKeyPressed(Input::Keyboard::L)) m->position.x += 0.1f;
-        //if (eng.inputIsKeyPressed(Input::Keyboard::J)) m->position.x -= 0.1f;
-        //if (eng.inputIsKeyPressed(Input::Keyboard::U)) m->angleRotationRadians += 0.05f;
-        //if (eng.inputIsKeyPressed(Input::Keyboard::O)) m->angleRotationRadians -= 0.05f;
-        //if (eng.inputIsKeyPressed(Input::Keyboard::N)) m->scale += glm::vec3(0.005f);
-        //if (eng.inputIsKeyPressed(Input::Keyboard::M)) m->scale -= glm::vec3(0.005f);
-        // --- *** ---
 
          // --- Player input (Lua) ---
         if (lua_update_player.valid()) {
