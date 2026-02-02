@@ -54,6 +54,33 @@ function update_player(movement)
 
     end
 
+function update_camera(camera, speed)
+    if Input.isKeyPressed(KEY_W) then
+        camera:moveForward(speed)
+    end
+    if Input.isKeyPressed(KEY_S) then
+        camera:moveBackward(speed)
+    end
+    if Input.isKeyPressed(KEY_A) then
+        camera:moveLeft(speed)
+    end
+    if Input.isKeyPressed(KEY_D) then
+        camera:moveRight(speed)
+    end
+    if Input.isKeyPressed(KEY_E) then
+        camera:moveUp(speed)
+    end
+    if Input.isKeyPressed(KEY_Q) then
+        camera:moveDown(speed)
+    end
+    if Input.isKeyPressed(KEY_R) then
+        camera:rotate(10.0, 0.0)
+    end
+    if Input.isKeyPressed(KEY_T) then
+        camera:rotate(-10.0, 0.0)
+    end
+end
+
 function test_transform(t)
     print("Lua modifying Transform")
 
@@ -143,6 +170,17 @@ int MTRD::main() {
         "angleRotationRadians", &MTRD::Movement::angleRotationRadians
     );
 
+    lua.new_usertype<MTRD::Camera>(
+        "Camera",
+        "moveForward", &MTRD::Camera::moveForward,
+        "moveBackward", &MTRD::Camera::moveBackward,
+        "moveLeft", &MTRD::Camera::moveLeft,
+        "moveRight", &MTRD::Camera::moveRight,
+        "moveUp", &MTRD::Camera::moveUp,
+        "moveDown", &MTRD::Camera::moveDown,
+        "rotate", &MTRD::Camera::rotate
+    );
+
     lua.create_named_table("Input");
 
     lua["Input"]["isKeyPressed"] = [](int key) {
@@ -152,7 +190,19 @@ int MTRD::main() {
         );
         };
 
+
+
     // Key constants
+
+    lua["KEY_W"] = (int)Input::Keyboard::W;
+    lua["KEY_S"] = (int)Input::Keyboard::S;
+    lua["KEY_A"] = (int)Input::Keyboard::A;
+    lua["KEY_D"] = (int)Input::Keyboard::D;
+    lua["KEY_Q"] = (int)Input::Keyboard::Q;
+    lua["KEY_E"] = (int)Input::Keyboard::E;
+    lua["KEY_R"] = (int)Input::Keyboard::R;
+    lua["KEY_T"] = (int)Input::Keyboard::T;
+
     lua["KEY_I"] = (int)Input::Keyboard::I;
     lua["KEY_K"] = (int)Input::Keyboard::K;
     lua["KEY_J"] = (int)Input::Keyboard::J;
@@ -163,6 +213,8 @@ int MTRD::main() {
 
     lua["KEY_N"] = (int)Input::Keyboard::N;
     lua["KEY_M"] = (int)Input::Keyboard::M;
+
+
 
     sol::load_result chunk = lua.load(lua_program);
     if (!chunk.valid()) {
@@ -239,6 +291,12 @@ int MTRD::main() {
     // --- *** ---
 
     sol::protected_function lua_update_player = lua["update_player"];
+    sol::protected_function lua_update_camera = lua["update_camera"];
+   
+    // Camera and movSpeed exposed
+
+    lua["camera"] = &camera;
+    lua["cameraSpeed"] = movSpeed;
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
@@ -323,14 +381,15 @@ int MTRD::main() {
         }
 
         // --- Input to move camera ---
-        if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::S)) camera.moveBackward(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::A)) camera.moveLeft(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::D)) camera.moveRight(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::E)) camera.moveUp(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::Q)) camera.moveDown(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::R)) camera.rotate(10.0f, 0.0f);
-        if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.rotate(-10.0f, 0.0f);
+        if (lua_update_camera.valid()) {
+            sol::protected_function_result r =
+                lua_update_camera(camera, movSpeed);
+
+            if (!r.valid()) {
+                sol::error err = r;
+                std::cout << "[Lua Camera Error] " << err.what() << std::endl;
+            }
+        }
         // --- *** ---
 
 
