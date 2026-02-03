@@ -141,6 +141,11 @@ int MTRD::main() {
     sol::state lua;
     lua.open_libraries(sol::lib::base);
 
+    lua.new_usertype<glm::vec2>(
+        "vec2_t",
+        "x", &glm::vec2::x,
+        "y", &glm::vec2::y
+    );
     lua.new_usertype<glm::vec3>(
         "vec3_t",
         "x", &glm::vec3::x,
