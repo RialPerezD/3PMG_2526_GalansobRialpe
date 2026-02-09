@@ -1,4 +1,4 @@
-#include "MotArda/Components/Render.hpp"
+#include "MotArda/common/Components/RenderComponent.hpp"
 
 namespace MTRD {
 
@@ -19,10 +19,10 @@ namespace MTRD {
     Shape::Shape() : vertices(), materialId(-1), vao(GL_INVALID_INDEX) {}
 
 
-    Render::Render() : shapes(new std::vector<Shape>()), materials(new std::vector<Material>()) {}
+    RenderComponent::RenderComponent() : shapes(new std::vector<Shape>()), materials(new std::vector<Material>()) {}
 
 
-    Render::Render(std::vector<Shape>* shps, std::vector<Material>* mats){
+    RenderComponent::RenderComponent(std::vector<Shape>* shps, std::vector<Material>* mats){
         shapes = shps;
         materials = mats;
     }

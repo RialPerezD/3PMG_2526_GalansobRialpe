@@ -6,9 +6,9 @@
 #include <vector>
 #include <algorithm>
 #include <cassert>
-#include "MotArda/Components/Transform.hpp"
-#include "MotArda/Components/Render.hpp"
-#include <MotArda/Components/Movement.hpp>
+#include "Components/TransformComponent.hpp"
+#include "Components/RenderComponent.hpp"
+#include "Components/MovementComponent.hpp"
 
 
 /**

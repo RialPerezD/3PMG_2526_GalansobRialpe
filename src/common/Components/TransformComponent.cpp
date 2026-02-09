@@ -1,6 +1,6 @@
-#include "MotArda/Components/Transform.hpp"
+#include "MotArda/common/Components/TransformComponent.hpp"
 
-MTRD::Transform::Transform(){
+MTRD::TransformComponent::TransformComponent(){
     position = { 0,0,0 };
     scale = { 0,0,0 };
     rotation = { 0,0,0 };
@@ -8,7 +8,7 @@ MTRD::Transform::Transform(){
 }
 
 
-MTRD::Transform::Transform(
+MTRD::TransformComponent::TransformComponent(
     const glm::vec3& pos,
     const glm::vec3& scl,
     const glm::vec3& rot,

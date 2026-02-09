@@ -1,11 +1,10 @@
-
-#include "Motarda/Engine.hpp"
+#include "Motarda/common/Engine.hpp"
 #include <memory>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <iostream>
-#include "MotArda/window.hpp"
+#include "MotArda/win64/window.hpp"
 
 namespace MTRD {
 
@@ -81,23 +80,14 @@ namespace MTRD {
 
 
     void MotardaEng::windowOpenglSetup(
-        std::vector<std::pair<size_t, Render>>& renderComponents,
         const char* vertexShader,
         const char* fragmentShader,
         std::vector<Window::UniformAttrib>& uniforms,
         const std::vector<Window::VertexAttrib>& attributes
     ) {
-
         window_.openglGenerateVertexShaders(vertexShader);
         window_.openglGenerateFragmentShaders(fragmentShader);
         window_.openglCreateProgram();
-
-        if (renderComponents.size() == 0) return;
-        updateVertexBuffers(
-            renderComponents,
-            uniforms,
-            attributes
-        );
     }
 
 
@@ -111,7 +101,7 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowOpenglProgramUniformDrawRender(Render& renderComponents) {
+    void MotardaEng::windowOpenglProgramUniformDrawRender(RenderComponent& renderComponents) {
         window_.openglProgramUniformDraw(renderComponents);
     }
 
@@ -195,12 +185,12 @@ namespace MTRD {
 
 
     void MotardaEng::updateVertexBuffers(
-        std::vector<std::pair<size_t, Render>>& renderComponents,
+        std::vector<std::pair<size_t, RenderComponent>>& renderComponents,
         std::vector<Window::UniformAttrib>& uniforms,
         const std::vector<Window::VertexAttrib>& attributes
     ) {
         for (int i = 0; i < renderComponents.size(); i++) {
-            Render* render = &renderComponents[i].second;
+            RenderComponent* render = &renderComponents[i].second;
             for (int j = 0; j < render->shapes->size(); j++) {
                 std::vector<Vertex> vertexes = render->shapes->at(j).vertices;
                 const void* vertexBuffer = static_cast<const void*> (vertexes.data());

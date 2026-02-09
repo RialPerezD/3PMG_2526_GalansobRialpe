@@ -41,11 +41,11 @@ namespace MTRD {
     };
 
 
-    struct Render {
+    struct RenderComponent {
         std::vector<Shape>* shapes;
         std::vector<Material>* materials;
 
-        Render();
-        Render(std::vector<Shape>* shps, std::vector<Material>* mats);
+        RenderComponent();
+        RenderComponent(std::vector<Shape>* shps, std::vector<Material>* mats);
     };
 }

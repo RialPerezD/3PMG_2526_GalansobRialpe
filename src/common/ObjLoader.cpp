@@ -1,4 +1,4 @@
-#include "MotArda/ObjLoader.hpp"
+#include "MotArda/common/ObjLoader.hpp"
 #include <fstream>
 #include <filesystem>
 #include <sstream>

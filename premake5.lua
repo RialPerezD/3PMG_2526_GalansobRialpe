@@ -86,18 +86,12 @@ workspace "MotArda"
 
 		files{
 			"premake5.lua",
-			"src/build/conanfile.txt",
-			"src/Window.cpp", "include/MotArda/Window.hpp",
-			"src/Engine.cpp", "include/MotArda/Engine.hpp",
-			"src/Input.cpp", "include/MotArda/Input.hpp",
-			"src/ObjLoader.cpp", "include/MotArda/ObjLoader.hpp",
-			"src/JobSystem.cpp", "include/MotArda/JobSystem.hpp",
-			"src/Camera.cpp", "include/MotArda/Camera.hpp",
-			"src/Systems.cpp", "include/MotArda/Systems.hpp",
-			"include/MotArda/Ecs.hpp",
-			"src/Components/Render.cpp", "include/MotArda/Components/Render.hpp",
-			"src/Components/Transform.cpp", "include/MotArda/Components/Transform.hpp",
-			"src/Components/Movement.cpp", "include/MotArda/Components/Movement.hpp",
+			"src/win64/build/conanfile.txt",
+			"src/common/*.cpp", "src/common/Components/*.cpp",
+			"include/MotArda/common/*.hpp", "include/MotArda/common/Components/*.hpp",
+
+			"src/win64/*.cpp", "include/MotArda/win64/*.hpp",
+
 			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h"
 			}
 

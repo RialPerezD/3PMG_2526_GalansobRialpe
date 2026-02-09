@@ -13,4 +13,4 @@ cambiar a shape a shared pointer
 
 hacer lo mismo para el material
 
-cuando creo el shape tiene los shared pointers avacios y luego se le asigna
+cuando creo el shape tiene los shared pointers vacios y luego se le asigna

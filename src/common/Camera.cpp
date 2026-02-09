@@ -1,4 +1,4 @@
-#include "MotArda/Camera.hpp"
+#include "MotArda/common/Camera.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include <../deps/glm-master/glm/gtc/type_ptr.hpp>
 

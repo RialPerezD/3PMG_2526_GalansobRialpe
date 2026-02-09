@@ -1,5 +1,5 @@
 
-#include "Motarda/Window.hpp"
+#include "Motarda/win64/Window.hpp"
 #include <memory>
 #include <vector>
 
@@ -19,7 +19,7 @@
 
 
 #include <algorithm>
-#include <MotArda/Engine.hpp>
+#include <MotArda/common/Engine.hpp>
 
 
 GLenum glCheckError_(const char* file, int line)
@@ -402,7 +402,7 @@ namespace MTRD {
 
 
     //meter esto en un render system
-    void Window::openglProgramUniformDraw(Render& render) {
+    void Window::openglProgramUniformDraw(RenderComponent& render) {
         glUseProgram(program);
         auto loc = glGetUniformLocation(program, "diffuseTexture");
 

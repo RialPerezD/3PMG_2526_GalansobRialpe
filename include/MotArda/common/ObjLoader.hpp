@@ -5,7 +5,7 @@
 #include <string>
 #include "glad/glad.h"
 #include "../deps/glm-master/glm/glm.hpp"
-#include "Components/Render.hpp"
+#include "Components/RenderComponent.hpp"
 
 namespace MTRD {
 

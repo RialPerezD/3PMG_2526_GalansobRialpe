@@ -1,4 +1,4 @@
-#include "MotArda/Systems.hpp"
+#include "MotArda/common/Systems.hpp"
 
 namespace MTRD {
 
@@ -8,10 +8,10 @@ namespace MTRD {
         std::vector<Window::UniformAttrib>& uniforms,
         glm::mat4& model)
     {
-        for (auto& rc : ecs.GetEntitiesWithComponents<Transform, Render>())
+        for (auto& rc : ecs.GetEntitiesWithComponents<TransformComponent, RenderComponent>())
         {
-            Transform* transform = ecs.GetComponent<Transform>(rc);
-            Render* render = ecs.GetComponent<Render>(rc);
+            TransformComponent* transform = ecs.GetComponent<TransformComponent>(rc);
+            RenderComponent* render = ecs.GetComponent<RenderComponent>(rc);
 
             model = glm::mat4(1.f);
             model = glm::translate(model, transform->position);
@@ -32,12 +32,12 @@ namespace MTRD {
         glm::mat4& model)
     {
         static float rotateCounter = 0.f;
-        for (auto& rc : ecs.GetEntitiesWithComponents<Transform, Render, Movement>())
+        for (auto& rc : ecs.GetEntitiesWithComponents<TransformComponent, RenderComponent, MovementComponent>())
         {
             // Get components
-            Transform* transform = ecs.GetComponent<Transform>(rc);
-            Render* render = ecs.GetComponent<Render>(rc);
-            Movement* movement = ecs.GetComponent<Movement>(rc);
+            TransformComponent* transform = ecs.GetComponent<TransformComponent>(rc);
+            RenderComponent* render = ecs.GetComponent<RenderComponent>(rc);
+            MovementComponent* movement = ecs.GetComponent<MovementComponent>(rc);
 
             // Reset Model Matrix
             model = glm::mat4(1.f);

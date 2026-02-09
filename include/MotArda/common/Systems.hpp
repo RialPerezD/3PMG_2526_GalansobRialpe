@@ -1,7 +1,7 @@
 #pragma once
 #include "../deps/glm-master/glm/ext/matrix_transform.hpp"
 #include "Ecs.hpp"
-#include "MotArda/Engine.hpp"
+#include "Engine.hpp"
 
 namespace MTRD {
 

@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 #include "glad/glad.h"
-#include "ObjLoader.hpp"
+#include "../common/ObjLoader.hpp"
 
 namespace MTRD {
     int main();
@@ -257,7 +257,7 @@ namespace MTRD {
         * @param Render& render Object to draw
         * @details Draws in the screen the specified object (render).
         */
-        void openglProgramUniformDraw(Render& render);
+        void openglProgramUniformDraw(RenderComponent& render);
         /**
         * @brief openglLoadMaterials.
         * @param std::vector<Material>& materials Material for a render.

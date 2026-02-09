@@ -1,7 +1,7 @@
 #pragma once
 
 #include <optional>
-#include "Window.hpp"
+#include "../win64/window.hpp"
 #include "Input.hpp"
 #include "JobSystem.hpp"
 #include "ObjLoader.hpp"
@@ -111,8 +111,6 @@ namespace MTRD {
 		);
 		/**
 		* @brief windowSetErrorCallback.
-		* @param std::vector<std::pair<size_t, Render>>& renderComponents
-		* Objects that the window will render.
 		* @param const char* vertexShader Vertex shader.
 		* @param const char* fragmentShader Fragment shader.
 		* @param std::vector<Window::UniformAttrib>& uniforms Uniforms for
@@ -123,7 +121,6 @@ namespace MTRD {
 		* with the specified components, uniforms and attributes.
 		*/
 		void windowOpenglSetup(
-			std::vector<std::pair<size_t, Render>>& renderComponents,
 			const char* vertexShader,
 			const char* fragmentShader,
 			std::vector<Window::UniformAttrib>& uniforms,
@@ -146,7 +143,7 @@ namespace MTRD {
 		* @details Draws in the scren the specified object by
 		* calling "openglProgramUniformDraw"
 		*/
-		void windowOpenglProgramUniformDrawRender(Render& render);
+		void windowOpenglProgramUniformDrawRender(RenderComponent& render);
 		/**
 		* @brief windowSetDebugMode.
 		* @param bool b Will activate debug mode in case the value given
@@ -225,7 +222,7 @@ namespace MTRD {
 		* @details Generates the vertex buffers and sets uniforms and attributes.
 		*/
 		void updateVertexBuffers(
-			std::vector<std::pair<size_t, Render>>& renderComponents,
+			std::vector<std::pair<size_t, RenderComponent>>& renderComponents,
 			std::vector<Window::UniformAttrib>& uniforms,
 			const std::vector<Window::VertexAttrib>& attributes
 		);

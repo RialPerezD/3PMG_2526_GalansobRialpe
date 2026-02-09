@@ -1,6 +1,6 @@
-#include "MotArda/Components/Movement.hpp"
+#include "MotArda/common/Components/MovementComponent.hpp"
 
-MTRD::Movement::Movement(){
+MTRD::MovementComponent::MovementComponent(){
     position = { 0,0,0 };
     scale = { 0,0,0 };
     rotation = { 0,0,0 };
@@ -9,7 +9,7 @@ MTRD::Movement::Movement(){
 }
 
 
-MTRD::Movement::Movement(
+MTRD::MovementComponent::MovementComponent(
     const glm::vec3& pos,
     const glm::vec3& scl,
     const glm::vec3& rot,
