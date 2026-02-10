@@ -81,36 +81,25 @@ function update_camera(camera, speed)
     end
 end
 
-function test_transform(t)
-    print("Lua modifying Transform")
-
+function init_player(t, r, m)
     t.position = vec3(0, 0, 0)
     t.rotation = vec3(1, 0, 0)
     t.angleRotationRadians = -1
     t.scale = vec3(0.02, 0.02, 0.02)
 
-    print("Transform values:")
-    print(
-        "Position:",
-        t.position.x, t.position.y, t.position.z
-    )
-    print(
-        "Rotation:",
-        t.rotation.x, t.rotation.y, t.rotation.z
-    )
-    print(
-        "Angle (rad):",
-        t.angleRotationRadians
-    )
-    print(
-        "Scale:",
-        t.scale.x, t.scale.y, t.scale.z
-    )
+    m.position = vec3(0, 0, 0)
+    m.rotation = vec3(0, 0, 1)
+    m.scale = vec3(0, 0, 0)
+    m.shouldConstantMove = false
 end
 
 )";
 
 static MTRD::MotardaEng* g_engine = nullptr;
+
+// ECS Lua 
+static ECSManager* g_ecs = nullptr;
+
 
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
@@ -156,7 +145,7 @@ int MTRD::main() {
     // Vec3 binding
     lua.set_function("vec3", [](float x, float y, float z) {
         return glm::vec3(x, y, z);
-    });
+        });
 
     // Transform binding
     lua.new_usertype<MTRD::Transform>(
@@ -173,7 +162,8 @@ int MTRD::main() {
         "position", &MTRD::Movement::position,
         "rotation", &MTRD::Movement::rotation,
         "scale", &MTRD::Movement::scale,
-        "angleRotationRadians", &MTRD::Movement::angleRotationRadians
+        "angleRotationRadians", &MTRD::Movement::angleRotationRadians,
+        "shouldConstantMove", &MTRD::Movement::shouldConstantMove
     );
 
 
@@ -210,7 +200,7 @@ int MTRD::main() {
         return g_engine->inputIsKeyPressed(
             static_cast<Input::Keyboard>(key)
         );
-    };
+        };
 
     // Key constants
 
@@ -234,6 +224,65 @@ int MTRD::main() {
     lua["KEY_N"] = (int)Input::Keyboard::N;
     lua["KEY_M"] = (int)Input::Keyboard::M;
 
+    // ECS Lua functions binding
+
+    lua.create_named_table("ECS");
+
+    lua["ECS"]["createEntity"] = []() -> size_t {
+        if (!g_ecs) return 0;
+        return g_ecs->AddEntity();
+    };
+
+    lua["ECS"]["destroyEntity"] = [](size_t entity) {
+        if (!g_ecs) return;
+        g_ecs->RemoveEntity(entity);
+    };
+
+    lua["ECS"]["addTransform"] = [](size_t entity) -> MTRD::Transform* {
+        if (!g_ecs) return nullptr;
+        return g_ecs->AddComponent<MTRD::Transform>(entity);
+    };
+
+    lua["ECS"]["getTransform"] = [](size_t entity) -> MTRD::Transform* {
+        if (!g_ecs) return nullptr;
+        return g_ecs->GetComponent<MTRD::Transform>(entity);
+    };
+
+    lua["ECS"]["removeTransform"] = [](size_t entity) {
+        if (!g_ecs) return;
+        g_ecs->RemoveComponent<MTRD::Transform>(entity);
+    };
+
+    lua["ECS"]["addMovement"] = [](size_t entity) -> MTRD::Movement* {
+        if (!g_ecs) return nullptr;
+        return g_ecs->AddComponent<MTRD::Movement>(entity);
+    };
+
+    lua["ECS"]["getMovement"] = [](size_t entity) -> MTRD::Movement* {
+        if (!g_ecs) return nullptr;
+        return g_ecs->GetComponent<MTRD::Movement>(entity);
+    };
+
+    lua["ECS"]["removeMovement"] = [](size_t entity) {
+        if (!g_ecs) return;
+        g_ecs->RemoveComponent<MTRD::Movement>(entity);
+    };
+
+    lua["ECS"]["addRender"] = [](size_t entity) -> MTRD::Render* {
+        if (!g_ecs) return nullptr;
+        return g_ecs->AddComponent<MTRD::Render>(entity);
+    };
+
+    lua["ECS"]["getRender"] = [](size_t entity) -> MTRD::Render* {
+        if (!g_ecs) return nullptr;
+        return g_ecs->GetComponent<MTRD::Render>(entity);
+    };
+
+    lua["ECS"]["removeRender"] = [](size_t entity) {
+        if (!g_ecs) return;
+        g_ecs->RemoveComponent<MTRD::Render>(entity);
+    };
+
 
 
     sol::load_result chunk = lua.load(lua_program);
@@ -253,7 +302,6 @@ int MTRD::main() {
     std::atomic<bool> objsLoaded = false;
     std::vector<MTRD::Window::ObjItem> objItemList;
     // --- *** ---
-
 
     // async obj load
     eng.enqueueTask([&]() {
@@ -288,6 +336,7 @@ int MTRD::main() {
 
     // --- Ecs ---
     ECSManager ecs;
+    g_ecs = &ecs;
     // --- *** ---
 
     float frameTime = 0;
@@ -295,6 +344,11 @@ int MTRD::main() {
     MTRD::Transform* t;
     MTRD::Render* r;
     MTRD::Movement* m;
+
+    MTRD::Transform* t_player;
+    MTRD::Render* r_player;
+    MTRD::Movement* m_player;
+
     glm::mat4x4 vp, model;
 
     // --- Setup uniforms ---
@@ -312,7 +366,7 @@ int MTRD::main() {
 
     sol::protected_function lua_update_player = lua["update_player"];
     sol::protected_function lua_update_camera = lua["update_camera"];
-   
+
     // Camera and movSpeed exposed
 
     lua["camera"] = &camera;
@@ -343,50 +397,41 @@ int MTRD::main() {
 
             for (int y = 0; y < 10; y++) {
                 for (int x = 0; x < 10; x++) {
-                    size_t entity = ecs.AddEntity();
+                    size_t entity = lua["ECS"]["createEntity"]();
 
                     float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
-                    t = ecs.AddComponent<MTRD::Transform>(entity);
+                    t = lua["ECS"]["addTransform"](entity);
                     t->position = glm::vec3(-3.0f + (y * 0.6), -2.0f + (x * 0.4f), 0.0f);
                     t->rotation = glm::vec3(0.0f);
                     t->scale = glm::vec3(scl);
 
-                    r = ecs.AddComponent<MTRD::Render>(entity);
+                    r = lua["ECS"]["addRender"](entity);
                     r->shapes = &objItemList[0].shapes;
                     r->materials = &objItemList[0].materials;
 
-                    m = ecs.AddComponent<MTRD::Movement>(entity);
+                    m = lua["ECS"]["addMovement"](entity);
                     m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
                     m->rotation = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1);
                     m->scale = glm::vec3(0.0f);
                 }
             }
 
-            size_t player = ecs.AddEntity();
+            // --- Player Init ---
+            size_t player = lua["ECS"]["createEntity"]();
 
-            t = ecs.AddComponent<MTRD::Transform>(player);
-            t->position = glm::vec3(0);
-            t->rotation = glm::vec3(1, 0, 0);
-            t->angleRotationRadians = -1;
-            t->scale = glm::vec3(0.02f);
+            t_player = lua["ECS"]["addTransform"](player);
+            r_player = lua["ECS"]["addRender"](player);
+            m_player = lua["ECS"]["addMovement"](player);
 
-            r = ecs.AddComponent<MTRD::Render>(player);
-            r->shapes = &objItemList[1].shapes;
-            r->materials = &objItemList[1].materials;
-
-            m = ecs.AddComponent<MTRD::Movement>(player);
-            m->position = glm::vec3(0);
-            m->rotation = glm::vec3(0, 0, 1);
-            m->scale = glm::vec3(0.0f);
-            m->shouldConstantMove = false;
+            r_player->shapes = &objItemList[1].shapes;
+            r_player->materials = &objItemList[1].materials;
+            lua["init_player"](t_player, r_player, m_player);
             // --- *** ---
-
 
             // --- Load shaders ---
             const char* vertex_shader = eng.loadShaderFile("../assets/shaders/textured_obj_vertex.txt");
             const char* fragment_shader = eng.loadShaderFile("../assets/shaders/textured_obj_fragment.txt");
             // --- *** ---
-
 
             // --- Setup Window ---
             eng.windowOpenglSetup(
@@ -412,21 +457,18 @@ int MTRD::main() {
         }
         // --- *** ---
 
-
         // --- Input to move player ---
         if (lua_update_player.valid()) {
-            sol::protected_function_result r = lua_update_player(m);
+            sol::protected_function_result r = lua_update_player(m_player);
             if (!r.valid()) {
                 sol::error err = r;
                 std::cout << "[Lua Error] " << err.what() << std::endl;
             }
         }
 
-
         // --- update vp ---
         vp = camera.getViewProj();
         // --- *** ---
-
 
         // --- Setup uniforms and draw ---
         systems.RunRenderSystemWithTraslations(ecs, eng, uniforms, model);
