@@ -14,7 +14,6 @@ namespace MTRD {
     */
     class Window {
     public:
-
         //< Struct that contains the glfw window
         struct Data;
 

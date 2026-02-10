@@ -7,10 +7,10 @@ cambiar a esto https://ktstephano.github.io/rendering/opengl/dsa a createbuffers
 
 constrcopia y deletecopia, eliminados. constructor y asignación de movimiento crear
 
-render -> a render component
 
 cambiar a shape a shared pointer
 
 hacer lo mismo para el material
 
 cuando creo el shape tiene los shared pointers vacios y luego se le asigna
+

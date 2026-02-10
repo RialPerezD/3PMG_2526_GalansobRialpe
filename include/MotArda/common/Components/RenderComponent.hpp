@@ -3,49 +3,16 @@
 #include <vector>
 #include "../deps/glm-master/glm/glm.hpp"
 #include "glad/glad.h"
+#include <MotArda/win64/Mesh.hpp>
+#include <MotArda/win64/Material.hpp>
 
 namespace MTRD {
-
-
-    struct Vertex {
-        glm::vec3 position;
-        glm::vec2 uv;
-        glm::vec3 normal;
-
-        Vertex();
-        Vertex(glm::vec3 pos, glm::vec2 uv, glm::vec3 norm);
-    };
-
-
-    struct Material {
-        std::string name;
-        glm::vec3 diffuse;
-        glm::vec3 specular;
-        glm::vec3 ambient;
-        float shininess;
-
-        bool loadeable;
-
-        std::string diffuseTexPath;
-        GLuint diffuseTexID;
-
-        Material();
-    };
-
-    struct Shape {
-        std::vector<Vertex> vertices;
-        int materialId;
-        GLuint vao;
-
-        Shape();
-    };
-
-
-    struct RenderComponent {
-        std::vector<Shape>* shapes;
-        std::vector<Material>* materials;
+    class RenderComponent {
+    public:
+        std::vector<Mesh>* meshes_;
+        std::vector<Material>* materials_;
 
         RenderComponent();
-        RenderComponent(std::vector<Shape>* shps, std::vector<Material>* mats);
+        RenderComponent(std::vector<Mesh>* meshes, std::vector<Material>* mats);
     };
 }

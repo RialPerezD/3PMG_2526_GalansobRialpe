@@ -22,8 +22,7 @@
 #include <MotArda/common/Engine.hpp>
 
 
-GLenum glCheckError_(const char* file, int line)
-{
+static GLenum glCheckError_(const char* file, int line){
     GLenum errorCode;
     while ((errorCode = glGetError()) != GL_NO_ERROR)
     {
@@ -236,6 +235,7 @@ namespace MTRD {
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * numVertex, vertex, GL_STATIC_DRAW);
 
+        //Vertex son los vertices que cargo del objeto
 
         if (debug_) {
             glCheckError();
@@ -406,11 +406,11 @@ namespace MTRD {
         glUseProgram(program);
         auto loc = glGetUniformLocation(program, "diffuseTexture");
 
-        for (size_t i = 0; i < render.shapes->size(); i++) {
-            Shape* shape = &render.shapes->at(i);
+        for (size_t i = 0; i < render.meshes_->size(); i++) {
+            Mesh* mesh = &render.meshes_->at(i);
 
-            if (shape->materialId != -1) {
-                Material mat = render.materials->at(shape->materialId);
+            if (mesh->materialId != -1) {
+                Material mat = render.materials_->at(mesh->materialId);
 
                 if (!mat.loadeable) continue;
 
@@ -423,8 +423,8 @@ namespace MTRD {
                 }
             }
 
-            glBindVertexArray(shape->vao);
-            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(shape->vertices.size()));
+            glBindVertexArray(mesh->vao);
+            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
 
             if (debug_) {
                 glCheckError();

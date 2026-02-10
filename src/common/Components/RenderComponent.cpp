@@ -1,29 +1,15 @@
 #include "MotArda/common/Components/RenderComponent.hpp"
+#include "../src/win64/Window.cpp"
 
 namespace MTRD {
+    RenderComponent::RenderComponent() :
+        meshes_(new std::vector<Mesh>()),
+        materials_(new std::vector<Material>()) {}
 
-    Vertex::Vertex() : position(0.0f), uv(0.0f), normal(0.0f) {}
-
-    Vertex::Vertex(
-        glm::vec3 pos,
-        glm::vec2 uv,
-        glm::vec3 norm
-    ) : position(pos), uv(uv), normal(norm) {}
-
-
-    Material::Material()
-        : name(""), diffuse(0.0f), specular(0.0f), ambient(0.0f),
-        shininess(0.0f), loadeable(false), diffuseTexPath(""), diffuseTexID(GL_INVALID_INDEX) {}
-
-
-    Shape::Shape() : vertices(), materialId(-1), vao(GL_INVALID_INDEX) {}
-
-
-    RenderComponent::RenderComponent() : shapes(new std::vector<Shape>()), materials(new std::vector<Material>()) {}
-
-
-    RenderComponent::RenderComponent(std::vector<Shape>* shps, std::vector<Material>* mats){
-        shapes = shps;
-        materials = mats;
+    RenderComponent::RenderComponent(
+        std::vector<Mesh>* meshes,
+        std::vector<Material>* mats){
+        meshes_ = meshes;
+        materials_ = mats;
     }
 }
