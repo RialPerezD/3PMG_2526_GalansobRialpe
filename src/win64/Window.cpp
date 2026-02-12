@@ -227,33 +227,6 @@ namespace MTRD {
     }
 
 
-    void Window::openglGenerateVertexBuffers(const void* vertex, int numVertex, GLuint& vao) {
-        glGenVertexArrays(1, &vao);
-        
-        glBindVertexArray(vao);
-        glGenBuffers(1, &vertexBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * numVertex, vertex, GL_STATIC_DRAW);
-
-        //Vertex son los vertices que cargo del objeto
-
-        if (debug_) {
-            glCheckError();
-        }
-    }
-
-
-    void Window::openglClearVertexBuffers(GLuint& vao) {
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glDeleteBuffers(1, &vertexBuffer);
-        vertexBuffer = GL_INVALID_INDEX;
-        glDeleteVertexArrays(1, &vao);
-        vao = GL_INVALID_INDEX;
-    }
-
-
     void Window::openglGenerateVertexShaders(const char* text) {
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &text, NULL);
@@ -496,7 +469,7 @@ namespace MTRD {
         }
     }
 
-    Window::ObjItem::ObjItem() : shapes(), materials() {}
+    Window::ObjItem::ObjItem() : meshes(), materials() {}
 }
 
 

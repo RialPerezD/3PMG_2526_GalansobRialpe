@@ -97,13 +97,13 @@ namespace MTRD {
 
         struct ObjItem {
             //< Vector that contains the objects to draw.
-            std::vector<Shape> shapes;
+            std::vector<Mesh> meshes;
             //< Vector of the diffetent materials for the shapes.
             std::vector<Material> materials;
 
             ObjItem();
-            ObjItem(const std::vector<Shape>& s, const std::vector<Material>& m)
-                : shapes(s), materials(m) {
+            ObjItem(const std::vector<Mesh>& s, const std::vector<Material>& m)
+                : meshes(s), materials(m) {
             }
         };
 
@@ -183,22 +183,6 @@ namespace MTRD {
         float getLastFrameTime();
 
         //------OpenGl functions-----------------------
-        
-        /**
-        * @brief openglGenerateVertexBuffers.
-        * @param const void* vertex Current vertex.
-        * @param int numVertex Number of vertexes.
-        * @param GLuint& vao Vertex array object, essential to configure
-        * vertex data.
-        * @details Generate the buffer data of the vertex. 
-        */
-        void openglGenerateVertexBuffers(const void* vertex, int numVertex, GLuint& vao);
-        /**
-        * @brief openglClearVertexBuffers.
-        * @param GLuint& vao Vertex array object to clear.
-        * @details Delete / clear the specified array of vertex.
-        */
-        void openglClearVertexBuffers(GLuint& vao);
         /**
         * @brief openglGenerateVertexShaders.
         * @param const char* text Name of the vertex shader to generate.

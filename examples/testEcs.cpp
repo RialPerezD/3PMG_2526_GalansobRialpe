@@ -182,13 +182,13 @@ int MTRD::main() {
             // --- Asign objects to renders ---
             for (size_t entity : objects) {
                 r = ecs.GetComponent<MTRD::RenderComponent>(entity);
-                r->shapes = &objItemList[0].shapes;
-                r->materials = &objItemList[0].materials;
+                r->meshes_ = &objItemList[0].meshes;
+                r->materials_ = &objItemList[0].materials;
             }
 
             r = ecs.GetComponent<MTRD::RenderComponent>(player);
-            r->shapes = &objItemList[1].shapes;
-            r->materials = &objItemList[1].materials;
+            r->meshes_ = &objItemList[1].meshes;
+            r->materials_ = &objItemList[1].materials;
             // --- *** ---
 
 

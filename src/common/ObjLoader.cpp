@@ -54,8 +54,7 @@ namespace MTRD {
 		}
 
 		for (const auto& shape : shapes) {
-			Shape futureShape;
-			futureShape.materialId = shape.mesh.material_ids[0];
+			std::vector<Vertex> vertexes;
 
 			for (const auto& index : shape.mesh.indices) {
 				Vertex vertex;
@@ -84,9 +83,12 @@ namespace MTRD {
 					vertex.normal = glm::vec3(0.0f, 0.0f, 0.0f);
 				}
 
-				futureShape.vertices.push_back(vertex);
+				vertexes.push_back(vertex);
 			}
-			objLoader.shapes.push_back(futureShape);
+
+			Mesh futureMesh = Mesh(vertexes, true);
+			futureMesh.materialId = shape.mesh.material_ids[0];
+			objLoader.meshes.push_back(futureMesh);
 		}
 
 		return objLoader;

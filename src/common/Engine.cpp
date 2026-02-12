@@ -159,7 +159,7 @@ namespace MTRD {
             if (!maybeObjLoader.has_value()) continue;
 
             ObjLoader objLoader = maybeObjLoader.value();
-            MTRD::Window::ObjItem item(objLoader.getShapes(), objLoader.getMaterials());
+            MTRD::Window::ObjItem item(objLoader.getMeshes(), objLoader.getMaterials());
 
             objItemsList.push_back(std::move(item));
         }
@@ -189,20 +189,6 @@ namespace MTRD {
         std::vector<Window::UniformAttrib>& uniforms,
         const std::vector<Window::VertexAttrib>& attributes
     ) {
-        for (int i = 0; i < renderComponents.size(); i++) {
-            RenderComponent* render = &renderComponents[i].second;
-            for (int j = 0; j < render->shapes->size(); j++) {
-                std::vector<Vertex> vertexes = render->shapes->at(j).vertices;
-                const void* vertexBuffer = static_cast<const void*> (vertexes.data());
-
-                window_.openglClearVertexBuffers(render->shapes->at(j).vao);
-                window_.openglGenerateVertexBuffers(
-                    vertexBuffer,
-                    static_cast<int>(vertexes.size()),
-                    render->shapes->at(j).vao
-                );
-                window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
-            }
-        }
+        window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
     }
 }

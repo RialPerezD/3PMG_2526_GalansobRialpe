@@ -28,11 +28,11 @@ namespace MTRD {
 		);
 
 		/**
-		* @brief getShapes
-		* @details Getter that returns a "Shape" type object
-		* return Returns shapes
+		* @brief getMeshes
+		* @details Getter that returns a "Mesh" type object
+		* return Returns meshes
 		*/
-		const std::vector<Shape>& getShapes() const { return shapes; }
+		const std::vector<Mesh>& getMeshes() const { return meshes; }
 		/**
 		* @brief getMaterials
 		* @details Getter that returns a "Material" type object
@@ -42,7 +42,7 @@ namespace MTRD {
 
 	private:
 		//< Contains the data of the vertices.
-		std::vector<Shape> shapes;
+		std::vector<Mesh> meshes;
 		//< Will contain the data of OBJ's material 
 		std::vector<Material> materials;
 	};
