@@ -27,50 +27,11 @@ int MTRD::main() {
     auto& eng = maybeEng.value();
     // --- *** ---
 
-
     // --- Create window ---
     eng.windowSetDebugMode(true);
     eng.windowSetErrorCallback(error_callback);
     eng.windowCreateContext();
     eng.windowSetSwapInterval(1);
-    // --- *** ---
-
-
-    // --- Load Objs ---
-    std::vector <const char*> objsRoutes = {
-        "indoor_plant_02.obj",
-        "12140_Skull_v3_L2.obj"
-    };
-
-    std::atomic<bool> objsLoaded = false;
-    std::vector<MTRD::Window::ObjItem> objItemList;
-    // --- *** ---
-
-    // async obj load
-    eng.enqueueTask([&]() {
-        objItemList = eng.loadObjs(objsRoutes);
-        objsLoaded = true;
-        }
-    );
-    // --- *** ---
-
-    // --- Drawable transform additions ---
-    float ratio = eng.windowGetSizeRatio();
-    float movSpeed = 0.05f;
-    // --- *** ---
-
-    // --- Camera ---
-    MTRD::Camera camera(
-        glm::vec3(0.f, 0.f, 5.f),
-        glm::vec3(0.f, 0.f, 0.f),
-        glm::vec3(0.f, 1.f, 0.f),
-        glm::radians(45.f),
-        ratio,
-        0.1f,
-        100.f
-    );
-
-    camera.updateAll();
     // --- *** ---
 
     // --- Systems ---
@@ -144,12 +105,10 @@ int MTRD::main() {
     m->shouldConstantMove = false;
     // --- *** ---
 
-
     // --- Load shaders ---
     const char* vertex_shader = eng.loadShaderFile("../assets/shaders/textured_obj_vertex.txt");
     const char* fragment_shader = eng.loadShaderFile("../assets/shaders/textured_obj_fragment.txt");
     // --- *** ---
-
 
     // --- Setup Window ---
     eng.windowOpenglSetup(
@@ -161,6 +120,43 @@ int MTRD::main() {
     // --- *** ---
     //la ventana no gestiona el shader, el render es el q deberia hacerlo
 
+    // --- Load Objs ---
+    std::vector <const char*> objsRoutes = {
+        "indoor_plant_02.obj",
+        "12140_Skull_v3_L2.obj"
+    };
+
+    std::atomic<bool> objsLoaded = false;
+    std::vector<MTRD::Window::ObjItem> objItemList;
+    // --- *** ---
+
+    // async obj load
+    eng.enqueueTask([&]() {
+        objItemList = eng.loadObjs(objsRoutes);
+        objsLoaded = true;
+        }
+    );
+    // --- *** ---
+
+    // --- Drawable transform additions ---
+    float ratio = eng.windowGetSizeRatio();
+    float movSpeed = 0.05f;
+    // --- *** ---
+
+    // --- Camera ---
+    MTRD::Camera camera(
+        glm::vec3(0.f, 0.f, 5.f),
+        glm::vec3(0.f, 0.f, 0.f),
+        glm::vec3(0.f, 1.f, 0.f),
+        glm::radians(45.f),
+        ratio,
+        0.1f,
+        100.f
+    );
+
+    camera.updateAll();
+    // --- *** ---
+    
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
 

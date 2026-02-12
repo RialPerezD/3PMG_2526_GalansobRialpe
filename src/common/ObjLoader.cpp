@@ -86,9 +86,9 @@ namespace MTRD {
 				vertexes.push_back(vertex);
 			}
 
-			Mesh futureMesh = Mesh(vertexes, true);
-			futureMesh.materialId = shape.mesh.material_ids[0];
-			objLoader.meshes.push_back(futureMesh);
+			objLoader.meshes.emplace_back(
+				vertexes, shape.mesh.material_ids[0], true
+			);
 		}
 
 		return objLoader;

@@ -18,14 +18,14 @@ namespace MTRD {
 
 	class Mesh {
 	public:
-		int materialId;
+		int materialId_;
 		GLuint vao;
 		GLuint gluintVertexBuffer;
 		bool debug_;
 
 		int meshSize;
 
-		Mesh(std::vector<Vertex> vertices, bool debug = true);
+		Mesh(std::vector<Vertex> vertices, int materialId = -1, bool debug = true);
 		~Mesh();
 	};
 

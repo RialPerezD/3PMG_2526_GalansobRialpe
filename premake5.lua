@@ -87,8 +87,8 @@ workspace "MotArda"
 		files{
 			"premake5.lua",
 			"src/win64/build/conanfile.txt",
-			"src/common/*.cpp", "src/common/Components/*.cpp",
-			"include/MotArda/common/*.hpp", "include/MotArda/common/Components/*.hpp",
+			"src/common/*.cpp", "include/MotArda/common/*.hpp",
+ 			"src/common/Components/*.cpp", "include/MotArda/common/Components/*.hpp",
 
 			"src/win64/*.cpp", "include/MotArda/win64/*.hpp",
 

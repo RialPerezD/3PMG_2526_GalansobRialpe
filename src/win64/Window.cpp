@@ -382,8 +382,8 @@ namespace MTRD {
         for (size_t i = 0; i < render.meshes_->size(); i++) {
             Mesh* mesh = &render.meshes_->at(i);
 
-            if (mesh->materialId != -1) {
-                Material mat = render.materials_->at(mesh->materialId);
+            if (mesh->materialId_ != -1) {
+                Material mat = render.materials_->at(mesh->materialId_);
 
                 if (!mat.loadeable) continue;
 
