@@ -49,19 +49,6 @@ namespace MTRD {
         ~Window();
 
         /**
-        * @brief Copy constructor
-        * @param const Window& right Reference to a Window type object
-        * @details Copy contructor has been removed.
-        */
-        Window(const Window& right) = delete;
-        /**
-        * @brief Copy assignment
-        * @param const Window& right Reference to a Window type object
-        * @details Copy assignment has been removed.
-        */
-        Window& operator=(const Window& right) = delete;
-
-        /**
         * @brief Move Constructor
         * @param const Window&& right Reference to a Window type object
         * @details We are able to Move the window as unique_ptr allows it.
@@ -259,21 +246,9 @@ namespace MTRD {
         * @param std::unique_ptr<Data> newData Unique ptr of the Data struct.
         * @details Inits the Window class data.
         */
-        explicit Window(std::unique_ptr<Data> newData); 
-
-        //< Different OpenGL objects for storing buffers, shaders and the program
-        GLuint vertexBuffer, vertexShader, fragmentShader, program;
-
-        //< Horizontal size of the window
-        int windowWidth_;
-        //< Vertical size of the window
-        int windowHeight_;
+        explicit Window(std::unique_ptr<Data> newData, bool debug);
 
         void checkErrors();
-        //< Boolean that activates the debug mode
-        bool debug_;
 
-        //< Last frame time
-        double lastFrameTime_ = 0.0;
     };
 }

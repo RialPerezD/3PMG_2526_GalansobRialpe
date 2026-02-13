@@ -2,6 +2,7 @@
 #include "Motarda/win64/Window.hpp"
 #include <memory>
 #include <vector>
+#include <filesystem>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../deps/stb_image.h" 
@@ -93,9 +94,16 @@ void APIENTRY glDebugOutput(GLenum source,
 
 namespace MTRD {
 
-    //Add more variables in body on future
     struct Window::Data {
         GLFWwindow* glfw_window;
+        //< Horizontal size of the window
+        int windowWidth_;
+        //< Vertical size of the window
+        int windowHeight_;
+        //< Boolean that activates the debug mode
+        bool debug_;
+        //< Last frame time
+        double lastFrameTime_ = 0.0;
     };
 
 
@@ -114,22 +122,25 @@ namespace MTRD {
 
 
     void Window::checkErrors() {
-        if (debug_) {
+        if (data->debug_) {
             glCheckError();
         }
     }
 
 
-    Window::Window(std::unique_ptr<Data> newData) :
-        data(std::move(newData)),
-        vertexBuffer(GL_INVALID_INDEX),
-        vertexShader(GL_INVALID_INDEX),
-        fragmentShader(GL_INVALID_INDEX),
-        program(GL_INVALID_INDEX),
-        windowWidth_(-1),
-        windowHeight_(-1),
-        debug_(false)
+    Window::Window(std::unique_ptr<Data> newData,bool debug) :
+        data(std::move(newData))
     {
+        glfwMakeContextCurrent(data->glfw_window);
+        gladLoadGL();
+
+        if (data->debug_)
+        {
+            glEnable(GL_DEBUG_OUTPUT);
+            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+            glDebugMessageCallback(glDebugOutput, nullptr);
+            glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+        }
     }
 
 
@@ -146,13 +157,11 @@ namespace MTRD {
         if (d->glfw_window == nullptr) {
             return std::nullopt;
         }
-
-        std::optional<Window> wind = std::make_optional(Window{ std::move(d) });
-        wind.value().windowWidth_ = width;
-        wind.value().windowHeight_ = height;
-        wind.value().debug_ = false;
-
-        wind->vertexBuffer = GL_INVALID_INDEX;
+        // TODO pasar debug desde parametros de windowCreate
+        std::optional<Window> wind = std::make_optional(Window{ std::move(d) ,true });
+        wind.value().data->windowWidth_ = width;
+        wind.value().data->windowHeight_ = height;
+        wind.value().data->debug_ = false;
 
         return wind;
     }
@@ -164,7 +173,7 @@ namespace MTRD {
 
 
     void Window::setDebugMode(bool b) {
-        debug_ = b;
+        data->debug_ = b;
     }
 
 
@@ -174,16 +183,7 @@ namespace MTRD {
 
 
     void Window::createContext() {
-        glfwMakeContextCurrent(data->glfw_window);
-        gladLoadGL();
 
-        if (debug_)
-        {
-            glEnable(GL_DEBUG_OUTPUT);
-            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-            glDebugMessageCallback(glDebugOutput, nullptr);
-            glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-        }
         
     }
 
@@ -209,7 +209,7 @@ namespace MTRD {
 
 
     float Window::getSizeRatio() {
-        return windowWidth_ / (float)windowHeight_;
+        return data->windowWidth_ / (float)data->windowHeight_;
     }
 
 
@@ -221,121 +221,181 @@ namespace MTRD {
 
     float Window::getLastFrameTime() {
         double currentTime = timer();
-        float deltaTime = static_cast<float>(currentTime - lastFrameTime_);
-        lastFrameTime_ = currentTime;
+        float deltaTime = static_cast<float>(currentTime - data->lastFrameTime_);
+        data->lastFrameTime_ = currentTime;
         return deltaTime;
     }
 
 
-    void Window::openglGenerateVertexShaders(const char* text) {
-        vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, &text, NULL);
-        glCompileShader(vertexShader);
+    class Shader {
+    public:
+        static Shader VertexFromFile(std::filesystem::path file) {
+            std::ifstream file(filename);
+            if (!file.is_open()) {
+                std::cerr << "Error: no se pudo abrir el archivo " << filename << std::endl;
+                return nullptr;
+            }
 
-        if (debug_) {
-            GLint success;
-            glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-            if (!success) {
-                char infoLog[512];
-                glGetShaderInfoLog(vertexShader, sizeof(infoLog), NULL, infoLog);
-                fprintf(stderr, "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s\n", infoLog);
-            }
-            else {
-                printf("Vertex shader compiled successfully.\n");
-            }
+            std::stringstream buffer;
+            buffer << file.rdbuf();
+
+            std::string* shaderSource = new std::string(buffer.str());
+
+            return shaderSource->c_str();
+
+            GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+                glShaderSource(vertexShader, 1, &text, NULL);
+                glCompileShader(vertexShader);
+
+                if (data->debug_) {
+                    GLint success;
+                    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+                    if (!success) {
+                        char infoLog[512];
+                        glGetShaderInfoLog(vertexShader, sizeof(infoLog), NULL, infoLog);
+                        fprintf(stderr, "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s\n", infoLog);
+                    }
+                    else {
+                        printf("Vertex shader compiled successfully.\n");
+                    }
+                }
+
+                if (data->debug_) {
+                    glCheckError();
+                }
+                return Shader{ vertexShader };
         }
 
-        if (debug_) {
-            glCheckError();
-        }
-    }
-
-
-    void Window::openglGenerateFragmentShaders(const char* text) {
-        fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, 1, &text, NULL);
-        glCompileShader(fragmentShader);
-
-        if (debug_) {
-            GLint success;
-            glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-            if (!success) {
-                char infoLog[512];
-                glGetShaderInfoLog(fragmentShader, sizeof(infoLog), NULL, infoLog);
-                fprintf(stderr, "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
-            }
-            else {
-                printf("Frament shader compiled successfully.\n");
-            }
-        }
-
-        if (debug_) {
-            glCheckError();
-        }
-    }
-
-
-    void Window::openglCreateProgram() {
-        program = glCreateProgram();
-        glAttachShader(program, vertexShader);
-        glAttachShader(program, fragmentShader);
-        glLinkProgram(program);
-
-
-        if (debug_) {
-            GLint success;
-            glGetProgramiv(program, GL_LINK_STATUS, &success);
-            if (!success) {
-                char infoLog[512];
-                glGetProgramInfoLog(program, sizeof(infoLog), NULL, infoLog);
-                fprintf(stderr, "ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
-            }
-            else {
-                printf("Program linked successfully.\n");
-
+        ~Shader() {
+            if (id_ != 0) {
+                glDestroyLoQueSea(id_);
             }
         }
 
-        glUseProgram(program);
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
+        Shader(const Shader&) = delete;
+        Shader & operator=(const Shader&) = delete;
 
-        if (debug_) {
-            glCheckError();
-        }
-    }
-
-
-    void Window::openglSetUniformsLocationsAndAtributtes(
-        std::vector<Window::UniformAttrib>& uniforms,
-        const std::vector<VertexAttrib>& attributes
-    ){
-        // Uniform locations
-        for (auto& u : uniforms)
-            u.location = glGetUniformLocation(program, u.name);
-
-        // Attribute locations
-        for (auto& attr : attributes) {
-            GLint loc = glGetAttribLocation(program, attr.name);
-            if (loc >= 0) {
-                glEnableVertexAttribArray(loc);
-                glVertexAttribPointer(loc, attr.size, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)attr.offset);
-            }
+        Shader(Shader&& other) : id_{ other.id_ } {
+            other.id_ = 0;
         }
 
-        if (debug_) {
-            glCheckError();
+        Shader& operator=(Shader&&)//TODO;
+    private:
+        Shader(GLuint id) : id_{ id } {
+
         }
-    }
+        GLuint id_;
+    };
+
+    //void Window::openglGenerateVertexShaders(const char* text) {
+    //    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    //    glShaderSource(vertexShader, 1, &text, NULL);
+    //    glCompileShader(vertexShader);
+
+    //    if (data->debug_) {
+    //        GLint success;
+    //        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    //        if (!success) {
+    //            char infoLog[512];
+    //            glGetShaderInfoLog(vertexShader, sizeof(infoLog), NULL, infoLog);
+    //            fprintf(stderr, "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s\n", infoLog);
+    //        }
+    //        else {
+    //            printf("Vertex shader compiled successfully.\n");
+    //        }
+    //    }
+
+    //    if (data->debug_) {
+    //        glCheckError();
+    //    }
+    //}
+
+
+    //void Window::openglGenerateFragmentShaders(const char* text) {
+    //    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    //    glShaderSource(fragmentShader, 1, &text, NULL);
+    //    glCompileShader(fragmentShader);
+
+    //    if (data->debug_) {
+    //        GLint success;
+    //        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    //        if (!success) {
+    //            char infoLog[512];
+    //            glGetShaderInfoLog(fragmentShader, sizeof(infoLog), NULL, infoLog);
+    //            fprintf(stderr, "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
+    //        }
+    //        else {
+    //            printf("Frament shader compiled successfully.\n");
+    //        }
+    //    }
+
+    //    if (data->debug_) {
+    //        glCheckError();
+    //    }
+    //}
+
+
+    //void Window::openglCreateProgram() {
+    //    program = glCreateProgram();
+    //    glAttachShader(program, vertexShader);
+    //    glAttachShader(program, fragmentShader);
+    //    glLinkProgram(program);
+
+
+    //    if (data->debug_) {
+    //        GLint success;
+    //        glGetProgramiv(program, GL_LINK_STATUS, &success);
+    //        if (!success) {
+    //            char infoLog[512];
+    //            glGetProgramInfoLog(program, sizeof(infoLog), NULL, infoLog);
+    //            fprintf(stderr, "ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
+    //        }
+    //        else {
+    //            printf("Program linked successfully.\n");
+
+    //        }
+    //    }
+
+    //    glUseProgram(program);
+    //    glEnable(GL_DEPTH_TEST);
+    //    glEnable(GL_CULL_FACE);
+    //    glCullFace(GL_BACK);
+
+    //    if (data->debug_) {
+    //        glCheckError();
+    //    }
+    //}
+
+
+    //void Window::openglSetUniformsLocationsAndAtributtes(
+    //    std::vector<Window::UniformAttrib>& uniforms,
+    //    const std::vector<VertexAttrib>& attributes
+    //){
+    //    // Uniform locations
+    //    for (auto& u : uniforms)
+    //        u.location = glGetUniformLocation(program, u.name);
+
+    //    // Attribute locations
+    //    for (auto& attr : attributes) {
+    //        GLint loc = glGetAttribLocation(program, attr.name);
+    //        if (loc >= 0) {
+    //            glEnableVertexAttribArray(loc);
+    //            glVertexAttribPointer(loc, attr.size, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)attr.offset);
+    //        }
+    //    }
+
+    //    if (data->debug_) {
+    //        glCheckError();
+    //    }
+    //}
 
 
 
     void Window::openglViewportAndClear() {
-        glViewport(0, 0, windowWidth_, windowHeight_);
+        glViewport(0, 0, data->windowWidth_, data->windowHeight_);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if (debug_) {
+        if (data->debug_) {
             glCheckError();
         }
     }
@@ -367,7 +427,7 @@ namespace MTRD {
                 break;
             }
 
-            if (debug_) {
+            if (data->debug_) {
                 glCheckError();
             }
         }
@@ -375,7 +435,7 @@ namespace MTRD {
 
 
     //meter esto en un render system
-    void Window::openglProgramUniformDraw(RenderComponent& render) {
+ /*   void Window::openglProgramUniformDraw(RenderComponent& render) {
         glUseProgram(program);
         auto loc = glGetUniformLocation(program, "diffuseTexture");
 
@@ -391,7 +451,7 @@ namespace MTRD {
                 glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
                 glUniform1i(loc, 0);
 
-                if (debug_) {
+                if (data->debug_) {
                     glCheckError();
                 }
             }
@@ -399,11 +459,11 @@ namespace MTRD {
             glBindVertexArray(mesh->vao);
             glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
 
-            if (debug_) {
+            if (data->debug_) {
                 glCheckError();
             }
         }
-    }
+    }*/
 
 
     void Window::openglLoadMaterials(std::vector<Material>& materials) {

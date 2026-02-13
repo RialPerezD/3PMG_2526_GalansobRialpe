@@ -28,9 +28,9 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Create window ---
-    eng.windowSetDebugMode(true);
+    //eng.windowSetDebugMode(true);
     eng.windowSetErrorCallback(error_callback);
-    eng.windowCreateContext();
+    //eng.windowCreateContext();
     eng.windowSetSwapInterval(1);
     // --- *** ---
 
@@ -243,7 +243,7 @@ int MTRD::main() {
 
 
         // --- Setup uniforms and draw ---
-        systems.RunRenderSystemWithTraslations(ecs, eng, uniforms, model);
+        systems.TranslationSystem2(ecs, eng, uniforms, model);
         // --- *** ---
 
         eng.windowEndFrame();

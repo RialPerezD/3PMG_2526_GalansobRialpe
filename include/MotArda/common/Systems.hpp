@@ -18,7 +18,7 @@ namespace MTRD {
         * and Render component (thanks to the ECS), then it sets the 
         * position, scale and rotation of the model.
         */
-        void RunRenderSystem(
+        void TranslationSystem(
             ECSManager& ecs,
             MotardaEng& eng,
             std::vector<Window::UniformAttrib>& uniforms,
@@ -34,7 +34,7 @@ namespace MTRD {
         * @param glm::mat4& model Mat4 type object.
         * @details Allows the object to move and rotate.
         */
-        void RunRenderSystemWithTraslations(
+        void TranslationSystem2(
             ECSManager& ecs,
             MotardaEng& eng,
             std::vector<Window::UniformAttrib>& uniforms,
