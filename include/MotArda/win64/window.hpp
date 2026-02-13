@@ -103,24 +103,11 @@ namespace MTRD {
         */
         bool shouldClose();
         /**
-        * @brief setDebugMode
-        * @param bool b
-        * @details Sets "debug_" to the specified boolean value
-        */
-        void setDebugMode(bool b);
-        /**
         * @brief pollEvents
         * @details Calls glfwPollEvents, that waits until events 
         * are queued and processes them.
         */
         void pollEvents();
-        /**
-        * @brief createContext
-        * @details Calls glfwMakeContextCurrent, creating the context of 
-        * the specidied window.
-        * If the debug mode is enabled, the debug mode outputs will be enabled.
-        */
-        void createContext();
         /**
         * @brief timer
         * @return Returns the GLFW time.
@@ -133,12 +120,6 @@ namespace MTRD {
         * back buffers of the specified window.
         */
         void swapBuffers();
-        /**
-        * @brief setSwapInterval
-        * @details Calls glSwapInterval in order to set the swap interval
-        * for the current OpenGL context
-        */
-        void setSwapInterval(int i);
         /**
         * @brief setErrorCallback
         * @param void(*function)(int, const char*) Function to callback
@@ -171,32 +152,6 @@ namespace MTRD {
 
         //------OpenGl functions-----------------------
         /**
-        * @brief openglGenerateVertexShaders.
-        * @param const char* text Name of the vertex shader to generate.
-        * @details First, a vertex shader is created with glCreateShader(),
-        * then, that shader is compiled.
-        * Finally, it checks the IVs in order to know if the shader
-        * was succesfully compiled.
-        */
-        void openglGenerateVertexShaders(const char* text);
-        /**
-        * @brief openglGenerateFragmentShaders.
-        * @param const char* text Name of the fragment shader to generate.
-        * @details First, a fragment shader is created with glCreateShader(),
-        * then, that shader is compiled.
-        * Finally, it checks the IVs in order to know if the shader
-        * was succesfully compiled.
-        */
-        void openglGenerateFragmentShaders(const char* text);
-        /**
-        * @brief openglCreateProgram.
-        * @details First, a program is created with glCreateProgram(),
-        * then, the shaders are attached to it.
-        * Finally, it checks the IVs in order to know if the program
-        * was succesfully linked.
-        */
-        void openglCreateProgram();
-        /**
         * @brief openglSetUniformsLocationsAndAtributtes.
         * @param std::vector<Window::UniformAttrib>& uniforms Vector of
         * uniforms.
@@ -205,10 +160,10 @@ namespace MTRD {
         * @details This function sets up the connection between the 
         * data and the OpenGL shader.
         */
-        void openglSetUniformsLocationsAndAtributtes(
+        /*void openglSetUniformsLocationsAndAtributtes(
             std::vector<Window::UniformAttrib>& uniforms,
             const std::vector<VertexAttrib>& attributes
-        );
+        );*/
 
         /**
         * @brief openglViewportAndClear.
@@ -222,12 +177,6 @@ namespace MTRD {
         * @details This function sets all the uniforms of the window.
         */
         void openglSetUniformsValues(const std::vector<Window::UniformAttrib>& uniforms);
-        /**
-        * @brief openglProgramUniformDraw.
-        * @param Render& render Object to draw
-        * @details Draws in the screen the specified object (render).
-        */
-        void openglProgramUniformDraw(RenderComponent& render);
         /**
         * @brief openglLoadMaterials.
         * @param std::vector<Material>& materials Material for a render.

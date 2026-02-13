@@ -46,16 +46,6 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowCreateContext() {
-        window_.createContext();
-    }
-
-
-    void MotardaEng::windowSetSwapInterval(int i) {
-        window_.setSwapInterval(i);
-    }
-
-
     void MotardaEng::windowSetErrorCallback(void(*function)(int, const char*)) {
         window_.setErrorCallback(function);
     }
@@ -66,31 +56,6 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowNoObjectsOpenglSetup(
-        const char* vertexShader,
-        const char* fragmentShader,
-        std::vector<Window::UniformAttrib>& uniforms,
-        const std::vector<Window::VertexAttrib>& attributes
-    ) {
-        window_.openglGenerateVertexShaders(vertexShader);
-        window_.openglGenerateFragmentShaders(fragmentShader);
-        window_.openglCreateProgram();
-        window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
-    }
-
-
-    void MotardaEng::windowOpenglSetup(
-        const char* vertexShader,
-        const char* fragmentShader,
-        std::vector<Window::UniformAttrib>& uniforms,
-        const std::vector<Window::VertexAttrib>& attributes
-    ) {
-        window_.openglGenerateVertexShaders(vertexShader);
-        window_.openglGenerateFragmentShaders(fragmentShader);
-        window_.openglCreateProgram();
-    }
-
-
     void MotardaEng::windowInitFrame() {
         window_.openglViewportAndClear();
     }
@@ -98,16 +63,6 @@ namespace MTRD {
 
     void MotardaEng::windowOpenglSetUniformsValues(std::vector<Window::UniformAttrib> uniforms) {
         window_.openglSetUniformsValues(uniforms);
-    }
-
-
-    void MotardaEng::windowOpenglProgramUniformDrawRender(RenderComponent& renderComponents) {
-        window_.openglProgramUniformDraw(renderComponents);
-    }
-
-
-    void MotardaEng::windowSetDebugMode(bool b) {
-        window_.setDebugMode(b);
     }
 
 
@@ -181,14 +136,5 @@ namespace MTRD {
         std::string* shaderSource = new std::string(buffer.str());
 
         return shaderSource->c_str();
-    }
-
-
-    void MotardaEng::updateVertexBuffers(
-        std::vector<std::pair<size_t, RenderComponent>>& renderComponents,
-        std::vector<Window::UniformAttrib>& uniforms,
-        const std::vector<Window::VertexAttrib>& attributes
-    ) {
-        window_.openglSetUniformsLocationsAndAtributtes(uniforms, attributes);
     }
 }

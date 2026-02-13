@@ -1,11 +1,11 @@
 #pragma once
 #include "../deps/glm-master/glm/ext/matrix_transform.hpp"
-#include "Ecs.hpp"
-#include "Engine.hpp"
+#include "../Ecs.hpp"
+#include "../Engine.hpp"
 
 namespace MTRD {
 
-    class Systems {
+    class TranslationSystem {
     public:
         /**
         * @brief RunRenderSystem
@@ -18,7 +18,7 @@ namespace MTRD {
         * and Render component (thanks to the ECS), then it sets the 
         * position, scale and rotation of the model.
         */
-        void TranslationSystem(
+        static void TranslationSystemPlane(
             ECSManager& ecs,
             MotardaEng& eng,
             std::vector<Window::UniformAttrib>& uniforms,
@@ -33,8 +33,9 @@ namespace MTRD {
         * uniform vector to the shader.
         * @param glm::mat4& model Mat4 type object.
         * @details Allows the object to move and rotate.
+        * It need have movement component to work in this function.
         */
-        void TranslationSystem2(
+        static void TranslationSystemWithMovementComponent(
             ECSManager& ecs,
             MotardaEng& eng,
             std::vector<Window::UniformAttrib>& uniforms,
@@ -43,7 +44,7 @@ namespace MTRD {
 
     private:
         //< Movement speed of the object
-        float movSpeed = 0.005f;
+        inline static float movSpeed = 0.005f;
     };
 
 }

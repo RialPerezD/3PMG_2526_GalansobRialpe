@@ -89,6 +89,7 @@ workspace "MotArda"
 			"src/win64/build/conanfile.txt",
 			"src/common/*.cpp", "include/MotArda/common/*.hpp",
  			"src/common/Components/*.cpp", "include/MotArda/common/Components/*.hpp",
+ 			"src/common/Systems/*.cpp", "include/MotArda/common/Systems/*.hpp",
 
 			"src/win64/*.cpp", "include/MotArda/win64/*.hpp",
 

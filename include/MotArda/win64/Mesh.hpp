@@ -3,19 +3,10 @@
 #include <vector>
 #include "../deps/glm-master/glm/glm.hpp"
 #include "glad/glad.h"
+#include <MotArda/common/Vertex.hpp>
 
 
 namespace MTRD {
-	struct Vertex {
-		glm::vec3 position;
-		glm::vec2 uv;
-		glm::vec3 normal;
-
-		Vertex();
-		Vertex(glm::vec3 pos, glm::vec2 uv, glm::vec3 norm);
-	};
-
-
 	class Mesh {
 	public:
 		int materialId_;

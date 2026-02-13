@@ -8,7 +8,8 @@
 #include "../deps/glm-master/glm/glm.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
-#include <MotArda/common/Systems.hpp>
+#include <MotArda/common/Systems/TraslationSystem.hpp>
+#include <MotArda/common/Systems/RenderSystem.hpp>
 
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
@@ -27,15 +28,8 @@ int MTRD::main() {
     auto& eng = maybeEng.value();
     // --- *** ---
 
-    // --- Create window ---
-    //eng.windowSetDebugMode(true);
+    // --- Setup callback inside window ---
     eng.windowSetErrorCallback(error_callback);
-    //eng.windowCreateContext();
-    eng.windowSetSwapInterval(1);
-    // --- *** ---
-
-    // --- Systems ---
-    Systems systems;
     // --- *** ---
 
     // --- Ecs ---
@@ -67,27 +61,6 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
 
-    size_t objects[100] = {};
-    for (int y = 0; y < 10; y++) {
-        for (int x = 0; x < 10; x++) {
-            size_t entity = ecs.AddEntity();
-            objects[x+y*10] = entity;
-
-            float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
-            t = ecs.AddComponent<MTRD::TransformComponent>(entity);
-            t->position = glm::vec3(-3.0f + (y * 0.6), -2.0f + (x * 0.4f), 0.0f);
-            t->rotation = glm::vec3(0.0f);
-            t->scale = glm::vec3(scl);
-
-            r = ecs.AddComponent<MTRD::RenderComponent>(entity);
-
-            m = ecs.AddComponent<MTRD::MovementComponent>(entity);
-            m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
-            m->rotation = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1);
-            m->scale = glm::vec3(0.0f);
-        }
-    }
-
     size_t player = ecs.AddEntity();
 
     t = ecs.AddComponent<MTRD::TransformComponent>(player);
@@ -104,25 +77,13 @@ int MTRD::main() {
     m->scale = glm::vec3(0.0f);
     m->shouldConstantMove = false;
     // --- *** ---
-
-    // --- Load shaders ---
-    const char* vertex_shader = eng.loadShaderFile("../assets/shaders/textured_obj_vertex.txt");
-    const char* fragment_shader = eng.loadShaderFile("../assets/shaders/textured_obj_fragment.txt");
+    
+    // --- Render System ---
+    RenderSystem renderSystem;
     // --- *** ---
-
-    // --- Setup Window ---
-    eng.windowOpenglSetup(
-        vertex_shader,
-        fragment_shader,
-        uniforms,
-        attributes
-    );
-    // --- *** ---
-    //la ventana no gestiona el shader, el render es el q deberia hacerlo
 
     // --- Load Objs ---
     std::vector <const char*> objsRoutes = {
-        "indoor_plant_02.obj",
         "12140_Skull_v3_L2.obj"
     };
 
@@ -176,65 +137,11 @@ int MTRD::main() {
             // --- *** ---
 
             // --- Asign objects to renders ---
-            for (size_t entity : objects) {
-                r = ecs.GetComponent<MTRD::RenderComponent>(entity);
-                r->meshes_ = &objItemList[0].meshes;
-                r->materials_ = &objItemList[0].materials;
-            }
-
             r = ecs.GetComponent<MTRD::RenderComponent>(player);
-            r->meshes_ = &objItemList[1].meshes;
-            r->materials_ = &objItemList[1].materials;
-            // --- *** ---
-
-
-            // --- Update Buffers ---
-            eng.updateVertexBuffers(
-                ecs.GetComponentList<RenderComponent>(),
-                uniforms,
-                attributes
-            );
+            r->meshes_ = &objItemList[0].meshes;
+            r->materials_ = &objItemList[0].materials;
             // --- *** ---
         }
-
-        // --- Input to move camera ---
-        if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::S)) camera.moveBackward(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::A)) camera.moveLeft(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::D)) camera.moveRight(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::E)) camera.moveUp(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::Q)) camera.moveDown(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::R)) camera.rotate(10.0f, 0.0f);
-        if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.rotate(-10.0f, 0.0f);
-        // --- *** ---
-
-
-        // --- Input to move player skull ---
-        if (eng.inputIsKeyPressed(Input::Keyboard::I)) m->position.y += 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::K)) m->position.y -= 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::L)) m->position.x += 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::J)) m->position.x -= 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::U)) m->angleRotationRadians += 0.05f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::O)) m->angleRotationRadians -= 0.05f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::N)) m->scale += glm::vec3(0.005f);
-        if (eng.inputIsKeyPressed(Input::Keyboard::M)) m->scale -= glm::vec3(0.005f);
-        // --- *** ---
-
-
-        // --- Item Movement ---
-        glm::vec3 itemMov = glm::vec3(0.f, 0.f, 0.f);
-        if (eng.inputIsKeyPressed(Input::Keyboard::I)) {
-            itemMov.x = 1;
-        }else if(eng.inputIsKeyPressed(Input::Keyboard::K)){
-            itemMov.x = -1;
-        }
-
-        if (eng.inputIsKeyPressed(Input::Keyboard::J)) {
-            itemMov.y = 1;
-        }else if (eng.inputIsKeyPressed(Input::Keyboard::L)) {
-            itemMov.y = -1;
-        }
-        // --- *** ---
 
 
         // --- update vp ---
@@ -243,7 +150,13 @@ int MTRD::main() {
 
 
         // --- Setup uniforms and draw ---
-        systems.TranslationSystem2(ecs, eng, uniforms, model);
+        //TranslationSystem::TranslationSystemWithMovementComponent(ecs, eng, uniforms, model);
+        
+        renderSystem.Render(
+            ecs,
+            ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>(),
+            true
+        );
         // --- *** ---
 
         eng.windowEndFrame();

@@ -1,8 +1,8 @@
-#include "MotArda/common/Systems.hpp"
+#include "MotArda/common/Systems/TraslationSystem.hpp"
 
 namespace MTRD {
 
-    void Systems::TranslationSystem(
+    void TranslationSystem::TranslationSystemPlane(
         ECSManager& ecs,
         MotardaEng& eng,
         std::vector<Window::UniformAttrib>& uniforms,
@@ -21,11 +21,11 @@ namespace MTRD {
             }
 
             eng.windowOpenglSetUniformsValues(uniforms);
-            eng.windowOpenglProgramUniformDrawRender(*render);
         }
     }
 
-    void Systems::TranslationSystem2(
+
+    void TranslationSystem::TranslationSystemWithMovementComponent(
         ECSManager& ecs,
         MotardaEng& eng,
         std::vector<Window::UniformAttrib>& uniforms,
@@ -92,7 +92,6 @@ namespace MTRD {
 
             // Send values
             eng.windowOpenglSetUniformsValues(uniforms);
-            eng.windowOpenglProgramUniformDrawRender(*render);
         }
         rotateCounter += movSpeed;
         

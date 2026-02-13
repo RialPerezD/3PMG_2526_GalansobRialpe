@@ -1,7 +1,10 @@
 
 #include "Motarda/win64/Window.hpp"
 #include <memory>
-#include <vector>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <iostream>
 #include <filesystem>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -21,75 +24,7 @@
 
 #include <algorithm>
 #include <MotArda/common/Engine.hpp>
-
-
-static GLenum glCheckError_(const char* file, int line){
-    GLenum errorCode;
-    while ((errorCode = glGetError()) != GL_NO_ERROR)
-    {
-        std::string error;
-        switch (errorCode)
-        {
-        case GL_INVALID_ENUM:                  error = "INVALID_ENUM"; break;
-        case GL_INVALID_VALUE:                 error = "INVALID_VALUE"; break;
-        case GL_INVALID_OPERATION:             error = "INVALID_OPERATION"; break;
-        case GL_STACK_OVERFLOW:                error = "STACK_OVERFLOW"; break;
-        case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
-        case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
-        case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
-        }
-        std::cout << error << " | " << file << " (" << line << ")" << std::endl;
-    }
-    return errorCode;
-}
-#define glCheckError() glCheckError_(__FILE__, __LINE__) 
-
-void APIENTRY glDebugOutput(GLenum source,
-    GLenum type,
-    unsigned int id,
-    GLenum severity,
-    GLsizei length,
-    const char* message,
-    const void* userParam)
-{
-    // ignore non-significant error/warning codes
-    if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
-
-    std::cout << "---------------" << std::endl;
-    std::cout << "Debug message (" << id << "): " << message << std::endl;
-
-    switch (source)
-    {
-    case GL_DEBUG_SOURCE_API:             std::cout << "Source: API"; break;
-    case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   std::cout << "Source: Window System"; break;
-    case GL_DEBUG_SOURCE_SHADER_COMPILER: std::cout << "Source: Shader Compiler"; break;
-    case GL_DEBUG_SOURCE_THIRD_PARTY:     std::cout << "Source: Third Party"; break;
-    case GL_DEBUG_SOURCE_APPLICATION:     std::cout << "Source: Application"; break;
-    case GL_DEBUG_SOURCE_OTHER:           std::cout << "Source: Other"; break;
-    } std::cout << std::endl;
-
-    switch (type)
-    {
-    case GL_DEBUG_TYPE_ERROR:               std::cout << "Type: Error"; break;
-    case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: std::cout << "Type: Deprecated Behaviour"; break;
-    case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  std::cout << "Type: Undefined Behaviour"; break;
-    case GL_DEBUG_TYPE_PORTABILITY:         std::cout << "Type: Portability"; break;
-    case GL_DEBUG_TYPE_PERFORMANCE:         std::cout << "Type: Performance"; break;
-    case GL_DEBUG_TYPE_MARKER:              std::cout << "Type: Marker"; break;
-    case GL_DEBUG_TYPE_PUSH_GROUP:          std::cout << "Type: Push Group"; break;
-    case GL_DEBUG_TYPE_POP_GROUP:           std::cout << "Type: Pop Group"; break;
-    case GL_DEBUG_TYPE_OTHER:               std::cout << "Type: Other"; break;
-    } std::cout << std::endl;
-
-    switch (severity)
-    {
-    case GL_DEBUG_SEVERITY_HIGH:         std::cout << "Severity: high"; break;
-    case GL_DEBUG_SEVERITY_MEDIUM:       std::cout << "Severity: medium"; break;
-    case GL_DEBUG_SEVERITY_LOW:          std::cout << "Severity: low"; break;
-    case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "Severity: notification"; break;
-    } std::cout << std::endl;
-    std::cout << std::endl;
-}
+#include <MotArda/win64/Debug.hpp>
 
 
 namespace MTRD {
@@ -163,6 +98,8 @@ namespace MTRD {
         wind.value().data->windowHeight_ = height;
         wind.value().data->debug_ = false;
 
+        glfwSwapInterval(1);
+
         return wind;
     }
 
@@ -172,19 +109,8 @@ namespace MTRD {
     }
 
 
-    void Window::setDebugMode(bool b) {
-        data->debug_ = b;
-    }
-
-
     void Window::pollEvents() {
         glfwPollEvents();
-    }
-
-
-    void Window::createContext() {
-
-        
     }
 
 
@@ -195,11 +121,6 @@ namespace MTRD {
 
     void Window::swapBuffers() {
         glfwSwapBuffers(data->glfw_window);
-    }
-
-
-    void Window::setSwapInterval(int i) {
-        glfwSwapInterval(i);
     }
 
 
@@ -225,170 +146,6 @@ namespace MTRD {
         data->lastFrameTime_ = currentTime;
         return deltaTime;
     }
-
-
-    class Shader {
-    public:
-        static Shader VertexFromFile(std::filesystem::path file) {
-            std::ifstream file(filename);
-            if (!file.is_open()) {
-                std::cerr << "Error: no se pudo abrir el archivo " << filename << std::endl;
-                return nullptr;
-            }
-
-            std::stringstream buffer;
-            buffer << file.rdbuf();
-
-            std::string* shaderSource = new std::string(buffer.str());
-
-            return shaderSource->c_str();
-
-            GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-                glShaderSource(vertexShader, 1, &text, NULL);
-                glCompileShader(vertexShader);
-
-                if (data->debug_) {
-                    GLint success;
-                    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-                    if (!success) {
-                        char infoLog[512];
-                        glGetShaderInfoLog(vertexShader, sizeof(infoLog), NULL, infoLog);
-                        fprintf(stderr, "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s\n", infoLog);
-                    }
-                    else {
-                        printf("Vertex shader compiled successfully.\n");
-                    }
-                }
-
-                if (data->debug_) {
-                    glCheckError();
-                }
-                return Shader{ vertexShader };
-        }
-
-        ~Shader() {
-            if (id_ != 0) {
-                glDestroyLoQueSea(id_);
-            }
-        }
-
-        Shader(const Shader&) = delete;
-        Shader & operator=(const Shader&) = delete;
-
-        Shader(Shader&& other) : id_{ other.id_ } {
-            other.id_ = 0;
-        }
-
-        Shader& operator=(Shader&&)//TODO;
-    private:
-        Shader(GLuint id) : id_{ id } {
-
-        }
-        GLuint id_;
-    };
-
-    //void Window::openglGenerateVertexShaders(const char* text) {
-    //    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    //    glShaderSource(vertexShader, 1, &text, NULL);
-    //    glCompileShader(vertexShader);
-
-    //    if (data->debug_) {
-    //        GLint success;
-    //        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    //        if (!success) {
-    //            char infoLog[512];
-    //            glGetShaderInfoLog(vertexShader, sizeof(infoLog), NULL, infoLog);
-    //            fprintf(stderr, "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s\n", infoLog);
-    //        }
-    //        else {
-    //            printf("Vertex shader compiled successfully.\n");
-    //        }
-    //    }
-
-    //    if (data->debug_) {
-    //        glCheckError();
-    //    }
-    //}
-
-
-    //void Window::openglGenerateFragmentShaders(const char* text) {
-    //    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    //    glShaderSource(fragmentShader, 1, &text, NULL);
-    //    glCompileShader(fragmentShader);
-
-    //    if (data->debug_) {
-    //        GLint success;
-    //        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    //        if (!success) {
-    //            char infoLog[512];
-    //            glGetShaderInfoLog(fragmentShader, sizeof(infoLog), NULL, infoLog);
-    //            fprintf(stderr, "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
-    //        }
-    //        else {
-    //            printf("Frament shader compiled successfully.\n");
-    //        }
-    //    }
-
-    //    if (data->debug_) {
-    //        glCheckError();
-    //    }
-    //}
-
-
-    //void Window::openglCreateProgram() {
-    //    program = glCreateProgram();
-    //    glAttachShader(program, vertexShader);
-    //    glAttachShader(program, fragmentShader);
-    //    glLinkProgram(program);
-
-
-    //    if (data->debug_) {
-    //        GLint success;
-    //        glGetProgramiv(program, GL_LINK_STATUS, &success);
-    //        if (!success) {
-    //            char infoLog[512];
-    //            glGetProgramInfoLog(program, sizeof(infoLog), NULL, infoLog);
-    //            fprintf(stderr, "ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
-    //        }
-    //        else {
-    //            printf("Program linked successfully.\n");
-
-    //        }
-    //    }
-
-    //    glUseProgram(program);
-    //    glEnable(GL_DEPTH_TEST);
-    //    glEnable(GL_CULL_FACE);
-    //    glCullFace(GL_BACK);
-
-    //    if (data->debug_) {
-    //        glCheckError();
-    //    }
-    //}
-
-
-    //void Window::openglSetUniformsLocationsAndAtributtes(
-    //    std::vector<Window::UniformAttrib>& uniforms,
-    //    const std::vector<VertexAttrib>& attributes
-    //){
-    //    // Uniform locations
-    //    for (auto& u : uniforms)
-    //        u.location = glGetUniformLocation(program, u.name);
-
-    //    // Attribute locations
-    //    for (auto& attr : attributes) {
-    //        GLint loc = glGetAttribLocation(program, attr.name);
-    //        if (loc >= 0) {
-    //            glEnableVertexAttribArray(loc);
-    //            glVertexAttribPointer(loc, attr.size, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)attr.offset);
-    //        }
-    //    }
-
-    //    if (data->debug_) {
-    //        glCheckError();
-    //    }
-    //}
-
 
 
     void Window::openglViewportAndClear() {
@@ -432,38 +189,6 @@ namespace MTRD {
             }
         }
     }
-
-
-    //meter esto en un render system
- /*   void Window::openglProgramUniformDraw(RenderComponent& render) {
-        glUseProgram(program);
-        auto loc = glGetUniformLocation(program, "diffuseTexture");
-
-        for (size_t i = 0; i < render.meshes_->size(); i++) {
-            Mesh* mesh = &render.meshes_->at(i);
-
-            if (mesh->materialId_ != -1) {
-                Material mat = render.materials_->at(mesh->materialId_);
-
-                if (!mat.loadeable) continue;
-
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
-                glUniform1i(loc, 0);
-
-                if (data->debug_) {
-                    glCheckError();
-                }
-            }
-
-            glBindVertexArray(mesh->vao);
-            glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
-
-            if (data->debug_) {
-                glCheckError();
-            }
-        }
-    }*/
 
 
     void Window::openglLoadMaterials(std::vector<Material>& materials) {
