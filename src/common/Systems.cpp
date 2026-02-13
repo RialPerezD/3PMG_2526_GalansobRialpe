@@ -2,7 +2,7 @@
 
 namespace MTRD {
 
-    void Systems::RunRenderSystem(
+    void Systems::TranslationSystem(
         ECSManager& ecs,
         MotardaEng& eng,
         std::vector<Window::UniformAttrib>& uniforms,
@@ -25,7 +25,7 @@ namespace MTRD {
         }
     }
 
-    void Systems::RunRenderSystemWithTraslations(
+    void Systems::TranslationSystem2(
         ECSManager& ecs,
         MotardaEng& eng,
         std::vector<Window::UniformAttrib>& uniforms,
