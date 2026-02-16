@@ -6,6 +6,11 @@
 #include "glad/glad.h"
 #include "../common/ObjLoader.hpp"
 
+
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#pragma warning(pop)
+
 namespace MTRD {
     int main();
     /**
@@ -14,9 +19,6 @@ namespace MTRD {
     */
     class Window {
     public:
-        //< Struct that contains the glfw window
-        struct Data;
-
         //< Type of values for the window
         enum class UniformTypes {
             Mat2,
@@ -95,6 +97,8 @@ namespace MTRD {
         };
 
         //------------Functions-----------------------
+
+        GLFWwindow* getGlfwWindow() const { return glfw_window; }
 
         /**
         * @brief shouldClose
@@ -186,18 +190,26 @@ namespace MTRD {
         */
         void openglLoadMaterials(std::vector<Material>& materials);
 
-
+        
     private:
-        //< Unique pointer of Data struct
-        std::unique_ptr<Data> data;
+
         /**
         * @brief Constructor
         * @param std::unique_ptr<Data> newData Unique ptr of the Data struct.
         * @details Inits the Window class data.
         */
-        explicit Window(std::unique_ptr<Data> newData, bool debug);
+        explicit Window(GLFWwindow* glfwWindow, bool debug);
 
         void checkErrors();
 
+        GLFWwindow* glfw_window;
+        //< Horizontal size of the window
+        int windowWidth_;
+        //< Vertical size of the window
+        int windowHeight_;
+        //< Boolean that activates the debug mode
+        bool debug_;
+        //< Last frame time
+        double lastFrameTime_ = 0.0;
     };
 }

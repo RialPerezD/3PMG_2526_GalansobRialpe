@@ -4,7 +4,21 @@
 
 
 namespace MTRD {
-    Mesh::Mesh(std::vector<Vertex> vertices, int materialId, bool debug){
+    Mesh::Mesh(
+        std::vector<Vertex> vertices,
+        const Window& parentWindow,
+        bool& firstTime,
+        int materialId,
+        bool debug){
+
+        if (firstTime) {
+            GLFWwindow* branchedWindow =
+                glfwCreateWindow(1, 1, "", nullptr, parentWindow.getGlfwWindow());
+            glfwMakeContextCurrent(branchedWindow);
+
+            firstTime = false;
+        }
+
         meshSize = static_cast<int>(vertices.size());
         vao = GL_INVALID_INDEX;
         gluintVertexBuffer = GL_INVALID_INDEX;

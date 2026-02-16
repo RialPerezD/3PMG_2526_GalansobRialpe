@@ -4,6 +4,7 @@
 #include "../deps/glm-master/glm/glm.hpp"
 #include "glad/glad.h"
 #include <MotArda/common/Vertex.hpp>
+#include <MotArda/win64/window.hpp>
 
 
 namespace MTRD {
@@ -16,7 +17,13 @@ namespace MTRD {
 
 		int meshSize;
 
-		Mesh(std::vector<Vertex> vertices, int materialId = -1, bool debug = true);
+		Mesh(
+			std::vector<Vertex> vertices,
+			const Window& parentWindow,
+			bool& firstTime,
+			int materialId = -1,
+			bool debug = true
+		);
 		~Mesh();
 	};
 

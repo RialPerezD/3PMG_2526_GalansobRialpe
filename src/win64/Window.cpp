@@ -10,16 +10,12 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../deps/stb_image.h" 
 
-
 #include <iostream>
 
 #pragma warning(push)
 #pragma warning(disable : 4005)
 //Need this include to use WinMain
 #include <windows.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#pragma warning(pop)
 
 
 #include <algorithm>
@@ -28,25 +24,9 @@
 
 
 namespace MTRD {
-
-    struct Window::Data {
-        GLFWwindow* glfw_window;
-        //< Horizontal size of the window
-        int windowWidth_;
-        //< Vertical size of the window
-        int windowHeight_;
-        //< Boolean that activates the debug mode
-        bool debug_;
-        //< Last frame time
-        double lastFrameTime_ = 0.0;
-    };
-
-
     Window::~Window() {
-        if (data) {
-            if (data->glfw_window) {
-                glfwDestroyWindow(data->glfw_window);
-            }
+        if (glfw_window) {
+            glfwDestroyWindow(glfw_window);
         }
     }
 
@@ -57,19 +37,19 @@ namespace MTRD {
 
 
     void Window::checkErrors() {
-        if (data->debug_) {
+        if (debug_) {
             glCheckError();
         }
     }
 
 
-    Window::Window(std::unique_ptr<Data> newData,bool debug) :
-        data(std::move(newData))
+    Window::Window(GLFWwindow* glfwWindow,bool debug) :
+        glfw_window(glfwWindow)
     {
-        glfwMakeContextCurrent(data->glfw_window);
+        glfwMakeContextCurrent(glfw_window);
         gladLoadGL();
 
-        if (data->debug_)
+        if (debug_)
         {
             glEnable(GL_DEBUG_OUTPUT);
             glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -80,23 +60,20 @@ namespace MTRD {
 
 
     std::optional<Window> Window::windowCreate(int width, int height, const char* windowName) {
-
-        auto d = std::make_unique<Data>();
-
-
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
-        d->glfw_window = glfwCreateWindow(width, height, windowName, NULL, NULL);
+        GLFWwindow* glfw_window = glfwCreateWindow(width, height, windowName, NULL, NULL);
 
-        if (d->glfw_window == nullptr) {
+        if (glfw_window == nullptr) {
             return std::nullopt;
         }
+
         // TODO pasar debug desde parametros de windowCreate
-        std::optional<Window> wind = std::make_optional(Window{ std::move(d) ,true });
-        wind.value().data->windowWidth_ = width;
-        wind.value().data->windowHeight_ = height;
-        wind.value().data->debug_ = false;
+        std::optional<Window> wind = std::make_optional(Window{ glfw_window, true });
+        wind.value().windowWidth_ = width;
+        wind.value().windowHeight_ = height;
+        wind.value().debug_ = false;
 
         glfwSwapInterval(1);
 
@@ -105,7 +82,7 @@ namespace MTRD {
 
 
     bool Window::shouldClose() {
-        return glfwWindowShouldClose(data->glfw_window);
+        return glfwWindowShouldClose(glfw_window);
     }
 
 
@@ -120,7 +97,7 @@ namespace MTRD {
 
 
     void Window::swapBuffers() {
-        glfwSwapBuffers(data->glfw_window);
+        glfwSwapBuffers(glfw_window);
     }
 
 
@@ -130,29 +107,29 @@ namespace MTRD {
 
 
     float Window::getSizeRatio() {
-        return data->windowWidth_ / (float)data->windowHeight_;
+        return windowWidth_ / (float)windowHeight_;
     }
 
 
     void Window::setKeyCallback(void* keyCallback) {
         auto parsed = reinterpret_cast<void(*)(GLFWwindow*, int, int, int, int)>(keyCallback);
-        glfwSetKeyCallback(data->glfw_window, parsed);
+        glfwSetKeyCallback(glfw_window, parsed);
     }
 
 
     float Window::getLastFrameTime() {
         double currentTime = timer();
-        float deltaTime = static_cast<float>(currentTime - data->lastFrameTime_);
-        data->lastFrameTime_ = currentTime;
+        float deltaTime = static_cast<float>(currentTime - lastFrameTime_);
+        lastFrameTime_ = currentTime;
         return deltaTime;
     }
 
 
     void Window::openglViewportAndClear() {
-        glViewport(0, 0, data->windowWidth_, data->windowHeight_);
+        glViewport(0, 0, windowWidth_, windowHeight_);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if (data->debug_) {
+        if (debug_) {
             glCheckError();
         }
     }
@@ -184,7 +161,7 @@ namespace MTRD {
                 break;
             }
 
-            if (data->debug_) {
+            if (debug_) {
                 glCheckError();
             }
         }
@@ -253,6 +230,7 @@ namespace MTRD {
             }
         }
     }
+
 
     Window::ObjItem::ObjItem() : meshes(), materials() {}
 }

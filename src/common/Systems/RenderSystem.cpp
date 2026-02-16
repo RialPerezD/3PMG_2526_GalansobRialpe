@@ -5,8 +5,8 @@
 namespace MTRD {
 	RenderSystem::RenderSystem()
 		: program{
-			Shader::VertexFromFile("../../../../assets/shaders/textured_obj_vertex.txt",true) ,
-			Shader::FragmentFromFile("../../../../assets/shaders/textured_obj_fragment.txt", true),true }
+			Shader::VertexFromFile("../assets/shaders/textured_obj_vertex.txt",true) ,
+			Shader::FragmentFromFile("../assets/shaders/textured_obj_fragment.txt", true),true }
 	{
 	}
 

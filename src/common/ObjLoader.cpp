@@ -4,13 +4,17 @@
 #include <sstream>
 #include <iostream>
 #include "../deps/glm-master/glm/glm.hpp"
+
+// tinyobj code
 #include "../deps/tiny_obj_loader.h"
 #include "../deps/tiny_obj_loader.cc"
 
 namespace MTRD {
 
 	std::optional<ObjLoader> ObjLoader::loadObj(
-		const std::string& filepath) {
+		const std::string& filepath,
+		const Window& parentWindow
+	) {
 		tinyobj::ObjReader reader;
 
 		std::string sourcePath = "../assets/";
@@ -34,8 +38,6 @@ namespace MTRD {
 		ObjLoader objLoader;
 
 		for (const auto& mat : materials) {
-
-
 			Material material;
 			material.name = mat.name;
 			material.diffuse = glm::vec3(mat.diffuse[0], mat.diffuse[1], mat.diffuse[2]);
@@ -53,6 +55,7 @@ namespace MTRD {
 			objLoader.materials.push_back(material);
 		}
 
+		bool firstTime = true;
 		for (const auto& shape : shapes) {
 			std::vector<Vertex> vertexes;
 
@@ -87,7 +90,7 @@ namespace MTRD {
 			}
 
 			objLoader.meshes.emplace_back(
-				vertexes, shape.mesh.material_ids[0], true
+				vertexes, parentWindow, firstTime, shape.mesh.material_ids[0], true
 			);
 		}
 

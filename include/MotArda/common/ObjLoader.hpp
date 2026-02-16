@@ -6,8 +6,11 @@
 #include "glad/glad.h"
 #include "../deps/glm-master/glm/glm.hpp"
 #include "Components/RenderComponent.hpp"
+#include <GLFW/glfw3.h>
 
 namespace MTRD {
+
+	class Window; 
 
 	/**
 	* @class ObjLoader
@@ -24,7 +27,8 @@ namespace MTRD {
 		* giving value to the vertices and normals.
 		*/
 		static std::optional<ObjLoader> loadObj(
-			const std::string& filepath
+			const std::string& filepath,
+			const Window& parentWindow
 		);
 
 		/**

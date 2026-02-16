@@ -14,8 +14,8 @@ namespace MTRD {
 		Program(const Program&) = delete;
 		Program& operator=(const Program&) = delete;
 
-		Program(Program&& other) noexcept;
-		Program& operator=(Program&&) noexcept;
+		Program(Program&& other);
+		Program& operator=(Program&&);
 
 		void SetupUniforms(
 			std::vector<Window::UniformAttrib>& uniforms,

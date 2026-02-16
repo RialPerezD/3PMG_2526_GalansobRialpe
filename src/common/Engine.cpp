@@ -108,7 +108,8 @@ namespace MTRD {
 
         for (const char* route : routes) {
             auto maybeObjLoader = ObjLoader::loadObj(
-                route
+                route,
+                window_
             );
 
             if (!maybeObjLoader.has_value()) continue;
