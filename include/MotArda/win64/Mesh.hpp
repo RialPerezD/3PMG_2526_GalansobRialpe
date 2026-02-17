@@ -4,10 +4,12 @@
 #include "../deps/glm-master/glm/glm.hpp"
 #include "glad/glad.h"
 #include <MotArda/common/Vertex.hpp>
-#include <MotArda/win64/window.hpp>
 
 
 namespace MTRD {
+
+	class Window;
+
 	class Mesh {
 	public:
 		int materialId_;
@@ -19,7 +21,7 @@ namespace MTRD {
 
 		Mesh(
 			std::vector<Vertex> vertices,
-			const Window& parentWindow,
+			Window& window,
 			bool& firstTime,
 			int materialId = -1,
 			bool debug = true

@@ -13,10 +13,9 @@ namespace MTRD {
 
 	std::optional<ObjLoader> ObjLoader::loadObj(
 		const std::string& filepath,
-		const Window& parentWindow
+		Window& window
 	) {
 		tinyobj::ObjReader reader;
-
 		std::string sourcePath = "../assets/";
 
 		//Obj path
@@ -90,7 +89,7 @@ namespace MTRD {
 			}
 
 			objLoader.meshes.emplace_back(
-				vertexes, parentWindow, firstTime, shape.mesh.material_ids[0], true
+				vertexes, window, firstTime, shape.mesh.material_ids[0], true
 			);
 		}
 

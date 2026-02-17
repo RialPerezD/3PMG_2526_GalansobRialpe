@@ -28,11 +28,23 @@ namespace MTRD {
         if (glfw_window) {
             glfwDestroyWindow(glfw_window);
         }
+
+        if (glfw_secondary_window) {
+            glfwDestroyWindow(glfw_secondary_window);
+        }
     }
 
 
     // Must be defined here as Data is not defined in the header
-    Window::Window(Window&& right) = default;
+    Window::Window(Window&& right) {
+        this->glfw_window = right.glfw_window;
+        this->glfw_secondary_window = right.glfw_secondary_window;
+        this->windowWidth_ = right.windowWidth_;
+        this->windowHeight_ = right.windowHeight_;
+
+        right.glfw_window = nullptr;
+        right.glfw_secondary_window = nullptr;
+    };
     Window& Window::operator=(Window&& right) = default;
 
 
@@ -43,8 +55,8 @@ namespace MTRD {
     }
 
 
-    Window::Window(GLFWwindow* glfwWindow,bool debug) :
-        glfw_window(glfwWindow)
+    Window::Window(GLFWwindow* glfwWindow, GLFWwindow* glfwSecondaryWindow, bool debug) :
+        glfw_window(glfwWindow), glfw_secondary_window(glfwSecondaryWindow)
     {
         glfwMakeContextCurrent(glfw_window);
         gladLoadGL();
@@ -69,8 +81,10 @@ namespace MTRD {
             return std::nullopt;
         }
 
+        GLFWwindow* glfw_secondary_window = glfwCreateWindow(1, 1, "", nullptr, glfw_window);
+
         // TODO pasar debug desde parametros de windowCreate
-        std::optional<Window> wind = std::make_optional(Window{ glfw_window, true });
+        std::optional<Window> wind = std::make_optional(Window{ glfw_window, glfw_secondary_window, true });
         wind.value().windowWidth_ = width;
         wind.value().windowHeight_ = height;
         wind.value().debug_ = false;

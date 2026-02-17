@@ -11,6 +11,8 @@
 namespace MTRD {
 
 	class Window; 
+	class Mesh;
+	class Material;
 
 	/**
 	* @class ObjLoader
@@ -28,7 +30,7 @@ namespace MTRD {
 		*/
 		static std::optional<ObjLoader> loadObj(
 			const std::string& filepath,
-			const Window& parentWindow
+			Window& window
 		);
 
 		/**

@@ -1,5 +1,4 @@
 #include "MotArda/common/Components/RenderComponent.hpp"
-#include "../src/win64/Window.cpp"
 
 namespace MTRD {
     RenderComponent::RenderComponent() :

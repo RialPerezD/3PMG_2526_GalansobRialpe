@@ -15,8 +15,8 @@ static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
 }
 
-int MTRD::main() {
 
+int MTRD::main() {
     // --- Rand seed ---
     std::srand(static_cast<unsigned>(std::time(nullptr)));
     // --- *** ---

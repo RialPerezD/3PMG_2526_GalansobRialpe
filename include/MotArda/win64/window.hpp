@@ -12,6 +12,9 @@
 #pragma warning(pop)
 
 namespace MTRD {
+    class Mesh;
+    class Material;
+
     int main();
     /**
     * @class Window
@@ -99,6 +102,7 @@ namespace MTRD {
         //------------Functions-----------------------
 
         GLFWwindow* getGlfwWindow() const { return glfw_window; }
+        GLFWwindow* getGlfwSecondaryWindow() const { return glfw_secondary_window; }
 
         /**
         * @brief shouldClose
@@ -198,11 +202,15 @@ namespace MTRD {
         * @param std::unique_ptr<Data> newData Unique ptr of the Data struct.
         * @details Inits the Window class data.
         */
-        explicit Window(GLFWwindow* glfwWindow, bool debug);
+        explicit Window(GLFWwindow* glfwWindow, GLFWwindow* glfwSecondaryWindow, bool debug);
 
         void checkErrors();
 
+        // Main Window
         GLFWwindow* glfw_window;
+        // Secondary Window
+        GLFWwindow* glfw_secondary_window;
+
         //< Horizontal size of the window
         int windowWidth_;
         //< Vertical size of the window

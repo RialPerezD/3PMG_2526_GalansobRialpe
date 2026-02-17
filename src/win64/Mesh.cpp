@@ -1,21 +1,19 @@
 #include "../include/MotArda/win64/Mesh.hpp"
 #include "../include/MotArda/win64/Debug.hpp"
+#include <MotArda/win64/window.hpp>
 #include <iostream>
 
 
 namespace MTRD {
     Mesh::Mesh(
         std::vector<Vertex> vertices,
-        const Window& parentWindow,
+        Window& window,
         bool& firstTime,
         int materialId,
         bool debug){
 
         if (firstTime) {
-            GLFWwindow* branchedWindow =
-                glfwCreateWindow(1, 1, "", nullptr, parentWindow.getGlfwWindow());
-            glfwMakeContextCurrent(branchedWindow);
-
+            glfwMakeContextCurrent(window.getGlfwSecondaryWindow());
             firstTime = false;
         }
 

@@ -17,7 +17,9 @@ namespace MTRD {
         bool debug
 	) {
         glUseProgram(program.programId_);
+        glCheckError();
         auto loc = glGetUniformLocation(program.programId_, "diffuseTexture");
+        glCheckError();
 
         for (size_t id : renderables) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
@@ -30,7 +32,9 @@ namespace MTRD {
                     if (!mat.loadeable) continue;
 
                     glActiveTexture(GL_TEXTURE0);
+                    glCheckError();
                     glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
+                    glCheckError();
                     glUniform1i(loc, 0);
 
                     if (debug) {
@@ -39,6 +43,7 @@ namespace MTRD {
                 }
 
                 glBindVertexArray(mesh->vao);
+                glCheckError();
                 glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
 
                 if (debug) {

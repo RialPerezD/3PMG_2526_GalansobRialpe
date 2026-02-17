@@ -156,7 +156,7 @@ namespace MTRD {
 			int height = 600,
 			const char* windowName = "Motarda default name");
 
-	private:
+	public:
 		/**
 		* @brief Constructor
 		* @param Window window Window class-type object.
