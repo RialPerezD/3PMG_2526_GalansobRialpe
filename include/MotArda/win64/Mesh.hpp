@@ -1,32 +1,28 @@
 #pragma once
+#include <memory>
 #include <string>
 #include <vector>
 #include "../deps/glm-master/glm/glm.hpp"
 #include "glad/glad.h"
 #include <MotArda/common/Vertex.hpp>
 
-
 namespace MTRD {
+    class Window;
 
-	class Window;
+    class Mesh {
+    public:
+        Mesh(std::vector<Vertex> vertices, Window& window, std::string name, bool& firstTime, int materialId, bool debug);
+        ~Mesh();
+        Mesh(Mesh&& other) = default;
+        Mesh& operator=(Mesh&& other) = default;
+        //Mesh(const Mesh&) = delete;
+        //Mesh& operator=(const Mesh&) = delete;
 
-	class Mesh {
-	public:
-		int materialId_;
-		GLuint vao;
-		GLuint gluintVertexBuffer;
-		bool debug_;
-
-		int meshSize;
-
-		Mesh(
-			std::vector<Vertex> vertices,
-			Window& window,
-			bool& firstTime,
-			int materialId = -1,
-			bool debug = true
-		);
-		~Mesh();
-	};
-
+        GLuint vao;
+        GLuint gluintVertexBuffer;
+        int materialId_;
+        int meshSize;
+        bool debug_;
+        std::string name_;
+    };
 }

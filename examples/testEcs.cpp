@@ -36,7 +36,6 @@ int MTRD::main() {
     ECSManager ecs;
     // --- *** ---
 
-    float frameTime = 0;
     bool firstTime = true;
     MTRD::TransformComponent* t;
     MTRD::RenderComponent* r;
@@ -99,23 +98,8 @@ int MTRD::main() {
     );
     // --- *** ---
 
-    // --- Drawable transform additions ---
-    float ratio = eng.windowGetSizeRatio();
-    float movSpeed = 0.05f;
-    // --- *** ---
-
     // --- Camera ---
-    MTRD::Camera camera(
-        glm::vec3(0.f, 0.f, 5.f),
-        glm::vec3(0.f, 0.f, 0.f),
-        glm::vec3(0.f, 1.f, 0.f),
-        glm::radians(45.f),
-        ratio,
-        0.1f,
-        100.f
-    );
-
-    camera.updateAll();
+    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
     // --- *** ---
     
     // --- Main window bucle ---
@@ -160,9 +144,6 @@ int MTRD::main() {
         // --- *** ---
 
         eng.windowEndFrame();
-
-        frameTime = eng.windowGetLastFrameTime();
-        //printf("Last frame time: %.4f secs\n", frameTime);
     }
 
     return 0;

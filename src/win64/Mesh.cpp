@@ -2,15 +2,19 @@
 #include "../include/MotArda/win64/Debug.hpp"
 #include <MotArda/win64/window.hpp>
 #include <iostream>
-
+#include <memory>
 
 namespace MTRD {
+
     Mesh::Mesh(
         std::vector<Vertex> vertices,
         Window& window,
+        std::string name,
         bool& firstTime,
         int materialId,
-        bool debug){
+        bool debug)
+    {
+        name_ = name;
 
         if (firstTime) {
             glfwMakeContextCurrent(window.getGlfwSecondaryWindow());
@@ -39,14 +43,13 @@ namespace MTRD {
     }
 
 
-    Mesh::~Mesh(){
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glDeleteBuffers(1, &gluintVertexBuffer);
-        gluintVertexBuffer = GL_INVALID_INDEX;
-        glDeleteVertexArrays(1, &vao);
-        vao = GL_INVALID_INDEX;
+    Mesh::~Mesh() {
+        if (vao != GL_INVALID_INDEX && vao != 0) {
+            glBindVertexArray(0);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glDeleteBuffers(1, &gluintVertexBuffer);
+            glDeleteVertexArrays(1, &vao);
+        }
 
         if (debug_) {
             glCheckError();
@@ -54,4 +57,35 @@ namespace MTRD {
     }
 
 
+    Mesh::Mesh(Mesh&& other)
+        : vao(other.vao),
+        gluintVertexBuffer(other.gluintVertexBuffer),
+        materialId_(other.materialId_),
+        debug_(other.debug_),
+        meshSize(other.meshSize),
+        name_(std::move(other.name_))
+    {
+        other.vao = 0;
+        other.gluintVertexBuffer = 0;
+    }
+
+
+    Mesh& Mesh::operator=(Mesh&& other) {
+        if (this != &other) {
+            if (vao != 0 && vao != GL_INVALID_INDEX) {
+                glDeleteBuffers(1, &gluintVertexBuffer);
+                glDeleteVertexArrays(1, &vao);
+            }
+            vao = other.vao;
+            gluintVertexBuffer = other.gluintVertexBuffer;
+            materialId_ = other.materialId_;
+            debug_ = other.debug_;
+            meshSize = other.meshSize;
+            name_ = std::move(other.name_);
+
+            other.vao = 0;
+            other.gluintVertexBuffer = 0;
+        }
+        return *this;
+    }
 }

@@ -171,13 +171,5 @@ namespace MTRD {
 		Input input_;
 		//< Object of JobSystem class.
 		JobSystem jobSystem_;
-
-		/**
-		* @brief windowLoadMaterials
-		* @param std::vector<Material>& materials Vector of materials for
-		* the OBJs.
-		* @details Load all materials by calling "openglLoadMaterials".
-		*/
-		void windowLoadMaterials(std::vector<Material>& materials);
 	};
 }

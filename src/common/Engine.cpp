@@ -23,7 +23,7 @@ namespace MTRD {
     MotardaEng::MotardaEng(Window window, Input input, JobSystem js)
         :
         window_{ std::move(window) },
-        input_{ std::move(input_) },
+        input_{ std::move(input) },
         jobSystem_{ std::move(js) }
     {
         input_.generateAsciiMap();
@@ -68,18 +68,13 @@ namespace MTRD {
 
     void MotardaEng::windowLoadAllMaterials(std::vector<MTRD::Window::ObjItem>& objItemsList){
         for (MTRD::Window::ObjItem& item : objItemsList) {
-            windowLoadMaterials(item.materials);
+            window_.openglLoadMaterials(item.materials);
         }
     }
 
 
     float MotardaEng::windowGetLastFrameTime() {
         return window_.getLastFrameTime();
-    }
-
-
-    void MotardaEng::windowLoadMaterials(std::vector<Material>& materials) {
-        window_.openglLoadMaterials(materials);
     }
 
 
@@ -115,7 +110,10 @@ namespace MTRD {
             if (!maybeObjLoader.has_value()) continue;
 
             ObjLoader objLoader = maybeObjLoader.value();
-            MTRD::Window::ObjItem item(objLoader.getMeshes(), objLoader.getMaterials());
+            MTRD::Window::ObjItem item(
+                objLoader.getMeshes(),
+                objLoader.getMaterials()
+            );
 
             objItemsList.push_back(std::move(item));
         }

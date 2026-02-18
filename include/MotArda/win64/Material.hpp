@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include "../deps/glm-master/glm/glm.hpp"
 #include <glad/glad.h>

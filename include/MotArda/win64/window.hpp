@@ -8,6 +8,8 @@
 
 
 #define GLFW_INCLUDE_NONE
+#pragma warning(push)
+#pragma warning(disable : 4193)
 #include <GLFW/glfw3.h>
 #pragma warning(pop)
 
@@ -94,9 +96,8 @@ namespace MTRD {
             std::vector<Material> materials;
 
             ObjItem();
-            ObjItem(const std::vector<Mesh>& s, const std::vector<Material>& m)
-                : meshes(s), materials(m) {
-            }
+            ObjItem(std::vector<Mesh> m, std::vector<Material> mat)
+                : meshes(std::move(m)), materials(std::move(mat)) {}
         };
 
         //------------Functions-----------------------

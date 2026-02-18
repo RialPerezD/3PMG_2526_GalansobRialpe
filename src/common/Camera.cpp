@@ -45,6 +45,23 @@ namespace MTRD {
     }
 
 
+    Camera& Camera::CreateCamera(float ratio) {
+        MTRD::Camera camera(
+            glm::vec3(0.f, 0.f, 5.f),
+            glm::vec3(0.f, 0.f, 0.f),
+            glm::vec3(0.f, 1.f, 0.f),
+            glm::radians(45.f),
+            ratio,
+            0.1f,
+            100.f
+        );
+
+        camera.updateAll();
+
+        return camera;
+    }
+
+
     // --- Matrix update ---
     void Camera::updateView() {
         front_.x = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));

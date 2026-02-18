@@ -38,6 +38,9 @@ namespace MTRD {
         */
         ~Camera() = default;
 
+
+        static Camera& CreateCamera(float ratio);
+
         // --- Updates ---
 
         /**

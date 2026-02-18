@@ -3,54 +3,29 @@
 #include <optional>
 #include <vector>
 #include <string>
+#include <memory>
 #include "glad/glad.h"
 #include "../deps/glm-master/glm/glm.hpp"
-#include "Components/RenderComponent.hpp"
-#include <GLFW/glfw3.h>
+#include <MotArda/win64/Mesh.hpp>
+#include <MotArda/win64/Material.hpp>
 
 namespace MTRD {
 
-	class Window; 
-	class Mesh;
-	class Material;
+    class Window;
 
-	/**
-	* @class ObjLoader
-	* @brief This class contains the functions to load an OBJ
-	*/	
-	class ObjLoader {
-	public:
-		/**
-		* @brief loadObj
-		* @param std::string& filepath Folder's path to the Obj
-		* @return Returns an ObjLoader class' type object.
-		* @details First, it receives the path to the OBJ, then it sets 
-		* the object material and finally establishes the model or "shape", 
-		* giving value to the vertices and normals.
-		*/
-		static std::optional<ObjLoader> loadObj(
-			const std::string& filepath,
-			Window& window
-		);
+    class ObjLoader {
+    public:
+        static std::optional<ObjLoader> loadObj(
+            const std::string& filepath,
+            Window& window
+        );
 
-		/**
-		* @brief getMeshes
-		* @details Getter that returns a "Mesh" type object
-		* return Returns meshes
-		*/
-		const std::vector<Mesh>& getMeshes() const { return meshes; }
-		/**
-		* @brief getMaterials
-		* @details Getter that returns a "Material" type object
-		* return Returns materials
-		*/
-		const std::vector<Material>& getMaterials() const { return materials; }
+        std::vector<Mesh> getMeshes() { return std::move(meshes); }
+        std::vector<Material> getMaterials() { return std::move(materials); }
 
-	private:
-		//< Contains the data of the vertices.
-		std::vector<Mesh> meshes;
-		//< Will contain the data of OBJ's material 
-		std::vector<Material> materials;
-	};
+    private:
+        std::vector<Mesh> meshes;
+        std::vector<Material> materials;
+    };
 
 }
