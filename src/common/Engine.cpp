@@ -109,7 +109,7 @@ namespace MTRD {
 
             if (!maybeObjLoader.has_value()) continue;
 
-            ObjLoader objLoader = maybeObjLoader.value();
+            ObjLoader objLoader = std::move(maybeObjLoader.value());
             MTRD::Window::ObjItem item(
                 objLoader.getMeshes(),
                 objLoader.getMaterials()

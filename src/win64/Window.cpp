@@ -81,6 +81,7 @@ namespace MTRD {
             return std::nullopt;
         }
 
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         GLFWwindow* glfw_secondary_window = glfwCreateWindow(1, 1, "", nullptr, glfw_window);
 
         // TODO pasar debug desde parametros de windowCreate
@@ -200,11 +201,19 @@ namespace MTRD {
                 glGenTextures(1, &tex);
                 glBindTexture(GL_TEXTURE_2D, tex);
 
+                if (debug_) {
+                    glCheckError();
+                }
+
                 // Configuracion basica de la textura
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+                if (debug_) {
+                    glCheckError();
+                }
 
                 int width, height, channels;
                 stbi_set_flip_vertically_on_load(true); // Invierte verticalmente para OpenGL
@@ -236,7 +245,15 @@ namespace MTRD {
                 glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
                 glGenerateMipmap(GL_TEXTURE_2D);
 
+                if (debug_) {
+                    glCheckError();
+                }
+
                 stbi_image_free(data);
+
+                if (debug_) {
+                    glCheckError();
+                }
 
                 textureCache[key] = tex; // Guardamos la textura en la cache
                 mat.diffuseTexID = tex;

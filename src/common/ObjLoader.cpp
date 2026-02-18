@@ -93,14 +93,14 @@ namespace MTRD {
             int materialId = shape.mesh.material_ids.empty() ? -1 : shape.mesh.material_ids[0];
 
 
-    /*        objLoader.meshes.emplace_back(
+            objLoader.meshes.emplace_back(
                 vertexes,
                 window,
                 shape.name,
                 firstTime,
                 materialId,
                 true
-            );*/
+            );
             firstTime = false;
         }
 

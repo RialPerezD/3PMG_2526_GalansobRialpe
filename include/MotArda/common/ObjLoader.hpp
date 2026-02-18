@@ -20,6 +20,10 @@ namespace MTRD {
             Window& window
         );
 
+        ObjLoader() = default;
+        ObjLoader(const ObjLoader&) = delete;
+        ObjLoader(ObjLoader&&) = default;
+
         std::vector<Mesh> getMeshes() { return std::move(meshes); }
         std::vector<Material> getMaterials() { return std::move(materials); }
 
