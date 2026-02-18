@@ -9,10 +9,10 @@
 namespace MTRD {
     class RenderComponent {
     public:
-        std::vector<Mesh>* meshes_;
+        std::vector<std::unique_ptr<Mesh>>* meshes_;
         std::vector<Material>* materials_;
 
         RenderComponent();
-        RenderComponent(std::vector<Mesh>* meshes, std::vector<Material>* mats);
+        RenderComponent(std::vector<std::unique_ptr<Mesh>>* meshes, std::vector<Material>* mats);
     };
 }

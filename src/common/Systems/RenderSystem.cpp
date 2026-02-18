@@ -24,7 +24,7 @@ namespace MTRD {
         for (size_t id : renderables) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
             for (size_t i = 0; i < render->meshes_->size(); i++) {
-                Mesh* mesh = &render->meshes_->at(i);
+                Mesh* mesh = render->meshes_->at(i).get();
 
                 if (mesh->materialId_ != -1) {
                     Material mat = render->materials_->at(mesh->materialId_);
@@ -41,6 +41,7 @@ namespace MTRD {
                         glCheckError();
                     }
                 }
+
 
                 glBindVertexArray(mesh->vao);
                 glCheckError();

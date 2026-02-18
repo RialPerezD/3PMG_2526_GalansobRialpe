@@ -11,12 +11,16 @@ namespace MTRD {
 
     class Mesh {
     public:
-        Mesh(std::vector<Vertex> vertices, Window& window, std::string name, bool& firstTime, int materialId, bool debug);
+        Mesh(std::vector<Vertex> vertices, Window& window, std::string name, bool& firstTime, int materialId, bool debug);    
         ~Mesh();
         Mesh(Mesh&& other);
         Mesh& operator=(Mesh&& other);
         Mesh(const Mesh&) = delete;
         Mesh& operator=(const Mesh&) = delete;
+
+        static std::unique_ptr<Mesh> MeshUniquePtr(std::vector<Vertex> vertices, Window& window, std::string name, bool& firstTime, int materialId, bool debug) {
+            return std::make_unique<Mesh>(vertices, window, name, firstTime, materialId, debug);
+        }
 
         GLuint vao;
         GLuint gluintVertexBuffer;

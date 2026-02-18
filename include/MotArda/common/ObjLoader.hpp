@@ -24,11 +24,11 @@ namespace MTRD {
         ObjLoader(const ObjLoader&) = delete;
         ObjLoader(ObjLoader&&) = default;
 
-        std::vector<Mesh> getMeshes() { return std::move(meshes); }
+        std::vector<std::unique_ptr<Mesh>> getMeshes() { return std::move(meshes); }
         std::vector<Material> getMaterials() { return std::move(materials); }
 
     private:
-        std::vector<Mesh> meshes;
+        std::vector<std::unique_ptr<Mesh>> meshes;
         std::vector<Material> materials;
     };
 

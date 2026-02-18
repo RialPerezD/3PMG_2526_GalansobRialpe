@@ -91,12 +91,12 @@ namespace MTRD {
 
         struct ObjItem {
             //< Vector that contains the objects to draw.
-            std::vector<Mesh> meshes;
+            std::vector<std::unique_ptr<Mesh>> meshes;
             //< Vector of the diffetent materials for the shapes.
             std::vector<Material> materials;
 
             ObjItem();
-            ObjItem(std::vector<Mesh> m, std::vector<Material> mat)
+            ObjItem(std::vector<std::unique_ptr<Mesh>> m, std::vector<Material> mat)
                 : meshes(std::move(m)), materials(std::move(mat)) {}
         };
 
