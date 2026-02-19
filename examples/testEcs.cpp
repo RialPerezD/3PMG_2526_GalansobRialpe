@@ -37,8 +37,8 @@ int MTRD::main() {
     MTRD::TransformComponent* t;
     MTRD::RenderComponent* r;
     MTRD::MovementComponent* m;
-    glm::mat4x4 vp = glm::mat4(0.0f);
-    glm::mat4x4 model = glm::mat4(0.0f);
+    glm::mat4x4 vp = glm::mat4(1.0f);
+    glm::mat4x4 model = glm::mat4(1.0f);
 
     // --- Create drawable entitys ---
     ecs.AddComponentType<MTRD::TransformComponent>();
@@ -64,8 +64,7 @@ int MTRD::main() {
     
     // --- Render System ---
     RenderSystem renderSystem;
-    renderSystem.model = model;
-    renderSystem.vp = vp;
+    TranslationSystem translationSystem;
     // --- *** ---
 
     // --- Load Objs ---
@@ -119,6 +118,11 @@ int MTRD::main() {
         vp = camera.getViewProj();
         // --- *** ---
 
+        // --- update model matrix ---
+        translationSystem.TranslationSystemWithMovementComponent(ecs, eng, renderSystem.uniforms, model);
+        renderSystem.vp = vp;
+        renderSystem.model = model;
+        // --- *** ---
 
         renderSystem.Render(
             ecs,

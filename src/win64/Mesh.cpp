@@ -102,7 +102,7 @@ namespace MTRD {
         glBindBuffer(GL_ARRAY_BUFFER, gluintVertexBuffer);
 
         for (int i = 0; i < attributes.size(); i++) {
-            if (attributes[i].location <= 0) continue;
+            if (attributes[i].location < 0) continue;
 
             glEnableVertexAttribArray(attributes[i].location);
             glVertexAttribPointer(
