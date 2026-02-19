@@ -5,6 +5,7 @@
 #include "../deps/glm-master/glm/glm.hpp"
 #include "glad/glad.h"
 #include <MotArda/common/Vertex.hpp>
+#include <MotArda/common/VertexAttributes.hpp>
 
 namespace MTRD {
     class Window;
@@ -21,6 +22,9 @@ namespace MTRD {
         static std::unique_ptr<Mesh> MeshUniquePtr(std::vector<Vertex> vertices, Window& window, std::string name, bool& firstTime, int materialId, bool debug) {
             return std::make_unique<Mesh>(vertices, window, name, firstTime, materialId, debug);
         }
+
+        void GenerateVao();
+        void SetVertexAtribs(const std::vector<VertexAttribute>& attributes);
 
         GLuint vao;
         GLuint gluintVertexBuffer;

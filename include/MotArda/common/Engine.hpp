@@ -85,12 +85,6 @@ namespace MTRD {
 		*/
 		void windowInitFrame();
 		/**
-		* @brief windowOpenglSetUniformsValues.
-		* @param std::vector<Window::UniformAttrib> uniforms Uniforms for the window.
-		* @details Sets all the uniforms of the window by calling "openglSetUniformsValues"
-		*/
-		void windowOpenglSetUniformsValues(std::vector<Window::UniformAttrib> uniforms);
-		/**
 		* @brief windowLoadAllMaterials.
 		* @param std::vector<MTRD::Window::ObjItem>& objItemsList List that
 		* contains the shapes and materials of the objects.

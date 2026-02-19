@@ -17,10 +17,14 @@ namespace MTRD {
 		Program(Program&& other);
 		Program& operator=(Program&&);
 
+		void SetupAtributeLocations(
+			std::vector<VertexAttribute>& attributes,
+			bool debug = true
+		);
+
 		void SetupUniforms(
 			std::vector<Window::UniformAttrib>& uniforms,
-			const std::vector<Window::VertexAttrib>& attributes,
-			bool debug
+			bool debug = true
 		);
 	private:
 		Program(GLuint programId) : programId_{ programId } {

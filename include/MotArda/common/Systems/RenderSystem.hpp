@@ -4,6 +4,9 @@
 #include <MotArda/common/Components/TransformComponent.hpp>
 #include <MotArda/common/Components/RenderComponent.hpp>
 #include <MotArda/common/Ecs.hpp>
+#include "../deps/glm-master/glm/glm.hpp"
+#include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
+#include "../deps/glm-master/glm/gtc/type_ptr.hpp"
 
 
 namespace MTRD {
@@ -17,6 +20,10 @@ namespace MTRD {
 			bool debug
 		);
 
+		std::vector<VertexAttribute> attributes;
+		std::vector<Window::UniformAttrib> uniforms;
+
+		glm::mat4x4 vp, model;
 	private:
 		Program program;
 	};

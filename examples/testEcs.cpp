@@ -5,9 +5,6 @@
 
 #include <memory>
 
-#include "../deps/glm-master/glm/glm.hpp"
-#include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
-#include "../deps/glm-master/glm/gtc/type_ptr.hpp"
 #include <MotArda/common/Systems/TraslationSystem.hpp>
 #include <MotArda/common/Systems/RenderSystem.hpp>
 
@@ -40,20 +37,8 @@ int MTRD::main() {
     MTRD::TransformComponent* t;
     MTRD::RenderComponent* r;
     MTRD::MovementComponent* m;
-    glm::mat4x4 vp, model;
-
-    // --- Setup uniforms ---
-    std::vector<Window::UniformAttrib> uniforms = {
-        {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
-        {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
-    };
-
-    std::vector<Window::VertexAttrib> attributes = {
-        { "position", 3, offsetof(Vertex, position) },
-        { "uv", 2, offsetof(Vertex, uv) },
-        { "normal", 3, offsetof(Vertex, normal) }
-    };
-    // --- *** ---
+    glm::mat4x4 vp = glm::mat4(0.0f);
+    glm::mat4x4 model = glm::mat4(0.0f);
 
     // --- Create drawable entitys ---
     ecs.AddComponentType<MTRD::TransformComponent>();
@@ -79,6 +64,8 @@ int MTRD::main() {
     
     // --- Render System ---
     RenderSystem renderSystem;
+    renderSystem.model = model;
+    renderSystem.vp = vp;
     // --- *** ---
 
     // --- Load Objs ---
@@ -133,9 +120,6 @@ int MTRD::main() {
         // --- *** ---
 
 
-        // --- Setup uniforms and draw ---
-        //TranslationSystem::TranslationSystemWithMovementComponent(ecs, eng, uniforms, model);
-        
         renderSystem.Render(
             ecs,
             ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>(),

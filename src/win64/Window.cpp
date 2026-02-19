@@ -150,39 +150,6 @@ namespace MTRD {
     }
 
 
-    void Window::openglSetUniformsValues(const std::vector<Window::UniformAttrib>& uniforms) {
-        for (int i = 0; i < uniforms.size(); i++) {
-            float f = *(uniforms[i].values);
-            switch (uniforms[i].type) {
-            case Window::UniformTypes::Vec2:
-                glUniform2fv(uniforms[i].location, 1, uniforms[i].values);
-                break;
-            case Window::UniformTypes::Vec3:
-                glUniform3fv(uniforms[i].location, 1, uniforms[i].values);
-                break;
-            case Window::UniformTypes::Vec4:
-                glUniform4fv(uniforms[i].location, 1, uniforms[i].values);
-                break;
-            case Window::UniformTypes::Mat2:
-                glUniformMatrix2fv(uniforms[i].location, 1, GL_FALSE, uniforms[i].values);
-                break;
-            case Window::UniformTypes::Mat3:
-                glUniformMatrix3fv(uniforms[i].location, 1, GL_FALSE, uniforms[i].values);
-                break;
-            case Window::UniformTypes::Mat4:
-                glUniformMatrix4fv(uniforms[i].location, 1, GL_FALSE, uniforms[i].values);
-                break;
-            default:
-                break;
-            }
-
-            if (debug_) {
-                glCheckError();
-            }
-        }
-    }
-
-
     void Window::openglLoadMaterials(std::vector<Material>& materials) {
         std::unordered_map<std::string, GLuint> textureCache;
 

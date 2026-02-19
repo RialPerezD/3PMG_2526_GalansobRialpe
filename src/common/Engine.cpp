@@ -61,11 +61,6 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowOpenglSetUniformsValues(std::vector<Window::UniformAttrib> uniforms) {
-        window_.openglSetUniformsValues(uniforms);
-    }
-
-
     void MotardaEng::windowLoadAllMaterials(std::vector<MTRD::Window::ObjItem>& objItemsList){
         for (MTRD::Window::ObjItem& item : objItemsList) {
             window_.openglLoadMaterials(item.materials);

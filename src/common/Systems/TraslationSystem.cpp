@@ -19,8 +19,6 @@ namespace MTRD {
             if (glm::length(transform->rotation) != 0) {
                 model = glm::rotate( model, transform->angleRotationRadians, transform->rotation);
             }
-
-            eng.windowOpenglSetUniformsValues(uniforms);
         }
     }
 
@@ -89,9 +87,6 @@ namespace MTRD {
                     );
                 }
             }
-
-            // Send values
-            eng.windowOpenglSetUniformsValues(uniforms);
         }
         rotateCounter += movSpeed;
         

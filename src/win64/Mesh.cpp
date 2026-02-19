@@ -26,10 +26,8 @@ namespace MTRD {
         gluintVertexBuffer = GL_INVALID_INDEX;
         materialId_ = materialId;
 
-        glGenVertexArrays(1, &vao);
         const void* vertex = static_cast<const void*> (vertices.data());
 
-        glBindVertexArray(vao);
         glGenBuffers(1, &gluintVertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, gluintVertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshSize, vertex, GL_STATIC_DRAW);
@@ -87,5 +85,38 @@ namespace MTRD {
             other.gluintVertexBuffer = 0;
         }
         return *this;
+    }
+
+
+    void Mesh::GenerateVao() {
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
+
+        if (debug_) {
+            glCheckError();
+        }
+    }
+
+
+    void Mesh::SetVertexAtribs(const std::vector<VertexAttribute>& attributes) {
+        glBindBuffer(GL_ARRAY_BUFFER, gluintVertexBuffer);
+
+        for (int i = 0; i < attributes.size(); i++) {
+            if (attributes[i].location <= 0) continue;
+
+            glEnableVertexAttribArray(attributes[i].location);
+            glVertexAttribPointer(
+                attributes[i].location,
+                attributes[i].size,
+                GL_FLOAT,
+                GL_FALSE,
+                sizeof(Vertex),
+                (void*)attributes[i].offset
+            );
+
+            if (debug_) {
+                glCheckError();
+            }
+        }
     }
 }

@@ -60,27 +60,59 @@ namespace MTRD {
     }
 
 
-    void Program::SetupUniforms(
-        std::vector<Window::UniformAttrib>& uniforms,
-        const std::vector<Window::VertexAttrib>& attributes,
+    void Program::SetupAtributeLocations(
+        std::vector<VertexAttribute>& attributes,
         bool debug
     ) {
-        // Uniform locations
-        for (auto& u : uniforms) {
-            u.location = glGetUniformLocation(programId_, u.name);
-        }
-
-        // Attribute locations
         for (auto& attr : attributes) {
             GLint loc = glGetAttribLocation(programId_, attr.name);
             if (loc >= 0) {
-                glEnableVertexAttribArray(loc);
-                glVertexAttribPointer(loc, attr.size, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)attr.offset);
+                attr.location = loc;
             }
         }
 
         if (debug) {
             glCheckError();
+        }
+    }
+
+
+    void Program::SetupUniforms(
+        std::vector<Window::UniformAttrib>& uniforms,
+        bool debug
+    ){
+        for (Window::UniformAttrib& uniform : uniforms) {
+
+            uniform.location = glGetUniformLocation(programId_, uniform.name);
+
+            if (uniform.location <= 0) continue;
+
+            switch (uniform.type) {
+            case Window::UniformTypes::Vec2:
+                glUniform2fv(uniform.location, 1, uniform.values);
+                break;
+            case Window::UniformTypes::Vec3:
+                glUniform3fv(uniform.location, 1, uniform.values);
+                break;
+            case Window::UniformTypes::Vec4:
+                glUniform4fv(uniform.location, 1, uniform.values);
+                break;
+            case Window::UniformTypes::Mat2:
+                glUniformMatrix2fv(uniform.location, 1, GL_FALSE, uniform.values);
+                break;
+            case Window::UniformTypes::Mat3:
+                glUniformMatrix3fv(uniform.location, 1, GL_FALSE, uniform.values);
+                break;
+            case Window::UniformTypes::Mat4:
+                glUniformMatrix4fv(uniform.location, 1, GL_FALSE, uniform.values);
+                break;
+            default:
+                break;
+            }
+
+            if (debug) {
+                glCheckError();
+            }
         }
     }
 }

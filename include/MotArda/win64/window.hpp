@@ -69,15 +69,6 @@ namespace MTRD {
         Window& operator=(Window&& right);
 
         //------------Structs-------------------------
-        struct VertexAttrib {
-            //< Name of the vertex attribute
-            const char* name;
-            //< Size of the vertex attribute
-            int size;
-            //< Offset of the vertex attribute
-            size_t offset;
-        };
-
         struct UniformAttrib {
             //< Name of the uniform attribute 
             const char* name;
@@ -179,13 +170,6 @@ namespace MTRD {
         * @details Clears the buffer of the window
         */
         void openglViewportAndClear();
-        /**
-        * @brief openglSetUniformsValues.
-        * @param const std::vector<Window::UniformAttrib>& uniforms Uniforms
-        * of the window.
-        * @details This function sets all the uniforms of the window.
-        */
-        void openglSetUniformsValues(const std::vector<Window::UniformAttrib>& uniforms);
         /**
         * @brief openglLoadMaterials.
         * @param std::vector<Material>& materials Material for a render.
