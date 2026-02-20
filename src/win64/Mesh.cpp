@@ -34,6 +34,7 @@ namespace MTRD {
 
         debug_ = debug;
         vertices.clear();
+		glFlush();
 
         if (debug_) {
             glCheckError();
