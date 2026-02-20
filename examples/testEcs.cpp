@@ -48,10 +48,10 @@ int MTRD::main() {
     size_t player = ecs.AddEntity();
 
     t = ecs.AddComponent<MTRD::TransformComponent>(player);
-    t->position = glm::vec3(0);
-    t->rotation = glm::vec3(1, 0, 0);
+    t->position = glm::vec3(0, 0, 0);
+    t->rotation = glm::vec3(0, 0, 0);
     t->angleRotationRadians = -1;
-    t->scale = glm::vec3(0.02f);
+    t->scale = glm::vec3(0.2f);
 
     r = ecs.AddComponent<MTRD::RenderComponent>(player);
 
@@ -69,7 +69,7 @@ int MTRD::main() {
 
     // --- Load Objs ---
     std::vector <const char*> objsRoutes = {
-        "12140_Skull_v3_L2.obj"
+        "indoor_plant_02.obj"
     };
 
     std::atomic<bool> objsLoaded = false;
@@ -86,6 +86,7 @@ int MTRD::main() {
 
     // --- Camera ---
     MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
+    float movSpeed = 0.05f;
     // --- *** ---
     
     // --- Main window bucle ---
@@ -100,6 +101,7 @@ int MTRD::main() {
 
         } else if (firstTime) {
             firstTime = false;
+            printf("Mayas cargadas correctamente\n");
 
             // --- Load object materials ---
             // This needs be called here cuz uses gl calls and need object loaded
@@ -112,6 +114,18 @@ int MTRD::main() {
             r->materials_ = &objItemList[0].materials;
             // --- *** ---
         }
+
+
+        // --- Input to move camera ---
+        if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
+        if (eng.inputIsKeyPressed(Input::Keyboard::S)) camera.moveBackward(movSpeed);
+        if (eng.inputIsKeyPressed(Input::Keyboard::A)) camera.moveLeft(movSpeed);
+        if (eng.inputIsKeyPressed(Input::Keyboard::D)) camera.moveRight(movSpeed);
+        if (eng.inputIsKeyPressed(Input::Keyboard::E)) camera.moveUp(movSpeed);
+        if (eng.inputIsKeyPressed(Input::Keyboard::Q)) camera.moveDown(movSpeed);
+        if (eng.inputIsKeyPressed(Input::Keyboard::R)) camera.rotate(10.0f, 0.0f);
+        if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.rotate(-10.0f, 0.0f);
+        // --- *** ---
 
 
         // --- update vp ---
