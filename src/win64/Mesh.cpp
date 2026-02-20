@@ -30,7 +30,7 @@ namespace MTRD {
 
         glGenBuffers(1, &gluintVertexBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, gluintVertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshSize, vertex, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshSize, vertices.data(), GL_STATIC_DRAW);
 
         debug_ = debug;
         vertices.clear();

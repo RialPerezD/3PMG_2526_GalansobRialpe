@@ -85,7 +85,7 @@ namespace MTRD {
 
             uniform.location = glGetUniformLocation(programId_, uniform.name);
 
-            if (uniform.location <= 0) continue;
+            if (uniform.location < 0) continue;
 
             switch (uniform.type) {
             case Window::UniformTypes::Vec2:
