@@ -228,9 +228,6 @@ namespace MTRD {
             }
         }
     }
-
-
-    Window::ObjItem::ObjItem() : meshes(), materials() {}
 }
 
 

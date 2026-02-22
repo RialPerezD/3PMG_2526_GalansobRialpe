@@ -91,7 +91,7 @@ namespace MTRD {
 		* @details Calls windowLoadMaterials() inside a for loop in order
 		* to load the materials for all the objects.
 		*/
-		void windowLoadAllMaterials(std::vector<MTRD::Window::ObjItem>& objItemsList);
+		void windowLoadAllMaterials(std::vector<ObjItem>& objItemsList);
 		/**
 		* @brief windowGetLastFrameTime.
 		* @details Manage the time in seconds by calling "getLastFrameTime" from
@@ -136,7 +136,7 @@ namespace MTRD {
 		* Next, a new ObjItem type varaible is created to store the shapes and materials,
 		* and finally, we move "item" into the first list of objects.
 		*/
-		std::vector<MTRD::Window::ObjItem> loadObjs(std::vector <const char*> routes);
+		std::vector<ObjItem> loadObjs(std::vector <const char*> routes);
 		/**
 		* @brief loadObjs.
 		* @param const char* filename Name of the shader.
@@ -144,6 +144,11 @@ namespace MTRD {
 		* @details Loads the contents of a shader file and returns it as a string.
 		*/
 		const char* loadShaderFile(const char* filename);
+
+		ObjItem generateCube(float size, int materialId, bool debug = true);
+		ObjItem generatePlane(float width, float height, int materialId, bool debug = true);
+		ObjItem generateSphere(float radius, int segments, int rings, int materialId, bool debug = true);
+
 
 		static std::optional<MotardaEng> createEngine(
 			int width = 800,

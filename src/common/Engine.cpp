@@ -4,7 +4,9 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+
 #include "MotArda/win64/window.hpp"
+#include <MotArda/common/Geometries.hpp>
 
 namespace MTRD {
 
@@ -61,8 +63,8 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowLoadAllMaterials(std::vector<MTRD::Window::ObjItem>& objItemsList){
-        for (MTRD::Window::ObjItem& item : objItemsList) {
+    void MotardaEng::windowLoadAllMaterials(std::vector<ObjItem>& objItemsList){
+        for (ObjItem& item : objItemsList) {
             window_.openglLoadMaterials(item.materials);
         }
     }
@@ -93,8 +95,8 @@ namespace MTRD {
     }
 
 
-    std::vector<MTRD::Window::ObjItem> MotardaEng::loadObjs(std::vector<const char*> routes){
-        std::vector<MTRD::Window::ObjItem> objItemsList = {};
+    std::vector<ObjItem> MotardaEng::loadObjs(std::vector<const char*> routes){
+        std::vector<ObjItem> objItemsList = {};
 
         for (const char* route : routes) {
             auto maybeObjLoader = ObjLoader::loadObj(
@@ -105,7 +107,7 @@ namespace MTRD {
             if (!maybeObjLoader.has_value()) continue;
 
             ObjLoader objLoader = std::move(maybeObjLoader.value());
-            MTRD::Window::ObjItem item(
+            ObjItem item(
                 objLoader.getMeshes(),
                 objLoader.getMaterials()
             );
@@ -130,5 +132,23 @@ namespace MTRD {
         std::string* shaderSource = new std::string(buffer.str());
 
         return shaderSource->c_str();
+    }
+
+
+    ObjItem MotardaEng::generateCube(float size, int materialId, bool debug) {
+		bool firstTime = false;
+        return std::move(Geometries::GenerateCube(window_, size, firstTime, materialId, debug));
+	}
+
+
+    ObjItem MotardaEng::generatePlane(float width, float height, int materialId, bool debug) {
+        bool firstTime = false;
+        return std::move(Geometries::GeneratePlane(window_, width, height, firstTime, materialId, debug));
+    }
+
+
+    ObjItem MotardaEng::generateSphere(float radius, int segments, int rings, int materialId, bool debug) {
+        bool firstTime = false;
+        return std::move(Geometries::GenerateSphere(window_, radius, segments, rings, firstTime, materialId, debug));
     }
 }

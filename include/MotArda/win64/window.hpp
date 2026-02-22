@@ -5,6 +5,7 @@
 #include <vector>
 #include "glad/glad.h"
 #include "../common/ObjLoader.hpp"
+#include "../common/ObjItem.hpp"
 
 
 #define GLFW_INCLUDE_NONE
@@ -78,17 +79,6 @@ namespace MTRD {
             UniformTypes type;
             //< Values of the uniform attribute
             float* values;
-        };
-
-        struct ObjItem {
-            //< Vector that contains the objects to draw.
-            std::vector<std::unique_ptr<Mesh>> meshes;
-            //< Vector of the diffetent materials for the shapes.
-            std::vector<Material> materials;
-
-            ObjItem();
-            ObjItem(std::vector<std::unique_ptr<Mesh>> m, std::vector<Material> mat)
-                : meshes(std::move(m)), materials(std::move(mat)) {}
         };
 
         //------------Functions-----------------------
