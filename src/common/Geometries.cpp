@@ -63,6 +63,7 @@ namespace MTRD {
         return vertices;
     }
 
+
     std::vector<Vertex> Geometries::GeneratePlane(float width, float height) {
         float w = width * 0.5f;
         float h = height * 0.5f;
@@ -78,6 +79,7 @@ namespace MTRD {
         
         return vertices;
     }
+
 
     std::vector<Vertex> Geometries::GenerateSphere(float radius, int segments, int rings) {
         std::vector<Vertex> vertices;
@@ -122,40 +124,70 @@ namespace MTRD {
                 glm::vec3 n22 = glm::normalize(p22);
                 
                 vertices.push_back(Vertex(p11, uv11, n11));
-                vertices.push_back(Vertex(p21, uv21, n21));
                 vertices.push_back(Vertex(p12, uv12, n12));
+                vertices.push_back(Vertex(p21, uv21, n21));
                 
                 vertices.push_back(Vertex(p12, uv12, n12));
-                vertices.push_back(Vertex(p21, uv21, n21));
                 vertices.push_back(Vertex(p22, uv22, n22));
+                vertices.push_back(Vertex(p21, uv21, n21));
             }
         }
         
         return vertices;
     }
 
+
     ObjItem Geometries::GenerateCube(Window& window, float size, bool& firstTimeRef, int materialId, bool debug) {
         auto vertices = GenerateCube(size);
         auto mesh = std::make_unique<Mesh>(vertices, window, "cube", firstTimeRef, materialId, debug);
         std::vector<std::unique_ptr<Mesh>> meshes;
         meshes.push_back(std::move(mesh));
-        return std::move(ObjItem(std::move(meshes), std::vector<Material>{}));
+
+        Material whiteMaterial;
+        whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        whiteMaterial.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+        whiteMaterial.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+        whiteMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+        whiteMaterial.shininess = 32.0f;
+        whiteMaterial.loadeable = true;
+
+        return std::move(ObjItem(std::move(meshes), std::vector<Material>{whiteMaterial}));
     }
+
 
     ObjItem Geometries::GeneratePlane(Window& window, float width, float height, bool& firstTimeRef, int materialId, bool debug) {
         auto vertices = GeneratePlane(width, height);
         auto mesh = std::make_unique<Mesh>(vertices, window, "plane", firstTimeRef, materialId, debug);
         std::vector<std::unique_ptr<Mesh>> meshes;
         meshes.push_back(std::move(mesh));
-        return ObjItem(std::move(meshes), std::vector<Material>{});
+
+        Material whiteMaterial;
+        whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        whiteMaterial.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+        whiteMaterial.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+        whiteMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+        whiteMaterial.shininess = 32.0f;
+        whiteMaterial.loadeable = true;
+
+        return ObjItem(std::move(meshes), std::vector<Material>{whiteMaterial});
     }
+
 
     ObjItem Geometries::GenerateSphere(Window& window, float radius, int segments, int rings, bool& firstTimeRef, int materialId, bool debug) {
         auto vertices = GenerateSphere(radius, segments, rings);
         auto mesh = std::make_unique<Mesh>(vertices, window, "sphere", firstTimeRef, materialId, debug);
         std::vector<std::unique_ptr<Mesh>> meshes;
         meshes.push_back(std::move(mesh));
-        return ObjItem(std::move(meshes), std::vector<Material>{});
+
+        Material whiteMaterial;
+        whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        whiteMaterial.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+        whiteMaterial.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+        whiteMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+        whiteMaterial.shininess = 32.0f;
+        whiteMaterial.loadeable = true;
+
+        return ObjItem(std::move(meshes), std::vector<Material>{whiteMaterial});
     }
 
 }

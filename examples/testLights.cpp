@@ -104,7 +104,7 @@ int MTRD::main() {
             firstTime = false;
             printf("Mayas cargadas correctamente\n");
 
-            objItemList.push_back(std::move(eng.generateCube(5, 4)));
+            objItemList.push_back(std::move(eng.generateSphere(3, 20, 20, 0)));
 
             // --- Load object materials ---
             // This needs be called here cuz uses gl calls and need object loaded
@@ -114,7 +114,7 @@ int MTRD::main() {
             // --- Asign objects to renders ---
             r = ecs.GetComponent<MTRD::RenderComponent>(player);
             r->meshes_ = &objItemList[1].meshes;
-            r->materials_ = &objItemList[0].materials;
+            r->materials_ = &objItemList[1].materials;
             // --- *** ---
         }
 
