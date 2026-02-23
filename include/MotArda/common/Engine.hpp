@@ -145,9 +145,9 @@ namespace MTRD {
 		*/
 		const char* loadShaderFile(const char* filename);
 
-		ObjItem generateCube(float size, int materialId, bool debug = true);
-		ObjItem generatePlane(float width, float height, int materialId, bool debug = true);
-		ObjItem generateSphere(float radius, int segments, int rings, int materialId, bool debug = true);
+		ObjItem generateCube(float size, bool debug = true);
+		ObjItem generatePlane(float width, float height, bool debug = true);
+		ObjItem generateSphere(float radius, int segments, int rings, bool debug = true);
 
 
 		static std::optional<MotardaEng> createEngine(

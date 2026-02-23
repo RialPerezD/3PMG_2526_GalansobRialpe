@@ -135,20 +135,20 @@ namespace MTRD {
     }
 
 
-    ObjItem MotardaEng::generateCube(float size, int materialId, bool debug) {
+    ObjItem MotardaEng::generateCube(float size, bool debug) {
 		bool firstTime = false;
-        return std::move(Geometries::GenerateCube(window_, size, firstTime, materialId, debug));
+        return std::move(Geometries::GenerateCube(window_, size, firstTime, debug));
 	}
 
 
-    ObjItem MotardaEng::generatePlane(float width, float height, int materialId, bool debug) {
+    ObjItem MotardaEng::generatePlane(float width, float height, bool debug) {
         bool firstTime = false;
-        return std::move(Geometries::GeneratePlane(window_, width, height, firstTime, materialId, debug));
+        return std::move(Geometries::GeneratePlane(window_, width, height, firstTime, debug));
     }
 
 
-    ObjItem MotardaEng::generateSphere(float radius, int segments, int rings, int materialId, bool debug) {
+    ObjItem MotardaEng::generateSphere(float radius, int segments, int rings, bool debug) {
         bool firstTime = false;
-        return std::move(Geometries::GenerateSphere(window_, radius, segments, rings, firstTime, materialId, debug));
+        return std::move(Geometries::GenerateSphere(window_, radius, segments, rings, firstTime, debug));
     }
 }

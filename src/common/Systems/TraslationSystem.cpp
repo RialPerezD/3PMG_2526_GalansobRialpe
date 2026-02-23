@@ -5,7 +5,6 @@ namespace MTRD {
     void TranslationSystem::TranslationSystemPlane(
         ECSManager& ecs,
         MotardaEng& eng,
-        std::vector<Window::UniformAttrib>& uniforms,
         glm::mat4& model)
     {
         for (auto& rc : ecs.GetEntitiesWithComponents<TransformComponent, RenderComponent>())
@@ -26,7 +25,6 @@ namespace MTRD {
     void TranslationSystem::TranslationSystemWithMovementComponent(
         ECSManager& ecs,
         MotardaEng& eng,
-        std::vector<Window::UniformAttrib>& uniforms,
         glm::mat4& model)
     {
         static float rotateCounter = 0.f;

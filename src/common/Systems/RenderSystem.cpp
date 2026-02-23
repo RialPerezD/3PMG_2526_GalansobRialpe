@@ -3,7 +3,7 @@
 
 
 namespace MTRD {
-	RenderSystem::RenderSystem()
+	RenderSystem::RenderSystem(glm::mat4x4& vp, glm::mat4x4& model)
 		: program{
 			Shader::VertexFromFile("../assets/shaders/textured_obj_vertex.txt",true) ,
 			Shader::FragmentFromFile("../assets/shaders/textured_obj_fragment.txt", true),true }
@@ -24,15 +24,25 @@ namespace MTRD {
 	void RenderSystem::Render(
         ECSManager& ecs,
         std::vector<size_t> renderables,
+        glm::mat4x4& model,
         bool debug
 	) {
         glUseProgram(program.programId_);
         auto loc = glGetUniformLocation(program.programId_, "diffuseTexture");
         program.SetupAtributeLocations(attributes);
-        program.SetupUniforms(uniforms);
 
         for (size_t id : renderables) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
+            TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
+
+            model = glm::mat4(1.f);
+            model = glm::translate(model, transform->position);
+            model = glm::scale(model, transform->scale);
+            if (glm::length(transform->rotation) != 0) {
+                model = glm::rotate(model, transform->angleRotationRadians, transform->rotation);
+            }
+            program.SetupUniforms(uniforms);
+
             for (size_t i = 0; i < render->meshes_->size(); i++) {
                 Mesh* mesh = render->meshes_->at(i).get();
 

@@ -21,7 +21,6 @@ namespace MTRD {
         static void TranslationSystemPlane(
             ECSManager& ecs,
             MotardaEng& eng,
-            std::vector<Window::UniformAttrib>& uniforms,
             glm::mat4& model
         );
 
@@ -38,7 +37,6 @@ namespace MTRD {
         static void TranslationSystemWithMovementComponent(
             ECSManager& ecs,
             MotardaEng& eng,
-            std::vector<Window::UniformAttrib>& uniforms,
             glm::mat4& model
         );
 

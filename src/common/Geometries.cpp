@@ -137,9 +137,9 @@ namespace MTRD {
     }
 
 
-    ObjItem Geometries::GenerateCube(Window& window, float size, bool& firstTimeRef, int materialId, bool debug) {
+    ObjItem Geometries::GenerateCube(Window& window, float size, bool& firstTimeRef, bool debug) {
         auto vertices = GenerateCube(size);
-        auto mesh = std::make_unique<Mesh>(vertices, window, "cube", firstTimeRef, materialId, debug);
+        auto mesh = std::make_unique<Mesh>(vertices, window, "cube", firstTimeRef, 0, debug);
         std::vector<std::unique_ptr<Mesh>> meshes;
         meshes.push_back(std::move(mesh));
 
@@ -155,9 +155,9 @@ namespace MTRD {
     }
 
 
-    ObjItem Geometries::GeneratePlane(Window& window, float width, float height, bool& firstTimeRef, int materialId, bool debug) {
+    ObjItem Geometries::GeneratePlane(Window& window, float width, float height, bool& firstTimeRef, bool debug) {
         auto vertices = GeneratePlane(width, height);
-        auto mesh = std::make_unique<Mesh>(vertices, window, "plane", firstTimeRef, materialId, debug);
+        auto mesh = std::make_unique<Mesh>(vertices, window, "plane", firstTimeRef, 0, debug);
         std::vector<std::unique_ptr<Mesh>> meshes;
         meshes.push_back(std::move(mesh));
 
@@ -173,9 +173,9 @@ namespace MTRD {
     }
 
 
-    ObjItem Geometries::GenerateSphere(Window& window, float radius, int segments, int rings, bool& firstTimeRef, int materialId, bool debug) {
+    ObjItem Geometries::GenerateSphere(Window& window, float radius, int segments, int rings, bool& firstTimeRef, bool debug) {
         auto vertices = GenerateSphere(radius, segments, rings);
-        auto mesh = std::make_unique<Mesh>(vertices, window, "sphere", firstTimeRef, materialId, debug);
+        auto mesh = std::make_unique<Mesh>(vertices, window, "sphere", firstTimeRef, 0, debug);
         std::vector<std::unique_ptr<Mesh>> meshes;
         meshes.push_back(std::move(mesh));
 
