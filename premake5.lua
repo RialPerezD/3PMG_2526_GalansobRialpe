@@ -92,6 +92,7 @@ workspace "MotArda"
  			"src/common/Systems/*.cpp", "include/MotArda/common/Systems/*.hpp",
 
 			"src/win64/*.cpp", "include/MotArda/win64/*.hpp",
+			"src/win64/Systems/*.cpp", "include/MotArda/win64/Systems/*.hpp",
 
 			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h"
 			}

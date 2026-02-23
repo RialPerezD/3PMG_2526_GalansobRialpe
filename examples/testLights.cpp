@@ -6,7 +6,7 @@
 #include <memory>
 
 #include <MotArda/common/Systems/TraslationSystem.hpp>
-#include <MotArda/common/Systems/RenderSystem.hpp>
+#include <MotArda/win64/Systems/RenderSystem.hpp>
 
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
