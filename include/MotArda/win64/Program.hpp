@@ -26,11 +26,11 @@ namespace MTRD {
 			std::vector<Window::UniformAttrib>& uniforms,
 			bool debug = true
 		);
+
+		GLuint programId_;
+
 	private:
 		Program(GLuint programId) : programId_{ programId } {
 		}
-
-		friend class RenderSystem;
-		GLuint programId_;
 	};
 }

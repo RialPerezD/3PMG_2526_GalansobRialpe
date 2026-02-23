@@ -2,11 +2,12 @@
 #include "MotArda/common/ObjLoader.hpp"
 #include <MotArda/common/Ecs.hpp>
 #include <MotArda/common/Camera.hpp>
+#include <MotArda/common/Light.hpp>
 
 #include <memory>
 
 #include <MotArda/common/Systems/TraslationSystem.hpp>
-#include <MotArda/win64/Systems/RenderSystem.hpp>
+#include <MotArda/win64/Systems/RenderLightsSystem.hpp>
 
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
@@ -50,6 +51,7 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
+    ecs.AddComponentType<MTRD::LightComponent>();
 
     size_t player = ecs.AddEntity();
     size_t floor = ecs.AddEntity();
@@ -113,6 +115,7 @@ int MTRD::main() {
     // --- Camera ---
     MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
     camera.setPosition(glm::vec3(0, 1, 20));
+    glm::vec3 viewPos = camera.getPosition();
     float movSpeed = 0.05f;
 
     glm::mat4x4 vp = glm::mat4(1.0f);
@@ -121,7 +124,7 @@ int MTRD::main() {
 
 
     // --- Render System ---
-    RenderSystem renderSystem = RenderSystem(vp, model);
+    RenderLightsSystem renderLightsSystem = RenderLightsSystem(vp, model, viewPos);
     TranslationSystem translationSystem;
     // --- *** ---
     
@@ -144,9 +147,10 @@ int MTRD::main() {
 
         // --- update vp ---
         vp = camera.getViewProj();
+        viewPos = camera.getPosition();
         // --- *** ---
 
-        renderSystem.Render(
+        renderLightsSystem.Render(
             ecs,
             ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>(),
             model,
