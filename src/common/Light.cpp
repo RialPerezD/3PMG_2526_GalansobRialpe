@@ -65,11 +65,7 @@ namespace MTRD {
 
     LightComponent::LightComponent()
         : hasAmbient(false)
-        , hasDirectional(false)
-        , hasSpot(false)
         , ambient()
-        , directional()
-        , spot()
     {
     }
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "../deps/glm-master/glm/glm.hpp"
+#include <vector>
 
 namespace MTRD {
 
@@ -47,12 +48,10 @@ namespace MTRD {
 
     struct LightComponent {
         bool hasAmbient;
-        bool hasDirectional;
-        bool hasSpot;
-
         AmbientLight ambient;
-        DirectionalLight directional;
-        SpotLight spot;
+
+        std::vector<DirectionalLight> directionalLights;
+        std::vector<SpotLight> spotLights;
 
         LightComponent();
     };

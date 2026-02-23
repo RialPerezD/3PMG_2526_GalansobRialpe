@@ -56,6 +56,7 @@ int MTRD::main() {
     size_t player = ecs.AddEntity();
     size_t floor = ecs.AddEntity();
     size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
+    size_t lightEntity = ecs.AddEntity();
 
     MTRD::TransformComponent*  t = ecs.AddComponent<MTRD::TransformComponent>(player);
     t->position = glm::vec3(0, -2.5f, 0);
@@ -126,6 +127,50 @@ int MTRD::main() {
     // --- Render System ---
     RenderLightsSystem renderLightsSystem = RenderLightsSystem(vp, model, viewPos);
     TranslationSystem translationSystem;
+    // --- *** ---
+
+
+    // --- Lights ---
+    MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
+    
+    lightComp->hasAmbient = true;
+    lightComp->ambient = MTRD::AmbientLight(glm::vec3(0.1f, 0.1f, 0.1f), 0.5f);
+
+    lightComp->directionalLights.push_back(MTRD::DirectionalLight(
+        glm::vec3(-1.0f, -1.0f, 0.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        0.8f
+    ));
+
+    lightComp->directionalLights.push_back(MTRD::DirectionalLight(
+        glm::vec3(1.0f, -1.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        0.8f
+    ));
+
+    lightComp->spotLights.push_back(MTRD::SpotLight(
+        glm::vec3(-3.0f, 5.0f, 5.0f),
+        glm::vec3(0.0f, -1.0f, 0.0f),
+        glm::vec3(1.0f, 1.0f, 0.0f),
+        2.0f,
+        glm::cos(glm::radians(12.5f)),
+        glm::cos(glm::radians(17.5f)),
+        1.0f,
+        0.09f,
+        0.032f
+    ));
+
+    lightComp->spotLights.push_back(MTRD::SpotLight(
+        glm::vec3(3.0f, 5.0f, 5.0f),
+        glm::vec3(0.0f, -1.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 1.0f),
+        2.0f,
+        glm::cos(glm::radians(12.5f)),
+        glm::cos(glm::radians(17.5f)),
+        1.0f,
+        0.09f,
+        0.032f
+    ));
     // --- *** ---
     
 
