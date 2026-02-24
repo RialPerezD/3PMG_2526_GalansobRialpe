@@ -17,8 +17,8 @@ namespace MTRD {
 
         void RenderShadowMap(
             ECSManager& ecs,
-            glm::mat4 model,
-            const glm::mat4& lightSpaceMatrix
+            glm::mat4& model,
+            glm::mat4& lightSpaceMatrix
         );
 
         GLuint getDepthMap() const {

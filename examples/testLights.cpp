@@ -60,7 +60,7 @@ int MTRD::main() {
     size_t lightEntity = ecs.AddEntity();
 
     MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
-    t->position = glm::vec3(0, -2.5f, 0);
+    t->position = glm::vec3(0, -2.f, 0);
     t->rotation = glm::vec3(0, 0, 0);
     t->angleRotationRadians = -1;
     t->scale = glm::vec3(1.f);
@@ -116,7 +116,9 @@ int MTRD::main() {
 
     // --- Camera ---
     MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
-    camera.setPosition(glm::vec3(0, 1, 20));
+    //camera.setPosition(glm::vec3(0, 1, 20));
+    camera.setPosition(glm::vec3(0, 15, 0));
+    camera.setTarget(glm::vec3(0.0f, -5.0f, 0.0f));
     glm::vec3 viewPos = camera.getPosition();
     float movSpeed = 0.05f;
 
@@ -136,15 +138,19 @@ int MTRD::main() {
     // --- Lights ---
     MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
 
-    lightComp->hasAmbient = true;
-    lightComp->ambient = MTRD::AmbientLight(glm::vec3(0.1f, 0.1f, 0.1f), 0.5f);
-
-    glm::vec3 lightDirection = glm::normalize(glm::vec3(-2.0f, -4.0f, -1.0f));
-    lightComp->directionalLights.push_back(MTRD::DirectionalLight(
-        lightDirection,
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        1.0f
-    ));
+    lightComp->spotLights.push_back(
+        SpotLight(
+            glm::vec3(0.0f, 15.0f, 0.0f),
+            glm::vec3(0.0f, -5.0f, 0.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            10.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            0.09f,
+            0.032f
+        )
+    );
     // --- *** ---
 
     // --- Main window bucle ---
@@ -169,7 +175,7 @@ int MTRD::main() {
         // --- *** ---
 
         // --- Temporal Light info to cast shadows ---
-        lightSpaceMatrix = lightComp->directionalLights[0].getLightSpaceMatrix();
+        lightSpaceMatrix = lightComp->spotLights[0].getLightSpaceMatrix(lightComp->spotLights[0]);
 
         // Generate shadow map
         shadowSystem.RenderShadowMap(ecs, model, lightSpaceMatrix);

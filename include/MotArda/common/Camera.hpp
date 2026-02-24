@@ -154,6 +154,7 @@ namespace MTRD {
         * position
         */
         void setPosition(const glm::vec3& pos) noexcept;
+        void setTarget(const glm::vec3& pos) noexcept;
         /**
         * @brief setAspect
         * @details Updates the aspect ratio and recalculates

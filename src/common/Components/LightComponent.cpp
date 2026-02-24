@@ -29,7 +29,11 @@ namespace MTRD {
     {
     }
 
-    glm::mat4 DirectionalLight::getLightSpaceMatrix(float orthoSize, float nearPlane, float farPlane) const {
+    glm::mat4 DirectionalLight::getLightSpaceMatrix(
+        float orthoSize,
+        float nearPlane,
+        float farPlane
+    ) const {
         glm::vec3 lightPos = -glm::normalize(direction) * 10.0f;
         glm::mat4 lightProjection = glm::ortho(-orthoSize, orthoSize, -orthoSize, orthoSize, nearPlane, farPlane);
         glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -71,6 +75,22 @@ namespace MTRD {
         , linear(linear)
         , quadratic(quadratic)
     {
+    }
+
+    glm::mat4 SpotLight::getLightSpaceMatrix(const SpotLight& light) {
+        float near_plane = 10.0f;
+        float far_plane = 50.0f;
+        float aspect = 1.0f;
+
+        glm::mat4 lightProjection = glm::perspective(glm::radians(45.0f), aspect, near_plane, far_plane);
+
+        glm::mat4 lightView = glm::lookAt(
+            light.position,
+            light.position + glm::vec3(0,-1,0),
+            glm::vec3(0.0f, 1.0f, 0.0f)
+        );
+
+        return lightProjection * lightView;
     }
 
     LightComponent::LightComponent()

@@ -52,8 +52,8 @@ namespace MTRD {
             glm::vec3(0.f, 1.f, 0.f),
             glm::radians(45.f),
             ratio,
-            0.1f,
-            100.f
+            10.0f,
+            50.f
         );
 
         camera.updateAll();
@@ -125,6 +125,20 @@ namespace MTRD {
     // --- Setters ---
     void Camera::setPosition(const glm::vec3& pos) noexcept {
         position_ = pos;
+        updateAll();
+    }
+
+    void Camera::setTarget(const glm::vec3& pos) noexcept {
+        target_ = pos;
+
+        glm::vec3 direction = glm::normalize(target_ - position_);
+
+        pitch_ = glm::degrees(asin(direction.y));
+        yaw_ = glm::degrees(atan2(direction.z, direction.x));
+
+        if (pitch_ > 89.0f) pitch_ = 89.0f;
+        if (pitch_ < -89.0f) pitch_ = -89.0f;
+
         updateAll();
     }
 

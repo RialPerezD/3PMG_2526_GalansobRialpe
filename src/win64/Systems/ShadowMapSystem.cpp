@@ -9,7 +9,6 @@ namespace MTRD {
     {
         debug_ = true;
 
-
         glGenFramebuffers(1, &depthMapFBO_);
 
         glGenTextures(1, &depthMap_);
@@ -45,14 +44,17 @@ namespace MTRD {
         };
     }
 
-    void ShadowMapSystem::RenderShadowMap(ECSManager& ecs, glm::mat4 model, const glm::mat4& lightSpaceMatrix) {
+    void ShadowMapSystem::RenderShadowMap(ECSManager& ecs, glm::mat4& model, glm::mat4& lightSpaceMatrix) {
 
         glUseProgram(shadowProgram.programId_);
+        glEnable(GL_DEPTH_TEST);
+
         shadowProgram.SetupAtributeLocations(attributes);
 
         glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
         glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO_);
         glClear(GL_DEPTH_BUFFER_BIT);
+        glDisable(GL_BLEND);
 
         for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
@@ -84,10 +86,10 @@ namespace MTRD {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         glViewport(0, 0, 800, 600);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, depthMap_);
+        glEnable(GL_BLEND);
 
 
         if (debug_) {
