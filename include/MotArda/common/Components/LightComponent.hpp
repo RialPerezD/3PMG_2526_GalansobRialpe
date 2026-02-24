@@ -5,17 +5,17 @@
 namespace MTRD {
 
     struct AmbientLight {
-        glm::vec3 color;
-        float intensity;
+        glm::vec3 color_;
+        float intensity_;
 
         AmbientLight();
         AmbientLight(const glm::vec3& color, float intensity);
     };
 
     struct DirectionalLight {
-        glm::vec3 direction;
-        glm::vec3 color;
-        float intensity;
+        glm::vec3 direction_;
+        glm::vec3 color_;
+        float intensity_;
 
         DirectionalLight();
         DirectionalLight(const glm::vec3& direction, const glm::vec3& color, float intensity);
@@ -28,15 +28,15 @@ namespace MTRD {
     };
 
     struct SpotLight {
-        glm::vec3 position;
-        glm::vec3 direction;
-        glm::vec3 color;
-        float intensity;
-        float cutOff;
-        float outerCutOff;
-        float constant;
-        float linear;
-        float quadratic;
+        glm::vec3 position_;
+        glm::vec3 direction_;
+        glm::vec3 color_;
+        float intensity_;
+        float cutOff_;
+        float outerCutOff_;
+        float constant_;
+        float linear_;
+        float quadratic_;
 
         SpotLight();
         SpotLight(
@@ -55,8 +55,8 @@ namespace MTRD {
     };
 
     struct LightComponent {
-        bool hasAmbient;
-        AmbientLight ambient;
+        bool hasAmbient_;
+        AmbientLight ambient_;
 
         std::vector<DirectionalLight> directionalLights;
         std::vector<SpotLight> spotLights;

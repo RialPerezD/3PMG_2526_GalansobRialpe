@@ -13,7 +13,7 @@
 namespace MTRD {
     class RenderLightsSystem {
     public:
-        RenderLightsSystem(glm::mat4x4& vp, glm::mat4x4& model, glm::vec3& viewPos);
+        RenderLightsSystem(glm::mat4x4& vp, glm::mat4x4& model, glm::vec3& viewPos, glm::mat4& lightSpaceMatrix);
 
         void Render(
             ECSManager& ecs,

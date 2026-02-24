@@ -96,7 +96,7 @@ int MTRD::main() {
 
     for (int i = 0; i < 4; i++) {
         t = ecs.AddComponent<MTRD::TransformComponent>(cubes[i]);
-        t->position = glm::vec3(-5 * ((i % 2) * 2 - 1), -2.5f, -5 * ((i / 2) * 2 - 1));
+        t->position = glm::vec3(-5 * ((i % 2) * 2 - 1), -2.0f, -5 * ((i / 2) * 2 - 1));
         t->rotation = glm::vec3(0, 0, 0);
         t->angleRotationRadians = -1;
         t->scale = glm::vec3(1.f);
@@ -116,8 +116,7 @@ int MTRD::main() {
 
     // --- Camera ---
     MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
-    //camera.setPosition(glm::vec3(0, 1, 20));
-    camera.setPosition(glm::vec3(0, 15, 0));
+    camera.setPosition(glm::vec3(0, 1, 20));
     camera.setTarget(glm::vec3(0.0f, -5.0f, 0.0f));
     glm::vec3 viewPos = camera.getPosition();
     float movSpeed = 0.05f;
@@ -129,8 +128,8 @@ int MTRD::main() {
 
 
     // --- Render System ---
-    RenderLightsSystem renderLightsSystem = RenderLightsSystem(vp, model, viewPos);
-    ShadowMapSystem shadowSystem = ShadowMapSystem(model, lightSpaceMatrix);
+    RenderLightsSystem renderLightsSystem = RenderLightsSystem(vp, model, viewPos, lightSpaceMatrix);
+    ShadowMapSystem shadowSystem = ShadowMapSystem(lightSpaceMatrix, model);
     TranslationSystem translationSystem;
     // --- *** ---
 
@@ -140,8 +139,8 @@ int MTRD::main() {
 
     lightComp->spotLights.push_back(
         SpotLight(
-            glm::vec3(0.0f, 15.0f, 0.0f),
-            glm::vec3(0.0f, -5.0f, 0.0f),
+            glm::vec3(5.0f, 2.0f, 0.0f),
+            glm::vec3(-1.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
             10.0f,
             1.0f,

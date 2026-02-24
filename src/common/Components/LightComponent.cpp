@@ -4,28 +4,28 @@
 
 namespace MTRD {
     AmbientLight::AmbientLight()
-        : color(glm::vec3(1.0f))
-        , intensity(0.1f)
+        : color_(glm::vec3(1.0f))
+        , intensity_(0.1f)
     {
     }
 
     AmbientLight::AmbientLight(const glm::vec3& color, float intensity)
-        : color(color)
-        , intensity(intensity)
+        : color_(color)
+        , intensity_(intensity)
     {
     }
 
     DirectionalLight::DirectionalLight()
-        : direction(glm::vec3(0.0f, -1.0f, 0.0f))
-        , color(glm::vec3(1.0f))
-        , intensity(1.0f)
+        : direction_(glm::vec3(0.0f, -1.0f, 0.0f))
+        , color_(glm::vec3(1.0f))
+        , intensity_(1.0f)
     {
     }
 
     DirectionalLight::DirectionalLight(const glm::vec3& direction, const glm::vec3& color, float intensity)
-        : direction(direction)
-        , color(color)
-        , intensity(intensity)
+        : direction_(direction)
+        , color_(color)
+        , intensity_(intensity)
     {
     }
 
@@ -34,7 +34,7 @@ namespace MTRD {
         float nearPlane,
         float farPlane
     ) const {
-        glm::vec3 lightPos = -glm::normalize(direction) * 10.0f;
+        glm::vec3 lightPos = -glm::normalize(direction_) * 10.0f;
         glm::mat4 lightProjection = glm::ortho(-orthoSize, orthoSize, -orthoSize, orthoSize, nearPlane, farPlane);
         glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
@@ -42,15 +42,15 @@ namespace MTRD {
     }
 
     SpotLight::SpotLight()
-        : position(glm::vec3(0.0f))
-        , direction(glm::vec3(0.0f, -1.0f, 0.0f))
-        , color(glm::vec3(1.0f))
-        , intensity(1.0f)
-        , cutOff(glm::cos(glm::radians(12.5f)))
-        , outerCutOff(glm::cos(glm::radians(17.5f)))
-        , constant(1.0f)
-        , linear(0.09f)
-        , quadratic(0.032f)
+        : position_(glm::vec3(0.0f))
+        , direction_(glm::vec3(0.0f, -1.0f, 0.0f))
+        , color_(glm::vec3(1.0f))
+        , intensity_(1.0f)
+        , cutOff_(glm::cos(glm::radians(12.5f)))
+        , outerCutOff_(glm::cos(glm::radians(17.5f)))
+        , constant_(1.0f)
+        , linear_(0.09f)
+        , quadratic_(0.032f)
     {
     }
 
@@ -65,37 +65,43 @@ namespace MTRD {
         float linear,
         float quadratic
     )
-        : position(position)
-        , direction(direction)
-        , color(color)
-        , intensity(intensity)
-        , cutOff(cutOff)
-        , outerCutOff(outerCutOff)
-        , constant(constant)
-        , linear(linear)
-        , quadratic(quadratic)
+        : position_(position)
+        , direction_(direction)
+        , color_(color)
+        , intensity_(intensity)
+        , cutOff_(cutOff)
+        , outerCutOff_(outerCutOff)
+        , constant_(constant)
+        , linear_(linear)
+        , quadratic_(quadratic)
     {
     }
 
     glm::mat4 SpotLight::getLightSpaceMatrix(const SpotLight& light) {
-        float near_plane = 10.0f;
-        float far_plane = 50.0f;
+        float near_plane = 3.0f; 
+        float far_plane = 100.0f;
         float aspect = 1.0f;
 
         glm::mat4 lightProjection = glm::perspective(glm::radians(45.0f), aspect, near_plane, far_plane);
 
+		// evitar up paralelo a la dirección de la luz
+        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+        if (glm::abs(glm::dot(glm::normalize(light.direction_), up)) > 0.99f) {
+            up = glm::vec3(1.0f, 0.0f, 0.0f); 
+        }
+
         glm::mat4 lightView = glm::lookAt(
-            light.position,
-            light.position + glm::vec3(0,-1,0),
-            glm::vec3(0.0f, 1.0f, 0.0f)
+            light.position_,
+            light.position_ + light.direction_,
+            up
         );
 
         return lightProjection * lightView;
     }
 
     LightComponent::LightComponent()
-        : hasAmbient(false)
-        , ambient()
+        : hasAmbient_(false)
+        , ambient_()
     {
     }
 }

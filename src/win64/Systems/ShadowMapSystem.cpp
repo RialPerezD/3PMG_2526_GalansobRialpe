@@ -66,7 +66,6 @@ namespace MTRD {
             if (glm::length(transform->rotation) != 0) {
                 model = glm::rotate(model, transform->angleRotationRadians, transform->rotation);
             }
-
             shadowProgram.SetupUniforms(uniforms);
 
             for (size_t i = 0; i < render->meshes_->size(); i++) {

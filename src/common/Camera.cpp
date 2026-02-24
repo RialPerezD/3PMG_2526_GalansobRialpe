@@ -52,8 +52,8 @@ namespace MTRD {
             glm::vec3(0.f, 1.f, 0.f),
             glm::radians(45.f),
             ratio,
-            10.0f,
-            50.f
+            0.1f,
+            100.f
         );
 
         camera.updateAll();

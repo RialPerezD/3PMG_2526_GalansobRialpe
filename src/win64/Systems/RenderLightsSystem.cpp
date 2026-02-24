@@ -4,7 +4,7 @@
 
 
 namespace MTRD {
-    RenderLightsSystem::RenderLightsSystem(glm::mat4x4& vp, glm::mat4x4& model, glm::vec3& viewPos)
+    RenderLightsSystem::RenderLightsSystem(glm::mat4x4& vp, glm::mat4x4& model, glm::vec3& viewPos, glm::mat4& lightSpaceMatrix)
         : program{
             Shader::VertexFromFile("../assets/shaders/textured_lights_obj_vertex.txt",true) ,
             Shader::FragmentFromFile("../assets/shaders/textured_lights_obj_fragment.txt", true),true }
@@ -19,6 +19,7 @@ namespace MTRD {
         uniforms = {
             {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
             {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
+            {"lightSpaceMatrix", -1, Window::UniformTypes::Mat4, glm::value_ptr(lightSpaceMatrix)},
         };
     }
 
@@ -45,10 +46,10 @@ namespace MTRD {
         glUniform3f(glGetUniformLocation(program.programId_, "viewPos"), viewPos_.x, viewPos_.y, viewPos_.z);
         glUniform1f(glGetUniformLocation(program.programId_, "shininess"), shininess);
 
-        if (light && light->hasAmbient) {
+        if (light && light->hasAmbient_) {
             glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 1);
-            glUniform3f(glGetUniformLocation(program.programId_, "ambientColor"), light->ambient.color.x, light->ambient.color.y, light->ambient.color.z);
-            glUniform1f(glGetUniformLocation(program.programId_, "ambientIntensity"), light->ambient.intensity);
+            glUniform3f(glGetUniformLocation(program.programId_, "ambientColor"), light->ambient_.color_.x, light->ambient_.color_.y, light->ambient_.color_.z);
+            glUniform1f(glGetUniformLocation(program.programId_, "ambientIntensity"), light->ambient_.intensity_);
         } else {
             glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
         }
@@ -62,13 +63,13 @@ namespace MTRD {
         for (size_t i = 0; i < 4 && light && i < light->directionalLights.size(); i++) {
             const auto& dirLight = light->directionalLights[i];
             std::string prefix = "directionalDir[" + std::to_string(i) + "]";
-            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), dirLight.direction.x, dirLight.direction.y, dirLight.direction.z);
+            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), dirLight.direction_.x, dirLight.direction_.y, dirLight.direction_.z);
 
             prefix = "directionalColor[" + std::to_string(i) + "]";
-            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), dirLight.color.x, dirLight.color.y, dirLight.color.z);
+            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), dirLight.color_.x, dirLight.color_.y, dirLight.color_.z);
 
             prefix = "directionalIntensity[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), dirLight.intensity);
+            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), dirLight.intensity_);
         }
 
         int numSpotLights = 0;
@@ -80,31 +81,31 @@ namespace MTRD {
         for (size_t i = 0; i < 4 && light && i < light->spotLights.size(); i++) {
             const auto& spot = light->spotLights[i];
             std::string prefix = "spotPos[" + std::to_string(i) + "]";
-            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.position.x, spot.position.y, spot.position.z);
+            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.position_.x, spot.position_.y, spot.position_.z);
 
             prefix = "spotDir[" + std::to_string(i) + "]";
-            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.direction.x, spot.direction.y, spot.direction.z);
+            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.direction_.x, spot.direction_.y, spot.direction_.z);
 
             prefix = "spotColor[" + std::to_string(i) + "]";
-            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.color.x, spot.color.y, spot.color.z);
+            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.color_.x, spot.color_.y, spot.color_.z);
 
             prefix = "spotIntensity[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.intensity);
+            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.intensity_);
 
             prefix = "spotCutOff[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.cutOff);
+            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.cutOff_);
 
             prefix = "spotOuterCutOff[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.outerCutOff);
+            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.outerCutOff_);
 
             prefix = "spotConstant[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.constant);
+            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.constant_);
 
             prefix = "spotLinear[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.linear);
+            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.linear_);
 
             prefix = "spotQuadratic[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.quadratic);
+            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.quadratic_);
         }
         // --- *** ---
 
