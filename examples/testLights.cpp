@@ -122,11 +122,13 @@ int MTRD::main() {
 
     glm::mat4x4 vp = glm::mat4(1.0f);
     glm::mat4x4 model = glm::mat4(1.0f);
+    glm::mat4 lightSpaceMatrix = glm::mat4(1.0f);
     // --- *** ---
 
 
     // --- Render System ---
     RenderLightsSystem renderLightsSystem = RenderLightsSystem(vp, model, viewPos);
+    ShadowMapSystem shadowSystem = ShadowMapSystem(model, lightSpaceMatrix);
     TranslationSystem translationSystem;
     // --- *** ---
 
@@ -144,8 +146,6 @@ int MTRD::main() {
         1.0f
     ));
     // --- *** ---
-
-    ShadowMapSystem shadowSystem;
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
@@ -169,14 +169,10 @@ int MTRD::main() {
         // --- *** ---
 
         // --- Temporal Light info to cast shadows ---
-        glm::vec3 lightPos = -lightDirection * 10.0f;
-        float near_plane = 1.0f, far_plane = 25.0f;
-        glm::mat4 lightProjection = glm::ortho(-15.0f, 15.0f, -15.0f, 15.0f, near_plane, far_plane);
-        glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+        lightSpaceMatrix = lightComp->directionalLights[0].getLightSpaceMatrix();
 
         // Generate shadow map
-        shadowSystem.RenderShadowMap(ecs, lightSpaceMatrix);
+        shadowSystem.RenderShadowMap(ecs, model, lightSpaceMatrix);
 
         //Now normal Render
         renderLightsSystem.Render(ecs, model, true);

@@ -120,6 +120,9 @@ namespace MTRD {
             }
             program.SetupUniforms(uniforms);
 
+            glUniform1i(glGetUniformLocation(program.programId_, "diffuseTexture"), 0);
+            glUniform1i(glGetUniformLocation(program.programId_, "shadowTexture"), 1);
+
             for (size_t i = 0; i < render->meshes_->size(); i++) {
                 Mesh* mesh = render->meshes_->at(i).get();
 

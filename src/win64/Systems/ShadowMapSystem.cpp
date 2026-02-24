@@ -2,7 +2,7 @@
 #include <MotArda/win64/Debug.hpp>
 
 namespace MTRD {
-    ShadowMapSystem::ShadowMapSystem()
+    ShadowMapSystem::ShadowMapSystem(glm::mat4& lightSpaceMatrix, glm::mat4& model)
         : shadowProgram{
             Shader::VertexFromFile("../assets/shaders/shadow_map_vertex.txt", true),
             Shader::FragmentFromFile("../assets/shaders/shadow_map_fragment.txt", true), true }
@@ -38,32 +38,34 @@ namespace MTRD {
             { "uv", 2, offsetof(Vertex, uv), -1},
             { "normal", 3, offsetof(Vertex, normal), -1}
         };
+
+        uniforms = {
+            {"lightSpaceMatrix", -1, Window::UniformTypes::Mat4, glm::value_ptr(lightSpaceMatrix)},
+            {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
+        };
     }
 
-    void ShadowMapSystem::RenderShadowMap(ECSManager& ecs, const glm::mat4& lightSpaceMatrix) {
+    void ShadowMapSystem::RenderShadowMap(ECSManager& ecs, glm::mat4 model, const glm::mat4& lightSpaceMatrix) {
 
         glUseProgram(shadowProgram.programId_);
+        shadowProgram.SetupAtributeLocations(attributes);
 
         glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
         glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO_);
         glClear(GL_DEPTH_BUFFER_BIT);
 
-        GLuint lightMatrixLoc = glGetUniformLocation(shadowProgram.programId_, "lightSpaceMatrix");
-        glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
-
         for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
             TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
 
-            glm::mat4 model = glm::mat4(1.f);
+            model = glm::mat4(1.f);
             model = glm::translate(model, transform->position);
             model = glm::scale(model, transform->scale);
             if (glm::length(transform->rotation) != 0) {
                 model = glm::rotate(model, transform->angleRotationRadians, transform->rotation);
             }
 
-            GLuint modelLoc = glGetUniformLocation(shadowProgram.programId_, "model");
-            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+            shadowProgram.SetupUniforms(uniforms);
 
             for (size_t i = 0; i < render->meshes_->size(); i++) {
                 Mesh* mesh = render->meshes_->at(i).get();
@@ -74,6 +76,8 @@ namespace MTRD {
                 }
                 glBindVertexArray(mesh->vao);
                 glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
+
+                mesh->vao = GL_INVALID_INDEX;
             }
         }
 

@@ -19,6 +19,8 @@ namespace MTRD {
 
         DirectionalLight();
         DirectionalLight(const glm::vec3& direction, const glm::vec3& color, float intensity);
+    
+        glm::mat4 getLightSpaceMatrix(float orthoSize = 15.0f, float nearPlane = 1.0f, float farPlane = 25.0f) const;
     };
 
     struct SpotLight {

@@ -1,4 +1,6 @@
 #include <MotArda/common/Components/LightComponent.hpp>
+#include "../../../deps/glm-master/glm/ext/matrix_clip_space.hpp"
+#include "../../../deps/glm-master/glm/ext/matrix_transform.hpp"
 
 namespace MTRD {
     AmbientLight::AmbientLight()
@@ -25,6 +27,14 @@ namespace MTRD {
         , color(color)
         , intensity(intensity)
     {
+    }
+
+    glm::mat4 DirectionalLight::getLightSpaceMatrix(float orthoSize, float nearPlane, float farPlane) const {
+        glm::vec3 lightPos = -glm::normalize(direction) * 10.0f;
+        glm::mat4 lightProjection = glm::ortho(-orthoSize, orthoSize, -orthoSize, orthoSize, nearPlane, farPlane);
+        glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+        return lightProjection * lightView;
     }
 
     SpotLight::SpotLight()

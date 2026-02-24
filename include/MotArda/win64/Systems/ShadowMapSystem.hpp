@@ -13,10 +13,11 @@
 namespace MTRD {
     class ShadowMapSystem {
     public:
-        ShadowMapSystem();
+        ShadowMapSystem(glm::mat4& lightSpaceMatrix, glm::mat4& model);
 
         void RenderShadowMap(
             ECSManager& ecs,
+            glm::mat4 model,
             const glm::mat4& lightSpaceMatrix
         );
 
@@ -25,6 +26,7 @@ namespace MTRD {
 		}
 
         std::vector<VertexAttribute> attributes;
+        std::vector<Window::UniformAttrib> uniforms;
 
     private:
         bool debug_;
