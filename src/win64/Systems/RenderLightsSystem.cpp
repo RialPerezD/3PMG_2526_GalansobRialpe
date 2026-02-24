@@ -25,7 +25,6 @@ namespace MTRD {
 
     void RenderLightsSystem::Render(
         ECSManager& ecs,
-        std::vector<size_t> renderables,
         glm::mat4x4& model,
         bool debug
     ) {
@@ -34,6 +33,7 @@ namespace MTRD {
         auto loc = glGetUniformLocation(program.programId_, "diffuseTexture");
         program.SetupAtributeLocations(attributes);
 
+        // --- Lights ---
         auto lightEntities = ecs.GetEntitiesWithComponents<LightComponent>();
         LightComponent* light = nullptr;
         if (!lightEntities.empty()) {
@@ -104,8 +104,11 @@ namespace MTRD {
             prefix = "spotQuadratic[" + std::to_string(i) + "]";
             glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.quadratic);
         }
+        // --- *** ---
 
-        for (size_t id : renderables) {
+
+        // --- Renderables ---
+        for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
             TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
 
@@ -149,5 +152,6 @@ namespace MTRD {
                 }
             }
         }
+        // --- *** ---
     }
 }

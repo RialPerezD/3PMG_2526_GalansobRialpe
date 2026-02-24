@@ -176,17 +176,10 @@ int MTRD::main() {
         glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 
         // Generate shadow map
-        auto entities = ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>();
-        /*shadowSystem.RenderShadowMap(ecs, entities, lightSpaceMatrix);
+        shadowSystem.RenderShadowMap(ecs, lightSpaceMatrix);
 
         //Now normal Render
-        glViewport(0, 0, 800, 600);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, shadowSystem.getDepthMap());*/
-
-        renderLightsSystem.Render(ecs, entities, model, true);
+        renderLightsSystem.Render(ecs, model, true);
         // --- *** ---
 
         eng.windowEndFrame();

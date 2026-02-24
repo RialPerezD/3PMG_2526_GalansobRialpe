@@ -31,7 +31,7 @@ namespace MTRD {
                 fprintf(stderr, "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s\n", infoLog);
             }
             else {
-                printf("Vertex shader compiled successfully.\n");
+                printf("Vertex %s shader compiled successfully.\n", filename.filename().string().c_str());
             }
         }
 
@@ -66,7 +66,7 @@ namespace MTRD {
                 fprintf(stderr, "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
             }
             else {
-                printf("Fragment shader compiled successfully.\n");
+                printf("Fragment %s shader compiled successfully.\n", filename.filename().string().c_str());
             }
         }
 

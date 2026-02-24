@@ -14,17 +14,17 @@ namespace MTRD {
     class ShadowMapSystem {
     public:
         ShadowMapSystem();
-        ~ShadowMapSystem();
 
         void RenderShadowMap(
             ECSManager& ecs,
-            std::vector<size_t> renderables,
             const glm::mat4& lightSpaceMatrix
         );
 
         GLuint getDepthMap() const {
             return depthMap_;
 		}
+
+        std::vector<VertexAttribute> attributes;
 
     private:
         bool debug_;

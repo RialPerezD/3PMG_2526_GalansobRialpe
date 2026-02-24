@@ -31,12 +31,16 @@ namespace MTRD {
         if (debug_) {
             glCheckError();
         }
+
+
+        attributes = {
+            { "position", 3, offsetof(Vertex, position), -1},
+            { "uv", 2, offsetof(Vertex, uv), -1},
+            { "normal", 3, offsetof(Vertex, normal), -1}
+        };
     }
 
-    ShadowMapSystem::~ShadowMapSystem() {
-    }
-
-    void ShadowMapSystem::RenderShadowMap(ECSManager& ecs, std::vector<size_t> renderables, const glm::mat4& lightSpaceMatrix) {
+    void ShadowMapSystem::RenderShadowMap(ECSManager& ecs, const glm::mat4& lightSpaceMatrix) {
 
         glUseProgram(shadowProgram.programId_);
 
@@ -47,7 +51,7 @@ namespace MTRD {
         GLuint lightMatrixLoc = glGetUniformLocation(shadowProgram.programId_, "lightSpaceMatrix");
         glUniformMatrix4fv(lightMatrixLoc, 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
 
-        for (size_t id : renderables) {
+        for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
             TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
 
@@ -64,26 +68,22 @@ namespace MTRD {
             for (size_t i = 0; i < render->meshes_->size(); i++) {
                 Mesh* mesh = render->meshes_->at(i).get();
 
-                // --- NUEVO: Generar VAO si no existe ---
                 if (mesh->vao == GL_INVALID_INDEX || mesh->vao == 0) {
                     mesh->GenerateVao();
-                    // Importante: El Shadow Shader necesita al menos el atributo de posición (location 0)
-                    std::vector<VertexAttribute> shadowAttr = {
-                        { "position", 3, offsetof(Vertex, position), -1},
-                        { "uv", 2, offsetof(Vertex, uv), -1},
-                        { "normal", 3, offsetof(Vertex, normal), -1}
-                    };
-
-                    mesh->SetVertexAtribs(shadowAttr);
+                    mesh->SetVertexAtribs(attributes);
                 }
-                // --- ---
-
                 glBindVertexArray(mesh->vao);
                 glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
             }
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        glViewport(0, 0, 800, 600);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, depthMap_);
 
 
         if (debug_) {

@@ -17,7 +17,6 @@ namespace MTRD {
 
         void Render(
             ECSManager& ecs,
-            std::vector<size_t> renderables,
             glm::mat4x4& model,
             bool debug
         );
