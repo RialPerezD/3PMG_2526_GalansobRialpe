@@ -22,16 +22,18 @@ namespace MTRD {
             const glm::mat4& lightSpaceMatrix
         );
 
-        std::vector<VertexAttribute> attributes;
-
-        GLuint getShadowMap() const { return shadowMap_; }
-        GLuint getShadowFBO() const { return shadowFBO_; }
+        GLuint getDepthMap() const {
+            return depthMap_;
+		}
 
     private:
+        bool debug_;
+
         Program shadowProgram;
-        GLuint shadowMap_;
-        GLuint shadowFBO_;
-        const unsigned int SHADOW_WIDTH = 2048;
-        const unsigned int SHADOW_HEIGHT = 2048;
+        GLuint depthMapFBO_;
+        GLuint depthMap_;
+
+        const unsigned int SHADOW_WIDTH = 1024;
+        const unsigned int SHADOW_HEIGHT = 1024;
     };
 }

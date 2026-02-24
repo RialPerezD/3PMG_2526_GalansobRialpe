@@ -30,6 +30,7 @@ namespace MTRD {
         bool debug
     ) {
         glUseProgram(program.programId_);
+
         auto loc = glGetUniformLocation(program.programId_, "diffuseTexture");
         program.SetupAtributeLocations(attributes);
 

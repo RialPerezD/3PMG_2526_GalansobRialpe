@@ -8,6 +8,7 @@
 
 #include <MotArda/common/Systems/TraslationSystem.hpp>
 #include <MotArda/win64/Systems/RenderLightsSystem.hpp>
+#include <MotArda/win64/Systems/ShadowMapSystem.hpp>
 
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
@@ -58,17 +59,17 @@ int MTRD::main() {
     size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
     size_t lightEntity = ecs.AddEntity();
 
-    MTRD::TransformComponent*  t = ecs.AddComponent<MTRD::TransformComponent>(player);
+    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
     t->position = glm::vec3(0, -2.5f, 0);
     t->rotation = glm::vec3(0, 0, 0);
     t->angleRotationRadians = -1;
     t->scale = glm::vec3(1.f);
 
-    MTRD::RenderComponent*  r = ecs.AddComponent<MTRD::RenderComponent>(player);
+    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
     r->meshes_ = &objItemList[0].meshes;
     r->materials_ = &objItemList[0].materials;
 
-    MTRD::MovementComponent*  m = ecs.AddComponent<MTRD::MovementComponent>(player);
+    MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
     m->position = glm::vec3(0);
     m->rotation = glm::vec3(0, 0, 1);
     m->scale = glm::vec3(0.0f);
@@ -132,47 +133,19 @@ int MTRD::main() {
 
     // --- Lights ---
     MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
-    
+
     lightComp->hasAmbient = true;
     lightComp->ambient = MTRD::AmbientLight(glm::vec3(0.1f, 0.1f, 0.1f), 0.5f);
 
+    glm::vec3 lightDirection = glm::normalize(glm::vec3(-2.0f, -4.0f, -1.0f));
     lightComp->directionalLights.push_back(MTRD::DirectionalLight(
-        glm::vec3(-1.0f, -1.0f, 0.0f),
-        glm::vec3(1.0f, 0.0f, 0.0f),
-        0.8f
-    ));
-
-    lightComp->directionalLights.push_back(MTRD::DirectionalLight(
-        glm::vec3(1.0f, -1.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 1.0f),
-        0.8f
-    ));
-
-    lightComp->spotLights.push_back(MTRD::SpotLight(
-        glm::vec3(-3.0f, 5.0f, 5.0f),
-        glm::vec3(0.0f, -1.0f, 0.0f),
-        glm::vec3(1.0f, 1.0f, 0.0f),
-        2.0f,
-        glm::cos(glm::radians(12.5f)),
-        glm::cos(glm::radians(17.5f)),
-        1.0f,
-        0.09f,
-        0.032f
-    ));
-
-    lightComp->spotLights.push_back(MTRD::SpotLight(
-        glm::vec3(3.0f, 5.0f, 5.0f),
-        glm::vec3(0.0f, -1.0f, 0.0f),
-        glm::vec3(0.0f, 1.0f, 1.0f),
-        2.0f,
-        glm::cos(glm::radians(12.5f)),
-        glm::cos(glm::radians(17.5f)),
-        1.0f,
-        0.09f,
-        0.032f
+        lightDirection,
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        1.0f
     ));
     // --- *** ---
-    
+
+    ShadowMapSystem shadowSystem;
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
@@ -195,12 +168,25 @@ int MTRD::main() {
         viewPos = camera.getPosition();
         // --- *** ---
 
-        renderLightsSystem.Render(
-            ecs,
-            ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>(),
-            model,
-            true
-        );
+        // --- Temporal Light info to cast shadows ---
+        glm::vec3 lightPos = -lightDirection * 10.0f;
+        float near_plane = 1.0f, far_plane = 25.0f;
+        glm::mat4 lightProjection = glm::ortho(-15.0f, 15.0f, -15.0f, 15.0f, near_plane, far_plane);
+        glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+
+        // Generate shadow map
+        auto entities = ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>();
+        /*shadowSystem.RenderShadowMap(ecs, entities, lightSpaceMatrix);
+
+        //Now normal Render
+        glViewport(0, 0, 800, 600);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, shadowSystem.getDepthMap());*/
+
+        renderLightsSystem.Render(ecs, entities, model, true);
         // --- *** ---
 
         eng.windowEndFrame();
