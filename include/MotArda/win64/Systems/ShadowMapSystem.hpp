@@ -11,22 +11,27 @@
 
 
 namespace MTRD {
-    class RenderLightsSystem {
+    class ShadowMapSystem {
     public:
-        RenderLightsSystem(glm::mat4x4& vp, glm::mat4x4& model, glm::vec3& viewPos);
+        ShadowMapSystem();
+        ~ShadowMapSystem();
 
-        void Render(
+        void RenderShadowMap(
             ECSManager& ecs,
             std::vector<size_t> renderables,
-            glm::mat4x4& model,
-            bool debug
+            const glm::mat4& lightSpaceMatrix
         );
 
         std::vector<VertexAttribute> attributes;
-        std::vector<Window::UniformAttrib> uniforms;
+
+        GLuint getShadowMap() const { return shadowMap_; }
+        GLuint getShadowFBO() const { return shadowFBO_; }
+
     private:
-        Program program;
-        glm::vec3& viewPos_;
-        float shininess = 32.0f;
+        Program shadowProgram;
+        GLuint shadowMap_;
+        GLuint shadowFBO_;
+        const unsigned int SHADOW_WIDTH = 2048;
+        const unsigned int SHADOW_HEIGHT = 2048;
     };
 }

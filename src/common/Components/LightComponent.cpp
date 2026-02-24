@@ -1,4 +1,4 @@
-#include <MotArda/common/Light.hpp>
+#include <MotArda/common/Components/LightComponent.hpp>
 
 namespace MTRD {
     AmbientLight::AmbientLight()

@@ -2,7 +2,7 @@
 #include "MotArda/common/ObjLoader.hpp"
 #include <MotArda/common/Ecs.hpp>
 #include <MotArda/common/Camera.hpp>
-#include <MotArda/common/Light.hpp>
+#include <MotArda/common/Components/LightComponent.hpp>
 
 #include <memory>
 
