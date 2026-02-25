@@ -1,11 +1,12 @@
-#include "MotArda/Engine.hpp"
+#include "MotArda/common/Engine.hpp"
 
 #include <memory>
 #include "../deps/glm-master/glm/glm.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
-#include <MotArda/Ecs.hpp>
-#include <MotArda/Camera.hpp>
+#include <MotArda/common/Ecs.hpp>
+#include <MotArda/common/Camera.hpp>
+#include <MotArda/win64/Systems/RenderSystem.hpp>
 
 
 static void error_callback(int error, const char* description)
@@ -16,80 +17,79 @@ static void error_callback(int error, const char* description)
 int MTRD::main() {
 
     auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda triangle");
-
     if (!maybeEng.has_value()) return 1;
-
     auto& eng = maybeEng.value();
 
-    eng.windowSetDebugMode(true);
     eng.windowSetErrorCallback(error_callback);
-    eng.windowCreateContext();
-    eng.windowSetSwapInterval();
+
 
     // --- Create drawable entitys ---
     ECSManager ecs;
-    ecs.AddComponentType<MTRD::Transform>();
-    ecs.AddComponentType<MTRD::Render>();
+    ecs.AddComponentType<MTRD::TransformComponent>();
+    ecs.AddComponentType<MTRD::RenderComponent>();
+    ecs.AddComponentType<MTRD::MovementComponent>();
 
     size_t entity = ecs.AddEntity();
 
-    MTRD::Transform* t = ecs.AddComponent<MTRD::Transform>(entity);
+    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(entity);
     t->position = glm::vec3(0.0f);
     t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
     t->angleRotationRadians = -1;
     t->scale = glm::vec3(0.05f);
 
-    MTRD::Render* r = ecs.AddComponent<MTRD::Render>(entity);
-    Shape shape = Shape();
-    shape.vertices.push_back(
-        {
+    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
+    
+    std::vector<Vertex> vertexList = {
+       {
             { 1.0f,  0.0f, 0.f },
             { 0.0f,  0.0f },
             { 1.0f,  0.0f, 0.f }
-        });
-    shape.vertices.push_back(
-        {
+        },
+       {
             { 0.0f,  1.5f, 0.f},
             { 0.0f,  0.0f},
             { 0.0f,  1.0f, 0.f}
-        });
-    shape.vertices.push_back(
+        },
+
         {
             {-1.0f,  0.0f, 0.f},
             { 0.0f,  0.0f},
             { 0.0f,  0.0f, 1.f}
-        });
-    r->shapes->push_back(shape);
+        }
+    };
+
+    std::vector<ObjItem> ObjList;
+    ObjList.push_back(ObjItem());
+
+    bool FirstTime = false;
+    std::unique_ptr<Mesh> TriangleMesh = std::make_unique<Mesh>(
+        vertexList,
+        eng.window_,
+        "triangle",
+        FirstTime,
+        -1,
+        true
+    );
+
+    Material mat;
+    mat.diffuse = glm::vec3(1.0f);
+    mat.specular = glm::vec3(1.0f);
+    mat.shininess = 32.0f;
+    mat.loadeable = true;
+    mat.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+
+    ObjList[0].materials.push_back(mat);
+    ObjList[0].meshes.push_back(std::move(TriangleMesh));
+
+    eng.windowLoadAllMaterials(ObjList);
+
+    r->meshes_ = &ObjList[0].meshes;
+    r->materials_ = &ObjList[0].materials;
     // --- *** ---
 
     // --- Vectores de uniforms y atributos ---
-    glm::mat4x4 mvp, model;
-
-    std::vector<Window::UniformAttrib> uniforms = {
-        {"MVP", -1, Window::UniformTypes::Mat4, glm::value_ptr(mvp)}
-    };
-
-    std::vector<Window::VertexAttrib> attributes = {
-        { "vPos", 3, offsetof(Vertex, position.x) },
-        { "vCol", 3, offsetof(Vertex, normal.x) }
-    };
+    glm::mat4x4 vp, model;
     // --- *** --- 
-
-    // --- Load shaders ---
-    const char* vertex_shader = eng.loadShaderFile("../assets/shaders/triangle_vertex.txt");
-    const char* fragment_shader = eng.loadShaderFile("../assets/shaders/triangle_fragment.txt");
-    // --- *** ---
-
-    // --- Setup Window ---
-    eng.windowOpenglSetup(
-        ecs.GetComponentList<Render>(),
-        vertex_shader,
-        fragment_shader,
-        uniforms,
-        attributes
-    );
-    // --- *** ---
-
 
     // --- Drawable transforms additions ---
     float ratio = eng.windowGetSizeRatio();
@@ -98,7 +98,7 @@ int MTRD::main() {
 
     // --- Camera ---
     MTRD::Camera camera(
-        glm::vec3(0.f, 0.f, 5.f),
+        glm::vec3(0.f, 0.f, 0.5f),
         glm::vec3(0.f, 0.f, 0.f),
         glm::vec3(0.f, 1.f, 0.f),
         glm::radians(45.f),
@@ -107,6 +107,8 @@ int MTRD::main() {
         100.f
     );
 
+    RenderSystem renderSystem = RenderSystem(vp, model);
+
     camera.updateAll();
     // --- *** ---
 
@@ -114,13 +116,16 @@ int MTRD::main() {
 
         eng.windowInitFrame();
 
-        model = glm::mat4(1.f);
-        glm::mat4x4 vp = camera.getViewProj();
-        mvp = vp * model;
+        vp = camera.getViewProj();
+        renderSystem.Render(
+            ecs,
+            ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>(),
+            model,
+            true
+            );
 
-
-        eng.windowOpenglSetUniformsValues(uniforms);
-        eng.windowOpenglProgramUniformDrawRender(*r);
+        //eng.windowOpenglSetUniformsValues(uniforms);
+        //eng.windowOpenglProgramUniformDrawRender(*r);
 
         eng.windowEndFrame();
     }
