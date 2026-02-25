@@ -78,21 +78,23 @@ namespace MTRD {
     }
 
     glm::mat4 SpotLight::getLightSpaceMatrix() {
-        float near_plane = 3.0f; 
+        float near_plane = 0.1f;
         float far_plane = 100.0f;
         float aspect = 1.0f;
 
-        glm::mat4 lightProjection = glm::perspective(glm::radians(45.0f), aspect, near_plane, far_plane);
+        float fov = glm::acos(outerCutOff_);
+        glm::mat4 lightProjection = glm::perspective(fov, aspect, near_plane, far_plane);
 
-		// evitar up paralelo a la dirección de la luz
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-        if (glm::abs(glm::dot(glm::normalize(direction_), up)) > 0.99f) {
-            up = glm::vec3(1.0f, 0.0f, 0.0f); 
+        glm::vec3 normDir = glm::normalize(direction_);
+        if (glm::abs(glm::dot(normDir, up)) > 0.99f) {
+            up = glm::vec3(1.0f, 0.0f, 0.0f);
         }
 
+        glm::vec3 temPos = position_ - (glm::vec3(-2.5f, 0, -2.5f) * fov);
         glm::mat4 lightView = glm::lookAt(
-            position_,
-            position_ + direction_,
+            temPos,
+            temPos + direction_,
             up
         );
 
