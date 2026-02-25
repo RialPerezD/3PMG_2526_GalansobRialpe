@@ -139,15 +139,16 @@ int MTRD::main() {
 
     lightComp->spotLights.push_back(
         SpotLight(
-            glm::vec3(0.0f, 5.0f, 0.0f),
+            glm::vec3(5.0f, 5.0f, 0.0f),
             glm::vec3(0.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
             10.0f,
             1.f,
-            0.55f,
+            0.65f,
             1.0f,
             0.09f,
-            0.032f
+            0.032f,
+            eng.windowGetSizeRatio()
         )
     );
 
@@ -161,7 +162,8 @@ int MTRD::main() {
             0.95f,
             1.0f,
             0.09f,
-            0.032f
+            0.032f,
+            eng.windowGetSizeRatio()
         )
     );*/
     // --- *** ---
@@ -181,10 +183,18 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::S)) camera.moveBackward(movSpeed);
         if (eng.inputIsKeyPressed(Input::Keyboard::A)) camera.moveLeft(movSpeed);
         if (eng.inputIsKeyPressed(Input::Keyboard::D)) camera.moveRight(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::E)) camera.moveUp(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::Q)) camera.moveDown(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::R)) camera.rotate(10.0f, 0.0f);
-        if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.rotate(-10.0f, 0.0f);
+        if (eng.inputIsKeyPressed(Input::Keyboard::R)) camera.moveUp(movSpeed);
+        if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.moveDown(movSpeed);
+        if (eng.inputIsKeyPressed(Input::Keyboard::E)) camera.rotate(10.0f, 0.0f);
+        if (eng.inputIsKeyPressed(Input::Keyboard::Q)) camera.rotate(-10.0f, 0.0f);
+        if (eng.inputIsKeyPressed(Input::Keyboard::F)) camera.rotate(0.0f, 10.0f);
+        if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -10.0f);
+
+
+        if (eng.inputIsKeyPressed(Input::Keyboard::J)) lightComp->spotLights[0].position_.x -= 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::L)) lightComp->spotLights[0].position_.x += 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::I)) lightComp->spotLights[0].position_.z -= 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::K)) lightComp->spotLights[0].position_.z += 0.1f;
         // --- *** ---
 
         // --- update vp ---
@@ -197,7 +207,7 @@ int MTRD::main() {
         if (angulo > 2 * M_PI) {
             angulo -= 2 * M_PI;
         }
-        lightComp->spotLights[0].position_ = glm::vec3(std::cos(angulo) * radio, 2, std::sin(angulo) * radio);
+        //lightComp->spotLights[0].position_ = glm::vec3(std::cos(angulo) * radio, 2, std::sin(angulo) * radio);
 
 
         // Generate shadow map

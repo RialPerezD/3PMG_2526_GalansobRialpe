@@ -38,6 +38,8 @@ namespace MTRD {
         float linear_;
         float quadratic_;
 
+        float wRatio_;
+
         SpotLight();
         SpotLight(
             const glm::vec3& position,
@@ -48,7 +50,8 @@ namespace MTRD {
             float outerCutOff,
             float constant,
             float linear,
-            float quadratic
+            float quadratic,
+			float wRatio
         );
 
         glm::mat4 getLightSpaceMatrix();
