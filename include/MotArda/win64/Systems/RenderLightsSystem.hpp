@@ -13,19 +13,23 @@
 namespace MTRD {
     class RenderLightsSystem {
     public:
-        RenderLightsSystem(glm::mat4x4& vp, glm::mat4x4& model, glm::vec3& viewPos, glm::mat4& lightSpaceMatrix);
+        RenderLightsSystem(glm::mat4x4& vp, glm::mat4x4& model, glm::vec3& viewPos);
 
         void Render(
             ECSManager& ecs,
             glm::mat4x4& model,
-            bool debug
+            bool hasShadows,
+            bool debug = true
         );
 
         std::vector<VertexAttribute> attributes;
         std::vector<Window::UniformAttrib> uniforms;
+        glm::mat4 lightSpaceMatrix_;
     private:
         Program program;
         glm::vec3& viewPos_;
         float shininess = 32.0f;
+
+        void DrawCall(ECSManager& ecs, glm::mat4x4& model, size_t loc);
     };
 }

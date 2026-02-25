@@ -2,7 +2,7 @@
 #include <MotArda/win64/Debug.hpp>
 
 namespace MTRD {
-    ShadowMapSystem::ShadowMapSystem(glm::mat4& lightSpaceMatrix, glm::mat4& model)
+    ShadowMapSystem::ShadowMapSystem(glm::mat4& model)
         : shadowProgram{
             Shader::VertexFromFile("../assets/shaders/shadow_map_vertex.txt", true),
             Shader::FragmentFromFile("../assets/shaders/shadow_map_fragment.txt", true), true }
@@ -39,23 +39,13 @@ namespace MTRD {
         };
 
         uniforms = {
-            {"lightSpaceMatrix", -1, Window::UniformTypes::Mat4, glm::value_ptr(lightSpaceMatrix)},
+            {"lightSpaceMatrix", -1, Window::UniformTypes::Mat4, glm::value_ptr(lightSpaceMatrix_)},
             {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
         };
     }
 
-    void ShadowMapSystem::RenderShadowMap(ECSManager& ecs, glm::mat4& model, glm::mat4& lightSpaceMatrix) {
 
-        glUseProgram(shadowProgram.programId_);
-        glEnable(GL_DEPTH_TEST);
-
-        shadowProgram.SetupAtributeLocations(attributes);
-
-        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO_);
-        glClear(GL_DEPTH_BUFFER_BIT);
-        glDisable(GL_BLEND);
-
+    void ShadowMapSystem::DrawCall(ECSManager& ecs, glm::mat4& model) {
         for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
             TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
@@ -79,6 +69,35 @@ namespace MTRD {
                 glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
 
                 mesh->vao = GL_INVALID_INDEX;
+            }
+        }
+    }
+
+
+    void ShadowMapSystem::RenderShadowMap(ECSManager& ecs, glm::mat4& model) {
+
+        glUseProgram(shadowProgram.programId_);
+        glEnable(GL_DEPTH_TEST);
+
+        shadowProgram.SetupAtributeLocations(attributes);
+
+        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO_);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glDisable(GL_BLEND);
+
+
+        for (size_t light_id : ecs.GetEntitiesWithComponents<LightComponent>()) {
+            LightComponent* light = ecs.GetComponent<LightComponent>(light_id);
+
+            for (int i = 0; i < light->directionalLights.size(); i++) {
+                lightSpaceMatrix_ = light->directionalLights[i].getLightSpaceMatrix();
+                DrawCall(ecs, model);
+            }
+
+            for (int i = 0; i < light->spotLights.size(); i++) {
+                lightSpaceMatrix_ = light->spotLights[i].getLightSpaceMatrix();
+                DrawCall(ecs, model);
             }
         }
 

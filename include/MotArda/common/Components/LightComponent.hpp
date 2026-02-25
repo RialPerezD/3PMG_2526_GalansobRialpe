@@ -51,7 +51,7 @@ namespace MTRD {
             float quadratic
         );
 
-        glm::mat4 getLightSpaceMatrix(const SpotLight& light);
+        glm::mat4 getLightSpaceMatrix();
     };
 
     struct LightComponent {

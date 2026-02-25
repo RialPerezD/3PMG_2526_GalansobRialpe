@@ -123,28 +123,42 @@ int MTRD::main() {
 
     glm::mat4x4 vp = glm::mat4(1.0f);
     glm::mat4x4 model = glm::mat4(1.0f);
-    glm::mat4 lightSpaceMatrix = glm::mat4(1.0f);
     // --- *** ---
 
 
     // --- Render System ---
-    RenderLightsSystem renderLightsSystem = RenderLightsSystem(vp, model, viewPos, lightSpaceMatrix);
-    ShadowMapSystem shadowSystem = ShadowMapSystem(lightSpaceMatrix, model);
+    RenderLightsSystem renderLightsSystem = RenderLightsSystem(vp, model, viewPos);
+    ShadowMapSystem shadowSystem = ShadowMapSystem(model);
     TranslationSystem translationSystem;
     // --- *** ---
 
 
     // --- Lights ---
+    // hacer que la maya tenga un booleano para si hace hace sombras o no
     MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
 
     lightComp->spotLights.push_back(
         SpotLight(
-            glm::vec3(5.0f, 2.0f, 0.0f),
+            glm::vec3(5.0f, 5.0f, 0.0f),
             glm::vec3(-1.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
             10.0f,
             1.0f,
-            0.0f,
+            0.95f,
+            1.0f,
+            0.09f,
+            0.032f
+        )
+    );
+
+    lightComp->spotLights.push_back(
+        SpotLight(
+            glm::vec3(-5.0f, 5.0f, 0.0f),
+            glm::vec3(1.0f, -1.0f, 0.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            10.0f,
+            1.0f,
+            0.95f,
             1.0f,
             0.09f,
             0.032f
@@ -173,11 +187,8 @@ int MTRD::main() {
         viewPos = camera.getPosition();
         // --- *** ---
 
-        // --- Temporal Light info to cast shadows ---
-        lightSpaceMatrix = lightComp->spotLights[0].getLightSpaceMatrix(lightComp->spotLights[0]);
-
         // Generate shadow map
-        shadowSystem.RenderShadowMap(ecs, model, lightSpaceMatrix);
+        shadowSystem.RenderShadowMap(ecs, model);
 
         //Now normal Render
         renderLightsSystem.Render(ecs, model, true);

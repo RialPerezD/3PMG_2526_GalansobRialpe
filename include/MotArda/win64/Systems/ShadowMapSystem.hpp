@@ -13,12 +13,11 @@
 namespace MTRD {
     class ShadowMapSystem {
     public:
-        ShadowMapSystem(glm::mat4& lightSpaceMatrix, glm::mat4& model);
+        ShadowMapSystem(glm::mat4& model);
 
         void RenderShadowMap(
             ECSManager& ecs,
-            glm::mat4& model,
-            glm::mat4& lightSpaceMatrix
+            glm::mat4& model
         );
 
         GLuint getDepthMap() const {
@@ -35,7 +34,11 @@ namespace MTRD {
         GLuint depthMapFBO_;
         GLuint depthMap_;
 
+        glm::mat4 lightSpaceMatrix_;
+
         const unsigned int SHADOW_WIDTH = 1024;
         const unsigned int SHADOW_HEIGHT = 1024;
+
+        void DrawCall(ECSManager& ecs, glm::mat4& model);
     };
 }

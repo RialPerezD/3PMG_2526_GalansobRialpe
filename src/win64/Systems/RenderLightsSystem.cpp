@@ -4,7 +4,7 @@
 
 
 namespace MTRD {
-    RenderLightsSystem::RenderLightsSystem(glm::mat4x4& vp, glm::mat4x4& model, glm::vec3& viewPos, glm::mat4& lightSpaceMatrix)
+    RenderLightsSystem::RenderLightsSystem(glm::mat4x4& vp, glm::mat4x4& model, glm::vec3& viewPos)
         : program{
             Shader::VertexFromFile("../assets/shaders/textured_lights_obj_vertex.txt",true) ,
             Shader::FragmentFromFile("../assets/shaders/textured_lights_obj_fragment.txt", true),true }
@@ -19,21 +19,69 @@ namespace MTRD {
         uniforms = {
             {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
             {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
-            {"lightSpaceMatrix", -1, Window::UniformTypes::Mat4, glm::value_ptr(lightSpaceMatrix)},
+            {"lightSpaceMatrix", -1, Window::UniformTypes::Mat4, glm::value_ptr(lightSpaceMatrix_)},
         };
+    }
+
+
+    void RenderLightsSystem::DrawCall(ECSManager& ecs, glm::mat4x4& model, size_t loc) {
+        for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
+            RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
+            TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
+
+            model = glm::mat4(1.f);
+            model = glm::translate(model, transform->position);
+            model = glm::scale(model, transform->scale);
+            if (glm::length(transform->rotation) != 0) {
+                model = glm::rotate(model, transform->angleRotationRadians, transform->rotation);
+            }
+            program.SetupUniforms(uniforms);
+
+            glUniform1i(glGetUniformLocation(program.programId_, "diffuseTexture"), 0);
+            glUniform1i(glGetUniformLocation(program.programId_, "shadowTexture"), 1);
+
+            for (size_t i = 0; i < render->meshes_->size(); i++) {
+                Mesh* mesh = render->meshes_->at(i).get();
+
+                if (mesh->materialId_ != -1) {
+                    Material mat = render->materials_->at(mesh->materialId_);
+
+                    if (!mat.loadeable) continue;
+
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
+                    glUniform1i(loc, 0);
+
+                    glUniform3f(glGetUniformLocation(program.programId_, "DIFFUSE"), mat.diffuse.x, mat.diffuse.y, mat.diffuse.z);
+                    glUniform3f(glGetUniformLocation(program.programId_, "SPECULAR"), mat.specular.x, mat.specular.y, mat.specular.z);
+
+                    glCheckError();
+                }
+
+                if (mesh->vao == GL_INVALID_INDEX || mesh->vao == 0) {
+                    mesh->GenerateVao();
+                    mesh->SetVertexAtribs(attributes);
+                }
+                glBindVertexArray(mesh->vao);
+                glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
+
+                glCheckError();
+            }
+        }
     }
 
 
     void RenderLightsSystem::Render(
         ECSManager& ecs,
         glm::mat4x4& model,
+        bool hasShadows,
         bool debug
     ) {
         glUseProgram(program.programId_);
 
         glEnable(GL_DEPTH_TEST);
 
-        auto loc = glGetUniformLocation(program.programId_, "diffuseTexture");
+        size_t loc = glGetUniformLocation(program.programId_, "diffuseTexture");
         program.SetupAtributeLocations(attributes);
 
         // --- Lights ---
@@ -111,52 +159,23 @@ namespace MTRD {
 
 
         // --- Renderables ---
-        for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
-            RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
-            TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
+        if (hasShadows) {
+            for (size_t light_id : ecs.GetEntitiesWithComponents<LightComponent>()) {
+                LightComponent* light = ecs.GetComponent<LightComponent>(light_id);
 
-            model = glm::mat4(1.f);
-            model = glm::translate(model, transform->position);
-            model = glm::scale(model, transform->scale);
-            if (glm::length(transform->rotation) != 0) {
-                model = glm::rotate(model, transform->angleRotationRadians, transform->rotation);
-            }
-            program.SetupUniforms(uniforms);
-
-            glUniform1i(glGetUniformLocation(program.programId_, "diffuseTexture"), 0);
-            glUniform1i(glGetUniformLocation(program.programId_, "shadowTexture"), 1);
-
-            for (size_t i = 0; i < render->meshes_->size(); i++) {
-                Mesh* mesh = render->meshes_->at(i).get();
-
-                if (mesh->materialId_ != -1) {
-                    Material mat = render->materials_->at(mesh->materialId_);
-
-                    if (!mat.loadeable) continue;
-
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
-                    glUniform1i(loc, 0);
-
-                    glUniform3f(glGetUniformLocation(program.programId_, "DIFFUSE"), mat.diffuse.x, mat.diffuse.y, mat.diffuse.z);
-                    glUniform3f(glGetUniformLocation(program.programId_, "SPECULAR"), mat.specular.x, mat.specular.y, mat.specular.z);
-
-                    if (debug) {
-                        glCheckError();
-                    }
+                for (int i = 0; i < light->directionalLights.size(); i++) {
+                    lightSpaceMatrix_ = light->directionalLights[i].getLightSpaceMatrix();
+                    DrawCall(ecs, model, loc);
                 }
 
-                if (mesh->vao == GL_INVALID_INDEX || mesh->vao == 0) {
-                    mesh->GenerateVao();
-                    mesh->SetVertexAtribs(attributes);
-                }
-                glBindVertexArray(mesh->vao);
-                glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
-
-                if (debug) {
-                    glCheckError();
+                for (int i = 0; i < light->spotLights.size(); i++) {
+                    lightSpaceMatrix_ = light->spotLights[i].getLightSpaceMatrix();
+                    DrawCall(ecs, model, loc);
                 }
             }
+        } else {
+            lightSpaceMatrix_ = glm::mat4(0);
+            DrawCall(ecs, model, loc);
         }
         // --- *** ---
     }
