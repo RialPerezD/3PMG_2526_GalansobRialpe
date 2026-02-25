@@ -144,7 +144,7 @@ int MTRD::main() {
             glm::vec3(1.0f, 1.0f, 1.0f),
             10.0f,
             1.f,
-            0.65f,
+            0.95f,
             1.0f,
             0.09f,
             0.032f,
@@ -169,7 +169,7 @@ int MTRD::main() {
     // --- *** ---
 
     float angulo = 0.f;
-    float radio = 5.f;
+    float radio = 10.f;
     float velocidad = 0.01f;
     float M_PI = 3.14159265359f;
 
@@ -195,6 +195,15 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::L)) lightComp->spotLights[0].position_.x += 0.1f;
         if (eng.inputIsKeyPressed(Input::Keyboard::I)) lightComp->spotLights[0].position_.z -= 0.1f;
         if (eng.inputIsKeyPressed(Input::Keyboard::K)) lightComp->spotLights[0].position_.z += 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::U)) lightComp->spotLights[0].position_.y -= 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::O)) lightComp->spotLights[0].position_.y += 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::N)) lightComp->spotLights[0].direction_.x -= 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::M)) lightComp->spotLights[0].direction_.x += 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::V)) lightComp->spotLights[0].direction_.y -= 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::B)) lightComp->spotLights[0].direction_.y += 0.1f;
+        
+        glm::vec3 target = glm::vec3(0.0f, -2.0f, 0.0f);
+        lightComp->spotLights[0].direction_ = glm::normalize(target - lightComp->spotLights[0].position_);
         // --- *** ---
 
         // --- update vp ---
@@ -207,7 +216,7 @@ int MTRD::main() {
         if (angulo > 2 * M_PI) {
             angulo -= 2 * M_PI;
         }
-        //lightComp->spotLights[0].position_ = glm::vec3(std::cos(angulo) * radio, 2, std::sin(angulo) * radio);
+        lightComp->spotLights[0].position_ = glm::vec3(std::cos(angulo) * radio, 2, std::sin(angulo) * radio);
 
 
         // Generate shadow map

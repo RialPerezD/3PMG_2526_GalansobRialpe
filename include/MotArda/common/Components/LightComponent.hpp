@@ -54,7 +54,7 @@ namespace MTRD {
 			float wRatio
         );
 
-        glm::mat4 getLightSpaceMatrix();
+        glm::mat4 getLightSpaceMatrix(float orthoSize = 25.0f, float nearPlane = 0.1f, float farPlane = 100.0f);
     };
 
     struct LightComponent {
