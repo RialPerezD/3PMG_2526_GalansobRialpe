@@ -140,12 +140,12 @@ int MTRD::main() {
 
     lightComp->spotLights.push_back(
         SpotLight(
-            glm::vec3(5.0f, 5.0f, 0.0f),
-            glm::vec3(-1.0f, -1.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
-            8.0f,
+            7.0f,
             1.f,
-            0.98f,
+            0.97f,
             1.0f,
             0.09f,
             0.032f,
@@ -155,12 +155,12 @@ int MTRD::main() {
 
     lightComp->spotLights.push_back(
         SpotLight(
-            glm::vec3(-5.0f, 5.0f, 0.0f),
-            glm::vec3(1.0f, -1.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
-            8.0f,
+            7.0f,
             1.0f,
-            0.98f,
+            0.97f,
             1.0f,
             0.09f,
             0.032f,
@@ -168,41 +168,27 @@ int MTRD::main() {
         )
     );
 
-    lightComp->spotLights.push_back(
+    /*lightComp->spotLights.push_back(
         SpotLight(
-            glm::vec3(0.0f, 5.0f, 5.0f),
-            glm::vec3(0.0f, -1.0f, -1.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
             8.0f,
             1.0f,
-            0.98f,
+            0.85f,
             1.0f,
             0.09f,
             0.032f,
             eng.windowGetSizeRatio()
         )
-    );
-
-    lightComp->spotLights.push_back(
-        SpotLight(
-            glm::vec3(0.0f, 5.0f, -5.0f),
-            glm::vec3(0.0f, -1.0f, 1.0f),
-            glm::vec3(1.0f, 1.0f, 1.0f),
-            8.0f,
-            1.0f,
-            0.98f,
-            1.0f,
-            0.09f,
-            0.032f,
-            eng.windowGetSizeRatio()
-        )
-    );
+    );*/
     // --- *** ---
 
     float angulo = 0.f;
     float radio = 10.f;
-    float velocidad = 0.01f;
+    float velocidad = 1.f;
     float M_PI = 3.14159265359f;
+    float timer = 0.0f;
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
@@ -226,6 +212,20 @@ int MTRD::main() {
         vp = camera.getViewProj();
         viewPos = camera.getPosition();
         // --- *** ---
+
+        timer += eng.windowGetLastFrameTime();
+
+        float posX = radio * cos(timer * velocidad);
+        float posY = radio * sin(timer * velocidad);
+        
+		lightComp->spotLights[0].position_ = glm::vec3(posX, 5.0f, posY);
+		lightComp->spotLights[0].direction_ = glm::normalize(glm::vec3(0,-3,0) - lightComp->spotLights[0].position_);
+
+        lightComp->spotLights[1].position_ = glm::vec3(-posX, 5.0f, -posY);
+        lightComp->spotLights[1].direction_ = glm::normalize(glm::vec3(0, -3, 0) - lightComp->spotLights[1].position_);
+        
+        //lightComp->spotLights[2].position_ = glm::vec3(posX * 0.75f, 2.0f, -posY * 0.75f);
+        
 
         // Generate shadow map
         shadowSystem.RenderShadowMap(ecs, model);

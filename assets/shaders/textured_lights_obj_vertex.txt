@@ -16,7 +16,7 @@ void main() {
     gl_Position = (VP * model) * vec4(position, 1.0);
 
     fragPosition = vec3(vec4(position, 1.0));
-    fragNormal = normalize(normal);
+    fragNormal = mat3(transpose(inverse(model))) * normal;
     fragTexCoords = uv;
     fragWorldPosition = vec3(model * vec4(position, 1.0));
 }

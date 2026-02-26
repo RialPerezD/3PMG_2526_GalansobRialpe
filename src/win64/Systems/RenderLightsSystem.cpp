@@ -118,15 +118,18 @@ namespace MTRD {
 
         if (!renderables.empty()) {
             if (hasShadows) {
+                glDepthMask(GL_TRUE);
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_ONE, GL_ONE);
-                glDepthMask(GL_FALSE);
 
                 glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
                 glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 0);
                 lightSpaceMatrix_ = glm::mat4(0);
                 glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
                 DrawCall(ecs, model, loc, renderables);
+
+                glDepthMask(GL_FALSE);
+                glDepthFunc(GL_EQUAL);
 
                 for (size_t light_id : lightEntities) {
                     LightComponent* lightComp = ecs.GetComponent<LightComponent>(light_id);
@@ -164,6 +167,7 @@ namespace MTRD {
                     }
                 }
 
+                glDepthFunc(GL_LESS);
                 glDisable(GL_BLEND);
                 glDepthMask(GL_TRUE);
             } else {
