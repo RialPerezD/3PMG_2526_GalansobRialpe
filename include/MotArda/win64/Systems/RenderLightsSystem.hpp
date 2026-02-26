@@ -22,6 +22,8 @@ namespace MTRD {
             bool debug = true
         );
 
+        void SetShadowMap(GLuint depthMap);
+
         std::vector<VertexAttribute> attributes;
         std::vector<Window::UniformAttrib> uniforms;
         glm::mat4 lightSpaceMatrix_;
@@ -29,7 +31,8 @@ namespace MTRD {
         Program program;
         glm::vec3& viewPos_;
         float shininess = 32.0f;
+        GLuint depthMap_ = 0;
 
-        void DrawCall(ECSManager& ecs, glm::mat4x4& model, size_t loc);
+        void DrawCall(ECSManager& ecs, glm::mat4x4& model, size_t loc, const std::vector<size_t>& renderables);
     };
 }

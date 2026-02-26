@@ -1,6 +1,7 @@
 #include <MotArda/win64/Systems/RenderLightsSystem.hpp>
 #include <MotArda/win64/Debug.hpp>
 #include <string>
+#include <vector>
 
 
 namespace MTRD {
@@ -23,9 +24,13 @@ namespace MTRD {
         };
     }
 
+    void RenderLightsSystem::SetShadowMap(GLuint depthMap) {
+        depthMap_ = depthMap;
+    }
 
-    void RenderLightsSystem::DrawCall(ECSManager& ecs, glm::mat4x4& model, size_t loc) {
-        for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
+
+    void RenderLightsSystem::DrawCall(ECSManager& ecs, glm::mat4x4& model, size_t loc, const std::vector<size_t>& renderables) {
+        for (size_t id : renderables) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
             TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
 
@@ -39,6 +44,11 @@ namespace MTRD {
 
             glUniform1i(glGetUniformLocation(program.programId_, "diffuseTexture"), 0);
             glUniform1i(glGetUniformLocation(program.programId_, "shadowTexture"), 1);
+
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, depthMap_);
 
             for (size_t i = 0; i < render->meshes_->size(); i++) {
                 Mesh* mesh = render->meshes_->at(i).get();
@@ -84,7 +94,6 @@ namespace MTRD {
         size_t loc = glGetUniformLocation(program.programId_, "diffuseTexture");
         program.SetupAtributeLocations(attributes);
 
-        // --- Lights ---
         auto lightEntities = ecs.GetEntitiesWithComponents<LightComponent>();
         LightComponent* light = nullptr;
         if (!lightEntities.empty()) {
@@ -102,81 +111,67 @@ namespace MTRD {
             glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
         }
 
-        int numDirLights = 0;
-        if (light) {
-            numDirLights = static_cast<int>(light->directionalLights.size());
-        }
-        glUniform1i(glGetUniformLocation(program.programId_, "numDirectionalLights"), numDirLights);
+        glUniform1i(glGetUniformLocation(program.programId_, "diffuseTexture"), 0);
+        glUniform1i(glGetUniformLocation(program.programId_, "shadowTexture"), 1);
 
-        for (size_t i = 0; i < 4 && light && i < light->directionalLights.size(); i++) {
-            const auto& dirLight = light->directionalLights[i];
-            std::string prefix = "directionalDir[" + std::to_string(i) + "]";
-            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), dirLight.direction_.x, dirLight.direction_.y, dirLight.direction_.z);
+        auto renderables = ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>();
 
-            prefix = "directionalColor[" + std::to_string(i) + "]";
-            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), dirLight.color_.x, dirLight.color_.y, dirLight.color_.z);
+        if (!renderables.empty()) {
+            if (hasShadows) {
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_ONE, GL_ONE);
+                glDepthMask(GL_FALSE);
 
-            prefix = "directionalIntensity[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), dirLight.intensity_);
-        }
+                glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
+                glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 0);
+                lightSpaceMatrix_ = glm::mat4(0);
+                glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
+                DrawCall(ecs, model, loc, renderables);
 
-        int numSpotLights = 0;
-        if (light) {
-            numSpotLights = static_cast<int>(light->spotLights.size());
-        }
-        glUniform1i(glGetUniformLocation(program.programId_, "numSpotLights"), numSpotLights);
+                for (size_t light_id : lightEntities) {
+                    LightComponent* lightComp = ecs.GetComponent<LightComponent>(light_id);
 
-        for (size_t i = 0; i < 4 && light && i < light->spotLights.size(); i++) {
-            const auto& spot = light->spotLights[i];
-            std::string prefix = "spotPos[" + std::to_string(i) + "]";
-            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.position_.x, spot.position_.y, spot.position_.z);
+                    for (auto& dirLight : lightComp->directionalLights) {
+                        glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
+                        glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 1);
+                        glUniform3f(glGetUniformLocation(program.programId_, "lightDirOrPos"), dirLight.direction_.x, dirLight.direction_.y, dirLight.direction_.z);
+                        glUniform3f(glGetUniformLocation(program.programId_, "lightColor"), dirLight.color_.x, dirLight.color_.y, dirLight.color_.z);
+                        glUniform1f(glGetUniformLocation(program.programId_, "lightIntensity"), dirLight.intensity_);
 
-            prefix = "spotDir[" + std::to_string(i) + "]";
-            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.direction_.x, spot.direction_.y, spot.direction_.z);
+                        lightSpaceMatrix_ = dirLight.getLightSpaceMatrix();
+                        glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
 
-            prefix = "spotColor[" + std::to_string(i) + "]";
-            glUniform3f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.color_.x, spot.color_.y, spot.color_.z);
+                        DrawCall(ecs, model, loc, renderables);
+                    }
 
-            prefix = "spotIntensity[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.intensity_);
+                    for (auto& spot : lightComp->spotLights) {
+                        glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
+                        glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 2);
+                        glUniform3f(glGetUniformLocation(program.programId_, "lightDirOrPos"), spot.position_.x, spot.position_.y, spot.position_.z);
+                        glUniform3f(glGetUniformLocation(program.programId_, "spotLightDir"), spot.direction_.x, spot.direction_.y, spot.direction_.z);
+                        glUniform3f(glGetUniformLocation(program.programId_, "lightColor"), spot.color_.x, spot.color_.y, spot.color_.z);
+                        glUniform1f(glGetUniformLocation(program.programId_, "lightIntensity"), spot.intensity_);
+                        glUniform1f(glGetUniformLocation(program.programId_, "spotCutOff"), spot.cutOff_);
+                        glUniform1f(glGetUniformLocation(program.programId_, "spotOuterCutOff"), spot.outerCutOff_);
+                        glUniform1f(glGetUniformLocation(program.programId_, "spotConstant"), spot.constant_);
+                        glUniform1f(glGetUniformLocation(program.programId_, "spotLinear"), spot.linear_);
+                        glUniform1f(glGetUniformLocation(program.programId_, "spotQuadratic"), spot.quadratic_);
 
-            prefix = "spotCutOff[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.cutOff_);
+                        lightSpaceMatrix_ = spot.getLightSpaceMatrix();
+                        glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
 
-            prefix = "spotOuterCutOff[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.outerCutOff_);
-
-            prefix = "spotConstant[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.constant_);
-
-            prefix = "spotLinear[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.linear_);
-
-            prefix = "spotQuadratic[" + std::to_string(i) + "]";
-            glUniform1f(glGetUniformLocation(program.programId_, prefix.c_str()), spot.quadratic_);
-        }
-        // --- *** ---
-
-
-        // --- Renderables ---
-        if (hasShadows) {
-            for (size_t light_id : ecs.GetEntitiesWithComponents<LightComponent>()) {
-                LightComponent* light = ecs.GetComponent<LightComponent>(light_id);
-
-                for (int i = 0; i < light->directionalLights.size(); i++) {
-                    lightSpaceMatrix_ = light->directionalLights[i].getLightSpaceMatrix();
-                    DrawCall(ecs, model, loc);
+                        DrawCall(ecs, model, loc, renderables);
+                    }
                 }
 
-                for (int i = 0; i < light->spotLights.size(); i++) {
-                    lightSpaceMatrix_ = light->spotLights[i].getLightSpaceMatrix();
-                    DrawCall(ecs, model, loc);
-                }
+                glDisable(GL_BLEND);
+                glDepthMask(GL_TRUE);
+            } else {
+                glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 0);
+                lightSpaceMatrix_ = glm::mat4(0);
+                glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
+                DrawCall(ecs, model, loc, renderables);
             }
-        } else {
-            lightSpaceMatrix_ = glm::mat4(0);
-            DrawCall(ecs, model, loc);
         }
-        // --- *** ---
     }
 }

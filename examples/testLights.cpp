@@ -129,6 +129,7 @@ int MTRD::main() {
     // --- Render System ---
     RenderLightsSystem renderLightsSystem = RenderLightsSystem(vp, model, viewPos);
     ShadowMapSystem shadowSystem = ShadowMapSystem(model);
+    renderLightsSystem.SetShadowMap(shadowSystem.getDepthMap());
     TranslationSystem translationSystem;
     // --- *** ---
 
@@ -140,11 +141,11 @@ int MTRD::main() {
     lightComp->spotLights.push_back(
         SpotLight(
             glm::vec3(5.0f, 5.0f, 0.0f),
-            glm::vec3(0.0f, -1.0f, 0.0f),
+            glm::vec3(-1.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
-            10.0f,
+            8.0f,
             1.f,
-            0.95f,
+            0.98f,
             1.0f,
             0.09f,
             0.032f,
@@ -152,20 +153,50 @@ int MTRD::main() {
         )
     );
 
-    /*lightComp->spotLights.push_back(
+    lightComp->spotLights.push_back(
         SpotLight(
             glm::vec3(-5.0f, 5.0f, 0.0f),
             glm::vec3(1.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
-            10.0f,
+            8.0f,
             1.0f,
-            0.95f,
+            0.98f,
             1.0f,
             0.09f,
             0.032f,
             eng.windowGetSizeRatio()
         )
-    );*/
+    );
+
+    lightComp->spotLights.push_back(
+        SpotLight(
+            glm::vec3(0.0f, 5.0f, 5.0f),
+            glm::vec3(0.0f, -1.0f, -1.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            8.0f,
+            1.0f,
+            0.98f,
+            1.0f,
+            0.09f,
+            0.032f,
+            eng.windowGetSizeRatio()
+        )
+    );
+
+    lightComp->spotLights.push_back(
+        SpotLight(
+            glm::vec3(0.0f, 5.0f, -5.0f),
+            glm::vec3(0.0f, -1.0f, 1.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            8.0f,
+            1.0f,
+            0.98f,
+            1.0f,
+            0.09f,
+            0.032f,
+            eng.windowGetSizeRatio()
+        )
+    );
     // --- *** ---
 
     float angulo = 0.f;
@@ -189,35 +220,12 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::Q)) camera.rotate(-10.0f, 0.0f);
         if (eng.inputIsKeyPressed(Input::Keyboard::F)) camera.rotate(0.0f, 10.0f);
         if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -10.0f);
-
-
-        if (eng.inputIsKeyPressed(Input::Keyboard::J)) lightComp->spotLights[0].position_.x -= 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::L)) lightComp->spotLights[0].position_.x += 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::I)) lightComp->spotLights[0].position_.z -= 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::K)) lightComp->spotLights[0].position_.z += 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::U)) lightComp->spotLights[0].position_.y -= 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::O)) lightComp->spotLights[0].position_.y += 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::N)) lightComp->spotLights[0].direction_.x -= 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::M)) lightComp->spotLights[0].direction_.x += 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::V)) lightComp->spotLights[0].direction_.y -= 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::B)) lightComp->spotLights[0].direction_.y += 0.1f;
-        
-        glm::vec3 target = glm::vec3(0.0f, -2.0f, 0.0f);
-        lightComp->spotLights[0].direction_ = glm::normalize(target - lightComp->spotLights[0].position_);
         // --- *** ---
 
         // --- update vp ---
         vp = camera.getViewProj();
         viewPos = camera.getPosition();
         // --- *** ---
-
-
-        angulo += velocidad;
-        if (angulo > 2 * M_PI) {
-            angulo -= 2 * M_PI;
-        }
-        lightComp->spotLights[0].position_ = glm::vec3(std::cos(angulo) * radio, 2, std::sin(angulo) * radio);
-
 
         // Generate shadow map
         shadowSystem.RenderShadowMap(ecs, model);
