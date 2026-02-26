@@ -41,8 +41,8 @@ int MTRD::main() {
 
     // --- Create Geometry to use in elements ---
     std::vector<ObjItem> objItemList;
-    objItemList.push_back(std::move(eng.generateSphere(0.5f, 20, 20)));
-    objItemList.push_back(std::move(eng.generatePlane(20, 20)));
+    objItemList.push_back(std::move(eng.generateSphere(0.5f, 20, 20, 1)));
+    objItemList.push_back(std::move(eng.generatePlane(20, 20, 1)));
     objItemList.push_back(std::move(eng.generateCube(1)));
     eng.windowLoadAllMaterials(objItemList);
     // --- *** ---
@@ -141,7 +141,7 @@ int MTRD::main() {
         SpotLight(
             glm::vec3(0.0f, 5.0f, 0.0f),
             glm::vec3(0.0f, -1.0f, 0.0f),
-            glm::vec3(1.0f, 1.0f, 1.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
             5.0f,
             1.f,
             0.95f,
@@ -156,10 +156,10 @@ int MTRD::main() {
         SpotLight(
             glm::vec3(5.0f, 5.0f, 5.0f),
             glm::vec3(0.0f, -1.0f, 0.0f),
-            glm::vec3(1.0f, 1.0f, 1.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
             5.0f,
             1.0f,
-            0.95f,
+            0.75f,
             1.0f,
             0.09f,
             0.032f,
@@ -171,8 +171,8 @@ int MTRD::main() {
         SpotLight(
             glm::vec3(5.0f, 5.0f, 5.0f),
             glm::vec3(0.0f, -1.0f, 0.0f),
-            glm::vec3(1.0f, 1.0f, 1.0f),
-            5.0f,
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            7.0f,
             1.0f,
             0.85f,
             1.0f,
@@ -217,7 +217,7 @@ int MTRD::main() {
         float posX2 = radio * sin(timer * velocidad);
         float posY2 = radio * cos(timer * velocidad);
 
-        lightComp->spotLights[0].position_ = glm::vec3(posX, -1.0f, posY);
+        lightComp->spotLights[0].position_ = glm::vec3(posX, 0.0f, posY);
         lightComp->spotLights[0].direction_ = glm::normalize(glm::vec3(0, -3, 0) - lightComp->spotLights[0].position_);
 
         lightComp->spotLights[1].position_ = glm::vec3(-posX2 * 0.5f, 5.0f, -posY2 * 0.5f);
