@@ -19,7 +19,7 @@ namespace MTRD {
         void Render(
             ECSManager& ecs,
             glm::mat4x4& model,
-            bool hasShadows,
+            bool hasShadows = false,
             bool debug = true
         );
 

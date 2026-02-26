@@ -110,6 +110,7 @@ namespace MTRD {
 
         glUniform3f(glGetUniformLocation(program.programId_, "viewPos"), viewPos_.x, viewPos_.y, viewPos_.z);
         glUniform1f(glGetUniformLocation(program.programId_, "shininess"), shininess);
+        glUniform1i(glGetUniformLocation(program.programId_, "hasShadows"), hasShadows);
 
         if (light && light->hasAmbient_) {
             glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 1);
@@ -125,69 +126,62 @@ namespace MTRD {
         auto renderables = ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>();
 
         if (!renderables.empty()) {
-            if (hasShadows) {
-                glDepthMask(GL_TRUE);
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_ONE, GL_ONE);
+            glDepthMask(GL_TRUE);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ONE, GL_ONE);
 
-                glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
-                glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 0);
-                lightSpaceMatrix_ = glm::mat4(0);
-                glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
-                DrawCall(ecs, model, loc, renderables, 0);
+            glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
+            glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 0);
+            lightSpaceMatrix_ = glm::mat4(0);
+            glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
+            DrawCall(ecs, model, loc, renderables, 0);
 
-                glDepthMask(GL_FALSE);
-                glDepthFunc(GL_EQUAL);
+            glDepthMask(GL_FALSE);
+            glDepthFunc(GL_EQUAL);
 
-                size_t currentShadowMapIndex = 0;
+            size_t currentShadowMapIndex = 0;
 
-                for (size_t light_id : lightEntities) {
-                    LightComponent* lightComp = ecs.GetComponent<LightComponent>(light_id);
+            for (size_t light_id : lightEntities) {
+                LightComponent* lightComp = ecs.GetComponent<LightComponent>(light_id);
 
-                    for (auto& dirLight : lightComp->directionalLights) {
-                        glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
-                        glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 1);
-                        glUniform3f(glGetUniformLocation(program.programId_, "lightDirOrPos"), dirLight.direction_.x, dirLight.direction_.y, dirLight.direction_.z);
-                        glUniform3f(glGetUniformLocation(program.programId_, "lightColor"), dirLight.color_.x, dirLight.color_.y, dirLight.color_.z);
-                        glUniform1f(glGetUniformLocation(program.programId_, "lightIntensity"), dirLight.intensity_);
+                for (auto& dirLight : lightComp->directionalLights) {
+                    glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
+                    glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 1);
+                    glUniform3f(glGetUniformLocation(program.programId_, "lightDirOrPos"), dirLight.direction_.x, dirLight.direction_.y, dirLight.direction_.z);
+                    glUniform3f(glGetUniformLocation(program.programId_, "lightColor"), dirLight.color_.x, dirLight.color_.y, dirLight.color_.z);
+                    glUniform1f(glGetUniformLocation(program.programId_, "lightIntensity"), dirLight.intensity_);
 
-                        lightSpaceMatrix_ = dirLight.getLightSpaceMatrix();
-                        glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
+                    lightSpaceMatrix_ = dirLight.getLightSpaceMatrix();
+                    glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
 
-                        DrawCall(ecs, model, loc, renderables, currentShadowMapIndex);
-                        currentShadowMapIndex++;
-                    }
-
-                    for (auto& spot : lightComp->spotLights) {
-                        glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
-                        glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 2);
-                        glUniform3f(glGetUniformLocation(program.programId_, "lightDirOrPos"), spot.position_.x, spot.position_.y, spot.position_.z);
-                        glUniform3f(glGetUniformLocation(program.programId_, "spotLightDir"), spot.direction_.x, spot.direction_.y, spot.direction_.z);
-                        glUniform3f(glGetUniformLocation(program.programId_, "lightColor"), spot.color_.x, spot.color_.y, spot.color_.z);
-                        glUniform1f(glGetUniformLocation(program.programId_, "lightIntensity"), spot.intensity_);
-                        glUniform1f(glGetUniformLocation(program.programId_, "spotCutOff"), spot.cutOff_);
-                        glUniform1f(glGetUniformLocation(program.programId_, "spotOuterCutOff"), spot.outerCutOff_);
-                        glUniform1f(glGetUniformLocation(program.programId_, "spotConstant"), spot.constant_);
-                        glUniform1f(glGetUniformLocation(program.programId_, "spotLinear"), spot.linear_);
-                        glUniform1f(glGetUniformLocation(program.programId_, "spotQuadratic"), spot.quadratic_);
-
-                        lightSpaceMatrix_ = spot.getLightSpaceMatrix();
-                        glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
-
-                        DrawCall(ecs, model, loc, renderables, currentShadowMapIndex);
-                        currentShadowMapIndex++;
-                    }
+                    DrawCall(ecs, model, loc, renderables, currentShadowMapIndex);
+                    currentShadowMapIndex++;
                 }
 
-                glDepthFunc(GL_LESS);
-                glDisable(GL_BLEND);
-                glDepthMask(GL_TRUE);
-            } else {
-                glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 0);
-                lightSpaceMatrix_ = glm::mat4(0);
-                glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
-                DrawCall(ecs, model, loc, renderables, 0);
+                for (auto& spot : lightComp->spotLights) {
+                    glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
+                    glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 2);
+                    glUniform3f(glGetUniformLocation(program.programId_, "lightDirOrPos"), spot.position_.x, spot.position_.y, spot.position_.z);
+                    glUniform3f(glGetUniformLocation(program.programId_, "spotLightDir"), spot.direction_.x, spot.direction_.y, spot.direction_.z);
+                    glUniform3f(glGetUniformLocation(program.programId_, "lightColor"), spot.color_.x, spot.color_.y, spot.color_.z);
+                    glUniform1f(glGetUniformLocation(program.programId_, "lightIntensity"), spot.intensity_);
+                    glUniform1f(glGetUniformLocation(program.programId_, "spotCutOff"), spot.cutOff_);
+                    glUniform1f(glGetUniformLocation(program.programId_, "spotOuterCutOff"), spot.outerCutOff_);
+                    glUniform1f(glGetUniformLocation(program.programId_, "spotConstant"), spot.constant_);
+                    glUniform1f(glGetUniformLocation(program.programId_, "spotLinear"), spot.linear_);
+                    glUniform1f(glGetUniformLocation(program.programId_, "spotQuadratic"), spot.quadratic_);
+
+                    lightSpaceMatrix_ = spot.getLightSpaceMatrix();
+                    glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
+
+                    DrawCall(ecs, model, loc, renderables, currentShadowMapIndex);
+                    currentShadowMapIndex++;
+                }
             }
+
+            glDepthFunc(GL_LESS);
+            glDisable(GL_BLEND);
+            glDepthMask(GL_TRUE);
         }
     }
 }
