@@ -35,6 +35,6 @@ namespace MTRD {
         float shininess = 32.0f;
         std::vector<GLuint> depthMaps_;
 
-        void DrawCall(ECSManager& ecs, glm::mat4x4& model, size_t loc, const std::vector<size_t>& renderables);
+        void DrawCall(ECSManager& ecs, glm::mat4x4& model, size_t loc, const std::vector<size_t>& renderables, size_t shadowMapIndex = 0);
     };
 }

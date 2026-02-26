@@ -143,15 +143,27 @@ namespace MTRD {
         std::vector<std::unique_ptr<Mesh>> meshes;
         meshes.push_back(std::move(mesh));
 
+        std::vector<Material> materials;
+
+        Material colorsMaterial;
+        colorsMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        colorsMaterial.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+        colorsMaterial.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+        colorsMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+        colorsMaterial.shininess = 32.0f;
+        colorsMaterial.loadeable = true;
+        materials.push_back(colorsMaterial);
+
         Material whiteMaterial;
-        whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank_white.jpg";
         whiteMaterial.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
         whiteMaterial.specular = glm::vec3(1.0f, 1.0f, 1.0f);
         whiteMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
         whiteMaterial.shininess = 32.0f;
         whiteMaterial.loadeable = true;
+        materials.push_back(whiteMaterial);
 
-        return std::move(ObjItem(std::move(meshes), std::vector<Material>{whiteMaterial}));
+        return std::move(ObjItem(std::move(meshes), materials));
     }
 
 
@@ -161,15 +173,27 @@ namespace MTRD {
         std::vector<std::unique_ptr<Mesh>> meshes;
         meshes.push_back(std::move(mesh));
 
+        std::vector<Material> materials;
+
+        Material colorsMaterial;
+        colorsMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        colorsMaterial.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+        colorsMaterial.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+        colorsMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+        colorsMaterial.shininess = 32.0f;
+        colorsMaterial.loadeable = true;
+        materials.push_back(colorsMaterial);
+
         Material whiteMaterial;
-        whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank_white.jpg";
         whiteMaterial.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
         whiteMaterial.specular = glm::vec3(1.0f, 1.0f, 1.0f);
         whiteMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
         whiteMaterial.shininess = 32.0f;
         whiteMaterial.loadeable = true;
+        materials.push_back(whiteMaterial);
 
-        return ObjItem(std::move(meshes), std::vector<Material>{whiteMaterial});
+        return ObjItem(std::move(meshes), materials);
     }
 
 
@@ -179,15 +203,27 @@ namespace MTRD {
         std::vector<std::unique_ptr<Mesh>> meshes;
         meshes.push_back(std::move(mesh));
 
+        std::vector<Material> materials;
+
+        Material colorsMaterial;
+        colorsMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        colorsMaterial.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+        colorsMaterial.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+        colorsMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+        colorsMaterial.shininess = 32.0f;
+        colorsMaterial.loadeable = true;
+        materials.push_back(colorsMaterial);
+
         Material whiteMaterial;
-        whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank_white.jpg";
         whiteMaterial.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
         whiteMaterial.specular = glm::vec3(1.0f, 1.0f, 1.0f);
         whiteMaterial.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
         whiteMaterial.shininess = 32.0f;
         whiteMaterial.loadeable = true;
+        materials.push_back(whiteMaterial);
 
-        return ObjItem(std::move(meshes), std::vector<Material>{whiteMaterial});
+        return ObjItem(std::move(meshes), materials);
     }
 
 }

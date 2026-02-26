@@ -139,10 +139,10 @@ int MTRD::main() {
 
     lightComp->spotLights.push_back(
         SpotLight(
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 5.0f, 0.0f),
             glm::vec3(0.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
-            7.0f,
+            5.0f,
             1.f,
             0.95f,
             1.0f,
@@ -154,10 +154,10 @@ int MTRD::main() {
 
     lightComp->spotLights.push_back(
         SpotLight(
-            glm::vec3(4.0f, 0.0f, 0.0f),
+            glm::vec3(5.0f, 5.0f, 5.0f),
             glm::vec3(0.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
-            7.0f,
+            5.0f,
             1.0f,
             0.95f,
             1.0f,
@@ -167,12 +167,12 @@ int MTRD::main() {
         )
     );
 
-    /*lightComp->spotLights.push_back(
+    lightComp->spotLights.push_back(
         SpotLight(
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(5.0f, 5.0f, 5.0f),
             glm::vec3(0.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
-            8.0f,
+            5.0f,
             1.0f,
             0.85f,
             1.0f,
@@ -180,13 +180,11 @@ int MTRD::main() {
             0.032f,
             eng.windowGetSizeRatio()
         )
-    );*/
+    );
     // --- *** ---
 
-    float angulo = 0.f;
     float radio = 10.f;
     float velocidad = 1.f;
-    float M_PI = 3.14159265359f;
     float timer = 0.0f;
 
     // --- Main window bucle ---
@@ -216,18 +214,17 @@ int MTRD::main() {
 
         float posX = radio * cos(timer * velocidad);
         float posY = radio * sin(timer * velocidad);
-        
-		/*
-        lightComp->spotLights[0].position_ = glm::vec3(posX, 5.0f, posY);
-		lightComp->spotLights[0].direction_ = glm::normalize(glm::vec3(0,-3,0) - lightComp->spotLights[0].position_);
+        float posX2 = radio * sin(timer * velocidad);
+        float posY2 = radio * cos(timer * velocidad);
 
-        lightComp->spotLights[1].position_ = glm::vec3(-posX, 5.0f, -posY);
+        lightComp->spotLights[0].position_ = glm::vec3(posX, -1.0f, posY);
+        lightComp->spotLights[0].direction_ = glm::normalize(glm::vec3(0, -3, 0) - lightComp->spotLights[0].position_);
+
+        lightComp->spotLights[1].position_ = glm::vec3(-posX2 * 0.5f, 5.0f, -posY2 * 0.5f);
         lightComp->spotLights[1].direction_ = glm::normalize(glm::vec3(0, -3, 0) - lightComp->spotLights[1].position_);
-        */
-        
-        //lightComp->spotLights[2].position_ = glm::vec3(posX * 0.75f, 2.0f, -posY * 0.75f);
-        
 
+        lightComp->spotLights[2].position_ = glm::vec3(-posX * 0.65f, 0.0f, posY * 0.65f);
+        
         // Generate shadow map
         shadowSystem.RenderShadowMap(ecs, model);
         renderLightsSystem.SetShadowMaps(shadowSystem.getAllDepthMaps());

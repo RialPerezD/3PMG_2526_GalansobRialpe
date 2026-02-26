@@ -36,7 +36,7 @@ namespace MTRD {
     }
 
 
-    void RenderLightsSystem::DrawCall(ECSManager& ecs, glm::mat4x4& model, size_t loc, const std::vector<size_t>& renderables) {
+    void RenderLightsSystem::DrawCall(ECSManager& ecs, glm::mat4x4& model, size_t loc, const std::vector<size_t>& renderables, size_t shadowMapIndex) {
         for (size_t id : renderables) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
             TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
@@ -55,7 +55,8 @@ namespace MTRD {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 0);
             glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, depthMaps_.empty() ? 0 : depthMaps_[0]);
+            GLuint shadowTex = (shadowMapIndex < depthMaps_.size()) ? depthMaps_[shadowMapIndex] : 0;
+            glBindTexture(GL_TEXTURE_2D, shadowTex);
 
             for (size_t i = 0; i < render->meshes_->size(); i++) {
                 Mesh* mesh = render->meshes_->at(i).get();
@@ -133,7 +134,7 @@ namespace MTRD {
                 glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 0);
                 lightSpaceMatrix_ = glm::mat4(0);
                 glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
-                DrawCall(ecs, model, loc, renderables);
+                DrawCall(ecs, model, loc, renderables, 0);
 
                 glDepthMask(GL_FALSE);
                 glDepthFunc(GL_EQUAL);
@@ -153,11 +154,7 @@ namespace MTRD {
                         lightSpaceMatrix_ = dirLight.getLightSpaceMatrix();
                         glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
 
-                        glActiveTexture(GL_TEXTURE1);
-                        GLuint shadowTex = (currentShadowMapIndex < depthMaps_.size()) ? depthMaps_[currentShadowMapIndex] : 0;
-                        glBindTexture(GL_TEXTURE_2D, shadowTex);
-
-                        DrawCall(ecs, model, loc, renderables);
+                        DrawCall(ecs, model, loc, renderables, currentShadowMapIndex);
                         currentShadowMapIndex++;
                     }
 
@@ -177,11 +174,7 @@ namespace MTRD {
                         lightSpaceMatrix_ = spot.getLightSpaceMatrix();
                         glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
 
-                        glActiveTexture(GL_TEXTURE1);
-                        GLuint shadowTex = (currentShadowMapIndex < depthMaps_.size()) ? depthMaps_[currentShadowMapIndex] : 0;
-                        glBindTexture(GL_TEXTURE_2D, shadowTex);
-
-                        DrawCall(ecs, model, loc, renderables);
+                        DrawCall(ecs, model, loc, renderables, currentShadowMapIndex);
                         currentShadowMapIndex++;
                     }
                 }
@@ -193,7 +186,7 @@ namespace MTRD {
                 glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 0);
                 lightSpaceMatrix_ = glm::mat4(0);
                 glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
-                DrawCall(ecs, model, loc, renderables);
+                DrawCall(ecs, model, loc, renderables, 0);
             }
         }
     }
