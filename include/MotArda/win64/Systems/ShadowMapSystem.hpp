@@ -21,8 +21,20 @@ namespace MTRD {
         );
 
         GLuint getDepthMap() const {
-            return depthMap_;
-		}
+            return depthMaps_.empty() ? 0 : depthMaps_[0];
+        }
+
+        GLuint getDepthMap(size_t index) const {
+            return (index < depthMaps_.size()) ? depthMaps_[index] : 0;
+        }
+
+        size_t getShadowMapCount() const {
+            return depthMaps_.size();
+        }
+
+        std::vector<GLuint> getAllDepthMaps() const {
+            return depthMaps_;
+        }
 
         std::vector<VertexAttribute> attributes;
         std::vector<Window::UniformAttrib> uniforms;
@@ -31,14 +43,15 @@ namespace MTRD {
         bool debug_;
 
         Program shadowProgram;
-        GLuint depthMapFBO_;
-        GLuint depthMap_;
+        std::vector<GLuint> depthMapFBOs_;
+        std::vector<GLuint> depthMaps_;
 
         glm::mat4 lightSpaceMatrix_;
 
         const unsigned int SHADOW_WIDTH = 1024;
         const unsigned int SHADOW_HEIGHT = 1024;
 
+        void CreateShadowMapResource(GLuint& fbo, GLuint& depthMap);
         void DrawCall(ECSManager& ecs, glm::mat4& model);
     };
 }

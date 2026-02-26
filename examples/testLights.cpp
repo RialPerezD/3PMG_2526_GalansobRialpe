@@ -129,7 +129,6 @@ int MTRD::main() {
     // --- Render System ---
     RenderLightsSystem renderLightsSystem = RenderLightsSystem(vp, model, viewPos);
     ShadowMapSystem shadowSystem = ShadowMapSystem(model);
-    renderLightsSystem.SetShadowMap(shadowSystem.getDepthMap());
     TranslationSystem translationSystem;
     // --- *** ---
 
@@ -141,11 +140,11 @@ int MTRD::main() {
     lightComp->spotLights.push_back(
         SpotLight(
             glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
             7.0f,
             1.f,
-            0.97f,
+            0.95f,
             1.0f,
             0.09f,
             0.032f,
@@ -155,12 +154,12 @@ int MTRD::main() {
 
     lightComp->spotLights.push_back(
         SpotLight(
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(4.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
             7.0f,
             1.0f,
-            0.97f,
+            0.95f,
             1.0f,
             0.09f,
             0.032f,
@@ -218,17 +217,20 @@ int MTRD::main() {
         float posX = radio * cos(timer * velocidad);
         float posY = radio * sin(timer * velocidad);
         
-		lightComp->spotLights[0].position_ = glm::vec3(posX, 5.0f, posY);
+		/*
+        lightComp->spotLights[0].position_ = glm::vec3(posX, 5.0f, posY);
 		lightComp->spotLights[0].direction_ = glm::normalize(glm::vec3(0,-3,0) - lightComp->spotLights[0].position_);
 
         lightComp->spotLights[1].position_ = glm::vec3(-posX, 5.0f, -posY);
         lightComp->spotLights[1].direction_ = glm::normalize(glm::vec3(0, -3, 0) - lightComp->spotLights[1].position_);
+        */
         
         //lightComp->spotLights[2].position_ = glm::vec3(posX * 0.75f, 2.0f, -posY * 0.75f);
         
 
         // Generate shadow map
         shadowSystem.RenderShadowMap(ecs, model);
+        renderLightsSystem.SetShadowMaps(shadowSystem.getAllDepthMaps());
 
         //Now normal Render
         renderLightsSystem.Render(ecs, model, true);
