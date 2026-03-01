@@ -107,7 +107,6 @@ int MTRD::main() {
 
         renderSystem.Render(
             ecs,
-            ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>(),
             model,
             true
         );

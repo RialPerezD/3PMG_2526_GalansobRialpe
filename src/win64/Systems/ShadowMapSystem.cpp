@@ -2,13 +2,14 @@
 #include <MotArda/win64/Debug.hpp>
 
 namespace MTRD {
-    ShadowMapSystem::ShadowMapSystem(glm::mat4& model)
-        : shadowProgram{
-            Shader::VertexFromFile("../assets/shaders/shadow_map_vertex.txt", true),
-            Shader::FragmentFromFile("../assets/shaders/shadow_map_fragment.txt", true), true }
+    ShadowMapSystem::ShadowMapSystem(glm::mat4& model, bool& debug)
+        : debug_ (debug),
+        shadowProgram{
+            Shader::VertexFromFile("../assets/shaders/shadow_map_vertex.txt", debug),
+            Shader::FragmentFromFile("../assets/shaders/shadow_map_fragment.txt", debug), 
+            debug
+        }
     {
-        debug_ = true;
-
         attributes = {
             { "position", 3, offsetof(Vertex, position), -1},
             { "uv", 2, offsetof(Vertex, uv), -1},
@@ -80,7 +81,10 @@ namespace MTRD {
     }
 
 
-    void ShadowMapSystem::RenderShadowMap(ECSManager& ecs, glm::mat4& model) {
+    void ShadowMapSystem::RenderShadowMap(
+        ECSManager& ecs,
+        glm::mat4& model
+    ){
         glUseProgram(shadowProgram.programId_);
         glEnable(GL_DEPTH_TEST);
 

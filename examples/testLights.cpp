@@ -29,13 +29,18 @@ int MTRD::main() {
     // --- *** ---
 
 
-    // --- Setup callback inside window ---
-    eng.windowSetErrorCallback(error_callback);
+    // --- Camera ---
+    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
+    camera.setPosition(glm::vec3(0, 1, 20));
+    camera.setTarget(glm::vec3(0.0f, -5.0f, 0.0f));
+    float movSpeed = 0.1f;
     // --- *** ---
 
 
-    // --- Ecs ---
-    ECSManager ecs;
+    // --- Setup engine info ---
+	eng.SetDebugMode(true);
+	eng.SetRenderType(MotardaEng::RenderType::LightsWithShadows, camera);
+    eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
 
@@ -49,6 +54,8 @@ int MTRD::main() {
 
 
     // --- Create drawable entitys ---
+    ECSManager ecs;
+
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
@@ -111,25 +118,6 @@ int MTRD::main() {
         m->scale = glm::vec3(0.0f);
         m->shouldConstantMove = false;
     }
-    // --- *** ---
-
-
-    // --- Camera ---
-    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
-    camera.setPosition(glm::vec3(0, 1, 20));
-    camera.setTarget(glm::vec3(0.0f, -5.0f, 0.0f));
-    glm::vec3 viewPos = camera.getPosition();
-    float movSpeed = 0.05f;
-
-    glm::mat4x4 vp = glm::mat4(1.0f);
-    glm::mat4x4 model = glm::mat4(1.0f);
-    // --- *** ---
-
-
-    // --- Render System ---
-    RenderLightsSystem renderLightsSystem = RenderLightsSystem(vp, model, viewPos);
-    ShadowMapSystem shadowSystem = ShadowMapSystem(model);
-    TranslationSystem translationSystem;
     // --- *** ---
 
 
@@ -205,11 +193,6 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -10.0f);
         // --- *** ---
 
-        // --- update vp ---
-        vp = camera.getViewProj();
-        viewPos = camera.getPosition();
-        // --- *** ---
-
         timer += eng.windowGetLastFrameTime();
 
         float posX = radio * cos(timer * velocidad);
@@ -226,11 +209,7 @@ int MTRD::main() {
         lightComp->spotLights[2].position_ = glm::vec3(-posX * 0.68f, 0.0f, posY * 0.68f);
         
         // Generate shadow map
-        shadowSystem.RenderShadowMap(ecs, model);
-        renderLightsSystem.SetShadowMaps(shadowSystem.getAllDepthMaps());
-
-        //Now normal Render
-        renderLightsSystem.Render(ecs, model, true);
+        eng.RenderScene(ecs, camera);
         // --- *** ---
 
         eng.windowEndFrame();

@@ -13,7 +13,7 @@
 namespace MTRD {
     class ShadowMapSystem {
     public:
-        ShadowMapSystem(glm::mat4& model);
+        ShadowMapSystem(glm::mat4& model, bool& debug);
 
         void RenderShadowMap(
             ECSManager& ecs,
@@ -40,7 +40,7 @@ namespace MTRD {
         std::vector<Window::UniformAttrib> uniforms;
 
     private:
-        bool debug_;
+        bool debug_ = true;
 
         Program shadowProgram;
         std::vector<GLuint> depthMapFBOs_;

@@ -12,18 +12,17 @@
 namespace MTRD {
 	class RenderSystem {
 	public:
-		RenderSystem(glm::mat4x4& vp, glm::mat4x4& model);
+		RenderSystem(glm::mat4x4& vp, glm::mat4x4& model, bool& debug);
 
 		void Render(
 			ECSManager& ecs,
-			std::vector<size_t> renderables,
-			glm::mat4x4& model,
-			bool debug
+			glm::mat4x4& model
 		);
 
 		std::vector<VertexAttribute> attributes;
 		std::vector<Window::UniformAttrib> uniforms;
 	private:
+		bool debug_ = true;
 		Program program;
 	};
 }

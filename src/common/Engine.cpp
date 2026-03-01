@@ -9,8 +9,11 @@
 #include <MotArda/common/Geometries.hpp>
 
 namespace MTRD {
-
-    std::optional<MotardaEng> MotardaEng::createEngine(int width, int height, const char* windowName) {
+    std::optional<MotardaEng> MotardaEng::createEngine(
+        int width,
+        int height,
+        const char* windowName
+    ) {
         auto w = Window::windowCreate(width, height, windowName);
         if (!w) return std::nullopt;
 
@@ -26,7 +29,10 @@ namespace MTRD {
         :
         window_{ std::move(window) },
         input_{ std::move(input) },
-        jobSystem_{ std::move(js) }
+        jobSystem_{ std::move(js) },
+        vp_ (glm::mat4(1.0f)),
+        model_ (glm::mat4(1.0f)),
+        debug_ (true)
     {
         input_.generateAsciiMap();
     }
@@ -150,5 +156,57 @@ namespace MTRD {
     ObjItem MotardaEng::generateSphere(float radius, int segments, int rings, int texureId, bool debug) {
         bool firstTime = false;
         return std::move(Geometries::GenerateSphere(window_, radius, segments, rings, firstTime, texureId, debug));
+    }
+
+
+    void MotardaEng::SetRenderType(RenderType type, Camera& camera){
+        actualRenderType_ = type;
+
+        switch (type) {
+            case RenderType::Base:
+                renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
+                break;
+            case RenderType::Lights:
+                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera.getPosition(), debug_);
+                break;
+            case RenderType::LightsWithShadows:
+                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera.getPosition(), debug_);
+                shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
+                break;
+		}
+    }
+
+
+    void MotardaEng::RenderScene(ECSManager& ecs, Camera& camera) {
+        vp_ = camera.getViewProj();
+
+        switch (actualRenderType_) {
+            case RenderType::Base:
+                if (!renderSystem_) {
+                    printf("There are no render system");
+                    return;
+                }
+
+                renderSystem_->Render(ecs, model_);
+                break;
+            case RenderType::Lights:
+                if (!renderLightsSystem_) {
+                    printf("There are no light render system");
+                    return;
+                }
+
+                renderLightsSystem_->Render(ecs, model_);
+                break;
+            case RenderType::LightsWithShadows:
+                if (!shadowSystem_ || !renderLightsSystem_) {
+                    printf("There are no light or shadow render system");
+                    return;
+                }
+
+                shadowSystem_->RenderShadowMap(ecs, model_);
+                renderLightsSystem_->SetShadowMaps(shadowSystem_->getAllDepthMaps());
+                renderLightsSystem_->Render(ecs, model_, true);
+                break;
+        }
     }
 }

@@ -5,6 +5,10 @@
 #include "Input.hpp"
 #include "JobSystem.hpp"
 #include "ObjLoader.hpp"
+#include <MotArda/win64/Systems/RenderLightsSystem.hpp>
+#include <MotArda/win64/Systems/ShadowMapSystem.hpp>
+#include <MotArda/win64/Systems/RenderSystem.hpp>
+#include "Camera.hpp"
 
 namespace MTRD {
 
@@ -16,6 +20,7 @@ namespace MTRD {
 	class MotardaEng {
 
 	public:
+		// --- Constructors and operators ---
 		/**
 		* @brief Destructor
 		* @details Destructor of the engine class.
@@ -49,10 +54,16 @@ namespace MTRD {
 		*/
 		MotardaEng& operator=(MotardaEng&& right) = default;
 
-		/**
-		* @brief windowShouldClose.
-		* @details Calls the "shouldClose" function from the Window class.
-		*/
+		static std::optional<MotardaEng> createEngine(
+			int width = 800,
+			int height = 600,
+			const char* windowName = "Motarda default name");
+
+		// --- *** ---
+
+		// --- Functions ---
+		void SetDebugMode(bool debug) { debug_ = debug; };
+
 		bool windowShouldClose();
 		/**
 		* @brief windowGetTimer.
@@ -148,14 +159,23 @@ namespace MTRD {
 		ObjItem generateCube(float size, int texureId = 0, bool debug = true);
 		ObjItem generatePlane(float width, float height, int texureId = 0, bool debug = true);
 		ObjItem generateSphere(float radius, int segments, int rings, int texureId = 0, bool debug = true);
+		
+		//------------
 
+		// --- Render Information ---
+		enum RenderType {
+			Base,
+			Lights,
+			LightsWithShadows
+		};
 
-		static std::optional<MotardaEng> createEngine(
-			int width = 800,
-			int height = 600,
-			const char* windowName = "Motarda default name");
+		void SetRenderType(RenderType type, Camera& camera);
 
-	public:
+		void RenderScene(ECSManager& ecs, Camera& camera);
+
+		//------------
+
+	private:
 		/**
 		* @brief Constructor
 		* @param Window window Window class-type object.
@@ -164,11 +184,25 @@ namespace MTRD {
 		* @details Constructor of the engine class.
 		*/
 		MotardaEng(Window window, Input input, JobSystem js);
+
+		bool debug_;
+
 		//< Object of Window class.
 		Window window_;
 		//< Object of Input class.
 		Input input_;
 		//< Object of JobSystem class.
 		JobSystem jobSystem_;
+
+
+		// --- Render Information ---
+		glm::mat4x4 vp_;
+		glm::mat4x4 model_;
+
+		std::unique_ptr<RenderSystem> renderSystem_;
+		std::unique_ptr<RenderLightsSystem> renderLightsSystem_;
+		std::unique_ptr<ShadowMapSystem> shadowSystem_;
+		RenderType actualRenderType_ = RenderType::Base;
+		// --- *** ---
 	};
 }

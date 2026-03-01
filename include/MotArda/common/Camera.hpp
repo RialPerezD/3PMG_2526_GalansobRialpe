@@ -138,7 +138,7 @@ namespace MTRD {
         * @brief getPosition
         * @details Gets camera position
         */
-        const glm::vec3& getPosition() const noexcept;
+        glm::vec3& getPosition() noexcept;
         /**
         * @brief getFront
         * @details Gets the direction the camera is facing

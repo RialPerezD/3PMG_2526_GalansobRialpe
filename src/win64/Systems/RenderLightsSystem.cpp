@@ -5,10 +5,15 @@
 
 
 namespace MTRD {
-    RenderLightsSystem::RenderLightsSystem(glm::mat4x4& vp, glm::mat4x4& model, glm::vec3& viewPos)
-        : program{
-            Shader::VertexFromFile("../assets/shaders/textured_lights_obj_vertex.txt",true) ,
-            Shader::FragmentFromFile("../assets/shaders/textured_lights_obj_fragment.txt", true),true }
+    RenderLightsSystem::RenderLightsSystem(glm::mat4x4& vp,
+        glm::mat4x4& model,
+        glm::vec3& viewPos,
+        bool& debug)
+        : debug_(debug),
+        program{
+            Shader::VertexFromFile("../assets/shaders/textured_lights_obj_vertex.txt", debug) ,
+            Shader::FragmentFromFile("../assets/shaders/textured_lights_obj_fragment.txt", debug),
+            debug }
         , viewPos_(viewPos)
     {
         attributes = {
@@ -73,7 +78,9 @@ namespace MTRD {
                     glUniform3f(glGetUniformLocation(program.programId_, "DIFFUSE"), mat.diffuse.x, mat.diffuse.y, mat.diffuse.z);
                     glUniform3f(glGetUniformLocation(program.programId_, "SPECULAR"), mat.specular.x, mat.specular.y, mat.specular.z);
 
-                    glCheckError();
+                    if (debug_) {
+                        glCheckError();
+                    }
                 }
 
                 if (mesh->vao == GL_INVALID_INDEX || mesh->vao == 0) {
@@ -83,7 +90,9 @@ namespace MTRD {
                 glBindVertexArray(mesh->vao);
                 glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
 
-                glCheckError();
+                if (debug_) {
+                    glCheckError();
+                }
             }
         }
     }
@@ -92,8 +101,7 @@ namespace MTRD {
     void RenderLightsSystem::Render(
         ECSManager& ecs,
         glm::mat4x4& model,
-        bool hasShadows,
-        bool debug
+        bool hasShadows
     ) {
         glUseProgram(program.programId_);
 
@@ -182,6 +190,10 @@ namespace MTRD {
             glDepthFunc(GL_LESS);
             glDisable(GL_BLEND);
             glDepthMask(GL_TRUE);
+        }
+
+        if (debug_) {
+            glCheckError();
         }
     }
 }

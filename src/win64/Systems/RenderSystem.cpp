@@ -3,10 +3,12 @@
 
 
 namespace MTRD {
-	RenderSystem::RenderSystem(glm::mat4x4& vp, glm::mat4x4& model)
-		: program{
-			Shader::VertexFromFile("../assets/shaders/textured_obj_vertex.txt",true) ,
-			Shader::FragmentFromFile("../assets/shaders/textured_obj_fragment.txt", true),true }
+	RenderSystem::RenderSystem(glm::mat4x4& vp, glm::mat4x4& model, bool& debug)
+		: debug_(debug),
+        program{
+			Shader::VertexFromFile("../assets/shaders/textured_obj_vertex.txt", debug),
+			Shader::FragmentFromFile("../assets/shaders/textured_obj_fragment.txt", debug),
+            debug}
 	{
         attributes = {
             { "position", 3, offsetof(Vertex, position), -1},
@@ -23,15 +25,13 @@ namespace MTRD {
 
 	void RenderSystem::Render(
         ECSManager& ecs,
-        std::vector<size_t> renderables,
-        glm::mat4x4& model,
-        bool debug
+        glm::mat4x4& model
 	) {
         glUseProgram(program.programId_);
         auto loc = glGetUniformLocation(program.programId_, "diffuseTexture");
         program.SetupAtributeLocations(attributes);
 
-        for (size_t id : renderables) {
+        for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
             TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
 
@@ -55,7 +55,7 @@ namespace MTRD {
                     glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
                     glUniform1i(loc, 0);
 
-                    if (debug) {
+                    if (debug_) {
                         glCheckError();
                     }
                 }
@@ -67,7 +67,7 @@ namespace MTRD {
                 glBindVertexArray(mesh->vao);
                 glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
 
-                if (debug) {
+                if (debug_) {
                     glCheckError();
                 }
             }

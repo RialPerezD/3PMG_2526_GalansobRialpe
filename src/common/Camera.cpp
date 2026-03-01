@@ -118,7 +118,7 @@ namespace MTRD {
     const glm::mat4& Camera::getProjection() const noexcept { return projection_; }
     const glm::mat4& Camera::getViewProj() const noexcept { return viewProj_; }
 
-    const glm::vec3& Camera::getPosition() const noexcept { return position_; }
+    glm::vec3& Camera::getPosition() noexcept { return position_; }
     const glm::vec3& Camera::getFront() const noexcept { return front_; }
 
 

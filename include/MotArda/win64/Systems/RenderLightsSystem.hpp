@@ -14,13 +14,16 @@
 namespace MTRD {
     class RenderLightsSystem {
     public:
-        RenderLightsSystem(glm::mat4x4& vp, glm::mat4x4& model, glm::vec3& viewPos);
+        RenderLightsSystem(
+            glm::mat4x4& vp,
+            glm::mat4x4& model,
+            glm::vec3& viewPos,
+            bool& debug);
 
         void Render(
             ECSManager& ecs,
             glm::mat4x4& model,
-            bool hasShadows = false,
-            bool debug = true
+            bool hasShadows = false
         );
 
         void SetShadowMap(GLuint depthMap);
@@ -29,7 +32,9 @@ namespace MTRD {
         std::vector<VertexAttribute> attributes;
         std::vector<Window::UniformAttrib> uniforms;
         glm::mat4 lightSpaceMatrix_;
+
     private:
+        bool debug_ = true;
         Program program;
         glm::vec3& viewPos_;
         float shininess = 32.0f;
