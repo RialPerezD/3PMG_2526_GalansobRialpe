@@ -27,13 +27,18 @@ int MTRD::main() {
     // --- *** ---
 
 
-    // --- Setup callback inside window ---
-    eng.windowSetErrorCallback(error_callback);
+    // --- Camera ---
+    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
+    camera.setPosition(glm::vec3(0, 1, 20));
+    camera.setTarget(glm::vec3(0.0f, -5.0f, 0.0f));
+    float movSpeed = 0.1f;
     // --- *** ---
 
 
-    // --- Ecs ---
-    ECSManager ecs;
+    // --- Setup engine info ---
+    eng.SetDebugMode(true);
+    eng.SetRenderType(MotardaEng::RenderType::Base, camera);
+    eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
 
@@ -45,6 +50,8 @@ int MTRD::main() {
 
 
     // --- Create drawable entitys ---
+    ECSManager ecs;
+
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
@@ -69,22 +76,6 @@ int MTRD::main() {
     // --- *** ---
 
 
-    // --- Camera ---
-    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
-    camera.setPosition(glm::vec3(0, 1, 20));
-    float movSpeed = 0.05f;
-
-    glm::mat4x4 vp = glm::mat4(1.0f);
-    glm::mat4x4 model = glm::mat4(1.0f);
-    // --- *** ---
-
-
-    // --- Render System ---
-    RenderSystem renderSystem = RenderSystem(vp, model);
-    TranslationSystem translationSystem;
-    // --- *** ---
-
-
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
 
@@ -101,16 +92,7 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.rotate(-10.0f, 0.0f);
         // --- *** ---
 
-        // --- update vp ---
-        vp = camera.getViewProj();
-        // --- *** ---
-
-        renderSystem.Render(
-            ecs,
-            model,
-            true
-        );
-        // --- *** ---
+		eng.RenderScene(ecs, camera);
 
         eng.windowEndFrame();
     }
