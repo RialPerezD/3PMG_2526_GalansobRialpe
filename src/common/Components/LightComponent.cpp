@@ -79,11 +79,15 @@ namespace MTRD {
     {
     }
 
-    glm::mat4 SpotLight::getLightSpaceMatrix(float orthoSize, float nearPlane, float farPlane) {
-        glm::mat4 lightProjection = glm::ortho(-orthoSize, orthoSize, -orthoSize, orthoSize, nearPlane, farPlane);
+    glm::mat4 SpotLight::getLightSpaceMatrix(float nearPlane, float farPlane) {
+        float fov = outerCutOff_ * 2.0f;
+        float aspect = wRatio_;
+
+        glm::mat4 lightProjection = glm::perspective(fov, aspect, nearPlane, farPlane);
 
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
         glm::vec3 normDir = glm::normalize(direction_);
+
         if (glm::abs(glm::dot(normDir, up)) > 0.99f) {
             up = glm::vec3(1.0f, 0.0f, 0.0f);
         }
