@@ -3,7 +3,7 @@
 #include <optional>
 #include <memory>
 #include <vector>
-#include "glad/glad.h"
+#include <glad/glad.h>
 #include "../common/ObjLoader.hpp"
 #include "../common/ObjItem.hpp"
 

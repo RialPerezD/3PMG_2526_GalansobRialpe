@@ -1,0 +1,1 @@
+en esta carpeta debería ir el lib asi como todas las librerías que hay que darle al usuario, un readme y esas cosas

@@ -35,7 +35,6 @@ int MTRD::main() {
 
     // --- Load Objs ---
     std::vector <const char*> objsRoutes = { "12140_Skull_v3_L2.obj" };
-
     std::atomic<bool> objsLoaded = false;
 
     std::vector<ObjItem> ObjList;
@@ -61,8 +60,6 @@ int MTRD::main() {
 
     bool needChangeObj = false;
     int objIndex = 1;
-    bool firstTime = true;
-    glm::mat4x4 vp, model;
     // --- *** ---
 
     MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(entity);
@@ -85,12 +82,6 @@ int MTRD::main() {
         objsLoaded = true;
         }
     );
-
-
-    if (ObjList.size() == 0) return 1;
-
-
-    camera.updateAll();
     // --- *** ---
 
     // --- Main window bucle ---
@@ -104,8 +95,6 @@ int MTRD::main() {
             continue;
         }
 
-        eng.RenderScene(ecs, camera);
-
         // --- Input to move camera ---
         if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
         if (eng.inputIsKeyPressed(Input::Keyboard::S)) camera.moveBackward(movSpeed);
@@ -117,19 +106,7 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.rotate(-10.0f, 0.0f);
         // --- *** ---
 
-        if (eng.inputIsKeyDown(Input::Keyboard::C)) {
-            needChangeObj = true;
-            objIndex = (objIndex + 1) % 3;
-        }
-        if (eng.inputIsKeyDown(Input::Keyboard::V)) {
-            needChangeObj = true;
-            objIndex = (objIndex + 2) % 3;
-        }
-
-        // --- Input to scale object ---
-        if (eng.inputIsKeyPressed(Input::Keyboard::Z)) t->scale -= scaSpeed;
-        else if (eng.inputIsKeyPressed(Input::Keyboard::X)) t->scale += scaSpeed;
-        // --- *** ---
+        eng.RenderScene(ecs, camera);
         
 
         eng.windowEndFrame();
