@@ -21,10 +21,10 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
     // --- *** ---
-    
+
     // --- Camera ---
     MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
-    camera.setPosition(glm::vec3(0.f, 0.f, -2.5f));
+    camera.setPosition(glm::vec3(0.f, 1.f, 5.f));
     camera.setTarget(glm::vec3(0.f, 0.f, 0.f));
 
     // --- Setup Engigne ---
@@ -54,9 +54,6 @@ int MTRD::main() {
     float ratio = eng.windowGetSizeRatio();
     float movSpeed = 0.05f;
     float scaSpeed = 0.01f;
-    float scale = 0.1f;
-
-    scale = 0.025f; scaSpeed = 0.001f;
 
     bool needChangeObj = false;
     int objIndex = 1;
@@ -65,7 +62,7 @@ int MTRD::main() {
     MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(entity);
     t->position = glm::vec3(0.0f);
     t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
-    t->angleRotationRadians = -1;
+    t->angleRotationRadians = -1.5708f;
     t->scale = glm::vec3(0.05f);
 
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
@@ -74,15 +71,12 @@ int MTRD::main() {
     eng.enqueueTask([&]() {
         ObjList = eng.loadObjs(objsRoutes);
 
-        eng.windowLoadAllMaterials(ObjList);
-
-        r->meshes_ = &ObjList[0].meshes;
-        r->materials_ = &ObjList[0].materials;
-
         objsLoaded = true;
         }
     );
     // --- *** ---
+
+    bool firstTime = true;
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
@@ -93,6 +87,13 @@ int MTRD::main() {
             printf("Cargando maya...\n");
             eng.windowEndFrame();
             continue;
+        }
+        else if (firstTime) {
+            firstTime = false;
+            eng.windowLoadAllMaterials(ObjList);
+
+            r->meshes_ = &ObjList[0].meshes;
+            r->materials_ = &ObjList[0].materials;
         }
 
         // --- Input to move camera ---
@@ -107,7 +108,7 @@ int MTRD::main() {
         // --- *** ---
 
         eng.RenderScene(ecs, camera);
-        
+
 
         eng.windowEndFrame();
     }
