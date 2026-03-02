@@ -101,6 +101,33 @@ namespace MTRD {
         return lightProjection * lightView;
     }
 
+    PointLight::PointLight()
+        : position_(glm::vec3(0.0f))
+        , color_(glm::vec3(1.0f))
+        , intensity_(1.0f)
+        , constant_(1.0f)
+        , linear_(0.09f)
+        , quadratic_(0.032f)
+    {
+    }
+
+    PointLight::PointLight(
+        const glm::vec3& position,
+        const glm::vec3& color,
+        float intensity,
+        float constant,
+        float linear,
+        float quadratic
+    )
+        : position_(position)
+        , color_(color)
+        , intensity_(intensity)
+        , constant_(constant)
+        , linear_(linear)
+        , quadratic_(quadratic)
+    {
+    }
+
     LightComponent::LightComponent()
         : hasAmbient_(false)
         , ambient_()

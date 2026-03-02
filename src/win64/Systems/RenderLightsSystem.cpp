@@ -185,6 +185,23 @@ namespace MTRD {
                     DrawCall(ecs, model, loc, renderables, currentShadowMapIndex);
                     currentShadowMapIndex++;
                 }
+
+                for (auto& point : lightComp->pointLights) {
+                    glUniform1i(glGetUniformLocation(program.programId_, "useAmbient"), 0);
+                    glUniform1i(glGetUniformLocation(program.programId_, "lightType"), 3);
+                    glUniform3f(glGetUniformLocation(program.programId_, "lightDirOrPos"), point.position_.x, point.position_.y, point.position_.z);
+                    glUniform3f(glGetUniformLocation(program.programId_, "lightColor"), point.color_.x, point.color_.y, point.color_.z);
+                    glUniform1f(glGetUniformLocation(program.programId_, "lightIntensity"), point.intensity_);
+                    glUniform1f(glGetUniformLocation(program.programId_, "spotConstant"), point.constant_);
+                    glUniform1f(glGetUniformLocation(program.programId_, "spotLinear"), point.linear_);
+                    glUniform1f(glGetUniformLocation(program.programId_, "spotQuadratic"), point.quadratic_);
+
+                    lightSpaceMatrix_ = glm::mat4(0);
+                    glUniformMatrix4fv(glGetUniformLocation(program.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix_));
+
+                    DrawCall(ecs, model, loc, renderables, currentShadowMapIndex);
+                    currentShadowMapIndex++;
+                }
             }
 
             glDepthFunc(GL_LESS);

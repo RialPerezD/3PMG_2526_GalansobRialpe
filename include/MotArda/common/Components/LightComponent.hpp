@@ -57,12 +57,32 @@ namespace MTRD {
         glm::mat4 getLightSpaceMatrix(float nearPlane = 0.1f, float farPlane = 1000.0f);
     };
 
+    struct PointLight {
+        glm::vec3 position_;
+        glm::vec3 color_;
+        float intensity_;
+        float constant_;
+        float linear_;
+        float quadratic_;
+
+        PointLight();
+        PointLight(
+            const glm::vec3& position,
+            const glm::vec3& color,
+            float intensity,
+            float constant,
+            float linear,
+            float quadratic
+        );
+    };
+
     struct LightComponent {
         bool hasAmbient_;
         AmbientLight ambient_;
 
         std::vector<DirectionalLight> directionalLights;
         std::vector<SpotLight> spotLights;
+        std::vector<PointLight> pointLights;
 
         LightComponent();
     };

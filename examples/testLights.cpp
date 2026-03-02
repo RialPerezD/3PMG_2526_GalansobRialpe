@@ -16,7 +16,7 @@ static void error_callback(int error, const char* description) {
 
 size_t lightEntity;
 glm::vec3 spotLigthCenter = glm::vec3(10,0,0);
-glm::vec3 directionalLigthCenter = glm::vec3(-10, 0, 0);
+glm::vec3 pointLigthCenter = glm::vec3(-10, 0, 0);
 
 
 void GenerateSpotLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objItemList) {
@@ -127,14 +127,14 @@ void GenerateSpotLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng) 
 }
 
 
-void GenerateDirectionalLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objItemList) {
+void GeneratePointLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objItemList) {
     size_t player = ecs.AddEntity();
     size_t floor = ecs.AddEntity();
     size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
     lightEntity = ecs.AddEntity();
 
     MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
-    t->position = glm::vec3(0, -2.f, 0) + directionalLigthCenter;
+    t->position = glm::vec3(0, -2.f, 0) + pointLigthCenter;
     t->rotation = glm::vec3(0, 0, 0);
     t->angleRotationRadians = -1;
     t->scale = glm::vec3(1.f);
@@ -144,14 +144,14 @@ void GenerateDirectionalLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>
     r->materials_ = &objItemList[0].materials;
 
     MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
-    m->position = glm::vec3(0) + directionalLigthCenter;
+    m->position = glm::vec3(0) + pointLigthCenter;
     m->rotation = glm::vec3(0, 0, 1);
     m->scale = glm::vec3(0.0f);
     m->shouldConstantMove = false;
 
 
     t = ecs.AddComponent<MTRD::TransformComponent>(floor);
-    t->position = glm::vec3(0, -3, 0) + directionalLigthCenter;
+    t->position = glm::vec3(0, -3, 0) + pointLigthCenter;
     t->rotation = glm::vec3(0, 0, 0);
     t->angleRotationRadians = -1;
     t->scale = glm::vec3(1.f);
@@ -161,7 +161,7 @@ void GenerateDirectionalLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>
     r->materials_ = &objItemList[1].materials;
 
     m = ecs.AddComponent<MTRD::MovementComponent>(floor);
-    m->position = glm::vec3(0) + directionalLigthCenter;
+    m->position = glm::vec3(0) + pointLigthCenter;
     m->rotation = glm::vec3(0, 0, 1);
     m->scale = glm::vec3(0.0f);
     m->shouldConstantMove = false;
@@ -169,7 +169,7 @@ void GenerateDirectionalLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>
 
     for (int i = 0; i < 4; i++) {
         t = ecs.AddComponent<MTRD::TransformComponent>(cubes[i]);
-        t->position = glm::vec3(-5 * ((i % 2) * 2 - 1), -2.0f, -5 * ((i / 2) * 2 - 1)) + directionalLigthCenter;
+        t->position = glm::vec3(-5 * ((i % 2) * 2 - 1), -2.0f, -5 * ((i / 2) * 2 - 1)) + pointLigthCenter;
         t->rotation = glm::vec3(0, 0, 0);
         t->angleRotationRadians = -1;
         t->scale = glm::vec3(1.f);
@@ -179,11 +179,25 @@ void GenerateDirectionalLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>
         r->materials_ = &objItemList[2].materials;
 
         m = ecs.AddComponent<MTRD::MovementComponent>(cubes[i]);
-        m->position = glm::vec3(0) + directionalLigthCenter;
+        m->position = glm::vec3(0) + pointLigthCenter;
         m->rotation = glm::vec3(0, 0, 1);
         m->scale = glm::vec3(0.0f);
         m->shouldConstantMove = false;
     }
+}
+
+
+void GeneratePointLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng) {
+    lightComp->pointLights.push_back(
+        MTRD::PointLight(
+            glm::vec3(0.0f, 1.0f, 0.0f) + pointLigthCenter,
+            glm::vec3(1.0f, 1.0f, 0.0f),
+            1.0f,
+            1.0f,
+            0.09f,
+            0.032f
+        )
+    );
 }
 
 
@@ -244,7 +258,7 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::LightComponent>();
 
     GenerateSpotLightEntitys(ecs, objItemList);
-    GenerateDirectionalLightEntitys(ecs, objItemList);
+    GeneratePointLightEntitys(ecs, objItemList);
     // --- *** ---
 
 
@@ -252,7 +266,8 @@ int MTRD::main() {
     // hacer que la maya tenga un booleano para si hace hace sombras o no
     MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
     GenerateSpotLights(lightComp, eng);
-	GenerateDirectionalLights(lightComp, eng);
+	//GenerateDirectionalLights(lightComp, eng);
+    GeneratePointLights(lightComp, eng);
     // --- *** ---
 
     float radio = 10.f;
