@@ -156,6 +156,8 @@ namespace MTRD {
 		*/
 		const char* loadShaderFile(const char* filename);
 
+		std::unique_ptr<Mesh> createMesh(std::vector<Vertex> vertices, std::string name);
+
 		ObjItem generateCube(float size, int texureId = 0, bool debug = true);
 		ObjItem generatePlane(float width, float height, int texureId = 0, bool debug = true);
 		ObjItem generateSphere(float radius, int segments, int rings, int texureId = 0, bool debug = true);

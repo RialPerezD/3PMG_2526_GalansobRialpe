@@ -141,6 +141,23 @@ namespace MTRD {
     }
 
 
+    std::unique_ptr<Mesh> MotardaEng::createMesh(
+        std::vector<Vertex> vertices,
+        std::string name) {
+
+        bool firstTime = false;
+
+        return std::make_unique<Mesh>(
+            vertices,
+            window_,
+            name,
+            firstTime,
+            -1,
+            debug_
+        );
+    }
+
+
     ObjItem MotardaEng::generateCube(float size, int texureId, bool debug) {
 		bool firstTime = false;
         return std::move(Geometries::GenerateCube(window_, size, firstTime, texureId, debug));

@@ -70,15 +70,7 @@ int MTRD::main() {
     std::vector<ObjItem> ObjList;
     ObjList.push_back(ObjItem());
 
-    bool FirstTime = false;
-    std::unique_ptr<Mesh> TriangleMesh = std::make_unique<Mesh>(
-        vertexList,
-        nullptr,
-        "triangle",
-        FirstTime,
-        -1,
-        true
-    );
+    std::unique_ptr<Mesh> TriangleMesh = eng.createMesh(vertexList, "triangle");
 
     Material mat;
     mat.diffuse = glm::vec3(1.0f);
@@ -96,25 +88,10 @@ int MTRD::main() {
     r->materials_ = &ObjList[0].materials;
     // --- *** ---
 
-    // --- Vectores de uniforms y atributos ---
-    glm::mat4x4 vp, model;
-    // --- *** --- 
-
-    // --- Drawable transforms additions ---
-    float ratio = eng.windowGetSizeRatio();
-    // --- *** ---
-
-
-    camera.updateAll();
-    // --- *** ---
-
     while (!eng.windowShouldClose()) {
 
         eng.windowInitFrame();
         eng.RenderScene(ecs, camera);
-
-        //eng.windowOpenglSetUniformsValues(uniforms);
-        //eng.windowOpenglProgramUniformDrawRender(*r);
 
         eng.windowEndFrame();
     }
