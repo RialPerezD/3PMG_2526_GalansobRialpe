@@ -16,6 +16,7 @@ static void error_callback(int error, const char* description) {
 
 size_t lightEntity;
 glm::vec3 spotLigthCenter = glm::vec3(10,0,0);
+glm::vec3 directionalLigthCenter = glm::vec3(-10, 0, 0);
 
 
 void GenerateSpotLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objItemList) {
@@ -126,6 +127,77 @@ void GenerateSpotLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng) 
 }
 
 
+void GenerateDirectionalLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objItemList) {
+    size_t player = ecs.AddEntity();
+    size_t floor = ecs.AddEntity();
+    size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
+    lightEntity = ecs.AddEntity();
+
+    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
+    t->position = glm::vec3(0, -2.f, 0) + directionalLigthCenter;
+    t->rotation = glm::vec3(0, 0, 0);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(1.f);
+
+    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
+    r->meshes_ = &objItemList[0].meshes;
+    r->materials_ = &objItemList[0].materials;
+
+    MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
+    m->position = glm::vec3(0) + directionalLigthCenter;
+    m->rotation = glm::vec3(0, 0, 1);
+    m->scale = glm::vec3(0.0f);
+    m->shouldConstantMove = false;
+
+
+    t = ecs.AddComponent<MTRD::TransformComponent>(floor);
+    t->position = glm::vec3(0, -3, 0) + directionalLigthCenter;
+    t->rotation = glm::vec3(0, 0, 0);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(1.f);
+
+    r = ecs.AddComponent<MTRD::RenderComponent>(floor);
+    r->meshes_ = &objItemList[1].meshes;
+    r->materials_ = &objItemList[1].materials;
+
+    m = ecs.AddComponent<MTRD::MovementComponent>(floor);
+    m->position = glm::vec3(0) + directionalLigthCenter;
+    m->rotation = glm::vec3(0, 0, 1);
+    m->scale = glm::vec3(0.0f);
+    m->shouldConstantMove = false;
+
+
+    for (int i = 0; i < 4; i++) {
+        t = ecs.AddComponent<MTRD::TransformComponent>(cubes[i]);
+        t->position = glm::vec3(-5 * ((i % 2) * 2 - 1), -2.0f, -5 * ((i / 2) * 2 - 1)) + directionalLigthCenter;
+        t->rotation = glm::vec3(0, 0, 0);
+        t->angleRotationRadians = -1;
+        t->scale = glm::vec3(1.f);
+
+        r = ecs.AddComponent<MTRD::RenderComponent>(cubes[i]);
+        r->meshes_ = &objItemList[2].meshes;
+        r->materials_ = &objItemList[2].materials;
+
+        m = ecs.AddComponent<MTRD::MovementComponent>(cubes[i]);
+        m->position = glm::vec3(0) + directionalLigthCenter;
+        m->rotation = glm::vec3(0, 0, 1);
+        m->scale = glm::vec3(0.0f);
+        m->shouldConstantMove = false;
+    }
+}
+
+
+void GenerateDirectionalLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng) {
+    lightComp->directionalLights.push_back(
+        MTRD::DirectionalLight(
+            glm::vec3(-1.0f, -1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 1.0f),
+            0.1f
+        )
+    );
+}
+
+
 int MTRD::main() {
     // --- Rand seed ---
     std::srand(static_cast<unsigned>(std::time(nullptr)));
@@ -172,6 +244,7 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::LightComponent>();
 
     GenerateSpotLightEntitys(ecs, objItemList);
+    GenerateDirectionalLightEntitys(ecs, objItemList);
     // --- *** ---
 
 
@@ -179,6 +252,7 @@ int MTRD::main() {
     // hacer que la maya tenga un booleano para si hace hace sombras o no
     MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
     GenerateSpotLights(lightComp, eng);
+	GenerateDirectionalLights(lightComp, eng);
     // --- *** ---
 
     float radio = 10.f;
