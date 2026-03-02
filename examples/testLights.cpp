@@ -14,6 +14,117 @@ static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
 }
 
+size_t lightEntity;
+glm::vec3 spotLigthCenter = glm::vec3(10,0,0);
+
+
+void GenerateSpotLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objItemList) {
+    size_t player = ecs.AddEntity();
+    size_t floor = ecs.AddEntity();
+    size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
+    lightEntity = ecs.AddEntity();
+
+    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
+    t->position = glm::vec3(0, -2.f, 0) + spotLigthCenter;
+    t->rotation = glm::vec3(0, 0, 0);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(1.f);
+
+    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
+    r->meshes_ = &objItemList[0].meshes;
+    r->materials_ = &objItemList[0].materials;
+
+    MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
+    m->position = glm::vec3(0) + spotLigthCenter;
+    m->rotation = glm::vec3(0, 0, 1);
+    m->scale = glm::vec3(0.0f);
+    m->shouldConstantMove = false;
+
+
+    t = ecs.AddComponent<MTRD::TransformComponent>(floor);
+    t->position = glm::vec3(0, -3, 0) + spotLigthCenter;
+    t->rotation = glm::vec3(0, 0, 0);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(1.f);
+
+    r = ecs.AddComponent<MTRD::RenderComponent>(floor);
+    r->meshes_ = &objItemList[1].meshes;
+    r->materials_ = &objItemList[1].materials;
+
+    m = ecs.AddComponent<MTRD::MovementComponent>(floor);
+    m->position = glm::vec3(0) + spotLigthCenter;
+    m->rotation = glm::vec3(0, 0, 1);
+    m->scale = glm::vec3(0.0f);
+    m->shouldConstantMove = false;
+
+
+    for (int i = 0; i < 4; i++) {
+        t = ecs.AddComponent<MTRD::TransformComponent>(cubes[i]);
+        t->position = glm::vec3(-5 * ((i % 2) * 2 - 1), -2.0f, -5 * ((i / 2) * 2 - 1)) + spotLigthCenter;
+        t->rotation = glm::vec3(0, 0, 0);
+        t->angleRotationRadians = -1;
+        t->scale = glm::vec3(1.f);
+
+        r = ecs.AddComponent<MTRD::RenderComponent>(cubes[i]);
+        r->meshes_ = &objItemList[2].meshes;
+        r->materials_ = &objItemList[2].materials;
+
+        m = ecs.AddComponent<MTRD::MovementComponent>(cubes[i]);
+        m->position = glm::vec3(0) + spotLigthCenter;
+        m->rotation = glm::vec3(0, 0, 1);
+        m->scale = glm::vec3(0.0f);
+        m->shouldConstantMove = false;
+    }
+}
+
+
+void GenerateSpotLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng) {
+    lightComp->spotLights.push_back(
+        MTRD::SpotLight(
+            glm::vec3(0.0f, 0.0f, 0.0f) + spotLigthCenter,
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            5.0f,
+            1.f,
+            0.75f,
+            1.0f,
+            0.09f,
+            0.032f,
+            eng.windowGetSizeRatio()
+        )
+    );
+
+    lightComp->spotLights.push_back(
+        MTRD::SpotLight(
+            glm::vec3(0.0f, 0.0f, 0.0f) + spotLigthCenter,
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            5.0f,
+            1.0f,
+            0.75f,
+            1.0f,
+            0.09f,
+            0.032f,
+            eng.windowGetSizeRatio()
+        )
+    );
+
+    lightComp->spotLights.push_back(
+        MTRD::SpotLight(
+            glm::vec3(5.0f, 5.0f, 5.0f) + spotLigthCenter,
+            glm::vec3(0.0f, -1.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            7.0f,
+            1.0f,
+            0.85f,
+            1.0f,
+            0.09f,
+            0.032f,
+            eng.windowGetSizeRatio()
+        )
+    );
+}
+
 
 int MTRD::main() {
     // --- Rand seed ---
@@ -55,120 +166,19 @@ int MTRD::main() {
 
     // --- Create drawable entitys ---
     ECSManager ecs;
-
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
     ecs.AddComponentType<MTRD::LightComponent>();
 
-    size_t player = ecs.AddEntity();
-    size_t floor = ecs.AddEntity();
-    size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
-    size_t lightEntity = ecs.AddEntity();
-
-    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
-    t->position = glm::vec3(0, -2.f, 0);
-    t->rotation = glm::vec3(0, 0, 0);
-    t->angleRotationRadians = -1;
-    t->scale = glm::vec3(1.f);
-
-    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
-    r->meshes_ = &objItemList[0].meshes;
-    r->materials_ = &objItemList[0].materials;
-
-    MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
-    m->position = glm::vec3(0);
-    m->rotation = glm::vec3(0, 0, 1);
-    m->scale = glm::vec3(0.0f);
-    m->shouldConstantMove = false;
-
-
-
-    t = ecs.AddComponent<MTRD::TransformComponent>(floor);
-    t->position = glm::vec3(0, -3, 0);
-    t->rotation = glm::vec3(0, 0, 0);
-    t->angleRotationRadians = -1;
-    t->scale = glm::vec3(1.f);
-
-    r = ecs.AddComponent<MTRD::RenderComponent>(floor);
-    r->meshes_ = &objItemList[1].meshes;
-    r->materials_ = &objItemList[1].materials;
-
-    m = ecs.AddComponent<MTRD::MovementComponent>(floor);
-    m->position = glm::vec3(0);
-    m->rotation = glm::vec3(0, 0, 1);
-    m->scale = glm::vec3(0.0f);
-    m->shouldConstantMove = false;
-
-
-    for (int i = 0; i < 4; i++) {
-        t = ecs.AddComponent<MTRD::TransformComponent>(cubes[i]);
-        t->position = glm::vec3(-5 * ((i % 2) * 2 - 1), -2.0f, -5 * ((i / 2) * 2 - 1));
-        t->rotation = glm::vec3(0, 0, 0);
-        t->angleRotationRadians = -1;
-        t->scale = glm::vec3(1.f);
-
-        r = ecs.AddComponent<MTRD::RenderComponent>(cubes[i]);
-        r->meshes_ = &objItemList[2].meshes;
-        r->materials_ = &objItemList[2].materials;
-
-        m = ecs.AddComponent<MTRD::MovementComponent>(cubes[i]);
-        m->position = glm::vec3(0);
-        m->rotation = glm::vec3(0, 0, 1);
-        m->scale = glm::vec3(0.0f);
-        m->shouldConstantMove = false;
-    }
+    GenerateSpotLightEntitys(ecs, objItemList);
     // --- *** ---
 
 
     // --- Lights ---
     // hacer que la maya tenga un booleano para si hace hace sombras o no
     MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
-
-    lightComp->spotLights.push_back(
-        SpotLight(
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 1.0f),
-            5.0f,
-            1.f,
-            0.75f,
-            1.0f,
-            0.09f,
-            0.032f,
-            eng.windowGetSizeRatio()
-        )
-    );
-
-    lightComp->spotLights.push_back(
-        SpotLight(
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 1.0f, 0.0f),
-            5.0f,
-            1.0f,
-            0.75f,
-            1.0f,
-            0.09f,
-            0.032f,
-            eng.windowGetSizeRatio()
-        )
-    );
-
-    lightComp->spotLights.push_back(
-        SpotLight(
-            glm::vec3(5.0f, 5.0f, 5.0f),
-            glm::vec3(0.0f, -1.0f, 0.0f),
-            glm::vec3(1.0f, 0.0f, 0.0f),
-            7.0f,
-            1.0f,
-            0.85f,
-            1.0f,
-            0.09f,
-            0.032f,
-            eng.windowGetSizeRatio()
-        )
-    );
+    GenerateSpotLights(lightComp, eng);
     // --- *** ---
 
     float radio = 10.f;
@@ -200,13 +210,13 @@ int MTRD::main() {
         float posX2 = radio * sin(timer * velocidad);
         float posY2 = radio * cos(timer * velocidad);
 
-        lightComp->spotLights[0].position_ = glm::vec3(posX / 5, 0.0f, posY / 5);
-        lightComp->spotLights[0].direction_ = glm::normalize(glm::vec3(0, -2, 0) - lightComp->spotLights[0].position_);
+        lightComp->spotLights[0].position_ = glm::vec3(posX / 5, 0.0f, posY / 5) + spotLigthCenter;
+        lightComp->spotLights[0].direction_ = glm::normalize(glm::vec3(0, -2, 0) - lightComp->spotLights[0].position_ + spotLigthCenter);
 
-        lightComp->spotLights[1].position_ = glm::vec3(posX2 / 5, 0.0f, posY2 / 5);
-        lightComp->spotLights[1].direction_ = glm::normalize(glm::vec3(0, -2, 0) - lightComp->spotLights[1].position_);
+        lightComp->spotLights[1].position_ = glm::vec3(posX2 / 5, 0.0f, posY2 / 5) + spotLigthCenter;
+        lightComp->spotLights[1].direction_ = glm::normalize(glm::vec3(0, -2, 0) - lightComp->spotLights[1].position_ + spotLigthCenter);
 
-        lightComp->spotLights[2].position_ = glm::vec3(-posX * 0.68f, 0.0f, posY * 0.68f);
+        lightComp->spotLights[2].position_ = glm::vec3(-posX * 0.68f, 0.0f, posY * 0.68f) + spotLigthCenter;
         
         // Generate shadow map
         eng.RenderScene(ecs, camera);
