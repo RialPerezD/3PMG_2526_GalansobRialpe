@@ -21,7 +21,16 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
     // --- *** ---
+    
+    // --- Camera ---
+    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
+    camera.setPosition(glm::vec3(0.f, 0.f, -2.5f));
+    camera.setTarget(glm::vec3(0.f, 0.f, 0.f));
 
+    // --- Setup Engigne ---
+
+    eng.SetDebugMode(true);
+    eng.SetRenderType(MotardaEng::RenderType::Base, camera);
     eng.windowSetErrorCallback(error_callback);
 
     // --- Load Objs ---
@@ -63,8 +72,6 @@ int MTRD::main() {
     t->scale = glm::vec3(0.05f);
 
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
-    r->meshes_ = &ObjList[0].meshes;
-    r->materials_ = &ObjList[0].materials;
 
     // async obj load
     eng.enqueueTask([&]() {
@@ -79,19 +86,6 @@ int MTRD::main() {
         }
     );
 
-    // --- Camera ---
-    MTRD::Camera camera(
-        glm::vec3(0.f, 0.f, 5.f),
-        glm::vec3(0.f, 0.f, 0.f),
-        glm::vec3(0.f, 1.f, 0.f),
-        glm::radians(45.f),
-        ratio,
-        0.1f,
-        100.f
-    );
-
-    RenderSystem renderSystem = RenderSystem(vp, model);
-    eng.windowLoadAllMaterials(ObjList);
 
     if (ObjList.size() == 0) return 1;
 
@@ -108,8 +102,9 @@ int MTRD::main() {
             printf("Cargando maya...\n");
             eng.windowEndFrame();
             continue;
-
         }
+
+        eng.RenderScene(ecs, camera);
 
         // --- Input to move camera ---
         if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
@@ -135,18 +130,7 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::Z)) t->scale -= scaSpeed;
         else if (eng.inputIsKeyPressed(Input::Keyboard::X)) t->scale += scaSpeed;
         // --- *** ---
-
-        vp = camera.getViewProj();
-
-        // --- update vp ---
-        renderSystem.Render(
-            ecs,
-            ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>(),
-            model,
-            true
-        );
-        // --- *** ---
-
+        
 
         eng.windowEndFrame();
     }

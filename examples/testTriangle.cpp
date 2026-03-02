@@ -20,8 +20,17 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
 
-    eng.windowSetErrorCallback(error_callback);
+    // --- Camera ---
+    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
+    camera.setPosition(glm::vec3(0.f, 0.f, 0.5f));
+    camera.setTarget(glm::vec3(0.f, 0.f, 0.f));
+    float movSpeed = 0.1f;
 
+    // --- Setup Engigne ---
+
+    eng.SetDebugMode(true);
+    eng.SetRenderType(MotardaEng::RenderType::Base, camera);
+    eng.windowSetErrorCallback(error_callback);
 
     // --- Create drawable entitys ---
     ECSManager ecs;
@@ -64,7 +73,7 @@ int MTRD::main() {
     bool FirstTime = false;
     std::unique_ptr<Mesh> TriangleMesh = std::make_unique<Mesh>(
         vertexList,
-        eng.window_,
+        nullptr,
         "triangle",
         FirstTime,
         -1,
@@ -93,21 +102,8 @@ int MTRD::main() {
 
     // --- Drawable transforms additions ---
     float ratio = eng.windowGetSizeRatio();
-    float movSpeed = 0.05f;
     // --- *** ---
 
-    // --- Camera ---
-    MTRD::Camera camera(
-        glm::vec3(0.f, 0.f, 0.5f),
-        glm::vec3(0.f, 0.f, 0.f),
-        glm::vec3(0.f, 1.f, 0.f),
-        glm::radians(45.f),
-        ratio,
-        0.1f,
-        100.f
-    );
-
-    RenderSystem renderSystem = RenderSystem(vp, model);
 
     camera.updateAll();
     // --- *** ---
@@ -115,14 +111,7 @@ int MTRD::main() {
     while (!eng.windowShouldClose()) {
 
         eng.windowInitFrame();
-
-        vp = camera.getViewProj();
-        renderSystem.Render(
-            ecs,
-            ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>(),
-            model,
-            true
-            );
+        eng.RenderScene(ecs, camera);
 
         //eng.windowOpenglSetUniformsValues(uniforms);
         //eng.windowOpenglProgramUniformDrawRender(*r);
