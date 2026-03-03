@@ -161,9 +161,9 @@ int MTRD::main() {
                 });
 
             while (!objsLoaded) {
-                eng.windowInitFrame();
-                printf("Cargando maya %d...\n", objIndex);
                 eng.windowEndFrame();
+                printf("Cargando maya %d...\n", objIndex);
+                eng.windowInitFrame();
             }
 
             printf("Maya %d cargada\n", objIndex);
@@ -171,7 +171,6 @@ int MTRD::main() {
             r->meshes_ = &ObjList[0].meshes;
             r->materials_ = &ObjList[0].materials;
 
-            //eng.updateVertexBuffers(ecs.GetComponentList<Render>(), uniforms, attributes);
             eng.windowLoadAllMaterials(ObjList);
 
             needChangeObj = false;

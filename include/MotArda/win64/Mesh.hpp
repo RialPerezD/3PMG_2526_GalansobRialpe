@@ -23,6 +23,8 @@ namespace MTRD {
             return std::make_unique<Mesh>(vertices, window, name, firstTime, materialId, debug);
         }
 
+        static void RemoveContext();
+
         void GenerateVao();
         void SetVertexAtribs(const std::vector<VertexAttribute>& attributes);
 
