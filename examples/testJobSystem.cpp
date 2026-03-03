@@ -1,14 +1,15 @@
-#include "MotArda/Engine.hpp"
-#include "MotArda/ObjLoader.hpp"
-#include <MotArda/Ecs.hpp>
-#include <MotArda/Camera.hpp>
+#include "MotArda/common/Engine.hpp"
+#include "MotArda/common/ObjLoader.hpp"
+#include <MotArda/common/Ecs.hpp>
+#include <MotArda/common/Camera.hpp>
 
 #include <memory>
 
 #include "../deps/glm-master/glm/glm.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
-#include <MotArda/Systems.hpp>
+#include <MotArda/win64/Systems/RenderSystem.hpp>
+
 
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
@@ -19,36 +20,36 @@ int MTRD::main() {
     // --- Create engine ---
     auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda OBJ Viewer");
     if (!maybeEng.has_value()) return 1;
-
     auto& eng = maybeEng.value();
     // --- *** ---
 
-    // --- Create window ---
-    eng.windowSetDebugMode(true);
+    // --- Camera ---
+    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
+    camera.setPosition(glm::vec3(0.f, 1.f, 5.f));
+    camera.setTarget(glm::vec3(0.f, 0.f, 0.f));
+    // --- *** ---
+
+    // --- Setup Engine ---
+    eng.SetDebugMode(true);
+    eng.SetRenderType(MotardaEng::RenderType::Base, camera);
     eng.windowSetErrorCallback(error_callback);
-    eng.windowCreateContext();
-    eng.windowSetSwapInterval(1);
     // --- *** ---
 
     // --- Load Objs ---
     std::vector <const char*> objsRoutes = { "12140_Skull_v3_L2.obj" };
-
     std::atomic<bool> objsLoaded = false;
-    std::vector<MTRD::Window::ObjItem> objItemList;
 
-    // async obj load
-    eng.enqueueTask([&]() {
-        objItemList = eng.loadObjs(objsRoutes);
-        objsLoaded = true;
-        }
-    );
-
-    // --- Systems ---
-    Systems systems;
-    // --- *** ---
+    std::vector<ObjItem> ObjList;
+    ObjList.push_back(ObjItem());
 
     // --- Ecs ---
     ECSManager ecs;
+
+    ecs.AddComponentType<MTRD::TransformComponent>();
+    ecs.AddComponentType<MTRD::RenderComponent>();
+    ecs.AddComponentType<MTRD::MovementComponent>();
+
+    size_t entity = ecs.AddEntity();
     // --- *** ---
 
     // --- Drawable transforms additions ---
@@ -62,38 +63,24 @@ int MTRD::main() {
     bool needChangeObj = false;
     int objIndex = 1;
     bool firstTime = true;
-    MTRD::Transform* t;
-    MTRD::Render* r;
-    MTRD::Movement* m;
-    glm::mat4x4 vp, model;
     // --- *** ---
 
-    // --- Setup uniforms ---
-    std::vector<Window::UniformAttrib> uniforms = {
-        {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
-        {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
-    };
+    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(entity);
+    t->position = glm::vec3(0.0f);
+    t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(0.05f);
 
-    std::vector<Window::VertexAttrib> attributes = {
-        { "position", 3, offsetof(Vertex, position) },
-        { "uv", 2, offsetof(Vertex, uv) },
-        { "normal", 3, offsetof(Vertex, normal) }
-    };
-    // --- *** ---
+    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
 
-    // --- Camera ---
-    MTRD::Camera camera(
-        glm::vec3(0.f, 0.f, 5.f),
-        glm::vec3(0.f, 0.f, 0.f),
-        glm::vec3(0.f, 1.f, 0.f),
-        glm::radians(45.f),
-        ratio,
-        0.1f,
-        100.f
+
+    // async obj load
+    eng.enqueueTask([&]() {
+        ObjList = eng.loadObjs(objsRoutes);
+
+        objsLoaded = true;
+        }
     );
-
-    camera.updateAll();
-    // --- *** ---
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
@@ -108,42 +95,10 @@ int MTRD::main() {
         }
         else if (firstTime) {
             firstTime = false;
+            eng.windowLoadAllMaterials(ObjList);
 
-            eng.windowLoadAllMaterials(objItemList);
-            if (objItemList.size() == 0) return 1;
-            // --- *** ---
-
-            // --- Create drawable entitys ---
-            ecs.AddComponentType<MTRD::Transform>();
-            ecs.AddComponentType<MTRD::Render>();
-
-            size_t entity = ecs.AddEntity();
-
-            t = ecs.AddComponent<MTRD::Transform>(entity);
-            t->position = glm::vec3(0.0f);
-            t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
-            t->angleRotationRadians = -1;
-            t->scale = glm::vec3(0.05f);
-
-            r = ecs.AddComponent<MTRD::Render>(entity);
-            r->shapes = &objItemList[0].shapes;
-            r->materials = &objItemList[0].materials;
-            // --- *** ---
-
-            // --- Load shaders ---
-            const char* vertex_shader = eng.loadShaderFile("../assets/shaders/textured_obj_vertex.txt");
-            const char* fragment_shader = eng.loadShaderFile("../assets/shaders/textured_obj_fragment.txt");
-            // --- *** ---
-
-            // --- Setup Window ---
-            eng.windowOpenglSetup(
-                ecs.GetComponentList<Render>(),
-                vertex_shader,
-                fragment_shader,
-                uniforms,
-                attributes
-            );
-            // --- *** ---
+            r->meshes_ = &ObjList[0].meshes;
+            r->materials_ = &ObjList[0].materials;
         }
 
 
@@ -171,17 +126,8 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::Z)) t->scale -= scaSpeed;
         else if (eng.inputIsKeyPressed(Input::Keyboard::X)) t->scale += scaSpeed;
         // --- *** ---
-         
-        // --- update vp ---
-        vp = camera.getViewProj();
-        // --- *** ---
-
-        // --- Setup uniforms and draw ---
-        systems.RunRenderSystem(ecs, eng, uniforms, model);
-        // --- *** ---
-
-        eng.windowEndFrame();
-
+        
+        eng.RenderScene(ecs, camera);
 
         // --- Cambiar objeto si es necesario ---
         if (needChangeObj) {
@@ -206,11 +152,11 @@ int MTRD::main() {
                 break;
             }
 
-            objItemList.clear();
+            ObjList.clear();
             objsLoaded = false;
 
             eng.enqueueTask([&]() {
-                objItemList = eng.loadObjs(objsRoutes);
+                ObjList = eng.loadObjs(objsRoutes);
                 objsLoaded = true;
                 });
 
@@ -222,14 +168,15 @@ int MTRD::main() {
 
             printf("Maya %d cargada\n", objIndex);
 
-            r->shapes = &objItemList[0].shapes;
-            r->materials = &objItemList[0].materials;
+            r->meshes_ = &ObjList[0].meshes;
+            r->materials_ = &ObjList[0].materials;
 
-            eng.updateVertexBuffers(ecs.GetComponentList<Render>(), uniforms, attributes);
-            eng.windowLoadAllMaterials(objItemList);
+            //eng.updateVertexBuffers(ecs.GetComponentList<Render>(), uniforms, attributes);
+            eng.windowLoadAllMaterials(ObjList);
 
             needChangeObj = false;
         }
+        eng.windowEndFrame();
     }
 
     return 0;
