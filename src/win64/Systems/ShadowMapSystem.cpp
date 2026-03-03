@@ -134,9 +134,9 @@ namespace MTRD {
                 glClear(GL_DEPTH_BUFFER_BIT);
 
                 float aspect = (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT;
-                float near = 1.0f;
-                float far = 25.0f;
-                glm::mat4 proj = glm::perspective(glm::radians(90.0f), aspect, near, far);
+                float nearPlane = 1.0f;
+                float farPlane = 25.0f;
+                glm::mat4 proj = glm::perspective(glm::radians(90.0f), aspect, nearPlane, farPlane);
                 glm::vec3 p = pl.position_;
 
                 std::vector<glm::mat4> transforms;
@@ -151,7 +151,7 @@ namespace MTRD {
                     glUniformMatrix4fv(glGetUniformLocation(omniShadowProgram.programId_, ("shadowMatrices[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(transforms[i]));
                 }
                 glUniform3f(glGetUniformLocation(omniShadowProgram.programId_, "lightPos"), p.x, p.y, p.z);
-                glUniform1f(glGetUniformLocation(omniShadowProgram.programId_, "far_plane"), far);
+                glUniform1f(glGetUniformLocation(omniShadowProgram.programId_, "far_plane"), farPlane);
 
                 DrawCall(ecs, model, omniShadowProgram);
                 currentCube++;

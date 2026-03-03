@@ -38,6 +38,12 @@ namespace MTRD {
     }
 
 
+    void MotardaEng::SetDebugMode(bool debug) {
+        debug_ = debug;
+        window_.setDebugMode(debug);
+    }
+
+
     bool MotardaEng::windowShouldClose(){
         return window_.shouldClose();
     }
@@ -226,5 +232,8 @@ namespace MTRD {
                 renderLightsSystem_->Render(ecs, model_, true);
                 break;
         }
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 }

@@ -7,6 +7,15 @@
 #include "../common/ObjLoader.hpp"
 #include "../common/ObjItem.hpp"
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
+#pragma warning(push)
+#pragma warning(disable : 4005)
+//Need this include to use WinMain
+#include <windows.h>
+
 
 #define GLFW_INCLUDE_NONE
 #pragma warning(push)
@@ -48,7 +57,8 @@ namespace MTRD {
         static std::optional<Window> windowCreate(
             int width,
             int height,
-            const char* windowName);
+            const char* windowName,
+            bool debug = false);
         /**
         * @brief ~window
         * @details Destructor of the window class.
@@ -67,7 +77,7 @@ namespace MTRD {
         * @param const Window&& right Reference to a Window type object
         * @details We are able to Move the window as unique_ptr allows it.
         */
-        Window& operator=(Window&& right);
+        Window& operator=(Window&& right) = default;
 
         //------------Structs-------------------------
         struct UniformAttrib {
@@ -171,14 +181,12 @@ namespace MTRD {
         */
         void openglLoadMaterials(std::vector<Material>& materials);
 
+
+        void setDebugMode(bool debug) { debug_ = debug; }
         
     private:
 
-        /**
-        * @brief Constructor
-        * @param std::unique_ptr<Data> newData Unique ptr of the Data struct.
-        * @details Inits the Window class data.
-        */
+
         explicit Window(GLFWwindow* glfwWindow, GLFWwindow* glfwSecondaryWindow, bool debug);
 
         void checkErrors();
@@ -196,5 +204,7 @@ namespace MTRD {
         bool debug_;
         //< Last frame time
         double lastFrameTime_ = 0.0;
+
+
     };
 }

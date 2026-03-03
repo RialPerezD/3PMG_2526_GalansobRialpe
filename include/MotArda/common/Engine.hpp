@@ -62,7 +62,7 @@ namespace MTRD {
 		// --- *** ---
 
 		// --- Functions ---
-		void SetDebugMode(bool debug) { debug_ = debug; };
+		void SetDebugMode(bool debug);
 
 		bool windowShouldClose();
 		/**
