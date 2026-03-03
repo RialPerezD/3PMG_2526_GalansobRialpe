@@ -124,6 +124,8 @@ namespace MTRD {
         * windowHeight_.
         */
         float getSizeRatio();
+        int getWidth() const { return windowWidth_; }
+        int getHeight() const { return windowHeight_; }
         /**
         * @brief setKeyCallback
         * @param void* keyCallback

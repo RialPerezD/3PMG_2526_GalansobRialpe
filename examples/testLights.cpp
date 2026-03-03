@@ -206,7 +206,7 @@ void GenerateDirectionalLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng
         MTRD::DirectionalLight(
             glm::vec3(-1.0f, -1.0f, 0.0f),
             glm::vec3(0.0f, 1.0f, 1.0f),
-            0.1f
+            0.01f
         )
     );
 }
@@ -266,7 +266,7 @@ int MTRD::main() {
     // hacer que la maya tenga un booleano para si hace hace sombras o no
     MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
     GenerateSpotLights(lightComp, eng);
-	//GenerateDirectionalLights(lightComp, eng);
+	GenerateDirectionalLights(lightComp, eng);
     GeneratePointLights(lightComp, eng);
     // --- *** ---
 
@@ -290,6 +290,11 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::Q)) camera.rotate(-10.0f, 0.0f);
         if (eng.inputIsKeyPressed(Input::Keyboard::F)) camera.rotate(0.0f, 10.0f);
         if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -10.0f);
+
+        if (eng.inputIsKeyPressed(Input::Keyboard::J)) lightComp->pointLights[0].position_.x -= 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::L)) lightComp->pointLights[0].position_.x += 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::I)) lightComp->pointLights[0].position_.z -= 0.1f;
+        if (eng.inputIsKeyPressed(Input::Keyboard::K)) lightComp->pointLights[0].position_.z += 0.1f;
         // --- *** ---
 
         timer += eng.windowGetLastFrameTime();

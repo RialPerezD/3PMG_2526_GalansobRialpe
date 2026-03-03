@@ -42,6 +42,38 @@ namespace MTRD {
     }
 
 
+    Shader Shader::GeometryFromFile(std::filesystem::path filename, bool debug) {
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            throw std::runtime_error("No se pudo abrir el archivo: " + filename.string());
+        }
+
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        std::string shaderSource = buffer.str();
+        const char* text = shaderSource.c_str();
+
+        GLuint geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+        glShaderSource(geometryShader, 1, &text, nullptr);
+        glCompileShader(geometryShader);
+
+        if (debug) {
+            GLint success;
+            glGetShaderiv(geometryShader, GL_COMPILE_STATUS, &success);
+            if (!success) {
+                char infoLog[512];
+                glGetShaderInfoLog(geometryShader, sizeof(infoLog), NULL, infoLog);
+                fprintf(stderr, "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n%s\n", infoLog);
+            }
+            else {
+                printf("Geometry %s shader compiled successfully.\n", filename.filename().string().c_str());
+            }
+            glCheckError();
+        }
+        return Shader{ geometryShader };
+    }
+
+
     Shader Shader::FragmentFromFile(std::filesystem::path filename, bool debug) {
         std::ifstream file(filename);
         if (!file.is_open()) {

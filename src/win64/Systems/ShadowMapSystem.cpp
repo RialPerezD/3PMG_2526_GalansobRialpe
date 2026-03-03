@@ -3,10 +3,16 @@
 
 namespace MTRD {
     ShadowMapSystem::ShadowMapSystem(glm::mat4& model, bool& debug)
-        : debug_ (debug),
+        : debug_(debug),
         shadowProgram{
             Shader::VertexFromFile("../assets/shaders/shadow_map_vertex.txt", debug),
-            Shader::FragmentFromFile("../assets/shaders/shadow_map_fragment.txt", debug), 
+            Shader::FragmentFromFile("../assets/shaders/shadow_map_fragment.txt", debug),
+            debug
+        },
+        omniShadowProgram{
+            Shader::VertexFromFile("../assets/shaders/omni_shadow_vertex.txt", debug),
+            Shader::GeometryFromFile("../assets/shaders/omni_shadow_geom.txt", debug),
+            Shader::FragmentFromFile("../assets/shaders/omni_shadow_frag.txt", debug),
             debug
         }
     {
@@ -20,28 +26,18 @@ namespace MTRD {
             {"lightSpaceMatrix", -1, Window::UniformTypes::Mat4, glm::value_ptr(lightSpaceMatrix_)},
             {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
         };
-
-        if (debug_) {
-            glCheckError();
-        }
     }
-
 
     void ShadowMapSystem::CreateShadowMapResource(GLuint& fbo, GLuint& depthMap) {
         glGenFramebuffers(1, &fbo);
-
         glGenTextures(1, &depthMap);
         glBindTexture(GL_TEXTURE_2D, depthMap);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-            SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
-        float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
         glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -51,9 +47,122 @@ namespace MTRD {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
+    void ShadowMapSystem::CreateOmniShadowResource(GLuint& fbo, GLuint& cubemap) {
+        glGenFramebuffers(1, &fbo);
+        glGenTextures(1, &cubemap);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+        for (unsigned int i = 0; i < 6; ++i) {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+                SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+        }
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-    void ShadowMapSystem::DrawCall(ECSManager& ecs, glm::mat4& model) {
-        for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, cubemap, 0);
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void ShadowMapSystem::RenderShadowMap(ECSManager& ecs, glm::mat4& model) {
+        auto lightEntities = ecs.GetEntitiesWithComponents<LightComponent>();
+        size_t dirSpotCount = 0;
+        size_t pointCount = 0;
+
+        for (size_t id : lightEntities) {
+            auto* l = ecs.GetComponent<LightComponent>(id);
+            dirSpotCount += l->directionalLights.size() + l->spotLights.size();
+            pointCount += l->pointLights.size();
+        }
+
+        if (depthMaps_.size() != dirSpotCount) {
+            for (auto fbo : depthMapFBOs_) glDeleteFramebuffers(1, &fbo);
+            for (auto tex : depthMaps_) glDeleteTextures(1, &tex);
+            depthMapFBOs_.clear();
+            depthMaps_.clear();
+            for (size_t i = 0; i < dirSpotCount; i++) {
+                GLuint fbo, tex;
+                CreateShadowMapResource(fbo, tex);
+                depthMapFBOs_.push_back(fbo);
+                depthMaps_.push_back(tex);
+            }
+        }
+
+        if (depthCubemaps_.size() != pointCount) {
+            for (auto fbo : omniDepthFBOs_) glDeleteFramebuffers(1, &fbo);
+            for (auto cb : depthCubemaps_) glDeleteTextures(1, &cb);
+            omniDepthFBOs_.clear();
+            depthCubemaps_.clear();
+            for (size_t i = 0; i < pointCount; i++) {
+                GLuint fbo, cb;
+                CreateOmniShadowResource(fbo, cb);
+                omniDepthFBOs_.push_back(fbo);
+                depthCubemaps_.push_back(cb);
+            }
+        }
+
+        size_t current2D = 0;
+        size_t currentCube = 0;
+        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+
+        for (size_t id : lightEntities) {
+            auto* l = ecs.GetComponent<LightComponent>(id);
+
+            glUseProgram(shadowProgram.programId_);
+            for (auto& dl : l->directionalLights) {
+                glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBOs_[current2D]);
+                glClear(GL_DEPTH_BUFFER_BIT);
+                lightSpaceMatrix_ = dl.getLightSpaceMatrix();
+                DrawCall(ecs, model, shadowProgram);
+                current2D++;
+            }
+            for (auto& sl : l->spotLights) {
+                glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBOs_[current2D]);
+                glClear(GL_DEPTH_BUFFER_BIT);
+                lightSpaceMatrix_ = sl.getLightSpaceMatrix();
+                DrawCall(ecs, model, shadowProgram);
+                current2D++;
+            }
+
+            glUseProgram(omniShadowProgram.programId_);
+            for (auto& pl : l->pointLights) {
+                glBindFramebuffer(GL_FRAMEBUFFER, omniDepthFBOs_[currentCube]);
+                glClear(GL_DEPTH_BUFFER_BIT);
+
+                float aspect = (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT;
+                float near = 1.0f;
+                float far = 25.0f;
+                glm::mat4 proj = glm::perspective(glm::radians(90.0f), aspect, near, far);
+                glm::vec3 p = pl.position_;
+
+                std::vector<glm::mat4> transforms;
+                transforms.push_back(proj * glm::lookAt(p, p + glm::vec3(1, 0, 0), glm::vec3(0, -1, 0)));
+                transforms.push_back(proj * glm::lookAt(p, p + glm::vec3(-1, 0, 0), glm::vec3(0, -1, 0)));
+                transforms.push_back(proj * glm::lookAt(p, p + glm::vec3(0, 1, 0), glm::vec3(0, 0, 1)));
+                transforms.push_back(proj * glm::lookAt(p, p + glm::vec3(0, -1, 0), glm::vec3(0, 0, -1)));
+                transforms.push_back(proj * glm::lookAt(p, p + glm::vec3(0, 0, 1), glm::vec3(0, -1, 0)));
+                transforms.push_back(proj * glm::lookAt(p, p + glm::vec3(0, 0, -1), glm::vec3(0, -1, 0)));
+
+                for (int i = 0; i < 6; ++i) {
+                    glUniformMatrix4fv(glGetUniformLocation(omniShadowProgram.programId_, ("shadowMatrices[" + std::to_string(i) + "]").c_str()), 1, GL_FALSE, glm::value_ptr(transforms[i]));
+                }
+                glUniform3f(glGetUniformLocation(omniShadowProgram.programId_, "lightPos"), p.x, p.y, p.z);
+                glUniform1f(glGetUniformLocation(omniShadowProgram.programId_, "far_plane"), far);
+
+                DrawCall(ecs, model, omniShadowProgram);
+                currentCube++;
+            }
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void ShadowMapSystem::DrawCall(ECSManager& ecs, glm::mat4& model, Program& currentProg) {
+        auto renderables = ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>();
+        for (size_t id : renderables) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
             TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
 
@@ -63,11 +172,12 @@ namespace MTRD {
             if (glm::length(transform->rotation) != 0) {
                 model = glm::rotate(model, transform->angleRotationRadians, transform->rotation);
             }
-            shadowProgram.SetupUniforms(uniforms);
+
+            currentProg.SetupUniforms(uniforms);
+            currentProg.SetupAtributeLocations(attributes);
 
             for (size_t i = 0; i < render->meshes_->size(); i++) {
                 Mesh* mesh = render->meshes_->at(i).get();
-
                 if (mesh->vao == GL_INVALID_INDEX || mesh->vao == 0) {
                     mesh->GenerateVao();
                     mesh->SetVertexAtribs(attributes);
@@ -77,78 +187,6 @@ namespace MTRD {
 
                 mesh->vao = GL_INVALID_INDEX;
             }
-        }
-    }
-
-
-    void ShadowMapSystem::RenderShadowMap(
-        ECSManager& ecs,
-        glm::mat4& model
-    ){
-        glUseProgram(shadowProgram.programId_);
-        glEnable(GL_DEPTH_TEST);
-
-        shadowProgram.SetupAtributeLocations(attributes);
-
-        size_t totalLights = 0;
-        for (size_t light_id : ecs.GetEntitiesWithComponents<LightComponent>()) {
-            LightComponent* light = ecs.GetComponent<LightComponent>(light_id);
-            totalLights += light->directionalLights.size();
-            totalLights += light->spotLights.size();
-        }
-
-        if (depthMaps_.size() != totalLights) {
-            for (auto fbo : depthMapFBOs_) {
-                glDeleteFramebuffers(1, &fbo);
-            }
-            for (auto dm : depthMaps_) {
-                glDeleteTextures(1, &dm);
-            }
-            depthMapFBOs_.clear();
-            depthMaps_.clear();
-
-            for (size_t i = 0; i < totalLights; i++) {
-                GLuint fbo, depthMap;
-                CreateShadowMapResource(fbo, depthMap);
-                depthMapFBOs_.push_back(fbo);
-                depthMaps_.push_back(depthMap);
-            }
-        }
-
-        size_t currentLightIndex = 0;
-        for (size_t light_id : ecs.GetEntitiesWithComponents<LightComponent>()) {
-            LightComponent* light = ecs.GetComponent<LightComponent>(light_id);
-
-            for (int i = 0; i < light->directionalLights.size(); i++) {
-                glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-                glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBOs_[currentLightIndex]);
-                glClear(GL_DEPTH_BUFFER_BIT);
-                glDisable(GL_BLEND);
-
-                lightSpaceMatrix_ = light->directionalLights[i].getLightSpaceMatrix();
-                DrawCall(ecs, model);
-
-                currentLightIndex++;
-            }
-
-            for (int i = 0; i < light->spotLights.size(); i++) {
-                glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-                glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBOs_[currentLightIndex]);
-                glClear(GL_DEPTH_BUFFER_BIT);
-                glDisable(GL_BLEND);
-
-                lightSpaceMatrix_ = light->spotLights[i].getLightSpaceMatrix();
-                DrawCall(ecs, model);
-
-                currentLightIndex++;
-            }
-        }
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, 800, 600);
-
-        if (debug_) {
-            glCheckError();
         }
     }
 }

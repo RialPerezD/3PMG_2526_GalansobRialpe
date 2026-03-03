@@ -184,10 +184,10 @@ namespace MTRD {
                 renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
                 break;
             case RenderType::Lights:
-                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera.getPosition(), debug_);
+                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera.getPosition(), debug_, window_.getWidth(), window_.getHeight());
                 break;
             case RenderType::LightsWithShadows:
-                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera.getPosition(), debug_);
+                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera.getPosition(), debug_, window_.getWidth(), window_.getHeight());
                 shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
                 break;
 		}
@@ -222,6 +222,7 @@ namespace MTRD {
 
                 shadowSystem_->RenderShadowMap(ecs, model_);
                 renderLightsSystem_->SetShadowMaps(shadowSystem_->getAllDepthMaps());
+                renderLightsSystem_->SetShadowCubemaps(shadowSystem_->getAllDepthCubemaps());
                 renderLightsSystem_->Render(ecs, model_, true);
                 break;
         }

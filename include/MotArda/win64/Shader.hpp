@@ -6,6 +6,7 @@ namespace MTRD {
 	class Shader {
 	public:
 		static Shader VertexFromFile(std::filesystem::path filename, bool debug);
+		static Shader GeometryFromFile(std::filesystem::path filename, bool debug);
 		static Shader FragmentFromFile(std::filesystem::path filename, bool debug);
         ~Shader();
 

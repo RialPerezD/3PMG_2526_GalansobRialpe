@@ -100,6 +100,7 @@ namespace MTRD {
 
 
     void Mesh::SetVertexAtribs(const std::vector<VertexAttribute>& attributes) {
+        glBindVertexArray(vao);
         glBindBuffer(GL_ARRAY_BUFFER, gluintVertexBuffer);
 
         for (int i = 0; i < attributes.size(); i++) {

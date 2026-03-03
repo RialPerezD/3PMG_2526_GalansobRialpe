@@ -2,7 +2,6 @@
 #include <MotArda/win64/Debug.hpp>
 #include <stdio.h>
 
-
 namespace MTRD {
     Program::Program(const Shader& vertexShader, const Shader& fragmentShader, bool debug) {
         programId_ = glCreateProgram();
@@ -33,23 +32,43 @@ namespace MTRD {
         }
     }
 
+    Program::Program(const Shader& vertexShader, const Shader& geometryShader, const Shader& fragmentShader, bool debug) {
+        programId_ = glCreateProgram();
+        glAttachShader(programId_, vertexShader.id_);
+        glAttachShader(programId_, geometryShader.id_);
+        glAttachShader(programId_, fragmentShader.id_);
+        glLinkProgram(programId_);
 
-	Program::~Program() {
+        if (debug) {
+            GLint success;
+            glGetProgramiv(programId_, GL_LINK_STATUS, &success);
+            if (!success) {
+                char infoLog[512];
+                glGetProgramInfoLog(programId_, sizeof(infoLog), NULL, infoLog);
+                fprintf(stderr, "ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
+            }
+        }
+
+        glUseProgram(programId_);
+        glEnable(GL_DEPTH_TEST);
+        if (debug) glCheckError();
+    }
+
+    Program::~Program() {
         if (programId_ != 0) {
             glDeleteProgram(programId_);
         }
-	}
+    }
 
-
-    Program::Program(Program&& other) {
+    Program::Program(Program&& other) noexcept {
+        programId_ = other.programId_;
         other.programId_ = 0;
     }
 
-
-    Program& Program::operator=(Program&& other) {
+    Program& Program::operator=(Program&& other) noexcept {
         if (this != &other) {
             if (programId_ != 0) {
-                glDeleteShader(programId_);
+                glDeleteProgram(programId_);
             }
 
             programId_ = other.programId_;
@@ -58,7 +77,6 @@ namespace MTRD {
 
         return *this;
     }
-
 
     void Program::SetupAtributeLocations(
         std::vector<VertexAttribute>& attributes,
@@ -76,15 +94,12 @@ namespace MTRD {
         }
     }
 
-
     void Program::SetupUniforms(
         std::vector<Window::UniformAttrib>& uniforms,
         bool debug
-    ){
+    ) {
         for (Window::UniformAttrib& uniform : uniforms) {
-
             uniform.location = glGetUniformLocation(programId_, uniform.name);
-
             if (uniform.location < 0) continue;
 
             switch (uniform.type) {
