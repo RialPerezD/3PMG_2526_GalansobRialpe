@@ -182,6 +182,10 @@ namespace MTRD {
         void openglLoadMaterials(std::vector<Material>& materials);
 
 
+        void imGuiRender();
+        void imGuiEndFrame();
+
+
         void setDebugMode(bool debug) { debug_ = debug; }
         
     private:

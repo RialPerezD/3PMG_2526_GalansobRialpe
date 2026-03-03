@@ -57,6 +57,7 @@ namespace MTRD {
     void MotardaEng::windowEndFrame() {
         window_.swapBuffers();
         window_.pollEvents();
+        window_.imGuiEndFrame();
     }
 
 
@@ -233,7 +234,6 @@ namespace MTRD {
                 break;
         }
 
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        window_.imGuiRender();
     }
 }

@@ -236,6 +236,17 @@ namespace MTRD {
             }
         }
     }
+
+
+    void Window::imGuiRender() {
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
+
+
+    void Window::imGuiEndFrame(){
+        ImGui::EndFrame();
+    }
 }
 
 
