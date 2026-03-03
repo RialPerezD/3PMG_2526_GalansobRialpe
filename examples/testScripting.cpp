@@ -1,8 +1,7 @@
-#include "MotArda/Engine.hpp"
-#include "MotArda/ObjLoader.hpp"
-#include <MotArda/Ecs.hpp>
-#include <MotArda/Camera.hpp>
-#include <MotArda/Systems.hpp>
+#include "MotArda/common/Engine.hpp"
+#include "MotArda/common/ObjLoader.hpp"
+#include <MotArda/common/Ecs.hpp>
+#include <MotArda/common/Camera.hpp>
 
 #include <sol/sol.hpp>
 #include <memory>
@@ -14,6 +13,8 @@
 #include "../deps/glm-master/glm/glm.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
+#include <MotArda/win64/Systems/RenderSystem.hpp>
+
 
 static const char* lua_program = R"(
 
@@ -125,17 +126,31 @@ int MTRD::main() {
     // --- Create engine ---
     auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda OBJ Viewer");
     if (!maybeEng.has_value()) return 1;
-
     auto& eng = maybeEng.value();
     g_engine = &eng;
     // --- *** ---
+ 
+    // --- Camera ---
+    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
+    camera.setPosition(glm::vec3(0.f, 1.f, 5.f));
+    camera.setTarget(glm::vec3(0.f, 0.f, 0.f));
+    // --- *** ---
 
-
-    // --- Create window ---
-    eng.windowSetDebugMode(true);
+    // --- Setup Engine ---
+    eng.SetDebugMode(true);
+    eng.SetRenderType(MotardaEng::RenderType::Base, camera);
     eng.windowSetErrorCallback(error_callback);
-    eng.windowCreateContext();
-    eng.windowSetSwapInterval(1);
+    // --- *** ---
+
+    // --- Load Objs ---
+    std::vector <const char*> objsRoutes = {
+        "indoor_plant_02.obj",
+        "12140_Skull_v3_L2.obj"
+    };
+    std::atomic<bool> objsLoaded = false;
+
+    std::vector<ObjItem> ObjList;
+    ObjList.push_back(ObjItem());
     // --- *** ---
 
     sol::state lua;
@@ -159,21 +174,21 @@ int MTRD::main() {
     });
 
     // Transform binding
-    lua.new_usertype<MTRD::Transform>(
+    lua.new_usertype<MTRD::TransformComponent>(
         "Transform",
-        "position", &MTRD::Transform::position,
-        "rotation", &MTRD::Transform::rotation,
-        "angleRotationRadians", &MTRD::Transform::angleRotationRadians,
-        "scale", &MTRD::Transform::scale
+        "position", &MTRD::TransformComponent::position,
+        "rotation", &MTRD::TransformComponent::rotation,
+        "angleRotationRadians", &MTRD::TransformComponent::angleRotationRadians,
+        "scale", &MTRD::TransformComponent::scale
     );
 
     // Movement binding
-    lua.new_usertype<MTRD::Movement>(
+    lua.new_usertype<MTRD::MovementComponent>(
         "Movement",
-        "position", &MTRD::Movement::position,
-        "rotation", &MTRD::Movement::rotation,
-        "scale", &MTRD::Movement::scale,
-        "angleRotationRadians", &MTRD::Movement::angleRotationRadians
+        "position", &MTRD::MovementComponent::position,
+        "rotation", &MTRD::MovementComponent::rotation,
+        "scale", &MTRD::MovementComponent::scale,
+        "angleRotationRadians", &MTRD::MovementComponent::angleRotationRadians
     );
 
 
@@ -185,10 +200,10 @@ int MTRD::main() {
         "normal", &MTRD::Vertex::normal
     );
     // Render(Render) binding
-    lua.new_usertype<MTRD::Render>(
+    lua.new_usertype<MTRD::RenderComponent>(
         "Render",
-        "position", &MTRD::Render::shapes,
-        "uv", &MTRD::Render::materials
+        "position", &MTRD::RenderComponent::meshes_,
+        "uv", &MTRD::RenderComponent::materials_
     );
 
     // Camera binding
@@ -244,20 +259,10 @@ int MTRD::main() {
     }
     chunk();
 
-    // --- Load Objs ---
-    std::vector <const char*> objsRoutes = {
-        "indoor_plant_02.obj",
-        "12140_Skull_v3_L2.obj"
-    };
-
-    std::atomic<bool> objsLoaded = false;
-    std::vector<MTRD::Window::ObjItem> objItemList;
-    // --- *** ---
-
 
     // async obj load
     eng.enqueueTask([&]() {
-        objItemList = eng.loadObjs(objsRoutes);
+        ObjList = eng.loadObjs(objsRoutes);
         objsLoaded = true;
         }
     );
@@ -268,47 +273,20 @@ int MTRD::main() {
     float movSpeed = 0.05f;
     // --- *** ---
 
-    // --- Camera ---
-    MTRD::Camera camera(
-        glm::vec3(0.f, 0.f, 5.f),
-        glm::vec3(0.f, 0.f, 0.f),
-        glm::vec3(0.f, 1.f, 0.f),
-        glm::radians(45.f),
-        ratio,
-        0.1f,
-        100.f
-    );
-
-    camera.updateAll();
-    // --- *** ---
-
-    // --- Systems ---
-    Systems systems;
-    // --- *** ---
 
     // --- Ecs ---
     ECSManager ecs;
+
+    ecs.AddComponentType<MTRD::TransformComponent>();
+    ecs.AddComponentType<MTRD::RenderComponent>();
+    ecs.AddComponentType<MTRD::MovementComponent>();
     // --- *** ---
 
     float frameTime = 0;
     bool firstTime = true;
-    MTRD::Transform* t;
-    MTRD::Render* r;
-    MTRD::Movement* m;
+
     glm::mat4x4 vp, model;
 
-    // --- Setup uniforms ---
-    std::vector<Window::UniformAttrib> uniforms = {
-        {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
-        {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
-    };
-
-    std::vector<Window::VertexAttrib> attributes = {
-        { "position", 3, offsetof(Vertex, position) },
-        { "uv", 2, offsetof(Vertex, uv) },
-        { "normal", 3, offsetof(Vertex, normal) }
-    };
-    // --- *** ---
 
     sol::protected_function lua_update_player = lua["update_player"];
     sol::protected_function lua_update_camera = lua["update_camera"];
@@ -317,6 +295,47 @@ int MTRD::main() {
 
     lua["camera"] = &camera;
     lua["cameraSpeed"] = movSpeed;
+
+    // --
+    for (int y = 0; y < 10; y++) {
+        for (int x = 0; x < 10; x++) {
+            size_t entity = ecs.AddEntity();
+
+            float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
+            MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(entity);
+            t->position = glm::vec3(-3.0f + (y * 0.6), -2.0f + (x * 0.4f), 0.0f);
+            t->rotation = glm::vec3(0.0f);
+            t->scale = glm::vec3(scl);
+
+            MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
+            r->meshes_ = &ObjList[0].meshes;
+            r->materials_ = &ObjList[0].materials;
+
+            MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(entity);
+            m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
+            m->rotation = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1);
+            m->scale = glm::vec3(0.0f);
+        }
+    }
+
+    size_t player = ecs.AddEntity();
+
+    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
+    t->position = glm::vec3(0);
+    t->rotation = glm::vec3(1, 0, 0);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(0.02f);
+
+    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
+    r->meshes_ = &ObjList[1].meshes;
+    r->materials_ = &ObjList[1].materials;
+
+    MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
+    m->position = glm::vec3(0);
+    m->rotation = glm::vec3(0, 0, 1);
+    m->scale = glm::vec3(0.0f);
+    m->shouldConstantMove = false;
+    // --- *** ---
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
@@ -331,73 +350,8 @@ int MTRD::main() {
         }
         else if (firstTime) {
             firstTime = false;
+            eng.windowLoadAllMaterials(ObjList);
 
-            eng.windowLoadAllMaterials(objItemList);
-            if (objItemList.size() == 0) return 1;
-            // --- *** ---
-
-            // --- Create drawable entitys ---
-            ecs.AddComponentType<MTRD::Transform>();
-            ecs.AddComponentType<MTRD::Render>();
-            ecs.AddComponentType<MTRD::Movement>();
-
-            for (int y = 0; y < 10; y++) {
-                for (int x = 0; x < 10; x++) {
-                    size_t entity = ecs.AddEntity();
-
-                    float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
-                    t = ecs.AddComponent<MTRD::Transform>(entity);
-                    t->position = glm::vec3(-3.0f + (y * 0.6), -2.0f + (x * 0.4f), 0.0f);
-                    t->rotation = glm::vec3(0.0f);
-                    t->scale = glm::vec3(scl);
-
-                    r = ecs.AddComponent<MTRD::Render>(entity);
-                    r->shapes = &objItemList[0].shapes;
-                    r->materials = &objItemList[0].materials;
-
-                    m = ecs.AddComponent<MTRD::Movement>(entity);
-                    m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
-                    m->rotation = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1);
-                    m->scale = glm::vec3(0.0f);
-                }
-            }
-
-            size_t player = ecs.AddEntity();
-
-            t = ecs.AddComponent<MTRD::Transform>(player);
-            t->position = glm::vec3(0);
-            t->rotation = glm::vec3(1, 0, 0);
-            t->angleRotationRadians = -1;
-            t->scale = glm::vec3(0.02f);
-
-            r = ecs.AddComponent<MTRD::Render>(player);
-            r->shapes = &objItemList[1].shapes;
-            r->materials = &objItemList[1].materials;
-
-            m = ecs.AddComponent<MTRD::Movement>(player);
-            m->position = glm::vec3(0);
-            m->rotation = glm::vec3(0, 0, 1);
-            m->scale = glm::vec3(0.0f);
-            m->shouldConstantMove = false;
-            // --- *** ---
-
-
-            // --- Load shaders ---
-            const char* vertex_shader = eng.loadShaderFile("../assets/shaders/textured_obj_vertex.txt");
-            const char* fragment_shader = eng.loadShaderFile("../assets/shaders/textured_obj_fragment.txt");
-            // --- *** ---
-
-
-            // --- Setup Window ---
-            eng.windowOpenglSetup(
-                ecs.GetComponentList<Render>(),
-                vertex_shader,
-                fragment_shader,
-                uniforms,
-                attributes
-            );
-            //la ventana no gestiona el shader, el render es el q deberia hacerlo
-            // --- *** ---
         }
 
         // --- Input to move camera ---
@@ -421,17 +375,7 @@ int MTRD::main() {
                 std::cout << "[Lua Error] " << err.what() << std::endl;
             }
         }
-
-
-        // --- update vp ---
-        vp = camera.getViewProj();
-        // --- *** ---
-
-
-        // --- Setup uniforms and draw ---
-        systems.RunRenderSystemWithTraslations(ecs, eng, uniforms, model);
-        // --- *** ---
-
+        //eng.RenderScene(ecs, camera); He comentado esto porq crashea
         eng.windowEndFrame();
 
         frameTime = eng.windowGetLastFrameTime();
