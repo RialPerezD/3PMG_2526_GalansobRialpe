@@ -18,6 +18,11 @@ namespace MTRD {
 
         if (firstTime) {
             glfwMakeContextCurrent(window.getGlfwSecondaryWindow());
+
+            if (debug_) {
+                glCheckError();
+            }
+
             firstTime = false;
         }
 
@@ -89,6 +94,10 @@ namespace MTRD {
     }
 
 
+    void Mesh::RemoveContext() {
+        glfwMakeContextCurrent(NULL);
+    }
+
     void Mesh::GenerateVao() {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
@@ -121,4 +130,6 @@ namespace MTRD {
             }
         }
     }
+
+
 }

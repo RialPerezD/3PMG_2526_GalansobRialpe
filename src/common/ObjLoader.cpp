@@ -92,8 +92,6 @@ namespace MTRD {
 
             int materialId = shape.mesh.material_ids.empty() ? -1 : shape.mesh.material_ids[0];
 
-
-
             objLoader.meshes.emplace_back(Mesh::MeshUniquePtr(
                     vertexes,
                     window,
@@ -105,6 +103,8 @@ namespace MTRD {
             );
             firstTime = false;
         }
+
+        Mesh::RemoveContext();
 
         return objLoader;
     }
