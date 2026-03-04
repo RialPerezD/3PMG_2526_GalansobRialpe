@@ -54,7 +54,9 @@ int MTRD::main() {
 
     Sprite sprite = eng.generateSprite(skullTexture, 1, 1);
     Sprite sprite2 = eng.generateSprite(skullTexture, 25, 0);
-    Sprite sprite3 = eng.generateSprite(tankTexture, 5, 2);
+
+    Sprite animatedSprite = eng.generateSpriteSheet(tankTexture, 5, 64, 64, 3, 4, 3);
+    float animTimer = 0.0f;
 
     TransformComponent* spritTransform = ecs.GetComponent<TransformComponent>(sprite.getId());
     
@@ -69,6 +71,14 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::S)) spritTransform->position.y -= movSpeed;
         if (eng.inputIsKeyPressed(Input::Keyboard::A)) spritTransform->position.x -= movSpeed;
         if (eng.inputIsKeyPressed(Input::Keyboard::D)) spritTransform->position.x += movSpeed;
+        // --- *** ---
+
+        // --- Animate sprite sheet ---
+        animTimer += eng.windowGetLastFrameTime();
+        if (animTimer >= 0.5f) {
+            animatedSprite.nextFrame();
+            animTimer = 0.0f;
+        }
         // --- *** ---
 
         // Generate shadow map

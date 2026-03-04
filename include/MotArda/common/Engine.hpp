@@ -165,6 +165,7 @@ namespace MTRD {
 
 		// TODO , poner en la documentacion que esto inserta un transform y un render components por defecto
 		Sprite& generateSprite(GLuint textureIndex, float size, float deep = 0);
+		Sprite& generateSpriteSheet(GLuint textureIndex, float size, int frameWidth, int frameHeight, int columns, int rows, float deep = 0);
 		//------------
 
 		// --- Utility functions ---

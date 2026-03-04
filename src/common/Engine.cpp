@@ -213,6 +213,40 @@ namespace MTRD {
         return sprite;
     }
 
+    Sprite& MotardaEng::generateSpriteSheet(GLuint textureIndex, float size, int frameWidth, int frameHeight, int columns, int rows, float deep) {
+        if (!initialized2D) {
+            initialized2D = true;
+
+            ecs_.AddComponentType<MTRD::TransformComponent>();
+            ecs_.AddComponentType<MTRD::RenderComponent>();
+        }
+        size_t spriteId = ecs_.AddEntity();
+
+        TransformComponent* t = ecs_.AddComponent<TransformComponent>(spriteId);
+		t->position = glm::vec3(0, 0, 0.1f * deep);
+        t->scale = glm::vec3(size * 0.05f);
+        t->rotation = glm::vec3( 1, 0, 0 );
+        t->angleRotationRadians = 1.5708f;
+
+        RenderComponent* r = ecs_.AddComponent<MTRD::RenderComponent>(spriteId);
+        r->meshes_ = &basePlane_.meshes;
+        r->materials_->emplace_back();
+
+        r->materials_[0][0].diffuseTexID = textureIndex;
+
+        Sprite sprite(spriteId, deep);
+        sprite.setRenderComponent(r);
+        sprite.setFrameSize(frameWidth, frameHeight);
+        
+        int totalFrames = columns * rows;
+        sprite.totalFrames_ = totalFrames;
+        sprite.columns_ = columns;
+        sprite.rows_ = rows;
+        sprite.setFrame(0);
+
+        return sprite;
+    }
+
 
     void MotardaEng::SetRenderType(RenderType type){
         actualRenderType_ = type;

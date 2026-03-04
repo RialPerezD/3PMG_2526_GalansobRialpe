@@ -29,6 +29,8 @@ namespace MTRD {
 	) {
         glUseProgram(program.programId_);
         auto loc = glGetUniformLocation(program.programId_, "diffuseTexture");
+        auto uvOffsetLoc = glGetUniformLocation(program.programId_, "uvOffset");
+        auto uvScaleLoc = glGetUniformLocation(program.programId_, "uvScale");
         program.SetupAtributeLocations(attributes);
 
         for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
@@ -54,6 +56,9 @@ namespace MTRD {
                     glActiveTexture(GL_TEXTURE0);
                     glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
                     glUniform1i(loc, 0);
+
+                    glUniform2f(uvOffsetLoc, mat.uvOffset.x, mat.uvOffset.y);
+                    glUniform2f(uvScaleLoc, mat.uvScale.x, mat.uvScale.y);
 
                     if (debug_) {
                         glCheckError();
