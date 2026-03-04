@@ -27,6 +27,9 @@ namespace MTRD {
         ECSManager& ecs,
         glm::mat4x4& model
 	) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
         glUseProgram(program.programId_);
         auto loc = glGetUniformLocation(program.programId_, "diffuseTexture");
         auto uvOffsetLoc = glGetUniformLocation(program.programId_, "uvOffset");
