@@ -32,7 +32,7 @@ int MTRD::main() {
 
     // --- Camera ---
     MTRD::Camera& camera = eng.getCamera();
-    camera.setPosition(glm::vec3(0, 1, 20));
+    camera.setPosition(glm::vec3(0, 0, 20));
     camera.setTarget(glm::vec3(0.0f, 0.0f, 0.0f));
     float movSpeed = 0.1f;
     // --- *** ---
@@ -50,10 +50,11 @@ int MTRD::main() {
     // --- *** ---
 
     GLuint skullTexture = Texture::LoadTexture("../assets/textures/12140_Skull_v3_L2/Skull.jpg");
+    GLuint tankTexture = Texture::LoadTexture("../assets/textures/tank/tanque.png");
 
     Sprite sprite = eng.generateSprite(skullTexture, 1, 1);
-    Sprite sprite2 = eng.generateSprite(skullTexture, 20, 0);
-    Sprite sprite3 = eng.generateSprite(skullTexture, 10, 2);
+    Sprite sprite2 = eng.generateSprite(skullTexture, 25, 0);
+    Sprite sprite3 = eng.generateSprite(tankTexture, 5, 2);
 
     TransformComponent* spritTransform = ecs.GetComponent<TransformComponent>(sprite.getId());
     
