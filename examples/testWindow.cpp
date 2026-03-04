@@ -11,6 +11,8 @@ int MTRD::main() {
         auto& eng = maybeEng.value();
 
         while (!eng.windowShouldClose()) {
+            eng.windowInitFrame();
+
             eng.windowEndFrame();
         }
 

@@ -84,7 +84,7 @@ namespace MTRD {
 
                     glActiveTexture(GL_TEXTURE0);
                     glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
-                    glUniform1i(loc, 0);
+                    glUniform1i((GLint)loc, 0);
 
                     glUniform3f(glGetUniformLocation(program.programId_, "DIFFUSE"), mat.diffuse.x, mat.diffuse.y, mat.diffuse.z);
                     glUniform3f(glGetUniformLocation(program.programId_, "SPECULAR"), mat.specular.x, mat.specular.y, mat.specular.z);

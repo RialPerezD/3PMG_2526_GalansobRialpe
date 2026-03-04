@@ -32,6 +32,7 @@ namespace MTRD {
         jobSystem_{ std::move(js) },
         vp_ (glm::mat4(1.0f)),
         model_ (glm::mat4(1.0f)),
+        camera_(Camera::CreateCamera(windowGetSizeRatio())),
         debug_ (true)
     {
         input_.generateAsciiMap();
@@ -183,7 +184,7 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::SetRenderType(RenderType type, Camera& camera){
+    void MotardaEng::SetRenderType(RenderType type){
         actualRenderType_ = type;
 
         switch (type) {
@@ -191,18 +192,18 @@ namespace MTRD {
                 renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
                 break;
             case RenderType::Lights:
-                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera.getPosition(), debug_, window_.getWidth(), window_.getHeight());
+                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
                 break;
             case RenderType::LightsWithShadows:
-                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera.getPosition(), debug_, window_.getWidth(), window_.getHeight());
+                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
                 shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
                 break;
 		}
     }
 
 
-    void MotardaEng::RenderScene(ECSManager& ecs, Camera& camera) {
-        vp_ = camera.getViewProj();
+    void MotardaEng::RenderScene() {
+        vp_ = camera_.getViewProj();
 
         switch (actualRenderType_) {
             case RenderType::Base:
@@ -211,7 +212,7 @@ namespace MTRD {
                     return;
                 }
 
-                renderSystem_->Render(ecs, model_);
+                renderSystem_->Render(ecs_, model_);
                 break;
             case RenderType::Lights:
                 if (!renderLightsSystem_) {
@@ -219,7 +220,7 @@ namespace MTRD {
                     return;
                 }
 
-                renderLightsSystem_->Render(ecs, model_);
+                renderLightsSystem_->Render(ecs_, model_);
                 break;
             case RenderType::LightsWithShadows:
                 if (!shadowSystem_ || !renderLightsSystem_) {
@@ -227,10 +228,10 @@ namespace MTRD {
                     return;
                 }
 
-                shadowSystem_->RenderShadowMap(ecs, model_);
+                shadowSystem_->RenderShadowMap(ecs_, model_);
                 renderLightsSystem_->SetShadowMaps(shadowSystem_->getAllDepthMaps());
                 renderLightsSystem_->SetShadowCubemaps(shadowSystem_->getAllDepthCubemaps());
-                renderLightsSystem_->Render(ecs, model_, true);
+                renderLightsSystem_->Render(ecs_, model_, true);
                 break;
         }
 

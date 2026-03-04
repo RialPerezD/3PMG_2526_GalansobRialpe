@@ -70,6 +70,7 @@ public:
 * @brief Class that manages the ECS
 */
 class ECSManager {
+
     /**
     * @brief Maps a type hash (component type) to its corresponding component list.
     * @details Allows generic handling of all component types without knowing T at runtime.

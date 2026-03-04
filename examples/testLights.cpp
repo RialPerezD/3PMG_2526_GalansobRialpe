@@ -227,7 +227,7 @@ int MTRD::main() {
 
 
     // --- Camera ---
-    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
+    MTRD::Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0, 1, 20));
     camera.setTarget(glm::vec3(0.0f, -5.0f, 0.0f));
     float movSpeed = 0.1f;
@@ -236,7 +236,7 @@ int MTRD::main() {
 
     // --- Setup engine info ---
 	eng.SetDebugMode(true);
-	eng.SetRenderType(MotardaEng::RenderType::LightsWithShadows, camera);
+	eng.SetRenderType(MotardaEng::RenderType::LightsWithShadows);
     eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
@@ -251,7 +251,7 @@ int MTRD::main() {
 
 
     // --- Create drawable entitys ---
-    ECSManager ecs;
+    ECSManager& ecs = eng.getEcs();
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
@@ -313,7 +313,7 @@ int MTRD::main() {
         lightComp->spotLights[2].position_ = glm::vec3(-posX * 0.68f, 0.0f, posY * 0.68f) + spotLigthCenter;
         
         // Generate shadow map
-        eng.RenderScene(ecs, camera);
+        eng.RenderScene();
         // --- *** ---
 
         eng.windowEndFrame();

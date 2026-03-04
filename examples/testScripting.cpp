@@ -131,14 +131,14 @@ int MTRD::main() {
     // --- *** ---
  
     // --- Camera ---
-    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
+    MTRD::Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0.f, 1.f, 5.f));
     camera.setTarget(glm::vec3(0.f, 0.f, 0.f));
     // --- *** ---
 
     // --- Setup Engine ---
     eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Base, camera);
+    eng.SetRenderType(MotardaEng::RenderType::Base);
     eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
@@ -275,8 +275,7 @@ int MTRD::main() {
 
 
     // --- Ecs ---
-    ECSManager ecs;
-
+    ECSManager& ecs = eng.getEcs();
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
@@ -347,8 +346,7 @@ int MTRD::main() {
             eng.windowEndFrame();
             continue;
 
-        }
-        else if (firstTime) {
+        } else if (firstTime) {
             firstTime = false;
             eng.windowLoadAllMaterials(ObjList);
 
@@ -367,6 +365,9 @@ int MTRD::main() {
         // --- *** ---
 
 
+        eng.RenderScene();
+
+
         // --- Input to move player ---
         if (lua_update_player.valid()) {
             sol::protected_function_result r = lua_update_player(m);
@@ -375,11 +376,8 @@ int MTRD::main() {
                 std::cout << "[Lua Error] " << err.what() << std::endl;
             }
         }
-        //eng.RenderScene(ecs, camera); He comentado esto porq crashea
-        eng.windowEndFrame();
 
-        frameTime = eng.windowGetLastFrameTime();
-        //printf("Last frame time: %.4f secs\n", frameTime);
+        eng.windowEndFrame();
     }
 
     return 0;

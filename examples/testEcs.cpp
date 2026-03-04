@@ -28,7 +28,7 @@ int MTRD::main() {
 
 
     // --- Camera ---
-    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
+    MTRD::Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0, 1, 20));
     camera.setTarget(glm::vec3(0.0f, -5.0f, 0.0f));
     float movSpeed = 0.1f;
@@ -37,7 +37,7 @@ int MTRD::main() {
 
     // --- Setup engine info ---
     eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Base, camera);
+    eng.SetRenderType(MotardaEng::RenderType::Base);
     eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
@@ -50,7 +50,7 @@ int MTRD::main() {
 
 
     // --- Create drawable entitys ---
-    ECSManager ecs;
+    ECSManager& ecs = eng.getEcs();
 
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
@@ -92,7 +92,7 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.rotate(-10.0f, 0.0f);
         // --- *** ---
 
-		eng.RenderScene(ecs, camera);
+		eng.RenderScene();
 
         eng.windowEndFrame();
     }

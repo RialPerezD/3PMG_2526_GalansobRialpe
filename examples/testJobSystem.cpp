@@ -24,14 +24,14 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Camera ---
-    MTRD::Camera camera = MTRD::Camera::CreateCamera(eng.windowGetSizeRatio());
+    MTRD::Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0.f, 1.f, 5.f));
     camera.setTarget(glm::vec3(0.f, 0.f, 0.f));
     // --- *** ---
 
     // --- Setup Engine ---
     eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Base, camera);
+    eng.SetRenderType(MotardaEng::RenderType::Base);
     eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
@@ -43,8 +43,7 @@ int MTRD::main() {
     ObjList.push_back(ObjItem());
 
     // --- Ecs ---
-    ECSManager ecs;
-
+    ECSManager& ecs = eng.getEcs();
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
@@ -127,7 +126,7 @@ int MTRD::main() {
         else if (eng.inputIsKeyPressed(Input::Keyboard::X)) t->scale += scaSpeed;
         // --- *** ---
         
-        eng.RenderScene(ecs, camera);
+        eng.RenderScene();
 
         // --- Cambiar objeto si es necesario ---
         if (needChangeObj) {

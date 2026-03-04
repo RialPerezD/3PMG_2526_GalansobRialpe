@@ -164,6 +164,13 @@ namespace MTRD {
 		
 		//------------
 
+		// --- Utility functions ---
+
+		Camera& getCamera() { return camera_; }
+		ECSManager& getEcs() { return ecs_; }
+
+		// --- *** ---
+
 		// --- Render Information ---
 		enum RenderType {
 			Base,
@@ -171,9 +178,9 @@ namespace MTRD {
 			LightsWithShadows
 		};
 
-		void SetRenderType(RenderType type, Camera& camera);
+		void SetRenderType(RenderType type);
 
-		void RenderScene(ECSManager& ecs, Camera& camera);
+		void RenderScene();
 
 		//------------
 
@@ -195,6 +202,9 @@ namespace MTRD {
 		Input input_;
 		//< Object of JobSystem class.
 		JobSystem jobSystem_;
+
+		Camera camera_;
+		ECSManager ecs_;
 
 
 		// --- Render Information ---
