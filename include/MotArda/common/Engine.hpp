@@ -9,6 +9,7 @@
 #include <MotArda/win64/Systems/ShadowMapSystem.hpp>
 #include <MotArda/win64/Systems/RenderSystem.hpp>
 #include "Camera.hpp"
+#include "Sprite.hpp"
 
 namespace MTRD {
 
@@ -161,11 +162,11 @@ namespace MTRD {
 		ObjItem generateCube(float size, int texureId = 0, bool debug = true);
 		ObjItem generatePlane(float width, float height, int texureId = 0, bool debug = true);
 		ObjItem generateSphere(float radius, int segments, int rings, int texureId = 0, bool debug = true);
-		
+
+		Sprite generateSprite(const char* spriteRoute, float size);
 		//------------
 
 		// --- Utility functions ---
-
 		Camera& getCamera() { return camera_; }
 		ECSManager& getEcs() { return ecs_; }
 
@@ -175,7 +176,8 @@ namespace MTRD {
 		enum RenderType {
 			Base,
 			Lights,
-			LightsWithShadows
+			LightsWithShadows,
+			Bidimensional
 		};
 
 		void SetRenderType(RenderType type);
@@ -215,6 +217,9 @@ namespace MTRD {
 		std::unique_ptr<RenderLightsSystem> renderLightsSystem_;
 		std::unique_ptr<ShadowMapSystem> shadowSystem_;
 		RenderType actualRenderType_ = RenderType::Base;
+
+		bool initialized2D;
+		ObjItem basePlane_;
 		// --- *** ---
 	};
 }

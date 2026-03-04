@@ -2,13 +2,13 @@
 
 namespace MTRD {
     Material::Material() {
-        name = "";
-        diffuse = glm::vec3(0.0f);
-        specular = glm::vec3(0.0f);
-        ambient = glm::vec3(0.0f);
-        shininess = 0.0f;
+        name = "DefaultText";
+        diffuse = glm::vec3(1.0f);
+        specular = glm::vec3(1.0f);
+        ambient = glm::vec3(0.2f);
+        shininess = 32.0f;
 
-        loadeable = false;
+        loadeable = true;
 
         diffuseTexPath = "";
         diffuseTexID = GL_INVALID_INDEX;

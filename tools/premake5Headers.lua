@@ -58,7 +58,13 @@ workspace "MotArda"
 	cppdialect "c++20"
 	startproject "Window"
 
-	includedirs {"include", "deps/**/include/"}
+	includedirs {
+		"include",
+		"deps/**/include",
+		"deps/**/src",
+		"deps",
+		"deps/imgui/"
+		}
 
 	filter "configurations:Debug"
 		defines { "DEBUG" }
@@ -82,9 +88,14 @@ workspace "MotArda"
 	project "MotArda"
 		kind "StaticLib"
 		language "C++"
-		targetdir "lib/%{prj.name}/%{cfg.buildcfg}"
+		targetdir "stage/%{prj.name}/%{cfg.buildcfg}"
 		objdir "build/obj/%{prj.name}/%{cfg.buildcfg}"
 		conan_config_lib()
+		postbuildcommands {
+            "{COPYDIR} ../deps ../stage/deps",
+            "{COPYDIR} ../assets ../stage/assets",
+            "{COPYDIR} ../doc ../stage/doc"
+        }
 
 		files{
 			"premake5.lua",
@@ -96,7 +107,8 @@ workspace "MotArda"
 			"src/win64/*.cpp", "include/MotArda/win64/*.hpp",
 			"src/win64/Systems/*.cpp", "include/MotArda/win64/Systems/*.hpp",
 
-			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h"
+			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h",
+			"deps/imgui/*.cpp"
 		}
 
 	project "TestWindowExample"
@@ -178,3 +190,27 @@ workspace "MotArda"
 		conan_config_exec()
 		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
 		files "examples/testLights.cpp"
+
+	project "TestImgui"
+		kind "ConsoleApp"
+		language "C++"
+		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
+		includedirs "include"
+		links "MotArda"
+		conan_config_exec("Debug")
+		conan_config_exec("Release")
+		conan_config_exec("RelWithDebInfo")
+		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
+		files "examples/testImgui.cpp"
+
+	project "Test2D"
+		kind "ConsoleApp"
+		language "C++"
+		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
+		includedirs "include"
+		links "MotArda"
+		conan_config_exec("Debug")
+		conan_config_exec("Release")
+		conan_config_exec("RelWithDebInfo")
+		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
+		files "examples/test2D.cpp"

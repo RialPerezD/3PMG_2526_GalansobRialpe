@@ -171,7 +171,7 @@ namespace MTRD {
         * @brief openglViewportAndClear.
         * @details Clears the buffer of the window
         */
-        void openglViewportAndClear();
+        void viewportAndClear();
         /**
         * @brief openglLoadMaterials.
         * @param std::vector<Material>& materials Material for a render.
@@ -179,7 +179,7 @@ namespace MTRD {
         * configuration is setted, adn finally, the different channels are read
         * and the texture is generated.
         */
-        void openglLoadMaterials(std::vector<Material>& materials);
+        void loadMaterials(std::vector<Material>& materials);
 
 
         void imGuiRender();

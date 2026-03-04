@@ -144,7 +144,7 @@ namespace MTRD {
     }
 
 
-    void Window::openglViewportAndClear() {
+    void Window::viewportAndClear() {
         glViewport(0, 0, windowWidth_, windowHeight_);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -158,7 +158,7 @@ namespace MTRD {
     }
 
 
-    void Window::openglLoadMaterials(std::vector<Material>& materials) {
+    void Window::loadMaterials(std::vector<Material>& materials) {
         std::unordered_map<std::string, GLuint> textureCache;
 
         for (auto& mat : materials) {

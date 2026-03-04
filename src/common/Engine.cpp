@@ -33,6 +33,8 @@ namespace MTRD {
         vp_ (glm::mat4(1.0f)),
         model_ (glm::mat4(1.0f)),
         camera_(Camera::CreateCamera(windowGetSizeRatio())),
+        initialized2D (false),
+        basePlane_ (std::move(generatePlane(20, 20))),
         debug_ (true)
     {
         input_.generateAsciiMap();
@@ -73,13 +75,13 @@ namespace MTRD {
 
 
     void MotardaEng::windowInitFrame() {
-        window_.openglViewportAndClear();
+        window_.viewportAndClear();
     }
 
 
     void MotardaEng::windowLoadAllMaterials(std::vector<ObjItem>& objItemsList){
         for (ObjItem& item : objItemsList) {
-            window_.openglLoadMaterials(item.materials);
+            window_.loadMaterials(item.materials);
         }
     }
 
@@ -184,6 +186,31 @@ namespace MTRD {
     }
 
 
+    Sprite MotardaEng::generateSprite(const char* spriteRoute, float size) {
+
+        if (!initialized2D) {
+            initialized2D = true;
+
+            ecs_.AddComponentType<MTRD::TransformComponent>();
+            ecs_.AddComponentType<MTRD::RenderComponent>();
+        }
+        size_t spriteId = ecs_.AddEntity();
+
+        TransformComponent* t = ecs_.AddComponent<TransformComponent>(spriteId);
+        t->scale = glm::vec3(size);
+
+        RenderComponent* r = ecs_.AddComponent<MTRD::RenderComponent>(spriteId);
+        r->meshes_ = &basePlane_.meshes;
+        r->materials_->emplace_back();
+
+        r->materials_[0][0].name = "blank";
+        r->materials_[0][0].diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        window_.loadMaterials(r->materials_[0]);
+
+        return std::move(Sprite::GenerateSprite(spriteRoute, spriteId));
+    }
+
+
     void MotardaEng::SetRenderType(RenderType type){
         actualRenderType_ = type;
 
@@ -197,6 +224,9 @@ namespace MTRD {
             case RenderType::LightsWithShadows:
                 renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
                 shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
+                break;
+            case RenderType::Bidimensional:
+                renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
                 break;
 		}
     }
@@ -232,6 +262,14 @@ namespace MTRD {
                 renderLightsSystem_->SetShadowMaps(shadowSystem_->getAllDepthMaps());
                 renderLightsSystem_->SetShadowCubemaps(shadowSystem_->getAllDepthCubemaps());
                 renderLightsSystem_->Render(ecs_, model_, true);
+                break;
+            case RenderType::Bidimensional:
+                if (!renderSystem_) {
+                    printf("There are no 2d render system");
+                    return;
+                }
+
+                renderSystem_->Render(ecs_, model_);
                 break;
         }
 
