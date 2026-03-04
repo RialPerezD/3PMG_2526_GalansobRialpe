@@ -150,7 +150,6 @@ int MTRD::main() {
     std::atomic<bool> objsLoaded = false;
 
     std::vector<ObjItem> ObjList;
-    ObjList.push_back(ObjItem());
     // --- *** ---
 
     sol::state lua;
@@ -284,8 +283,6 @@ int MTRD::main() {
     float frameTime = 0;
     bool firstTime = true;
 
-    glm::mat4x4 vp, model;
-
 
     sol::protected_function lua_update_player = lua["update_player"];
     sol::protected_function lua_update_camera = lua["update_camera"];
@@ -296,44 +293,44 @@ int MTRD::main() {
     lua["cameraSpeed"] = movSpeed;
 
     // --
-    for (int y = 0; y < 10; y++) {
-        for (int x = 0; x < 10; x++) {
-            size_t entity = ecs.AddEntity();
+    //for (int y = 0; y < 10; y++) {
+    //    for (int x = 0; x < 10; x++) {
+    //        size_t entity = ecs.AddEntity();
 
-            float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
-            MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(entity);
-            t->position = glm::vec3(-3.0f + (y * 0.6), -2.0f + (x * 0.4f), 0.0f);
-            t->rotation = glm::vec3(0.0f);
-            t->scale = glm::vec3(scl);
+    //        float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
+    //        MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(entity);
+    //        t->position = glm::vec3(-3.0f + (y * 0.6), -2.0f + (x * 0.4f), 0.0f);
+    //        t->rotation = glm::vec3(0.0f);
+    //        t->scale = glm::vec3(scl);
 
-            MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
-            r->meshes_ = &ObjList[0].meshes;
-            r->materials_ = &ObjList[0].materials;
+    //        MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
+    //        r->meshes_ = &ObjList[0].meshes;
+    //        r->materials_ = &ObjList[0].materials;
 
-            MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(entity);
-            m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
-            m->rotation = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1);
-            m->scale = glm::vec3(0.0f);
-        }
-    }
+    //        MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(entity);
+    //        m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
+    //        m->rotation = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1);
+    //        m->scale = glm::vec3(0.0f);
+    //    }
+    //}
 
     size_t player = ecs.AddEntity();
 
-    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
-    t->position = glm::vec3(0);
-    t->rotation = glm::vec3(1, 0, 0);
-    t->angleRotationRadians = -1;
-    t->scale = glm::vec3(0.02f);
+    MTRD::TransformComponent* Pt = ecs.AddComponent<MTRD::TransformComponent>(player);
+    Pt->position = glm::vec3(0);
+    Pt->rotation = glm::vec3(1, 0, 0);
+    Pt->angleRotationRadians = -1;
+    Pt->scale = glm::vec3(0.02f);
 
-    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
-    r->meshes_ = &ObjList[1].meshes;
-    r->materials_ = &ObjList[1].materials;
+    //MTRD::RenderComponent* Pr = ecs.AddComponent<MTRD::RenderComponent>(player);
+    //Pr->meshes_ = &ObjList[1].meshes;
+    //Pr->materials_ = &ObjList[1].materials;
 
-    MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
-    m->position = glm::vec3(0);
-    m->rotation = glm::vec3(0, 0, 1);
-    m->scale = glm::vec3(0.0f);
-    m->shouldConstantMove = false;
+    MTRD::MovementComponent* Pm = ecs.AddComponent<MTRD::MovementComponent>(player);
+    Pm->position = glm::vec3(0);
+    Pm->rotation = glm::vec3(0, 0, 1);
+    Pm->scale = glm::vec3(0.0f);
+    Pm->shouldConstantMove = false;
     // --- *** ---
 
     // --- Main window bucle ---
@@ -350,6 +347,30 @@ int MTRD::main() {
             firstTime = false;
             eng.windowLoadAllMaterials(ObjList);
 
+            for (int y = 0; y < 10; y++) {
+                for (int x = 0; x < 10; x++) {
+                    size_t entity = ecs.AddEntity();
+
+                    float scl = 0.01f + rand() / (float)RAND_MAX * 0.06f;
+                    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(entity);
+                    t->position = glm::vec3(-3.0f + (y * 0.6), -2.0f + (x * 0.4f), 0.0f);
+                    t->rotation = glm::vec3(0.0f);
+                    t->scale = glm::vec3(scl);
+
+                    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
+                    r->meshes_ = &ObjList[0].meshes;
+                    r->materials_ = &ObjList[0].materials;
+
+                    MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(entity);
+                    m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
+                    m->rotation = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1);
+                    m->scale = glm::vec3(0.0f);
+                }
+            }
+
+            MTRD::RenderComponent* Pr = ecs.AddComponent<MTRD::RenderComponent>(player);
+            Pr->meshes_ = &ObjList[1].meshes;
+            Pr->materials_ = &ObjList[1].materials;
         }
 
         // --- Input to move camera ---
@@ -370,7 +391,7 @@ int MTRD::main() {
 
         // --- Input to move player ---
         if (lua_update_player.valid()) {
-            sol::protected_function_result r = lua_update_player(m);
+            sol::protected_function_result r = lua_update_player(Pm);
             if (!r.valid()) {
                 sol::error err = r;
                 std::cout << "[Lua Error] " << err.what() << std::endl;
