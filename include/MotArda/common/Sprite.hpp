@@ -10,11 +10,12 @@ namespace MTRD {
     class Sprite {
         Sprite(const char* spriteRoute, size_t ecsEntityIdentifyer_);
 
-        int layer_;
+        float layer_;
+        size_t ecsEntityIdentifyer_;
 
     public:
-        static Sprite GenerateSprite(const char* spriteRoute, size_t ecsEntityIdentifyer_);
+        Sprite(size_t ecsEntityIdentifyer, float layer);
 
-        size_t ecsEntityIdentifyer_;
+        size_t getId() { return ecsEntityIdentifyer_; }
     };
 }

@@ -186,7 +186,7 @@ namespace MTRD {
     }
 
 
-    size_t MotardaEng::generateSprite(GLuint textureIndex, float size) {
+    Sprite& MotardaEng::generateSprite(GLuint textureIndex, float size, float deep) {
 
         if (!initialized2D) {
             initialized2D = true;
@@ -197,6 +197,7 @@ namespace MTRD {
         size_t spriteId = ecs_.AddEntity();
 
         TransformComponent* t = ecs_.AddComponent<TransformComponent>(spriteId);
+		t->position = glm::vec3(0, 0, 0.1f * deep);
         t->scale = glm::vec3(size * 0.05f);
         t->rotation = glm::vec3( 1, 0, 0 );
         t->angleRotationRadians = 1.5708f;
@@ -207,7 +208,9 @@ namespace MTRD {
 
         r->materials_[0][0].diffuseTexID = textureIndex;
 
-        return spriteId;
+		Sprite sprite(spriteId, deep);
+
+        return sprite;
     }
 
 

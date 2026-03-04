@@ -164,7 +164,7 @@ namespace MTRD {
 		ObjItem generateSphere(float radius, int segments, int rings, int texureId = 0, bool debug = true);
 
 		// TODO , poner en la documentacion que esto inserta un transform y un render components por defecto
-		size_t generateSprite(GLuint textureIndex, float size);
+		Sprite& generateSprite(GLuint textureIndex, float size, float deep = 0);
 		//------------
 
 		// --- Utility functions ---

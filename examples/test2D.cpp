@@ -50,8 +50,12 @@ int MTRD::main() {
     // --- *** ---
 
     GLuint skullTexture = Texture::LoadTexture("../assets/textures/12140_Skull_v3_L2/Skull.jpg");
-    GLuint sprite = eng.generateSprite(skullTexture, 1);
-    TransformComponent* spritTransform = ecs.GetComponent<TransformComponent>(sprite);
+
+    Sprite sprite = eng.generateSprite(skullTexture, 1, 1);
+    Sprite sprite2 = eng.generateSprite(skullTexture, 20, 0);
+    Sprite sprite3 = eng.generateSprite(skullTexture, 10, 2);
+
+    TransformComponent* spritTransform = ecs.GetComponent<TransformComponent>(sprite.getId());
     
 
     // --- Main window bucle ---
