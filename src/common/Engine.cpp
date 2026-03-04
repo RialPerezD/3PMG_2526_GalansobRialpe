@@ -186,7 +186,7 @@ namespace MTRD {
     }
 
 
-    Sprite MotardaEng::generateSprite(const char* spriteRoute, float size) {
+    size_t MotardaEng::generateSprite(GLuint textureIndex, float size) {
 
         if (!initialized2D) {
             initialized2D = true;
@@ -197,17 +197,17 @@ namespace MTRD {
         size_t spriteId = ecs_.AddEntity();
 
         TransformComponent* t = ecs_.AddComponent<TransformComponent>(spriteId);
-        t->scale = glm::vec3(size);
+        t->scale = glm::vec3(size * 0.05f);
+        t->rotation = glm::vec3( 1, 0, 0 );
+        t->angleRotationRadians = 1.5708f;
 
         RenderComponent* r = ecs_.AddComponent<MTRD::RenderComponent>(spriteId);
         r->meshes_ = &basePlane_.meshes;
         r->materials_->emplace_back();
 
-        r->materials_[0][0].name = "blank";
-        r->materials_[0][0].diffuseTexPath = "../assets/textures/blank/blank.jpg";
-        window_.loadMaterials(r->materials_[0]);
+        r->materials_[0][0].diffuseTexID = textureIndex;
 
-        return std::move(Sprite::GenerateSprite(spriteRoute, spriteId));
+        return spriteId;
     }
 
 

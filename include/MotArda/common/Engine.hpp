@@ -163,7 +163,8 @@ namespace MTRD {
 		ObjItem generatePlane(float width, float height, int texureId = 0, bool debug = true);
 		ObjItem generateSphere(float radius, int segments, int rings, int texureId = 0, bool debug = true);
 
-		Sprite generateSprite(const char* spriteRoute, float size);
+		// TODO , poner en la documentacion que esto inserta un transform y un render components por defecto
+		size_t generateSprite(GLuint textureIndex, float size);
 		//------------
 
 		// --- Utility functions ---

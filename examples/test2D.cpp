@@ -9,6 +9,7 @@
 #include <MotArda/common/Systems/TraslationSystem.hpp>
 #include <MotArda/win64/Systems/RenderLightsSystem.hpp>
 #include <MotArda/win64/Systems/ShadowMapSystem.hpp>
+#include <MotArda/win64/Texture.hpp>
 
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
@@ -29,6 +30,14 @@ int MTRD::main() {
     // --- *** ---
 
 
+    // --- Camera ---
+    MTRD::Camera& camera = eng.getCamera();
+    camera.setPosition(glm::vec3(0, 1, 20));
+    camera.setTarget(glm::vec3(0.0f, 0.0f, 0.0f));
+    float movSpeed = 0.1f;
+    // --- *** ---
+
+
     // --- Setup engine info ---
     eng.SetDebugMode(true);
     eng.SetRenderType(MotardaEng::RenderType::Bidimensional);
@@ -40,13 +49,22 @@ int MTRD::main() {
     ECSManager& ecs = eng.getEcs();
     // --- *** ---
 
-    Sprite sprite = eng.generateSprite("", 1);
+    GLuint skullTexture = Texture::LoadTexture("../assets/textures/12140_Skull_v3_L2/Skull.jpg");
+    GLuint sprite = eng.generateSprite(skullTexture, 1);
+    TransformComponent* spritTransform = ecs.GetComponent<TransformComponent>(sprite);
     
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
 
         eng.windowInitFrame();
+
+        // --- Input to move camera ---
+        if (eng.inputIsKeyPressed(Input::Keyboard::W)) spritTransform->position.y += movSpeed;
+        if (eng.inputIsKeyPressed(Input::Keyboard::S)) spritTransform->position.y -= movSpeed;
+        if (eng.inputIsKeyPressed(Input::Keyboard::A)) spritTransform->position.x -= movSpeed;
+        if (eng.inputIsKeyPressed(Input::Keyboard::D)) spritTransform->position.x += movSpeed;
+        // --- *** ---
 
         // Generate shadow map
         eng.RenderScene();

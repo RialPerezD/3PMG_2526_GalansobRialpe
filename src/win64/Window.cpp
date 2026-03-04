@@ -10,10 +10,6 @@
 #include <MotArda/common/Engine.hpp>
 #include <MotArda/win64/Debug.hpp>
 
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "../deps/stb_image.h" 
-
 namespace MTRD {
     Window::~Window() {
         if (glfw_window) {
@@ -163,76 +159,18 @@ namespace MTRD {
 
         for (auto& mat : materials) {
             if (!mat.diffuseTexPath.empty()) {
-                
-                std::string route = mat.diffuseTexPath;
 
-                std::string key(route);
+                std::string key(mat.diffuseTexPath);
                 if (textureCache.find(key) != textureCache.end()) {
                     mat.diffuseTexID = textureCache[key];
                     continue;
                 }
 
                 GLuint tex = -1;
-                glGenTextures(1, &tex);
-                glBindTexture(GL_TEXTURE_2D, tex);
-
-                if (debug_) {
-                    glCheckError();
-                }
-
-                // Configuracion basica de la textura
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-                if (debug_) {
-                    glCheckError();
-                }
-
-                int width, height, channels;
-                stbi_set_flip_vertically_on_load(true); // Invierte verticalmente para OpenGL
-                unsigned char* data = stbi_load(route.c_str(), &width, &height, &channels, 0);
-
-                if (!data) {
-                    std::cerr << "Error cargando textura: " << route << std::endl;
-                    mat.diffuseTexID = -1; // -1 significa sin textura
-                    continue;
-                }
-
-                GLenum format;
-
-                switch (channels) {
-                case 1:
-                    format = GL_RED;
-                    break;
-                case 3:
-                    format = GL_RGB;
-                    break;
-                case 4:
-                    format = GL_RGBA;
-                    break;
-                default:
-                    format = GL_RGB;
-                    break;
-                }
-
-                glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-                glGenerateMipmap(GL_TEXTURE_2D);
-
-                if (debug_) {
-                    glCheckError();
-                }
-
-                stbi_image_free(data);
-
-                if (debug_) {
-                    glCheckError();
-                }
+                tex = Texture::LoadTexture(mat.diffuseTexPath.c_str(), debug_);
 
                 textureCache[key] = tex; // Guardamos la textura en la cache
                 mat.diffuseTexID = tex;
-                continue;
             }
         }
     }
