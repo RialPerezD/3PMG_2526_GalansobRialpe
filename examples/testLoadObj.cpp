@@ -38,7 +38,7 @@ int MTRD::main() {
     std::atomic<bool> objsLoaded = false;
 
     std::vector<ObjItem> ObjList;
-    ObjList.push_back(ObjItem());
+//TODO: Borrar en todos los demostradores:   ObjList.push_back(ObjItem());
 
 
     // --- Ecs ---
