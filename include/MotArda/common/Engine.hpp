@@ -10,6 +10,7 @@
 #include <MotArda/win64/Systems/RenderSystem.hpp>
 #include "Camera.hpp"
 #include "Sprite.hpp"
+#include <MotArda/win64/Systems/RenderDefferredSystem.hpp>
 
 namespace MTRD {
 
@@ -179,7 +180,8 @@ namespace MTRD {
 			Base,
 			Lights,
 			LightsWithShadows,
-			Bidimensional
+			Bidimensional,
+			Deferred
 		};
 
 		void SetRenderType(RenderType type);
@@ -218,6 +220,7 @@ namespace MTRD {
 		std::unique_ptr<RenderSystem> renderSystem_;
 		std::unique_ptr<RenderLightsSystem> renderLightsSystem_;
 		std::unique_ptr<ShadowMapSystem> shadowSystem_;
+		std::unique_ptr<RenderDefferredSystem> defferredSystem_;
 		RenderType actualRenderType_ = RenderType::Base;
 
 		bool initialized2D;

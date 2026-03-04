@@ -111,106 +111,20 @@ workspace "MotArda"
 			"deps/imgui/*.cpp"
 		}
 
-	project "TestWindowExample"
-		kind "ConsoleApp"
-		language "C++"
-		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
-		includedirs "include"
-		links "MotArda"
-		conan_config_exec()
-		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/testWindow.cpp"
+    local example_files = os.matchfiles("examples/*.cpp")
 
-	project "TestTriangleExample"
-		kind "ConsoleApp"
-		language "C++"
-		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
-		includedirs "include"
-		links "MotArda"
-		conan_config_exec()
-		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/testTriangle.cpp"
+    for _, filepath in ipairs(example_files) do
+        local projectName = path.getbasename(filepath)
 
-	project "TestMovingTriangleExample"
-		kind "ConsoleApp"
-		language "C++"
-		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
-		includedirs "include"
-		links "MotArda"
-		conan_config_exec()
-		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/testMovTriangle.cpp"
-
-	project "TestObjLoaderExample"
-		kind "ConsoleApp"
-		language "C++"
-		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
-		includedirs "include"
-		links "MotArda"
-		conan_config_exec()
-		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/testLoadObj.cpp"
-
-	project "TestJobSystemExample"
-		kind "ConsoleApp"
-		language "C++"
-		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
-		includedirs "include"
-		links "MotArda"
-		conan_config_exec()
-		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/testJobSystem.cpp"
-
-	project "TestEcsExample"
-		kind "ConsoleApp"
-		language "C++"
-		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
-		includedirs "include"
-		links "MotArda"
-		conan_config_exec()
-		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/testEcs.cpp"
-
-	project "TestScripting"
-		kind "ConsoleApp"
-		language "C++"
-		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
-		includedirs "include"
-		links "MotArda"
-		conan_config_exec()
-		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/testScripting.cpp"
-
-	project "TestLights"
-		kind "ConsoleApp"
-		language "C++"
-		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
-		includedirs "include"
-		links "MotArda"
-		conan_config_exec()
-		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/testLights.cpp"
-
-	project "TestImgui"
-		kind "ConsoleApp"
-		language "C++"
-		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
-		includedirs "include"
-		links "MotArda"
-		conan_config_exec("Debug")
-		conan_config_exec("Release")
-		conan_config_exec("RelWithDebInfo")
-		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/testImgui.cpp"
-
-	project "Test2D"
-		kind "ConsoleApp"
-		language "C++"
-		targetdir "build/%{prj.name}/%{cfg.buildcfg}"
-		includedirs "include"
-		links "MotArda"
-		conan_config_exec("Debug")
-		conan_config_exec("Release")
-		conan_config_exec("RelWithDebInfo")
-		debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
-		files "examples/test2D.cpp"
+        project (projectName)
+            kind "ConsoleApp"
+            language "C++"
+            targetdir ("build/" .. projectName .. "/%{cfg.buildcfg}")
+            includedirs "include"
+            links "MotArda"
+            
+            conan_config_exec()
+            
+            debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
+            files { filepath }
+    end

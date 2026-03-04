@@ -308,6 +308,8 @@ namespace MTRD {
 
                 renderSystem_->Render(ecs_, model_);
                 break;
+			case RenderType::Deferred:
+				break;
         }
 
         window_.imGuiRender();

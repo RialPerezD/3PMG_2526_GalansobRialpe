@@ -4,6 +4,8 @@ uniform vec3 DIFFUSE;
 uniform vec3 SPECULAR;
 uniform vec3 AMBIENT;
 uniform sampler2D diffuseTexture;
+uniform vec2 uvOffset = vec2(0.0, 0.0);
+uniform vec2 uvScale = vec2(1.0, 1.0);
 
 in vec3 fragNormal;
 in vec3 fragPosition;
@@ -12,8 +14,12 @@ in vec2 fragTexCoords;
 out vec4 fragColor;
 
 void main() {
-    // Color base de la textura
-    vec3 texColor = texture(diffuseTexture, fragTexCoords).rgb;
+    vec2 transformedUV = fragTexCoords * uvScale + uvOffset;
+    vec4 texColor = texture(diffuseTexture, transformedUV);
 
-    fragColor = vec4(texColor, 1.0);
+    if (texColor.a < 0.1) {
+        discard;
+    }
+
+    fragColor = texColor;
 }
