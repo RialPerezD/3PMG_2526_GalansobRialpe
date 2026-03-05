@@ -141,6 +141,7 @@ namespace MTRD {
 
 
     void Window::viewportAndClear() {
+        glGetError();
         glViewport(0, 0, windowWidth_, windowHeight_);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

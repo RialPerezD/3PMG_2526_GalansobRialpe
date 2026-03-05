@@ -181,7 +181,7 @@ namespace MTRD {
 			Lights,
 			LightsWithShadows,
 			Bidimensional,
-			Deferred
+			DeferredWithLights
 		};
 
 		void SetRenderType(RenderType type);

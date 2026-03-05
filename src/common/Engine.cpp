@@ -265,7 +265,7 @@ namespace MTRD {
             case RenderType::Bidimensional:
                 renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
                 break;
-            case RenderType::Deferred:
+            case RenderType::DeferredWithLights:
                 defferredSystem_ = std::make_unique<RenderDefferredSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
                 shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
                 break;
@@ -312,7 +312,7 @@ namespace MTRD {
             renderSystem_->Render(ecs_, model_);
             break;
 
-        case RenderType::Deferred:
+        case RenderType::DeferredWithLights:
             if (!defferredSystem_) {
                 printf("There are no deferred render system");
                 return;

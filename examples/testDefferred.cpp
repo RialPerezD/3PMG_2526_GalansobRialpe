@@ -236,7 +236,7 @@ int MTRD::main() {
 
     // --- Setup engine info ---
 	eng.SetDebugMode(true);
-	eng.SetRenderType(MotardaEng::RenderType::Deferred);
+	eng.SetRenderType(MotardaEng::RenderType::DeferredWithLights);
     eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
