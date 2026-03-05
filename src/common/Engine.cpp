@@ -267,6 +267,7 @@ namespace MTRD {
                 break;
             case RenderType::Deferred:
                 defferredSystem_ = std::make_unique<RenderDefferredSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
+                shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
                 break;
 		}
     }
@@ -276,49 +277,53 @@ namespace MTRD {
         vp_ = camera_.getViewProj();
 
         switch (actualRenderType_) {
-            case RenderType::Base:
-                if (!renderSystem_) {
-                    printf("There are no render system");
-                    return;
-                }
+        case RenderType::Base:
+            if (!renderSystem_) {
+                printf("There are no render system");
+                return;
+            }
+            renderSystem_->Render(ecs_, model_);
+            break;
 
-                renderSystem_->Render(ecs_, model_);
-                break;
-            case RenderType::Lights:
-                if (!renderLightsSystem_) {
-                    printf("There are no light render system");
-                    return;
-                }
+        case RenderType::Lights:
+            if (!renderLightsSystem_) {
+                printf("There are no light render system");
+                return;
+            }
+            renderLightsSystem_->Render(ecs_, model_);
+            break;
 
-                renderLightsSystem_->Render(ecs_, model_);
-                break;
-            case RenderType::LightsWithShadows:
-                if (!shadowSystem_ || !renderLightsSystem_) {
-                    printf("There are no light or shadow render system");
-                    return;
-                }
+        case RenderType::LightsWithShadows:
+            if (!shadowSystem_ || !renderLightsSystem_) {
+                printf("There are no light or shadow render system");
+                return;
+            }
+            shadowSystem_->RenderShadowMap(ecs_, model_);
+            renderLightsSystem_->SetShadowMaps(shadowSystem_->getAllDepthMaps());
+            renderLightsSystem_->SetShadowCubemaps(shadowSystem_->getAllDepthCubemaps());
+            renderLightsSystem_->Render(ecs_, model_, true);
+            break;
 
-                shadowSystem_->RenderShadowMap(ecs_, model_);
-                renderLightsSystem_->SetShadowMaps(shadowSystem_->getAllDepthMaps());
-                renderLightsSystem_->SetShadowCubemaps(shadowSystem_->getAllDepthCubemaps());
-                renderLightsSystem_->Render(ecs_, model_, true);
-                break;
-            case RenderType::Bidimensional:
-                if (!renderSystem_) {
-                    printf("There are no 2d render system");
-                    return;
-                }
+        case RenderType::Bidimensional:
+            if (!renderSystem_) {
+                printf("There are no 2d render system");
+                return;
+            }
+            renderSystem_->Render(ecs_, model_);
+            break;
 
-                renderSystem_->Render(ecs_, model_);
-                break;
-			case RenderType::Deferred:
-				if (!defferredSystem_) {
-					printf("There are no deferred render system");
-					return;
-				}
+        case RenderType::Deferred:
+            if (!defferredSystem_) {
+                printf("There are no deferred render system");
+                return;
+            }
+            shadowSystem_->RenderShadowMap(ecs_, model_);
 
-				defferredSystem_->Render(ecs_, model_);
-				break;
+            defferredSystem_->SetShadowMaps(shadowSystem_->getAllDepthMaps());
+            defferredSystem_->SetShadowCubemaps(shadowSystem_->getAllDepthCubemaps());
+
+            defferredSystem_->Render(ecs_, model_, true);
+            break;
         }
 
         window_.imGuiRender();

@@ -14,42 +14,95 @@ uniform int useAmbient;
 uniform vec3 ambientColor;
 uniform float ambientIntensity;
 
-uniform int numDirLights;
-uniform int numSpotLights;
-uniform int numPointLights;
+uniform int lightType; // 0=ambient, 1=dir, 2=spot, 3=point
+uniform vec3 lightDirOrPos;
+uniform vec3 lightColor;
+uniform float lightIntensity;
 
-struct DirLight {
-    vec3 direction;
-    vec3 color;
-    float intensity;
-};
+uniform vec3 spotLightDir;
+uniform float spotCutOff;
+uniform float spotOuterCutOff;
+uniform float spotConstant;
+uniform float spotLinear;
+uniform float spotQuadratic;
 
-struct SpotLight {
-    vec3 position;
-    vec3 direction;
-    vec3 color;
-    float intensity;
-    float cutOff;
-    float outerCutOff;
-    float constant;
-    float linear;
-    float quadratic;
-};
-
-struct PointLight {
-    vec3 position;
-    vec3 color;
-    float intensity;
-    float constant;
-    float linear;
-    float quadratic;
-};
-
-uniform DirLight dirLights[4];
-uniform SpotLight spotLights[8];
-uniform PointLight pointLights[16];
+uniform sampler2D shadowTexture;
+uniform samplerCube shadowCubeMap;
+uniform mat4 lightSpaceMatrix;
+uniform int hasShadows;
 
 out vec4 fragColor;
+
+float CalculateShadow(vec3 fragPos, vec3 normal, vec3 lightDir) {
+    if (hasShadows == 0) return 0.0;
+    
+    vec4 fragPosLightSpace = lightSpaceMatrix * vec4(fragPos, 1.0);
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+    
+    if (projCoords.z > 1.0) return 0.0;
+    
+    float closestDepth = texture(shadowTexture, projCoords.xy).r;
+    float currentDepth = projCoords.z;
+    float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.0005);
+    
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / vec2(1024.0, 1024.0);
+    for(int x = -1; x <= 1; ++x) {
+        for(int y = -1; y <= 1; ++y) {
+            float pcfDepth = texture(shadowTexture, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+    
+    return shadow;
+}
+
+float CalculateCubeShadow(vec3 fragPos, vec3 lightPos) {
+    if (hasShadows == 0) return 0.0;
+    
+    vec3 fragToLight = fragPos - lightPos;
+    float currentDepth = length(fragToLight);
+    float bias = 0.05;
+    
+    float shadow = 0.0;
+    float viewDistance = length(viewPos - fragPos);
+    float diskRadius = (1.0 + viewDistance / far_plane) / 25.0;
+    
+    const float PI = 3.14159265;
+    const int samples = 20;
+    vec3 sampleDirections[20];
+    sampleDirections[0] = vec3(1.0, 0.0, 0.0);
+    sampleDirections[1] = vec3(-1.0, 0.0, 0.0);
+    sampleDirections[2] = vec3(0.0, 1.0, 0.0);
+    sampleDirections[3] = vec3(0.0, -1.0, 0.0);
+    sampleDirections[4] = vec3(0.0, 0.0, 1.0);
+    sampleDirections[5] = vec3(0.0, 0.0, -1.0);
+    sampleDirections[6] = vec3(1.0, 1.0, 0.0);
+    sampleDirections[7] = vec3(1.0, -1.0, 0.0);
+    sampleDirections[8] = vec3(-1.0, 1.0, 0.0);
+    sampleDirections[9] = vec3(-1.0, -1.0, 0.0);
+    sampleDirections[10] = vec3(1.0, 0.0, 1.0);
+    sampleDirections[11] = vec3(1.0, 0.0, -1.0);
+    sampleDirections[12] = vec3(-1.0, 0.0, 1.0);
+    sampleDirections[13] = vec3(-1.0, 0.0, -1.0);
+    sampleDirections[14] = vec3(0.0, 1.0, 1.0);
+    sampleDirections[15] = vec3(0.0, 1.0, -1.0);
+    sampleDirections[16] = vec3(0.0, -1.0, 1.0);
+    sampleDirections[17] = vec3(0.0, -1.0, -1.0);
+    sampleDirections[18] = vec3(1.0, 1.0, 1.0);
+    sampleDirections[19] = vec3(-1.0, -1.0, -1.0);
+    
+    for(int i = 0; i < samples; ++i) {
+        float closestDepth = texture(shadowCubeMap, fragToLight + sampleDirections[i] * diskRadius).r;
+        closestDepth *= far_plane;
+        shadow += currentDepth - bias > closestDepth ? 1.0 : 0.0;
+    }
+    shadow /= float(samples);
+    
+    return shadow;
+}
 
 void main() {
     vec3 fragPos = texture(gPosition, fragTexCoords).rgb;
@@ -70,45 +123,51 @@ void main() {
         result += ambientColor * ambientIntensity * albedo;
     }
 
-    for (int i = 0; i < numDirLights; i++) {
-        vec3 lightDir = normalize(-dirLights[i].direction);
+    // Lighting basado en lightType
+    if (lightType == 1) { // Directional Light
+        vec3 lightDir = normalize(-lightDirOrPos);
         float diff = max(dot(normal, lightDir), 0.0);
         vec3 reflectDir = reflect(-lightDir, normal);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-        vec3 diffuse = diff * albedo * dirLights[i].color * dirLights[i].intensity;
-        vec3 specularVec = spec * specular * dirLights[i].color * dirLights[i].intensity;
+        
+        float shadow = CalculateShadow(fragPos, normal, lightDir);
+        
+        vec3 diffuse = diff * albedo * lightColor * lightIntensity * (1.0 - shadow);
+        vec3 specularVec = spec * specular * lightColor * lightIntensity * (1.0 - shadow);
         result += diffuse + specularVec;
     }
+    else if (lightType == 2) { // Spot Light
+        vec3 lightDir = normalize(lightDirOrPos - fragPos);
+        float distance = length(lightDirOrPos - fragPos);
+        float attenuation = 1.0 / (spotConstant + spotLinear * distance + spotQuadratic * (distance * distance));
 
-    for (int i = 0; i < numSpotLights; i++) {
-        vec3 lightDir = normalize(spotLights[i].position - fragPos);
-        float distance = length(spotLights[i].position - fragPos);
-        float attenuation = 1.0 / (spotLights[i].constant + spotLights[i].linear * distance + spotLights[i].quadratic * (distance * distance));
-
-        float theta = dot(lightDir, normalize(-spotLights[i].direction));
-        float epsilon = spotLights[i].cutOff - spotLights[i].outerCutOff;
-        float intensity = clamp((theta - spotLights[i].outerCutOff) / epsilon, 0.0, 1.0);
+        float theta = dot(lightDir, normalize(-spotLightDir));
+        float epsilon = spotCutOff - spotOuterCutOff;
+        float intensity = clamp((theta - spotOuterCutOff) / epsilon, 0.0, 1.0);
 
         float diff = max(dot(normal, lightDir), 0.0);
         vec3 reflectDir = reflect(-lightDir, normal);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
 
-        vec3 diffuse = diff * albedo * spotLights[i].color * spotLights[i].intensity * attenuation * intensity;
-        vec3 specularVec = spec * specular * spotLights[i].color * spotLights[i].intensity * attenuation * intensity;
+        float shadow = CalculateShadow(fragPos, normal, lightDir);
+
+        vec3 diffuse = diff * albedo * lightColor * lightIntensity * attenuation * intensity * (1.0 - shadow);
+        vec3 specularVec = spec * specular * lightColor * lightIntensity * attenuation * intensity * (1.0 - shadow);
         result += diffuse + specularVec;
     }
-
-    for (int i = 0; i < numPointLights; i++) {
-        vec3 lightDir = normalize(pointLights[i].position - fragPos);
-        float distance = length(pointLights[i].position - fragPos);
-        float attenuation = 1.0 / (pointLights[i].constant + pointLights[i].linear * distance + pointLights[i].quadratic * (distance * distance));
+    else if (lightType == 3) { // Point Light
+        vec3 lightDir = normalize(lightDirOrPos - fragPos);
+        float distance = length(lightDirOrPos - fragPos);
+        float attenuation = 1.0 / (spotConstant + spotLinear * distance + spotQuadratic * (distance * distance));
 
         float diff = max(dot(normal, lightDir), 0.0);
         vec3 reflectDir = reflect(-lightDir, normal);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
 
-        vec3 diffuse = diff * albedo * pointLights[i].color * pointLights[i].intensity * attenuation;
-        vec3 specularVec = spec * specular * pointLights[i].color * pointLights[i].intensity * attenuation;
+        float shadow = CalculateCubeShadow(fragPos, lightDirOrPos);
+
+        vec3 diffuse = diff * albedo * lightColor * lightIntensity * attenuation * (1.0 - shadow);
+        vec3 specularVec = spec * specular * lightColor * lightIntensity * attenuation * (1.0 - shadow);
         result += diffuse + specularVec;
     }
 

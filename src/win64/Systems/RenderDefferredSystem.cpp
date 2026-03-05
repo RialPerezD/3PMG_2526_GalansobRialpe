@@ -21,11 +21,10 @@ namespace MTRD {
             Shader::VertexFromFile("../assets/shaders/deferred_gbuffer_vertex.txt", debug),
             Shader::FragmentFromFile("../assets/shaders/deferred_gbuffer_fragment.txt", debug),
             debug },
-        lightingProgram{
-            Shader::VertexFromFile("../assets/shaders/deferred_lighting_vertex.txt", debug),
-            Shader::FragmentFromFile("../assets/shaders/deferred_lighting_fragment.txt", debug),
-            debug }
-    {
+            lightingProgram{
+                Shader::VertexFromFile("../assets/shaders/deferred_lighting_vertex.txt", debug),
+                Shader::FragmentFromFile("../assets/shaders/deferred_lighting_fragment.txt", debug),
+                debug } {
         attributes = {
             { "position", 3, offsetof(Vertex, position), -1},
             { "uv", 2, offsetof(Vertex, uv), -1},
@@ -48,6 +47,14 @@ namespace MTRD {
             glDeleteTextures(1, &gAlbedoSpec);
             glDeleteRenderbuffers(1, &rboDepth);
         }
+    }
+
+    void RenderDefferredSystem::SetShadowMaps(const std::vector<GLuint>& depthMaps) {
+        depthMaps_ = depthMaps;
+    }
+
+    void RenderDefferredSystem::SetShadowCubemaps(const std::vector<GLuint>& depthCubemaps) {
+        depthCubemaps_ = depthCubemaps;
     }
 
     void RenderDefferredSystem::InitGBuffer() {
@@ -159,12 +166,14 @@ namespace MTRD {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void RenderDefferredSystem::LightingPass(ECSManager& ecs) {
+    void RenderDefferredSystem::LightingPass(ECSManager& ecs, bool hasShadows) {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT);
         glDisable(GL_DEPTH_TEST);
 
         glUseProgram(lightingProgram.programId_);
 
+        // Bind G-Buffer Textures
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, gPosition);
         glUniform1i(glGetUniformLocation(lightingProgram.programId_, "gPosition"), 0);
@@ -177,76 +186,97 @@ namespace MTRD {
         glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
         glUniform1i(glGetUniformLocation(lightingProgram.programId_, "gAlbedoSpec"), 2);
 
+        // Common Uniforms
         glUniform3f(glGetUniformLocation(lightingProgram.programId_, "viewPos"), viewPos_.x, viewPos_.y, viewPos_.z);
         glUniform1f(glGetUniformLocation(lightingProgram.programId_, "shininess"), shininess);
         glUniform1f(glGetUniformLocation(lightingProgram.programId_, "far_plane"), far_plane);
+        glUniform1i(glGetUniformLocation(lightingProgram.programId_, "hasShadows"), hasShadows);
 
         auto lightEntities = ecs.GetEntitiesWithComponents<LightComponent>();
-        LightComponent* light = nullptr;
-        if (!lightEntities.empty()) {
-            light = ecs.GetComponent<LightComponent>(lightEntities[0]);
-        }
+        LightComponent* mainLight = !lightEntities.empty() ? ecs.GetComponent<LightComponent>(lightEntities[0]) : nullptr;
 
+        // --- 1. AMBIENT PASS ---
         glUniform1i(glGetUniformLocation(lightingProgram.programId_, "useAmbient"), 1);
-        if (light && light->hasAmbient_) {
-            glUniform3f(glGetUniformLocation(lightingProgram.programId_, "ambientColor"), light->ambient_.color_.x, light->ambient_.color_.y, light->ambient_.color_.z);
-            glUniform1f(glGetUniformLocation(lightingProgram.programId_, "ambientIntensity"), light->ambient_.intensity_);
+        glUniform1i(glGetUniformLocation(lightingProgram.programId_, "lightType"), 0);
+        if (mainLight && mainLight->hasAmbient_) {
+            glUniform3f(glGetUniformLocation(lightingProgram.programId_, "ambientColor"), mainLight->ambient_.color_.x, mainLight->ambient_.color_.y, mainLight->ambient_.color_.z);
+            glUniform1f(glGetUniformLocation(lightingProgram.programId_, "ambientIntensity"), mainLight->ambient_.intensity_);
         }
+        RenderQuad();
 
-        size_t numDirLights = 0;
-        size_t numSpotLights = 0;
-        size_t numPointLights = 0;
+        // --- 2. LIGHTING PASSES (Additive) ---
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+        glUniform1i(glGetUniformLocation(lightingProgram.programId_, "useAmbient"), 0);
 
-        if (light) {
-            numDirLights = light->directionalLights.size();
-            numSpotLights = light->spotLights.size();
-            numPointLights = light->pointLights.size();
-        }
-
-        glUniform1i(glGetUniformLocation(lightingProgram.programId_, "numDirLights"), static_cast<GLint>(numDirLights));
-        glUniform1i(glGetUniformLocation(lightingProgram.programId_, "numSpotLights"), static_cast<GLint>(numSpotLights));
-        glUniform1i(glGetUniformLocation(lightingProgram.programId_, "numPointLights"), static_cast<GLint>(numPointLights));
-
-        size_t dirIdx = 0, spotIdx = 0, pointIdx = 0;
+        size_t current2DShadowIndex = 0;
+        size_t currentCubeShadowIndex = 0;
 
         for (size_t light_id : lightEntities) {
             LightComponent* lightComp = ecs.GetComponent<LightComponent>(light_id);
 
+            // Directional Lights
             for (auto& dirLight : lightComp->directionalLights) {
-                std::string prefix = "dirLights[" + std::to_string(dirIdx) + "].";
-                glUniform3f(glGetUniformLocation(lightingProgram.programId_, (prefix + "direction").c_str()), dirLight.direction_.x, dirLight.direction_.y, dirLight.direction_.z);
-                glUniform3f(glGetUniformLocation(lightingProgram.programId_, (prefix + "color").c_str()), dirLight.color_.x, dirLight.color_.y, dirLight.color_.z);
-                glUniform1f(glGetUniformLocation(lightingProgram.programId_, (prefix + "intensity").c_str()), dirLight.intensity_);
-                dirIdx++;
+                glUniform1i(glGetUniformLocation(lightingProgram.programId_, "lightType"), 1);
+                glUniform3f(glGetUniformLocation(lightingProgram.programId_, "lightDirOrPos"), dirLight.direction_.x, dirLight.direction_.y, dirLight.direction_.z);
+                glUniform3f(glGetUniformLocation(lightingProgram.programId_, "lightColor"), dirLight.color_.x, dirLight.color_.y, dirLight.color_.z);
+                glUniform1f(glGetUniformLocation(lightingProgram.programId_, "lightIntensity"), dirLight.intensity_);
+
+                glm::mat4 lightSpace = dirLight.getLightSpaceMatrix();
+                glUniformMatrix4fv(glGetUniformLocation(lightingProgram.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpace));
+
+                glActiveTexture(GL_TEXTURE3);
+                GLuint shadowTex = (current2DShadowIndex < depthMaps_.size()) ? depthMaps_[current2DShadowIndex] : 0;
+                glBindTexture(GL_TEXTURE_2D, shadowTex);
+                glUniform1i(glGetUniformLocation(lightingProgram.programId_, "shadowTexture"), 3);
+
+                RenderQuad();
+                current2DShadowIndex++;
             }
 
+            // Spot Lights
             for (auto& spot : lightComp->spotLights) {
-                std::string prefix = "spotLights[" + std::to_string(spotIdx) + "].";
-                glUniform3f(glGetUniformLocation(lightingProgram.programId_, (prefix + "position").c_str()), spot.position_.x, spot.position_.y, spot.position_.z);
-                glUniform3f(glGetUniformLocation(lightingProgram.programId_, (prefix + "direction").c_str()), spot.direction_.x, spot.direction_.y, spot.direction_.z);
-                glUniform3f(glGetUniformLocation(lightingProgram.programId_, (prefix + "color").c_str()), spot.color_.x, spot.color_.y, spot.color_.z);
-                glUniform1f(glGetUniformLocation(lightingProgram.programId_, (prefix + "intensity").c_str()), spot.intensity_);
-                glUniform1f(glGetUniformLocation(lightingProgram.programId_, (prefix + "cutOff").c_str()), spot.cutOff_);
-                glUniform1f(glGetUniformLocation(lightingProgram.programId_, (prefix + "outerCutOff").c_str()), spot.outerCutOff_);
-                glUniform1f(glGetUniformLocation(lightingProgram.programId_, (prefix + "constant").c_str()), spot.constant_);
-                glUniform1f(glGetUniformLocation(lightingProgram.programId_, (prefix + "linear").c_str()), spot.linear_);
-                glUniform1f(glGetUniformLocation(lightingProgram.programId_, (prefix + "quadratic").c_str()), spot.quadratic_);
-                spotIdx++;
+                glUniform1i(glGetUniformLocation(lightingProgram.programId_, "lightType"), 2);
+                glUniform3f(glGetUniformLocation(lightingProgram.programId_, "lightDirOrPos"), spot.position_.x, spot.position_.y, spot.position_.z);
+                glUniform3f(glGetUniformLocation(lightingProgram.programId_, "spotLightDir"), spot.direction_.x, spot.direction_.y, spot.direction_.z);
+                glUniform3f(glGetUniformLocation(lightingProgram.programId_, "lightColor"), spot.color_.x, spot.color_.y, spot.color_.z);
+                glUniform1f(glGetUniformLocation(lightingProgram.programId_, "lightIntensity"), spot.intensity_);
+                glUniform1f(glGetUniformLocation(lightingProgram.programId_, "spotCutOff"), spot.cutOff_);
+                glUniform1f(glGetUniformLocation(lightingProgram.programId_, "spotOuterCutOff"), spot.outerCutOff_);
+
+                glm::mat4 lightSpace = spot.getLightSpaceMatrix();
+                glUniformMatrix4fv(glGetUniformLocation(lightingProgram.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpace));
+
+                glActiveTexture(GL_TEXTURE3);
+                GLuint shadowTex = (current2DShadowIndex < depthMaps_.size()) ? depthMaps_[current2DShadowIndex] : 0;
+                glBindTexture(GL_TEXTURE_2D, shadowTex);
+                glUniform1i(glGetUniformLocation(lightingProgram.programId_, "shadowTexture"), 3);
+
+                RenderQuad();
+                current2DShadowIndex++;
             }
 
+            // Point Lights
             for (auto& point : lightComp->pointLights) {
-                std::string prefix = "pointLights[" + std::to_string(pointIdx) + "].";
-                glUniform3f(glGetUniformLocation(lightingProgram.programId_, (prefix + "position").c_str()), point.position_.x, point.position_.y, point.position_.z);
-                glUniform3f(glGetUniformLocation(lightingProgram.programId_, (prefix + "color").c_str()), point.color_.x, point.color_.y, point.color_.z);
-                glUniform1f(glGetUniformLocation(lightingProgram.programId_, (prefix + "intensity").c_str()), point.intensity_);
-                glUniform1f(glGetUniformLocation(lightingProgram.programId_, (prefix + "constant").c_str()), point.constant_);
-                glUniform1f(glGetUniformLocation(lightingProgram.programId_, (prefix + "linear").c_str()), point.linear_);
-                glUniform1f(glGetUniformLocation(lightingProgram.programId_, (prefix + "quadratic").c_str()), point.quadratic_);
-                pointIdx++;
+                glUniform1i(glGetUniformLocation(lightingProgram.programId_, "lightType"), 3);
+                glUniform3f(glGetUniformLocation(lightingProgram.programId_, "lightDirOrPos"), point.position_.x, point.position_.y, point.position_.z);
+                glUniform3f(glGetUniformLocation(lightingProgram.programId_, "lightColor"), point.color_.x, point.color_.y, point.color_.z);
+                glUniform1f(glGetUniformLocation(lightingProgram.programId_, "lightIntensity"), point.intensity_);
+                glUniform1f(glGetUniformLocation(lightingProgram.programId_, "spotConstant"), point.constant_);
+                glUniform1f(glGetUniformLocation(lightingProgram.programId_, "spotLinear"), point.linear_);
+                glUniform1f(glGetUniformLocation(lightingProgram.programId_, "spotQuadratic"), point.quadratic_);
+
+                glActiveTexture(GL_TEXTURE4);
+                GLuint shadowCube = (currentCubeShadowIndex < depthCubemaps_.size()) ? depthCubemaps_[currentCubeShadowIndex] : 0;
+                glBindTexture(GL_TEXTURE_CUBE_MAP, shadowCube);
+                glUniform1i(glGetUniformLocation(lightingProgram.programId_, "shadowCubeMap"), 4);
+
+                RenderQuad();
+                currentCubeShadowIndex++;
             }
         }
 
-        RenderQuad();
+        glDisable(GL_BLEND);
     }
 
     void RenderDefferredSystem::RenderQuad() {
@@ -281,9 +311,9 @@ namespace MTRD {
         glBindVertexArray(0);
     }
 
-    void RenderDefferredSystem::Render(ECSManager& ecs, glm::mat4x4& model) {
+    void RenderDefferredSystem::Render(ECSManager& ecs, glm::mat4x4& model, bool hasShadows) {
         glViewport(0, 0, windowWidth_, windowHeight_);
         GeometryPass(ecs, model);
-        LightingPass(ecs);
+        LightingPass(ecs, hasShadows);
     }
 }

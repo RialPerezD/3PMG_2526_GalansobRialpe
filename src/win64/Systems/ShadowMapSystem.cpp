@@ -108,6 +108,7 @@ namespace MTRD {
         size_t current2D = 0;
         size_t currentCube = 0;
         glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+        glEnable(GL_DEPTH_TEST);
 
         for (size_t id : lightEntities) {
             auto* l = ecs.GetComponent<LightComponent>(id);

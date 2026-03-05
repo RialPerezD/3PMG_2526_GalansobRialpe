@@ -25,10 +25,14 @@ namespace MTRD {
 
         void Render(
             ECSManager& ecs,
-            glm::mat4x4& model
+            glm::mat4x4& model,
+            bool hasShadows = false
         );
 
         void Resize(int width, int height);
+
+        void SetShadowMaps(const std::vector<GLuint>& depthMaps);
+        void SetShadowCubemaps(const std::vector<GLuint>& depthCubemaps);
 
         std::vector<VertexAttribute> attributes;
         std::vector<Window::UniformAttrib> uniforms;
@@ -37,7 +41,7 @@ namespace MTRD {
         bool debug_ = true;
         Program gBufferProgram;
         Program lightingProgram;
-        
+
         glm::vec3& viewPos_;
         float shininess = 32.0f;
         float far_plane = 25.0f;
@@ -50,11 +54,14 @@ namespace MTRD {
         GLuint gAlbedoSpec;
         GLuint rboDepth;
 
+        std::vector<GLuint> depthMaps_;
+        std::vector<GLuint> depthCubemaps_;
+
         bool gBufferInitialized = false;
 
         void InitGBuffer();
         void GeometryPass(ECSManager& ecs, glm::mat4x4& model);
-        void LightingPass(ECSManager& ecs);
+        void LightingPass(ECSManager& ecs, bool hasShadows);
         void RenderQuad();
     };
 }
