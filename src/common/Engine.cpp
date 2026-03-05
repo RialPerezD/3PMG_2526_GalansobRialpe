@@ -265,6 +265,9 @@ namespace MTRD {
             case RenderType::Bidimensional:
                 renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
                 break;
+            case RenderType::Deferred:
+                defferredSystem_ = std::make_unique<RenderDefferredSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
+                break;
 		}
     }
 
@@ -309,6 +312,12 @@ namespace MTRD {
                 renderSystem_->Render(ecs_, model_);
                 break;
 			case RenderType::Deferred:
+				if (!defferredSystem_) {
+					printf("There are no deferred render system");
+					return;
+				}
+
+				defferredSystem_->Render(ecs_, model_);
 				break;
         }
 
