@@ -33,16 +33,17 @@ namespace MTRD {
         gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, physx::PxTolerancesScale());
         if (!gPhysics) return;
         
-        gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.1f);
+        gMaterial = gPhysics->createMaterial(0.3f, 0.3f, 0.1f);
         if (!gMaterial) return;
         
         physx::PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-        sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+        sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f * 2.0f, 0.0f);
         sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(1);
         if (!sceneDesc.cpuDispatcher) return;
         sceneDesc.filterShader = defaultFilterShader;
         
         gScene = gPhysics->createScene(sceneDesc);
+        
         initialized = true;
     }
 
@@ -89,7 +90,10 @@ namespace MTRD {
             physx::PxRigidDynamic* actor = gPhysics->createRigidDynamic(actorTransform);
             actor->attachShape(*shape);
             actor->setMass(physxComp->mass);
+            actor->setLinearDamping(0.01f);
+            actor->setAngularDamping(0.01f);
             gScene->addActor(*actor);
+            actor->wakeUp();
             physxComp->actor = actor;
         } else {
             physx::PxRigidStatic* actor = gPhysics->createRigidStatic(actorTransform);
