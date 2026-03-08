@@ -11,6 +11,7 @@
 #include "Camera.hpp"
 #include "Sprite.hpp"
 #include <MotArda/win64/Systems/RenderDefferredSystem.hpp>
+#include "PhysxMaster.hpp"
 
 namespace MTRD {
 
@@ -172,6 +173,8 @@ namespace MTRD {
 		// --- Utility functions ---
 		Camera& getCamera() { return camera_; }
 		ECSManager& getEcs() { return ecs_; }
+		void createPhysxActor(MTRD::PhysxComponent& p, MTRD::TransformComponent& t);
+		void hasPhysx(bool has);
 
 		// --- *** ---
 
@@ -225,6 +228,9 @@ namespace MTRD {
 
 		bool initialized2D;
 		ObjItem basePlane_;
+
+		bool hasPhysx_;
+		PhysxMaster physx_;
 		// --- *** ---
 	};
 }

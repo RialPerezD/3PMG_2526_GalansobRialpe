@@ -5,7 +5,6 @@
 
 #include <memory>
 
-#include <MotArda/common/Systems/TraslationSystem.hpp>
 #include <MotArda/win64/Systems/RenderSystem.hpp>
 
 static void error_callback(int error, const char* description) {

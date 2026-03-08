@@ -34,6 +34,7 @@ namespace MTRD {
         model_ (glm::mat4(1.0f)),
         camera_(Camera::CreateCamera(windowGetSizeRatio())),
         initialized2D (false),
+        hasPhysx_(false),
         basePlane_ (std::move(generatePlane(20, 20))),
         debug_ (true)
     {
@@ -248,6 +249,23 @@ namespace MTRD {
     }
 
 
+    void MotardaEng::createPhysxActor(
+        MTRD::PhysxComponent& p,
+        MTRD::TransformComponent& t
+    ) {
+        physx_.createActor(&p, &t);
+    }
+
+
+    void MotardaEng::hasPhysx(bool has) {
+        hasPhysx_ = has;
+
+        if (!physx_.initialized) {
+			physx_.init();
+        }
+	}
+
+
     void MotardaEng::SetRenderType(RenderType type){
         actualRenderType_ = type;
 
@@ -327,5 +345,22 @@ namespace MTRD {
         }
 
         window_.imGuiRender();
+
+
+        // --- Physics update ---
+        if (hasPhysx_) {
+            float deltaTime = windowGetLastFrameTime();
+            physx_.update(deltaTime);
+
+            MTRD::TransformComponent* t;
+            MTRD::PhysxComponent* p;
+            // Sync physics to transforms
+            for (size_t id : ecs_.GetEntitiesWithComponents<MTRD::TransformComponent, MTRD::PhysxComponent>()) {
+                t = ecs_.GetComponent<MTRD::TransformComponent>(id);
+                p = ecs_.GetComponent<MTRD::PhysxComponent>(id);
+                physx_.syncTransform(p, t);
+            }
+        }
+        // --- *** ---
     }
 }

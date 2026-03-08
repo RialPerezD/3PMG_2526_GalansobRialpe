@@ -4,7 +4,6 @@
 #include <MotArda/common/Camera.hpp>
 #include <MotArda/common/Components/LightComponent.hpp>
 #include <memory>
-#include <MotArda/common/Systems/TraslationSystem.hpp>
 #include <MotArda/win64/Systems/RenderLightsSystem.hpp>
 #include <MotArda/win64/Systems/ShadowMapSystem.hpp>
 

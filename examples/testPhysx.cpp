@@ -3,10 +3,10 @@
 #include <MotArda/common/Ecs.hpp>
 #include <MotArda/common/Camera.hpp>
 #include <MotArda/common/Components/LightComponent.hpp>
+#include <MotArda/common/Components/PhysxComponent.hpp>
 
 #include <memory>
 
-#include <MotArda/common/Systems/TraslationSystem.hpp>
 #include <MotArda/win64/Systems/RenderLightsSystem.hpp>
 #include <MotArda/win64/Systems/ShadowMapSystem.hpp>
 
@@ -40,6 +40,7 @@ int MTRD::main() {
     // --- Setup engine info ---
 	eng.SetDebugMode(true);
 	eng.SetRenderType(MotardaEng::RenderType::Base);
+	eng.hasPhysx(true);
     eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
@@ -47,7 +48,7 @@ int MTRD::main() {
     // --- Create Geometry to use in elements ---
     std::vector<ObjItem> objItemList;
     objItemList.push_back(std::move(eng.generateSphere(0.5f, 20, 20)));
-    objItemList.push_back(std::move(eng.generatePlane(20, 20, 1)));
+    objItemList.push_back(std::move(eng.generatePlane(20, 20)));
     objItemList.push_back(std::move(eng.generateCube(1)));
     eng.windowLoadAllMaterials(objItemList);
     // --- *** ---
@@ -59,13 +60,14 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
     ecs.AddComponentType<MTRD::LightComponent>();
+    ecs.AddComponentType<MTRD::PhysxComponent>();
 
     size_t player = ecs.AddEntity();
     size_t floor = ecs.AddEntity();
     size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
 
     MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
-    t->position = glm::vec3(0, -2.f, 0);
+    t->position = glm::vec3(0, 5.f, 0);
     t->rotation = glm::vec3(0, 0, 0);
     t->angleRotationRadians = -1;
     t->scale = glm::vec3(1.f);
@@ -79,6 +81,13 @@ int MTRD::main() {
     m->rotation = glm::vec3(0, 0, 1);
     m->scale = glm::vec3(0.0f);
     m->shouldConstantMove = false;
+
+    MTRD::PhysxComponent* p = ecs.AddComponent<MTRD::PhysxComponent>(player);
+    p->shapeType = MTRD::PhysxShapeType::Sphere;
+    p->radius = 0.5f;
+    p->mass = 1.0f;
+    p->isDynamic = true;
+    eng.createPhysxActor(*p, *t);
 
 
     t = ecs.AddComponent<MTRD::TransformComponent>(floor);
@@ -97,25 +106,39 @@ int MTRD::main() {
     m->scale = glm::vec3(0.0f);
     m->shouldConstantMove = false;
 
+    MTRD::PhysxComponent* floorPhysx = ecs.AddComponent<MTRD::PhysxComponent>(floor);
+    floorPhysx->shapeType = MTRD::PhysxShapeType::Box;
+    floorPhysx->halfExtents = glm::vec3(10.0f, 0.05f, 10.0f);
+    floorPhysx->mass = 0.0f;
+    floorPhysx->isDynamic = false;
+    eng.createPhysxActor(*floorPhysx, *t);
+
 
     for (int i = 0; i < 4; i++) {
         t = ecs.AddComponent<MTRD::TransformComponent>(cubes[i]);
-        t->position = glm::vec3(-5 * ((i % 2) * 2 - 1), -2.0f, -5 * ((i / 2) * 2 - 1));
+        t->position = glm::vec3(0.5f * ((i % 2) * 2 - 1), -2.0f, 0.5f * ((i / 2) * 2 - 1));
         t->rotation = glm::vec3(0, 0, 0);
         t->angleRotationRadians = -1;
         t->scale = glm::vec3(1.f);
 
         r = ecs.AddComponent<MTRD::RenderComponent>(cubes[i]);
-        r->meshes_ = &objItemList[2].meshes;
-        r->materials_ = &objItemList[2].materials;
+        r->meshes_ = &objItemList[0].meshes;
+        r->materials_ = &objItemList[0].materials;
 
         m = ecs.AddComponent<MTRD::MovementComponent>(cubes[i]);
         m->position = glm::vec3(0);
         m->rotation = glm::vec3(0, 0, 1);
         m->scale = glm::vec3(0.0f);
         m->shouldConstantMove = false;
+
+        p = ecs.AddComponent<MTRD::PhysxComponent>(cubes[i]);
+        p->shapeType = MTRD::PhysxShapeType::Sphere;
+        p->radius = 0.5f;
+        p->mass = 1.0f;
+        p->isDynamic = true;
+        eng.createPhysxActor(*p, *t);
     }
-    // --- *** ---
+    // --- ***
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
@@ -135,7 +158,6 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -10.0f);
         // --- *** ---
 
-        
         // Generate shadow map
         eng.RenderScene();
         // --- *** ---
