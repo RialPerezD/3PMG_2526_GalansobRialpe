@@ -1,5 +1,0 @@
-#version 330 core
-
-// Fragment vacio, interesa el automatico
-void main() {             
-}

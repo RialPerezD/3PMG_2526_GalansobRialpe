@@ -21,6 +21,30 @@ for i = 1,3 do
 	cfg["frameworks"] = conan_frameworks
 end
 
+function physx_config()
+    includedirs { "deps/physx/include" }
+    
+    filter "configurations:Debug"
+        libdirs { "deps/physx/lib/debug" }
+        links { 
+            "PhysX_64", 
+            "PhysXCommon_64", 
+            "PhysXFoundation_64", 
+            "PhysXExtensions_static_64",
+            "PhysXPvdSDK_static_64" 
+        }
+
+    filter "configurations:Release or RelWithDebInfo"
+        libdirs { "deps/physx/lib/release" }
+        links { 
+            "PhysX_64", 
+            "PhysXCommon_64", 
+            "PhysXFoundation_64", 
+            "PhysXExtensions_static_64",
+            "PhysXPvdSDK_static_64"
+        }
+    filter {}
+end
 
 function conan_config_exec()
 	configs = {'Debug', 'Release', 'RelWithDebInfo'}
@@ -49,7 +73,6 @@ function conan_config_lib()
 		filter{}
 	end
 end
-
 
 workspace "MotArda"
 	configurations {"Debug", "Release", "RelWithDebInfo"}
@@ -83,7 +106,6 @@ workspace "MotArda"
 		symbols "On"
 
 	filter {}
-
 
 	project "MotArda"
 		kind "StaticLib"
@@ -124,6 +146,7 @@ workspace "MotArda"
             links "MotArda"
             
             conan_config_exec()
+            physx_config()
             
             debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
             files { filepath }
