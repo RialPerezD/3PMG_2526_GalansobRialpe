@@ -34,6 +34,10 @@ function physx_config()
             "PhysXPvdSDK_static_64" 
         }
 
+	postbuildcommands {
+		"{COPY} ../deps/physx/lib/debug/*.dll %{cfg.targetdir}"
+	}
+
     filter "configurations:Release or RelWithDebInfo"
         libdirs { "deps/physx/lib/release" }
         links { 
@@ -43,6 +47,11 @@ function physx_config()
             "PhysXExtensions_static_64",
             "PhysXPvdSDK_static_64"
         }
+
+	postbuildcommands {
+		"{COPY} ../deps/physx/lib/release/*.dll %{cfg.targetdir}"
+	}
+
     filter {}
 end
 
