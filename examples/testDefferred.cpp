@@ -14,6 +14,7 @@ static void error_callback(int error, const char* description) {
 size_t lightEntity;
 glm::vec3 spotLigthCenter = glm::vec3(10, 0, 0);
 glm::vec3 pointLigthCenter = glm::vec3(-10, 0, 0);
+// Amount of times the light instance is repeated
 const int numInstances = 5;
 const float zOffset = -20.0f;
 

@@ -53,14 +53,15 @@ int MTRD::main() {
 
     // --- Drawable transforms additions ---
     float ratio = eng.windowGetSizeRatio();
+    // The speed at which the object will move and scale
     float movSpeed = 0.05f;
-    float scaSpeed = 0.01f;
-    float scale = 0.1f;
+    float scaSpeed = 0.001f;
+    float scale = 0.025f;
 
-    scale = 0.025f; scaSpeed = 0.001f;
-
+    // This bool is used to change the displayed mesh
     bool needChangeObj = false;
     int objIndex = 1;
+
     bool firstTime = true;
     // --- *** ---
 

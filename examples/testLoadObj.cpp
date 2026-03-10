@@ -35,11 +35,10 @@ int MTRD::main() {
 
     // --- Load Objs ---
     std::vector <const char*> objsRoutes = { "12140_Skull_v3_L2.obj" };
+    // Atomic bool which indicates if the Obj has been loaded to the multithread task
     std::atomic<bool> objsLoaded = false;
 
     std::vector<ObjItem> ObjList;
-//TODO: Borrar en todos los demostradores:   ObjList.push_back(ObjItem());
-
 
     // --- Ecs ---
     ECSManager& ecs = eng.getEcs();
@@ -70,7 +69,6 @@ int MTRD::main() {
     // async obj load
     eng.enqueueTask([&]() {
         ObjList = eng.loadObjs(objsRoutes);
-
         objsLoaded = true;
         }
     );
@@ -88,6 +86,11 @@ int MTRD::main() {
             eng.windowEndFrame();
             continue;
         }
+        // This "if" is needed because the Obj is loading in another thread.
+        // Material load also needs the name of the texture that is inside the object mesh.
+        
+        // Then, the mesh and the material are setted to the render. If you are loading more 
+        // than one obj at time, the ObjList[] will contain all the objs loaded to be used in more than one render.
         else if (firstTime) {
             firstTime = false;
             eng.windowLoadAllMaterials(ObjList);

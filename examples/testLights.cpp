@@ -13,11 +13,12 @@ static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
 }
 
+// Light component identifier within the ECS
 size_t lightEntity;
 glm::vec3 spotLigthCenter = glm::vec3(10,0,0);
 glm::vec3 pointLigthCenter = glm::vec3(-10, 0, 0);
 
-
+// Create the structure that will be illuminated by the corresponding light.
 void GenerateSpotLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objItemList) {
     size_t player = ecs.AddEntity();
     size_t floor = ecs.AddEntity();
@@ -125,7 +126,7 @@ void GenerateSpotLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng) 
     );
 }
 
-
+// Create the structure that will be illuminated by the corresponding light.
 void GeneratePointLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objItemList) {
     size_t player = ecs.AddEntity();
     size_t floor = ecs.AddEntity();
@@ -262,7 +263,6 @@ int MTRD::main() {
 
 
     // --- Lights ---
-    // hacer que la maya tenga un booleano para si hace hace sombras o no
     MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
     GenerateSpotLights(lightComp, eng);
 	GenerateDirectionalLights(lightComp, eng);
@@ -302,6 +302,7 @@ int MTRD::main() {
         float posY = radio * sin(timer * velocidad);
         float posX2 = radio * sin(timer * velocidad);
         float posY2 = radio * cos(timer * velocidad);
+
 
         lightComp->spotLights[0].position_ = glm::vec3(posX / 5, 0.0f, posY / 5) + spotLigthCenter;
         lightComp->spotLights[0].direction_ = glm::normalize(glm::vec3(0, -2, 0) - lightComp->spotLights[0].position_ + spotLigthCenter);

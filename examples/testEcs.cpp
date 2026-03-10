@@ -55,6 +55,8 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
 
+    // Create an entity (in this case, the player) that will be used to determine
+    // what the ECS values are added to.
     size_t player = ecs.AddEntity();
 
     MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);

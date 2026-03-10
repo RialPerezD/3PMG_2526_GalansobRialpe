@@ -37,6 +37,7 @@ int MTRD::main() {
     // --- Setup engine info ---
 	eng.SetDebugMode(true);
 	eng.SetRenderType(MotardaEng::RenderType::Base);
+    // Enable physx
 	eng.hasPhysx(true);
     eng.windowSetErrorCallback(error_callback);
     // --- *** ---
@@ -57,11 +58,13 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
     ecs.AddComponentType<MTRD::LightComponent>();
+    // New component to the ECS
     ecs.AddComponentType<MTRD::PhysxComponent>();
 
+    // Create entities
     size_t player = ecs.AddEntity();
     size_t floor = ecs.AddEntity();
-    size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
+    size_t spheres[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
 
     MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
     t->position = glm::vec3(0, 5.f, 0);
@@ -103,6 +106,7 @@ int MTRD::main() {
     m->scale = glm::vec3(0.0f);
     m->shouldConstantMove = false;
 
+    // Physx component for the floor
     MTRD::PhysxComponent* floorPhysx = ecs.AddComponent<MTRD::PhysxComponent>(floor);
     floorPhysx->shapeType = MTRD::PhysxShapeType::Box;
     floorPhysx->halfExtents = glm::vec3(10.0f, 0.05f, 10.0f);
@@ -110,25 +114,26 @@ int MTRD::main() {
     floorPhysx->isDynamic = false;
     eng.createPhysxActor(*floorPhysx, *t);
 
-
+    
     for (int i = 0; i < 4; i++) {
-        t = ecs.AddComponent<MTRD::TransformComponent>(cubes[i]);
+        t = ecs.AddComponent<MTRD::TransformComponent>(spheres[i]);
         t->position = glm::vec3(0.5f * ((i % 2) * 2 - 1), -2.0f, 0.5f * ((i / 2) * 2 - 1));
         t->rotation = glm::vec3(0, 0, 0);
         t->angleRotationRadians = -1;
         t->scale = glm::vec3(1.f);
 
-        r = ecs.AddComponent<MTRD::RenderComponent>(cubes[i]);
+        r = ecs.AddComponent<MTRD::RenderComponent>(spheres[i]);
         r->meshes_ = &objItemList[0].meshes;
         r->materials_ = &objItemList[0].materials;
 
-        m = ecs.AddComponent<MTRD::MovementComponent>(cubes[i]);
+        m = ecs.AddComponent<MTRD::MovementComponent>(spheres[i]);
         m->position = glm::vec3(0);
         m->rotation = glm::vec3(0, 0, 1);
         m->scale = glm::vec3(0.0f);
         m->shouldConstantMove = false;
 
-        p = ecs.AddComponent<MTRD::PhysxComponent>(cubes[i]);
+        // Physx component for the spheres
+        p = ecs.AddComponent<MTRD::PhysxComponent>(spheres[i]);
         p->shapeType = MTRD::PhysxShapeType::Sphere;
         p->radius = 0.5f;
         p->mass = 1.0f;

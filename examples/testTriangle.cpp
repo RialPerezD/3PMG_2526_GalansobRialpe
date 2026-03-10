@@ -27,8 +27,15 @@ int MTRD::main() {
     float movSpeed = 0.1f;
 
     // --- Setup Engigne ---
-
     eng.SetDebugMode(true);
+
+    /* You can set the render type to : 
+        Base,
+	    Lights,
+	    LightsWithShadows,
+	    Bidimensional,
+	    DeferredWithLights
+    */
     eng.SetRenderType(MotardaEng::RenderType::Base);
     eng.windowSetErrorCallback(error_callback);
 
@@ -48,6 +55,7 @@ int MTRD::main() {
 
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
     
+    //Set the vertex coordinates to create a custom geometry
     std::vector<Vertex> vertexList = {
        {
             { 1.0f,  0.0f, 0.f },
@@ -70,8 +78,10 @@ int MTRD::main() {
     std::vector<ObjItem> ObjList;
     ObjList.push_back(ObjItem());
 
+    // Use createMesh(ListOfVertex, "NameOfTheMesh") to create a mesh with custom vertices
     std::unique_ptr<Mesh> TriangleMesh = eng.createMesh(vertexList, "triangle");
 
+    // Initialize material's values
     Material mat;
     mat.diffuse = glm::vec3(1.0f);
     mat.specular = glm::vec3(1.0f);
@@ -91,6 +101,7 @@ int MTRD::main() {
     while (!eng.windowShouldClose()) {
 
         eng.windowInitFrame();
+        // Render the scene depending the Render type setted before
         eng.RenderScene();
 
         eng.windowEndFrame();

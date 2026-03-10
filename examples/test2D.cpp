@@ -48,9 +48,12 @@ int MTRD::main() {
     ECSManager& ecs = eng.getEcs();
     // --- *** ---
 
+    // --- Load textures ---
     GLuint skullTexture = Texture::LoadTexture("../assets/textures/12140_Skull_v3_L2/Skull.jpg");
     GLuint tankTexture = Texture::LoadTexture("../assets/textures/tank/tanque.png");
+    // --- *** ---
 
+    // --- Generate Sprites ---
     Sprite sprite = eng.generateSprite(skullTexture, 1, 1);
     Sprite sprite2 = eng.generateSprite(skullTexture, 25, 0);
 
@@ -58,7 +61,7 @@ int MTRD::main() {
     float animTimer = 0.0f;
 
     TransformComponent* spritTransform = ecs.GetComponent<TransformComponent>(sprite.getId());
-    
+    // --- *** ---
 
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {

@@ -15,6 +15,7 @@ static void error_callback(int error, const char* description) {
 
 size_t lightEntity;
 
+// Create the structure that will be illuminated by the corresponding light.
 void GeneratePointLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objItemList) {
     size_t player = ecs.AddEntity();
     size_t floor = ecs.AddEntity();
@@ -120,6 +121,7 @@ int MTRD::main() {
 
 
     // --- Create Geometry to use in elements ---
+    // You can load basic geometries as spheres, planes and cubes:
     std::vector<ObjItem> objItemList;
     objItemList.push_back(std::move(eng.generateSphere(0.5f, 20, 20, 1)));
     objItemList.push_back(std::move(eng.generatePlane(20, 20, 1)));
@@ -164,7 +166,7 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -10.0f);
         // --- *** ---
 
-
+        // Create the ImGui window
         ImGui::SetNextWindowSize(ImVec2(250, 350), ImGuiCond_FirstUseEver);
         ImGui::Begin("Light Config");
         if (lightComp && !lightComp->pointLights.empty()) {
