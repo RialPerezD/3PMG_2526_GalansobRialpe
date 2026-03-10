@@ -35,7 +35,8 @@ function physx_config()
         }
 
 	postbuildcommands {
-		"{COPY} ../deps/physx/lib/debug/*.dll %{cfg.targetdir}"
+		"{COPY} ../deps/physx/lib/debug/*.dll %{cfg.targetdir}",
+		"{COPY} ../include ../stage/"
 	}
 
     filter "configurations:Release or RelWithDebInfo"
@@ -119,7 +120,7 @@ workspace "MotArda"
 	project "MotArda"
 		kind "StaticLib"
 		language "C++"
-		targetdir "stage/%{prj.name}/%{cfg.buildcfg}"
+		targetdir "stage/%{prj.name}/libs/%{cfg.buildcfg}"
 		objdir "build/obj/%{prj.name}/%{cfg.buildcfg}"
 		conan_config_lib()
 		postbuildcommands {
@@ -127,6 +128,11 @@ workspace "MotArda"
             "{COPYDIR} ../assets ../stage/assets",
             "{COPYDIR} ../doc ../stage/doc"
         }
+
+		clean {
+			"**.idb",
+			"**.pdb"
+		}
 
 		files{
 			"premake5.lua",
