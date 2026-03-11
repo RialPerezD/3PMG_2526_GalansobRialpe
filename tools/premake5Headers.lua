@@ -129,11 +129,6 @@ workspace "MotArda"
             "{COPYDIR} ../doc ../stage/doc"
         }
 
-		clean {
-			"**.idb",
-			"**.pdb"
-		}
-
 		files{
 			"premake5.lua",
 			"src/win64/build/conanfile.txt",
