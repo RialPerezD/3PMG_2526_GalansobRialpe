@@ -26,8 +26,8 @@
 11. [🎲 Renderizado 2D y Sprites](#-11-renderizado-2d-y-sprites)
 12. [⚡ Sistema de Física (PhysX)](#-12-sistema-de-física-physx)
 13. [🐍 Scripting con Lua](#-13-scripting-con-lua)
-14. [⌨️ Sistema de Entrada](#--14-sistema-de-entrada)
-15. [🛠️ Referencia API y Troubleshooting](#--15-referencia-api-y-troubleshooting)
+14. [🕹️ Sistema de Entrada](#-14-sistema-de-entrada)
+15. [🔧 Referencia API y Troubleshooting](#-15-referencia-api-y-troubleshooting)
 
 ---
 
@@ -488,7 +488,7 @@ if (!r.valid()) {
 
 ---
 
-## ⌨️ 14. Sistema de Entrada
+## 🕹️ 14. Sistema de Entrada
 Mapeo de teclas rápido para interacciones [cite: 1]:
 
 | Tecla | Acción común |
@@ -503,7 +503,7 @@ Mapeo de teclas rápido para interacciones [cite: 1]:
 
 ---
 
-## 🛠️ 15. Referencia API y Troubleshooting
+## 🔧 15. Referencia API y Troubleshooting
 
 ### Métodos Útiles de `MotardaEng`
 * `windowGetSizeRatio()`: Obtiene el aspect ratio de la ventana [cite: 1].
