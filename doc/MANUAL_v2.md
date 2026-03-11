@@ -1,4 +1,4 @@
-# <div align="center">🎮 MotArda Engine</div>
+# <div align="center">🎮 MotArda Engine <br> Ahora con soporte 2D!!</div>
 <div align="center">
 
 ![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)
@@ -6,7 +6,7 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-**Un motor de renderizado 3D minimalista, potente y flexible construido sobre OpenGL.**
+**Un motor de renderizado 3D, 2D minimalista, potente y flexible construido sobre OpenGL.**
 </div>
 
 ---
@@ -32,9 +32,10 @@
 ---
 
 ## 🚀 1. Introducción
-MotArda es un motor de renderizado personalizado diseñado para simplificar la creación de aplicaciones 3D. Ofrece una interfaz intuitiva para la gestión de ventanas, carga de modelos y efectos de iluminación avanzada.
+MotArda es un motor de renderizado personalizado diseñado para simplificar la creación de aplicaciones 3D y 2D. Ofrece una interfaz intuitiva para la gestión de ventanas, carga de modelos y efectos de iluminación avanzada.
 
 **Características principales:**
+* **2D:** Foco en pintado 2D con carga de sprite sheets, transparencias y capas de pintado (como Hollow Knight :D).
 * **ECS:** Arquitectura orientada a datos para alto rendimiento.
 * **Iluminación:** Soporte para luces *Spot*, *Point* y *Directional*.
 * **Sombras:** Mapeo de sombras dinámico integrado.
@@ -74,7 +75,6 @@ El corazón de MotArda se divide en componentes modulares:
 | `MotardaEng` | Clase principal del motor y gestión de ventana. |
 | `ECSManager` | Cerebro del Entity Component System. |
 | `Camera` | Gestión de la perspectiva y vista. |
-| `RenderSystem` | Pipeline de renderizado. |
 | `PhysxComponent` | Componente para física. |
 
 ---
@@ -82,7 +82,7 @@ El corazón de MotArda se divide en componentes modulares:
 ## 🎬 5. Guía de Inicio
 ### Creación de Ventana Básica
 ```cpp
-#include "Motarda/common/Engine.hpp"
+#include "MotArda/common/Engine.hpp"
 
 int MTRD::main() {
     auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "MotArda Window");
@@ -105,16 +105,6 @@ int MTRD::main() {
 ---
 
 ## 📦 6. Renderizado y Modelos
-### Definición de Materiales
-```cpp
-Material mat;
-mat.diffuse = glm::vec3(1.0f, 0.0f, 0.0f);    // RGB color
-mat.specular = glm::vec3(1.0f, 1.0f, 1.0f);  // Specular reflection
-mat.shininess = 32.0f;                        // Shininess factor
-mat.loadeable = true;
-mat.diffuseTexPath = "../assets/textures/blank/blank.jpg";
-```
-
 
 ### Carga Asíncrona de Modelos OBJ
 El motor permite cargar modelos en segundo plano para evitar bloqueos:
@@ -124,6 +114,16 @@ eng.enqueueTask([&]() {
     ObjList = eng.loadObjs(objsRoutes);
     objsLoaded = true;
 });
+```
+
+### Definición de Materiales
+```cpp
+Material mat;
+mat.diffuse = glm::vec3(1.0f, 0.0f, 0.0f);    // RGB color
+mat.specular = glm::vec3(1.0f, 1.0f, 1.0f);   // Specular reflection
+mat.shininess = 32.0f;                        // Shininess factor
+mat.loadeable = true;
+mat.diffuseTexPath = "../assets/textures/blank/blank.jpg";
 ```
 
 
@@ -246,7 +246,7 @@ Sprite sprite = eng.generateSprite(texture, width, height);
 
 // Sprite sheet animado
 Sprite animatedSprite = eng.generateSpriteSheet(
-    texture,      // Textura
+    texture,       // Textura
     frames,        // Total de frames
     frameWidth,    // Ancho de cada frame
     frameHeight,   // Alto de cada frame
@@ -489,7 +489,7 @@ if (!r.valid()) {
 ---
 
 ## 🎮 14. Sistema de Entrada
-Mapeo de teclas rápido para interacciones:
+Mapeo de teclas recomendado para interacciones utilizado en los ejemplos:
 
 | Tecla | Acción común |
 | :--- | :--- |
@@ -539,5 +539,5 @@ Mapeo de teclas rápido para interacciones:
 
 ---
 <div align="center">
-  <sub>MotArda Engine Manual - 2026. Creado para desarrolladores apasionados.</sub>
+  <sub>MotArda Engine Manual - 2026. Wigili wigili, your game is now my property.</sub>
 </div>
