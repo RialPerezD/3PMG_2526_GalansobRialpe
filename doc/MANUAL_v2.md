@@ -15,7 +15,7 @@
 
 1. [🚀 Introducción](#-1-introducción)
 2. [💻 Requisitos del Sistema](#-2-requisitos-del-sistema)
-3. [🏗️ Construcción del Proyecto](#-3-construcción-del-proyecto)
+3. [🔨 Construcción del Proyecto](#-3-construcción-del-proyecto)
 4. [📐 Arquitectura del Motor](#-4-arquitectura-del-motor)
 5. [🎬 Guía de Inicio](#-5-guía-de-inicio)
 6. [📦 Renderizado y Modelos](#-6-renderizado-y-modelos)
@@ -26,26 +26,26 @@
 11. [🎲 Renderizado 2D y Sprites](#-11-renderizado-2d-y-sprites)
 12. [⚡ Sistema de Física (PhysX)](#-12-sistema-de-física-physx)
 13. [🐍 Scripting con Lua](#-13-scripting-con-lua)
-14. [🕹️ Sistema de Entrada](#-14-sistema-de-entrada)
-15. [🔧 Referencia API y Troubleshooting](#-15-referencia-api-y-troubleshooting)
+14. [🎮 Sistema de Entrada](#-14-sistema-de-entrada)
+15. [🔍 Referencia API y Troubleshooting](#-15-referencia-api-y-troubleshooting)
 
 ---
 
 ## 🚀 1. Introducción
-MotArda es un motor de renderizado personalizado diseñado para simplificar la creación de aplicaciones 3D. Ofrece una interfaz intuitiva para la gestión de ventanas, carga de modelos y efectos de iluminación avanzada [cite: 1].
+MotArda es un motor de renderizado personalizado diseñado para simplificar la creación de aplicaciones 3D. Ofrece una interfaz intuitiva para la gestión de ventanas, carga de modelos y efectos de iluminación avanzada.
 
 **Características principales:**
-* **ECS:** Arquitectura orientada a datos para alto rendimiento [cite: 1].
-* **Iluminación:** Soporte para luces *Spot*, *Point* y *Directional* [cite: 1].
-* **Sombras:** Mapeo de sombras dinámico integrado [cite: 1].
-* **Modelos:** Carga asíncrona de archivos `.obj` [cite: 1].
-* **Física:** Integración con PhysX para simulación física [cite: 1].
-* **Scripting:** Soporte para Lua para lógica de juego [cite: 1].
+* **ECS:** Arquitectura orientada a datos para alto rendimiento.
+* **Iluminación:** Soporte para luces *Spot*, *Point* y *Directional*.
+* **Sombras:** Mapeo de sombras dinámico integrado.
+* **Modelos:** Carga asíncrona de archivos `.obj`.
+* **Física:** Integración con PhysX para simulación física.
+* **Scripting:** Soporte para Lua para lógica de juego.
 
 ---
 
 ## 💻 2. Requisitos del Sistema
-Para asegurar un rendimiento óptimo, verifica que tu entorno cumpla con lo siguiente [cite: 1]:
+Para asegurar un rendimiento óptimo, verifica que tu entorno cumpla con lo siguiente:
 
 | Software | Requisito |
 | :--- | :--- |
@@ -57,25 +57,25 @@ Para asegurar un rendimiento óptimo, verifica que tu entorno cumpla con lo sigu
 
 ---
 
-## 🏗️ 3. Construcción del Proyecto
-Sigue estos tres pasos para compilar tu primer proyecto [cite: 1]:
+## 🔨 3. Construcción del Proyecto
+Sigue estos tres pasos para compilar tu primer proyecto:
 
-1.  **Generar Archivos:** Ejecuta `./tools/genproyect.bat` [cite: 1].
-2.  **Abrir Solución:** Abre `./build/MotArda.sln` en Visual Studio [cite: 1].
+1.  **Generar Archivos:** Ejecuta `./tools/genproyect.bat`.
+2.  **Abrir Solución:** Abre `./build/MotArda.sln` en Visual Studio.
 3.  **Compilar:** Selecciona tu configuración y pulsa **F5**.
 
 ---
 
 ## 📐 4. Arquitectura del Motor
-El corazón de MotArda se divide en componentes modulares [cite: 1]:
+El corazón de MotArda se divide en componentes modulares:
 
 | Componente | Descripción |
 | :--- | :--- |
-| `MotardaEng` | Clase principal del motor y gestión de ventana [cite: 1]. |
-| `ECSManager` | Cerebro del Entity Component System [cite: 1]. |
-| `Camera` | Gestión de la perspectiva y vista [cite: 1]. |
-| `RenderSystem` | Pipeline de renderizado [cite: 1]. |
-| `PhysxComponent` | Componente para física [cite: 1]. |
+| `MotardaEng` | Clase principal del motor y gestión de ventana. |
+| `ECSManager` | Cerebro del Entity Component System. |
+| `Camera` | Gestión de la perspectiva y vista. |
+| `RenderSystem` | Pipeline de renderizado. |
+| `PhysxComponent` | Componente para física. |
 
 ---
 
@@ -100,7 +100,7 @@ int MTRD::main() {
     return 1;
 }
 ```
-[cite: 1]
+
 
 ---
 
@@ -114,10 +114,10 @@ mat.shininess = 32.0f;                        // Shininess factor
 mat.loadeable = true;
 mat.diffuseTexPath = "../assets/textures/blank/blank.jpg";
 ```
-[cite: 1]
+
 
 ### Carga Asíncrona de Modelos OBJ
-El motor permite cargar modelos en segundo plano para evitar bloqueos [cite: 1]:
+El motor permite cargar modelos en segundo plano para evitar bloqueos:
 ```cpp
 std::vector<const char*> objsRoutes = { "model.obj" };
 eng.enqueueTask([&]() {
@@ -125,7 +125,7 @@ eng.enqueueTask([&]() {
     objsLoaded = true;
 });
 ```
-[cite: 1]
+
 
 ### Geometría Integrada
 ```cpp
@@ -142,29 +142,29 @@ ObjItem cube = eng.generateCube(size);
 ---
 
 ## 🎥 7. Sistema de Cámara
-Controla la perspectiva con métodos sencillos [cite: 1]:
+Controla la perspectiva con métodos sencillos:
 
-* **`setPosition(vec3)`**: Ubicación en el mundo [cite: 1].
-* **`setTarget(vec3)`**: Punto al que mira la cámara [cite: 1].
-* **`rotate(yaw, pitch)`**: Rotación de la vista [cite: 1].
-* **`moveForward/Backward(float)`**: Mover adelante/atrás [cite: 1].
-* **`moveLeft/Right(float)`**: Mover izquierda/derecha [cite: 1].
-* **`moveUp/Down(float)`**: Mover arriba/abajo [cite: 1].
+* **`setPosition(vec3)`**: Ubicación en el mundo.
+* **`setTarget(vec3)`**: Punto al que mira la cámara.
+* **`rotate(yaw, pitch)`**: Rotación de la vista.
+* **`moveForward/Backward(float)`**: Mover adelante/atrás.
+* **`moveLeft/Right(float)`**: Mover izquierda/derecha.
+* **`moveUp/Down(float)`**: Mover arriba/abajo.
 
 ---
 
 ## 🧩 8. Entity Component System (ECS)
-Gestiona tus objetos mediante componentes especializados [cite: 1]:
+Gestiona tus objetos mediante componentes especializados:
 
 > 💡 **Tip:** Separa la lógica de movimiento de la representación visual añadiendo distintos componentes a una misma entidad.
 
 | Componente | Función |
 | :--- | :--- |
-| `TransformComponent` | Define posición, rotación y escala [cite: 1]. |
-| `RenderComponent` | Contiene referencias a mallas y materiales [cite: 1]. |
-| `MovementComponent` | Datos de movimiento y animación [cite: 1]. |
-| `LightComponent` | Convierte la entidad en una fuente de luz [cite: 1]. |
-| `PhysxComponent` | Comportamiento físico de la entidad [cite: 1]. |
+| `TransformComponent` | Define posición, rotación y escala. |
+| `RenderComponent` | Contiene referencias a mallas y materiales. |
+| `MovementComponent` | Datos de movimiento y animación. |
+| `LightComponent` | Convierte la entidad en una fuente de luz. |
+| `PhysxComponent` | Comportamiento físico de la entidad. |
 
 ### Uso Básico del ECS
 ```cpp
@@ -187,11 +187,11 @@ t->scale = glm::vec3(1, 1, 1);
 ---
 
 ## 💡 9. Sistema de Iluminación
-MotArda soporta iluminación realista mediante tres tipos de luces principales [cite: 1]:
+MotArda soporta iluminación realista mediante tres tipos de luces principales:
 
-* **Puntual (Point):** Emite luz en todas direcciones desde un punto [cite: 1].
-* **Focal (Spot):** Luz cónica con decaimiento [cite: 1].
-* **Direccional:** Simula la luz solar (rayos paralelos) [cite: 1].
+* **Puntual (Point):** Emite luz en todas direcciones desde un punto.
+* **Focal (Spot):** Luz cónica con decaimiento.
+* **Direccional:** Simula la luz solar (rayos paralelos).
 
 ### Tipos de Luz
 ```cpp
@@ -214,14 +214,14 @@ lightComp->spotLights.push_back(
 ---
 
 ## 🎨 10. Modos de Renderizado
-Cambia el comportamiento visual del motor en tiempo de ejecución [cite: 1]:
+Cambia el comportamiento visual del motor en tiempo de ejecución:
 
 | Modo | Descripción |
 | :--- | :--- |
-| `Base` | Renderizado 3D básico sin luces [cite: 1]. |
-| `LightsWithShadows` | Renderizado completo con iluminación y sombras [cite: 1]. |
-| `Bidimensional` | Modo ortográfico para sprites 2D [cite: 1]. |
-| `DeferredWithLights` | Pipeline deferred para múltiples luces [cite: 1]. |
+| `Base` | Renderizado 3D básico sin luces. |
+| `LightsWithShadows` | Renderizado completo con iluminación y sombras. |
+| `Bidimensional` | Modo ortográfico para sprites 2D. |
+| `DeferredWithLights` | Pipeline deferred para múltiples luces. |
 
 ```cpp
 eng.SetRenderType(MotardaEng::RenderType::DeferredWithLights);
@@ -230,7 +230,7 @@ eng.SetRenderType(MotardaEng::RenderType::DeferredWithLights);
 ---
 
 ## 🎲 11. Renderizado 2D y Sprites
-MotArda incluye soporte completo para renderizado 2D mediante sprites y sprite sheets [cite: 1].
+MotArda incluye soporte completo para renderizado 2D mediante sprites y sprite sheets.
 
 ### Cargar Texturas
 ```cpp
@@ -282,7 +282,7 @@ if (eng.inputIsKeyPressed(Input::Keyboard::D)) spriteTransform->position.x += sp
 ---
 
 ## ⚡ 12. Sistema de Física (PhysX)
-MotArda integra el motor de física PhysX para simulación realista [cite: 1].
+MotArda integra el motor de física PhysX para simulación realista.
 
 ### Activar Física
 ```cpp
@@ -347,7 +347,7 @@ eng.createPhysxActor(*floorPhysx, *floorTransform);
 ---
 
 ## 🐍 13. Scripting con Lua
-MotArda permite añadir lógica de juego mediante scripts Lua utilizando la librería Sol [cite: 1].
+MotArda permite añadir lógica de juego mediante scripts Lua utilizando la librería Sol.
 
 ### Incluir Librería
 ```cpp
@@ -488,37 +488,37 @@ if (!r.valid()) {
 
 ---
 
-## 🕹️ 14. Sistema de Entrada
-Mapeo de teclas rápido para interacciones [cite: 1]:
+## 🎮 14. Sistema de Entrada
+Mapeo de teclas rápido para interacciones:
 
 | Tecla | Acción común |
 | :--- | :--- |
-| **W, A, S, D** | Movimiento lateral y frontal [cite: 1] |
-| **Q, E** | Movimiento vertical [cite: 1] |
-| **R, T** | Rotación de cámara [cite: 1] |
-| **F, G** | Rotación de pitch [cite: 1] |
-| **I, J, K, L** | Controles alternativos (Lua) [cite: 1] |
-| **U, O** | Rotación de objeto (Lua) [cite: 1] |
-| **N, M** | Escalado (Lua) [cite: 1] |
+| **W, A, S, D** | Movimiento lateral y frontal |
+| **Q, E** | Movimiento vertical |
+| **R, T** | Rotación de cámara |
+| **F, G** | Rotación de pitch |
+| **I, J, K, L** | Controles alternativos (Lua) |
+| **U, O** | Rotación de objeto (Lua) |
+| **N, M** | Escalado (Lua) |
 
 ---
 
-## 🔧 15. Referencia API y Troubleshooting
+## 🔍 15. Referencia API y Troubleshooting
 
 ### Métodos Útiles de `MotardaEng`
-* `windowGetSizeRatio()`: Obtiene el aspect ratio de la ventana [cite: 1].
-* `generateSphere/Cube/Plane()`: Crea geometría básica al vuelo [cite: 1].
-* `generateSprite/Sheet()`: Crea sprites 2D [cite: 1].
-* `SetDebugMode(bool)`: Activa/Desactiva información de depuración [cite: 1].
-* `hasPhysx(bool)`: Activa/desactiva el sistema de física [cite: 1].
-* `createPhysxActor()`: Crea un actor físico [cite: 1].
+* `windowGetSizeRatio()`: Obtiene el aspect ratio de la ventana.
+* `generateSphere/Cube/Plane()`: Crea geometría básica al vuelo.
+* `generateSprite/Sheet()`: Crea sprites 2D.
+* `SetDebugMode(bool)`: Activa/Desactiva información de depuración.
+* `hasPhysx(bool)`: Activa/desactiva el sistema de física.
+* `createPhysxActor()`: Crea un actor físico.
 
 ### ❓ Solución de Problemas
-* **¿Pantalla Negra?** Revisa si la cámara está dentro de un objeto o si olvidaste llamar a `RenderScene()` [cite: 1].
-* **¿Fallo de Texturas?** Verifica que las rutas en `Material` sean relativas al ejecutable [cite: 1].
-* **¿Sombras no visibles?** Asegúrate de usar el modo `LightsWithShadows` [cite: 1].
-* **¿Física no funciona?** Verifica que `eng.hasPhysx(true)` esté activado [cite: 1].
-* **¿Lua no responde?** Comprueba que las funciones estén correctamente boundeadas [cite: 1].
+* **¿Pantalla Negra?** Revisa si la cámara está dentro de un objeto o si olvidaste llamar a `RenderScene()`.
+* **¿Fallo de Texturas?** Verifica que las rutas en `Material` sean relativas al ejecutable.
+* **¿Sombras no visibles?** Asegúrate de usar el modo `LightsWithShadows`.
+* **¿Física no funciona?** Verifica que `eng.hasPhysx(true)` esté activado.
+* **¿Lua no responde?** Comprueba que las funciones estén correctamente boundeadas.
 
 ---
 
@@ -526,16 +526,16 @@ Mapeo de teclas rápido para interacciones [cite: 1]:
 
 | Archivo | Demuestra |
 | :--- | :--- |
-| `testWindow.cpp` | Creación básica de ventana [cite: 1]. |
-| `testTriangle.cpp` | Renderizado de malla personalizada [cite: 1]. |
-| `testMovTriangle.cpp` | Movimiento de cámara [cite: 1]. |
-| `testLoadObj.cpp` | Carga de modelos OBJ [cite: 1]. |
-| `testLights.cpp` | Iluminación y sombras [cite: 1]. |
-| `testEcs.cpp` | Sistema ECS [cite: 1]. |
-| `test2D.cpp` | Renderizado 2D y sprites [cite: 1]. |
-| `testPhysx.cpp` | Física con PhysX [cite: 1]. |
-| `testScripting.cpp` | Scripting con Lua [cite: 1]. |
-| `testDefferred.cpp` | Renderizado deferred [cite: 1]. |
+| `testWindow.cpp` | Creación básica de ventana. |
+| `testTriangle.cpp` | Renderizado de malla personalizada. |
+| `testMovTriangle.cpp` | Movimiento de cámara. |
+| `testLoadObj.cpp` | Carga de modelos OBJ. |
+| `testLights.cpp` | Iluminación y sombras. |
+| `testEcs.cpp` | Sistema ECS. |
+| `test2D.cpp` | Renderizado 2D y sprites. |
+| `testPhysx.cpp` | Física con PhysX. |
+| `testScripting.cpp` | Scripting con Lua. |
+| `testDefferred.cpp` | Renderizado deferred. |
 
 ---
 <div align="center">
