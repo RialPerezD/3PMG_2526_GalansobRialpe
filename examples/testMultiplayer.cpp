@@ -53,6 +53,13 @@ void OnReceivePacket(uint32_t senderID, const void* data, size_t size) {
 
     const MTRD::NetworkMessage* msg = static_cast<const MTRD::NetworkMessage*>(data);
 
+    if (localPlayerEntity != SIZE_MAX) {
+        auto* localNetComp = ecsPtr->GetComponent<MTRD::NetworkComponent>(localPlayerEntity);
+        if (localNetComp && localNetComp->networkID == msg->networkID) {
+            return;
+        }
+    }
+
     auto it = remoteEntities.find(msg->networkID);
     if (it == remoteEntities.end()) {
         size_t entity = ecsPtr->AddEntity();
@@ -104,7 +111,6 @@ int MTRD::main() {
     camera.setTarget(glm::vec3(0, 0, 0));
 
     MTRD::NetworkManager netMgr;
-
     if (IS_SERVER) {
         if (!netMgr.InitServer(PORT, 32)) {
             printf("Failed to start server\n");
@@ -130,9 +136,8 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::NetworkComponent>();
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
-    ecs.AddComponentType<MTRD::MovementComponent>();
 
-    size_t player = 0;
+    size_t player = SIZE_MAX;
 
     if (!IS_SERVER) {
         player = ecs.AddEntity();
@@ -154,12 +159,6 @@ int MTRD::main() {
         auto* render = ecs.AddComponent<MTRD::RenderComponent>(player);
         render->meshes_ = &objItemList[0].meshes;
         render->materials_ = &objItemList[0].materials;
-
-        auto* movement = ecs.AddComponent<MTRD::MovementComponent>(player);
-        movement->position = glm::vec3(0);
-        movement->rotation = glm::vec3(0, 0, 1);
-        movement->scale = glm::vec3(0.0f);
-        movement->shouldConstantMove = false;
 
         printf("Player created at (%.2f, %.2f), waiting for networkID...\n",
             randomX, randomZ);

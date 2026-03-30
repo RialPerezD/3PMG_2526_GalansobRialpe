@@ -109,6 +109,13 @@ void MTRD::NetworkManager::PollEvents(std::function<void(uint32_t, const void*, 
                     ENetPacket* packet = enet_packet_create(&np.networkID, sizeof(np.networkID), ENET_PACKET_FLAG_RELIABLE);
                     enet_peer_send(event.peer, 0, packet);
                     
+                    for (const auto& p : peers_) {
+                        if (p.peer != event.peer) {
+                            ENetPacket* broadcastPacket = enet_packet_create(&np.networkID, sizeof(np.networkID), ENET_PACKET_FLAG_RELIABLE);
+                            enet_peer_send(p.peer, 0, broadcastPacket);
+                        }
+                    }
+                    
                     if (callback) {
                         callback(np.networkID, nullptr, 0);
                     }
@@ -124,6 +131,14 @@ void MTRD::NetworkManager::PollEvents(std::function<void(uint32_t, const void*, 
                         if (p.peer == event.peer) {
                             senderID = p.networkID;
                             break;
+                        }
+                    }
+                    if (senderID != 0) {
+                        ENetPacket* broadcastPacket = enet_packet_create(event.packet->data, event.packet->dataLength, ENET_PACKET_FLAG_UNSEQUENCED);
+                        for (const auto& p : peers_) {
+                            if (p.peer != event.peer) {
+                                enet_peer_send(p.peer, 0, broadcastPacket);
+                            }
                         }
                     }
                 }
@@ -143,6 +158,13 @@ void MTRD::NetworkManager::PollEvents(std::function<void(uint32_t, const void*, 
                     }
                 }
                 printf("[NetworkManager] Client disconnected (ID: %u)\n", disconnectedID);
+                
+                uint32_t disconnectMsg = disconnectedID | 0x80000000;
+                ENetPacket* broadcastPacket = enet_packet_create(&disconnectMsg, sizeof(disconnectMsg), ENET_PACKET_FLAG_RELIABLE);
+                for (const auto& p : peers_) {
+                    enet_peer_send(p.peer, 0, broadcastPacket);
+                }
+                
                 if (callback) {
                     callback(disconnectedID | 0x80000000, nullptr, 0);
                 }
