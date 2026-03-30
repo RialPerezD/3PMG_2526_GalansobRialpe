@@ -9,8 +9,7 @@
 #include <MotArda/win64/Systems/RenderSystem.hpp>
 
 
-static void error_callback(int error, const char* description)
-{
+static void error_callback(int error, const char* description){
     fprintf(stderr, "Glfw error: %s\n", description);
 }
 

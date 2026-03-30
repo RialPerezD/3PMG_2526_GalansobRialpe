@@ -12,6 +12,7 @@
 #include "Sprite.hpp"
 #include <MotArda/win64/Systems/RenderDefferredSystem.hpp>
 #include "PhysxMaster.hpp"
+#include "Systems/OnlineSystem.hpp"
 
 namespace MTRD {
 
@@ -66,6 +67,15 @@ namespace MTRD {
 
 		// --- Functions ---
 		void SetDebugMode(bool debug);
+
+		/**
+		* TODO write online documentation
+		*/
+		OnlineSystem* ActivateOnlineMode(
+			bool ImServer = true,
+			const char* ip = "127.0.0.0",
+			float port = 1234
+		);
 
 		bool windowShouldClose();
 		/**
@@ -204,6 +214,7 @@ namespace MTRD {
 		MotardaEng(Window window, Input input, JobSystem js);
 
 		bool debug_;
+		bool online_;
 
 		//< Object of Window class.
 		Window window_;
@@ -215,6 +226,8 @@ namespace MTRD {
 		Camera camera_;
 		ECSManager ecs_;
 
+		// --- Online Information ---
+		OnlineSystem onlineSystem_;
 
 		// --- Render Information ---
 		glm::mat4x4 vp_;

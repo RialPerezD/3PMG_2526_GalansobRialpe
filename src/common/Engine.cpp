@@ -1,3 +1,4 @@
+#include <enet/enet.h>
 #include "Motarda/common/Engine.hpp"
 #include <memory>
 #include <fstream>
@@ -48,6 +49,23 @@ namespace MTRD {
     }
 
 
+    OnlineSystem* MotardaEng::ActivateOnlineMode(
+        bool ImServer,
+        const char* ip,
+        float port
+    ) {
+        online_ = true;
+
+        if (enet_initialize() != 0) return nullptr;
+        atexit(enet_deinitialize);
+
+        onlineSystem_ = OnlineSystem(ImServer, ip, port);
+        if (!onlineSystem_.Init()) return nullptr;
+
+        return &onlineSystem_;
+    }
+
+
     bool MotardaEng::windowShouldClose(){
         return window_.shouldClose();
     }
@@ -62,6 +80,8 @@ namespace MTRD {
         window_.swapBuffers();
         window_.pollEvents();
         window_.imGuiEndFrame();
+
+		if (online_) onlineSystem_.PollEvents();
     }
 
 
