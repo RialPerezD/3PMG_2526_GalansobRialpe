@@ -9,6 +9,7 @@
 #include "Components/TransformComponent.hpp"
 #include "Components/RenderComponent.hpp"
 #include "Components/MovementComponent.hpp"
+#include "Components/NetworkComponent.hpp"
 
 
 /**
