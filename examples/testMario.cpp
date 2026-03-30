@@ -3,9 +3,7 @@
 #include <MotArda/common/Ecs.hpp>
 #include <MotArda/common/Camera.hpp>
 #include <MotArda/common/Components/LightComponent.hpp>
-
 #include <memory>
-
 #include <MotArda/win64/Systems/RenderLightsSystem.hpp>
 #include <MotArda/win64/Systems/ShadowMapSystem.hpp>
 #include <MotArda/win64/Texture.hpp>
@@ -15,9 +13,16 @@ static void error_callback(int error, const char* description) {
 }
 
 struct Platform {
-    float x, y;
-    float width, height;
+    float x, y, width, height;
 };
+
+bool checkGroundCollision(const glm::vec3& pos, const Platform& plat, float w, float h) {
+    float pL = plat.x - plat.width * 0.5f, pR = plat.x + plat.width * 0.5f;
+    float pT = plat.y + plat.height * 0.5f;
+    float mL = pos.x - w * 0.5f, mR = pos.x + w * 0.5f, mB = pos.y - h * 0.5f;
+
+    return (mR > pL && mL < pR && mB <= pT && mB >= pT - 0.3f);
+}
 
 int MTRD::main() {
     std::srand(static_cast<unsigned>(std::time(nullptr)));
@@ -26,120 +31,71 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
 
     auto& eng = maybeEng.value();
-
-    MTRD::Camera& camera = eng.getCamera();
-    camera.setPosition(glm::vec3(0, 0, 20));
-    camera.setTarget(glm::vec3(0, 0, 0));
-
+    eng.getCamera().setPosition({ 0, 0, 20 });
+    eng.getCamera().setTarget({ 0, 0, 0 });
     eng.SetDebugMode(true);
     eng.SetRenderType(MotardaEng::RenderType::Bidimensional);
     eng.windowSetErrorCallback(error_callback);
 
     ECSManager& ecs = eng.getEcs();
+    GLuint marioTex = Texture::LoadTexture("../assets/textures/mario/MarioSheet.png");
+    GLuint bgTex = Texture::LoadTexture("../assets/textures/mario/background.png");
 
-    GLuint marioTexture = Texture::LoadTexture("../assets/textures/mario/MarioSheet.png");
-    GLuint backgroundTexture = Texture::LoadTexture("../assets/textures/mario/background.png");
+    Sprite bg = eng.generateSprite(bgTex, -16, 12);
+    ecs.GetComponent<TransformComponent>(bg.getId())->position = { 0, 0, -2.0f };
 
-    Sprite backgroundSprite = eng.generateSprite(backgroundTexture, -16, 12);
-    TransformComponent* backgroundTransform = ecs.GetComponent<TransformComponent>(backgroundSprite.getId());
-    backgroundTransform->position = glm::vec3(0, 0, -2.0f);
-
-    Sprite marioSprite = eng.generateSpriteSheet(marioTexture, -1, 64, 32, 4, 2, 5);
-    TransformComponent* marioTransform = ecs.GetComponent<TransformComponent>(marioSprite.getId());
-    marioTransform->position = glm::vec3(0.0f, 0.0f, 0.0f);
+    Sprite mario = eng.generateSpriteSheet(marioTex, -1, 64, 32, 4, 2, 5);
+    auto* mTrans = ecs.GetComponent<TransformComponent>(mario.getId());
+    mTrans->position = { 0.0f, 0.0f, 0.0f };
 
     std::vector<Platform> platforms;
+    for (float x = -12.0f; x <= 12.0f; x += 1.0f) platforms.push_back({ x, -4.2f, 1.0f, 1.0f });
 
-    float groundY = -3.0f;
-    for (float x = -12.0f; x <= 12.0f; x += 1.0f) {
-        platforms.push_back({x, groundY, 1.0f, 1.0f});
-    }
+    std::vector<glm::vec2> extraPos = { {-4.0f, 2.5f}, {-2.0f, 2.5f}, {-1.0f, 2.5f} };
+    for (auto& p : extraPos) platforms.push_back({ p.x, p.y, 1.0f, 1.0f });
 
-    float platformPositions[][3] = {
-        {-2.0f, 1.0f}//, {-1.0f, -1.0f}, {0.0f, -1.0f}, {1.0f, -1.0f}, {2.0f, -1.0f}, {3.0f, -1.0f},
-        //{3.0f, 0.5f}, {4.0f, 0.5f},
-        //{-4.5f, 0.5f}, {-3.5f, 0.5f}, {-2.5f, 0.5f},
-        //{-6.5f, 1.5f}, {-5.5f, 1.5f},
-        //{6.5f, 1.5f}, {7.5f, 1.5f},
-    };
-
-    for (int i = 0; i < 15; i++) {
-        platforms.push_back({platformPositions[i][0], platformPositions[i][1], 1.0f, 1.0f});
-    }
-
-    float movSpeed = 0.15f;
-    float velocityY = 0.0f;
-    float gravity = -0.015f;
-    float jumpForce = 0.4f;
-    bool canJump = false;
-    bool moving = false;
-    float animTimer = 0.0f;
-
-    float marioWidth = 0.8f;
-    float marioHeight = 0.8f;
+    float velY = 0, gravity = -0.015f, jump = 0.5f, speed = 0.15f, animTimer = 0;
+    float mW = 0.8f, mH = 0.8f;
+    bool canJump = false, moving = false;
 
     while (!eng.windowShouldClose()) {
         eng.windowInitFrame();
 
+        moving = false;
         if (eng.inputIsKeyPressed(Input::Keyboard::A)) {
-            marioTransform->position.x -= movSpeed;
-            moving = true;
-        }
-        if (eng.inputIsKeyPressed(Input::Keyboard::D)) {
-            marioTransform->position.x += movSpeed;
-            moving = true;
-        }
-
-        if (eng.inputIsKeyPressed(Input::Keyboard::W) && canJump) {
-            velocityY = jumpForce;
-            canJump = false;
-        }
-
-        if (!eng.inputIsKeyPressed(Input::Keyboard::A) && 
-            !eng.inputIsKeyPressed(Input::Keyboard::D)) {
-            moving = false;
-        }
-
-        velocityY += gravity;
-        marioTransform->position.y += velocityY;
-
-        bool onGround = false;
-        for (const auto& plat : platforms) {
-            float platLeft = plat.x - plat.width * 0.5f;
-            float platRight = plat.x + plat.width * 0.5f;
-            float platTop = plat.y + plat.height * 0.5f;
-            float platBottom = plat.y - plat.height * 0.5f;
-
-            float marioLeft = marioTransform->position.x - marioWidth * 0.5f;
-            float marioRight = marioTransform->position.x + marioWidth * 0.5f;
-            float marioBottom = marioTransform->position.y - marioHeight * 0.5f;
-            float marioTop = marioTransform->position.y + marioHeight * 0.5f;
-
-            if (marioRight > platLeft && marioLeft < platRight) {
-                if (marioBottom <= platTop && marioBottom >= platTop - 0.3f && velocityY < 0) {
-                    marioTransform->position.y = platTop + marioHeight * 0.5f;
-                    velocityY = 0.0f;
-                    onGround = true;
-                }
+            float temPos = mTrans->position.x - speed;
+            if (temPos > -7) {
+                mTrans->position.x = temPos;
+                moving = true;
+            }
+        }else if (eng.inputIsKeyPressed(Input::Keyboard::D)) {
+            float temPos = mTrans->position.x + speed;
+            if (temPos < 7) {
+                mTrans->position.x = temPos;
+                moving = true;
             }
         }
 
-        if (onGround) {
-            canJump = true;
-        }
+        if (eng.inputIsKeyPressed(Input::Keyboard::W) && canJump) { velY = jump; canJump = false; }
 
-        if (marioTransform->position.y < -10.0f) {
-            marioTransform->position = glm::vec3(0.0f, 0.0f, 0.0f);
-            velocityY = 0.0f;
-        }
+        velY += gravity;
+        mTrans->position.y += velY;
 
-        //camera.setTarget(glm::vec3(marioTransform->position.x, marioTransform->position.y + 2.0f, 0.0f));
+        bool onGround = false;
+        for (const auto& plat : platforms) {
+            if (velY < 0 && checkGroundCollision(mTrans->position, plat, mW, mH)) {
+                mTrans->position.y = (plat.y + plat.height * 0.5f) + mH * 0.5f;
+                velY = 0;
+                onGround = true;
+                break;
+            }
+        }
+        canJump = onGround;
+
+        if (mTrans->position.y < -10.0f) { mTrans->position = { 0, 0, 0 }; velY = 0; }
 
         animTimer += eng.windowGetLastFrameTime();
-        if (moving && animTimer >= 0.15f) {
-            marioSprite.nextFrame();
-            animTimer = 0.0f;
-        }
+        if (moving && animTimer >= 0.15f) { mario.nextFrame(); animTimer = 0; }
 
         eng.RenderScene();
         eng.windowEndFrame();
