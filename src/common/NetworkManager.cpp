@@ -2,9 +2,10 @@
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
+#include <functional>
 
 MTRD::NetworkManager::NetworkManager()
-    : isServer_(false), host_(nullptr), receiveCallback_(nullptr) {
+    : isServer_(false), host_(nullptr), peer_(nullptr), peers_() {
     static bool enetInitialized = false;
     if (!enetInitialized) {
         if (enet_initialize() != 0) {
@@ -21,6 +22,8 @@ MTRD::NetworkManager::~NetworkManager() {
 }
 
 bool MTRD::NetworkManager::InitServer(uint16_t port, uint32_t maxClients) {
+    if (maxClients > 10) maxClients = 10;
+
     ENetAddress address;
     address.host = ENET_HOST_ANY;
     address.port = port;
@@ -82,6 +85,10 @@ void MTRD::NetworkManager::Shutdown() {
 }
 
 void MTRD::NetworkManager::PollEvents() {
+    PollEvents(nullptr);
+}
+
+void MTRD::NetworkManager::PollEvents(std::function<void(uint32_t, const void*, size_t)> callback) {
     if (!host_) return;
 
     ENetEvent event;
@@ -89,16 +96,28 @@ void MTRD::NetworkManager::PollEvents() {
         switch (event.type) {
         case ENET_EVENT_TYPE_CONNECT:
             if (isServer_) {
-                NetworkPeer np;
-                np.networkID = GenerateNetworkID();
-                np.peer = event.peer;
-                peers_.push_back(np);
-                printf("[NetworkManager] Client connected (ID: %u)\n", np.networkID);
+                if (peers_.size() >= 10) {
+                    printf("[NetworkManager] Server full, rejecting client\n");
+                    enet_peer_disconnect_now(event.peer, 0);
+                } else {
+                    NetworkPeer np;
+                    np.networkID = GenerateNetworkID();
+                    np.peer = event.peer;
+                    peers_.push_back(np);
+                    printf("[NetworkManager] Client connected (ID: %u)\n", np.networkID);
+                    
+                    ENetPacket* packet = enet_packet_create(&np.networkID, sizeof(np.networkID), ENET_PACKET_FLAG_RELIABLE);
+                    enet_peer_send(event.peer, 0, packet);
+                    
+                    if (callback) {
+                        callback(np.networkID, nullptr, 0);
+                    }
+                }
             }
             break;
 
         case ENET_EVENT_TYPE_RECEIVE:
-            if (receiveCallback_ && event.packet->dataLength >= sizeof(uint32_t)) {
+            if (callback && event.packet->dataLength >= sizeof(uint32_t)) {
                 uint32_t senderID = 0;
                 if (isServer_) {
                     for (const auto& p : peers_) {
@@ -108,17 +127,24 @@ void MTRD::NetworkManager::PollEvents() {
                         }
                     }
                 }
-                receiveCallback_(senderID, event.packet->data, event.packet->dataLength);
+                callback(senderID, event.packet->data, event.packet->dataLength);
             }
             enet_packet_destroy(event.packet);
             break;
 
         case ENET_EVENT_TYPE_DISCONNECT:
-            printf("[NetworkManager] Peer disconnected\n");
-            for (auto it = peers_.begin(); it != peers_.end(); ++it) {
-                if (it->peer == event.peer) {
-                    peers_.erase(it);
-                    break;
+            if (isServer_) {
+                uint32_t disconnectedID = 0;
+                for (auto it = peers_.begin(); it != peers_.end(); ++it) {
+                    if (it->peer == event.peer) {
+                        disconnectedID = it->networkID;
+                        peers_.erase(it);
+                        break;
+                    }
+                }
+                printf("[NetworkManager] Client disconnected (ID: %u)\n", disconnectedID);
+                if (callback) {
+                    callback(disconnectedID | 0x80000000, nullptr, 0);
                 }
             }
             break;
@@ -162,6 +188,21 @@ bool MTRD::NetworkManager::IsConnected() const {
         return host_ != nullptr;
     }
     return host_ != nullptr && peer_ != nullptr;
+}
+
+void MTRD::NetworkManager::SendNetworkID(uint32_t networkID) {
+    if (isServer_) {
+        for (auto& p : peers_) {
+            if (p.networkID == networkID && p.peer) {
+                ENetPacket* packet = enet_packet_create(&networkID, sizeof(networkID), ENET_PACKET_FLAG_RELIABLE);
+                enet_peer_send(p.peer, 0, packet);
+                break;
+            }
+        }
+    } else if (peer_) {
+        ENetPacket* packet = enet_packet_create(&networkID, sizeof(networkID), ENET_PACKET_FLAG_RELIABLE);
+        enet_peer_send(peer_, 0, packet);
+    }
 }
 
 uint32_t MTRD::NetworkManager::GenerateNetworkID() {

@@ -2,14 +2,12 @@
 #include "MotArda/common/Components/NetworkComponent.hpp"
 #include "MotArda/common/Components/TransformComponent.hpp"
 
-void MTRD::NetworkSystem::Process(ECSManager& ecs, MotardaEng& eng, NetworkManager& netMgr) {
+void MTRD::NetworkSystem::Process(ECSManager& ecs, MotardaEng& eng, NetworkManager& netMgr, std::function<void(uint32_t, const void*, size_t)> receiveCallback) {
     if (!netMgr.IsConnected()) return;
 
-    netMgr.PollEvents();
+    netMgr.PollEvents(receiveCallback);
 
     auto entities = ecs.GetEntitiesWithComponents<TransformComponent, NetworkComponent>();
-    auto& transformList = ecs.GetComponentList<TransformComponent>();
-    auto& networkList = ecs.GetComponentList<NetworkComponent>();
 
     if (netMgr.IsServer()) {
         for (size_t entity : entities) {
@@ -34,7 +32,7 @@ void MTRD::NetworkSystem::Process(ECSManager& ecs, MotardaEng& eng, NetworkManag
             auto* netComp = ecs.GetComponent<NetworkComponent>(entity);
             auto* transform = ecs.GetComponent<TransformComponent>(entity);
 
-            if (netComp && transform && !netComp->isLocal) {
+            if (netComp && transform && netComp->isLocal && netComp->networkID != 0) {
                 NetworkMessage msg;
                 msg.networkID = netComp->networkID;
                 msg.posX = transform->position.x;
@@ -44,7 +42,7 @@ void MTRD::NetworkSystem::Process(ECSManager& ecs, MotardaEng& eng, NetworkManag
                 msg.rotY = transform->rotation.y;
                 msg.rotZ = transform->rotation.z;
 
-                netMgr.SendPacket(netComp->networkID, &msg, sizeof(msg), false);
+                netMgr.SendPacket(0, &msg, sizeof(msg), false);
             }
         }
     }

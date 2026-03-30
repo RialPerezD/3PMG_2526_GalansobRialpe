@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <functional>
 
 namespace MTRD {
 
@@ -27,22 +28,21 @@ namespace MTRD {
         void Shutdown();
 
         void PollEvents();
+        void PollEvents(std::function<void(uint32_t, const void*, size_t)> callback);
 
         bool SendPacket(uint32_t targetNetworkID, const void* data, size_t size, bool reliable = true);
         bool BroadcastPacket(const void* data, size_t size, bool reliable = true);
+        void SendNetworkID(uint32_t networkID);
 
         bool IsServer() const { return isServer_; }
         bool IsConnected() const;
-
-        using PacketCallback = void(*)(uint32_t senderID, const void* data, size_t size);
-        void SetReceiveCallback(PacketCallback callback) { receiveCallback_ = callback; }
+        size_t GetPeerCount() const { return peers_.size(); }
 
     private:
         bool isServer_;
         ENetHost* host_;
         ENetPeer* peer_;
         std::vector<NetworkPeer> peers_;
-        PacketCallback receiveCallback_;
 
         uint32_t GenerateNetworkID();
     };

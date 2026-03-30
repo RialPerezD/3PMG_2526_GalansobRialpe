@@ -49,7 +49,7 @@ namespace MTRD {
     }
 
 
-    OnlineSystem* MotardaEng::ActivateOnlineMode(
+    /*OnlineSystem* MotardaEng::ActivateOnlineMode(
         bool ImServer,
         const char* ip,
         float port
@@ -63,7 +63,7 @@ namespace MTRD {
         if (!onlineSystem_.Init()) return nullptr;
 
         return &onlineSystem_;
-    }
+    }*/
 
 
     bool MotardaEng::windowShouldClose(){
@@ -81,7 +81,7 @@ namespace MTRD {
         window_.pollEvents();
         window_.imGuiEndFrame();
 
-		if (online_) onlineSystem_.PollEvents();
+		//if (online_) onlineSystem_.PollEvents();
     }
 
 

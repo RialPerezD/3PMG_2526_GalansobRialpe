@@ -68,12 +68,6 @@ int MTRD::main() {
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
     r->meshes_ = &objItemList[0].meshes;
     r->materials_ = &objItemList[0].materials;
-
-    MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
-    m->position = glm::vec3(0);
-    m->rotation = glm::vec3(0, 0, 1);
-    m->scale = glm::vec3(0.0f);
-    m->shouldConstantMove = false;
     // --- *** ---
 
 
