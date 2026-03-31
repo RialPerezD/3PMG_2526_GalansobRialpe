@@ -49,7 +49,7 @@ int MTRD::main() {
     mTrans->position = { 0.0f, 0.0f, 0.0f };
 
     std::vector<Platform> platforms;
-    for (float x = -12.0f; x <= 12.0f; x += 1.0f) platforms.push_back({ x, -4.2f, 1.0f, 1.0f });
+    for (float x = -12.0f; x <= 12.0f; x += 1.0f) platforms.push_back({ x, -4.25f, 1.0f, 1.0f });
 
     std::vector<glm::vec2> extraPos = { {-4.0f, 2.5f}, {-2.0f, 2.5f}, {-1.0f, 2.5f} };
     for (auto& p : extraPos) platforms.push_back({ p.x, p.y, 1.0f, 1.0f });
@@ -57,18 +57,22 @@ int MTRD::main() {
     float velY = 0, gravity = -0.015f, jump = 0.5f, speed = 0.15f, animTimer = 0;
     float mW = 0.8f, mH = 0.8f;
     bool canJump = false, moving = false;
+    int frame = 0, side = 1;
+    mario.setFrame(1);
 
     while (!eng.windowShouldClose()) {
         eng.windowInitFrame();
 
         moving = false;
         if (eng.inputIsKeyPressed(Input::Keyboard::A)) {
+            side = 4;
             float temPos = mTrans->position.x - speed;
             if (temPos > -7) {
                 mTrans->position.x = temPos;
                 moving = true;
             }
         }else if (eng.inputIsKeyPressed(Input::Keyboard::D)) {
+            side = 1;
             float temPos = mTrans->position.x + speed;
             if (temPos < 7) {
                 mTrans->position.x = temPos;
@@ -92,10 +96,24 @@ int MTRD::main() {
         }
         canJump = onGround;
 
+        if(!moving && canJump){ mario.setFrame(side); }
+
         if (mTrans->position.y < -10.0f) { mTrans->position = { 0, 0, 0 }; velY = 0; }
 
         animTimer += eng.windowGetLastFrameTime();
-        if (moving && animTimer >= 0.15f) { mario.nextFrame(); animTimer = 0; }
+        if (moving && animTimer >= 0.15f) {
+            if (canJump) {
+                mario.setFrame(frame + side);
+                frame = (frame + 1) % 3;
+            } else {
+                if (side == 4) {
+                    mario.setFrame(7);
+                } else {
+                    mario.setFrame(0);
+                }
+            }
+            animTimer = 0;
+        }
 
         eng.RenderScene();
         eng.windowEndFrame();
