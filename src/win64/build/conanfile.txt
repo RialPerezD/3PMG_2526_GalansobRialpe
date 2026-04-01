@@ -1,6 +1,7 @@
 [requires]
 glfw/3.3.8
 sol2/3.3.0
+spdlog/1.17.0
 
 [generators]
 premake
@@ -9,4 +10,6 @@ CMakeToolchain
 
 [options]
 
+[layout]
+cmake_layout
 
