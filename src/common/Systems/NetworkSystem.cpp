@@ -1,6 +1,8 @@
 #include "MotArda/common/Systems/NetworkSystem.hpp"
 #include "MotArda/common/Components/NetworkComponent.hpp"
 #include "MotArda/common/Components/TransformComponent.hpp"
+#include <cstring>
+#include <iostream>
 
 namespace MTRD {
 
@@ -9,13 +11,25 @@ namespace MTRD {
         MessageCallback receiveCallback)
         : ecs_(ecs),
         netMgr_(netMgr),
-        receiveCallback_(receiveCallback) 
+        receiveCallback_(receiveCallback),
+        chatCallback_(nullptr)
     {}
 
     void NetworkSystem::Process() {
         if (!netMgr_.IsConnected()) return;
 
-        netMgr_.PollEvents(receiveCallback_);
+        netMgr_.PollEvents([this](uint32_t senderID, const void* data, size_t size) {
+            if (receiveCallback_) {
+                receiveCallback_(senderID, data, size);
+            }
+
+            if (chatCallback_ && size >= sizeof(ChatMessage)) {
+                const ChatMessage* chatMsg = static_cast<const ChatMessage*>(data);
+                if (chatMsg->text[0] != '\0') {
+                    chatCallback_(*chatMsg);
+                }
+            }
+        });
 
         auto entities = ecs_.GetEntitiesWithComponents<TransformComponent, NetworkComponent>();
 
