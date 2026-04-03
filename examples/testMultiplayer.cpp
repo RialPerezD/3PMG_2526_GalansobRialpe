@@ -7,104 +7,18 @@
 #include "MotArda/common/Components/TransformComponent.hpp"
 #include "MotArda/common/Components/RenderComponent.hpp"
 #include "MotArda/common/Components/MovementComponent.hpp"
+#include "MotArda/common/SimplePacketReciver.hpp"
 #include <cstdlib>
 #include <ctime>
 #include <map>
 #include <functional>
 
-static std::map<uint32_t, size_t> remoteEntities;
-static std::vector<MTRD::ObjItem>* sphereObjItem = nullptr;
-static ECSManager* ecsPtr = nullptr;
-static std::vector<MTRD::ObjItem>* objItemListPtr = nullptr;
-static size_t localPlayerEntity = SIZE_MAX;
-
-void OnReceivePacket(uint32_t senderID, const void* data, size_t size) {
-    if (!ecsPtr) return;
-
-    // Handle local player network ID assignment
-    if (localPlayerEntity != SIZE_MAX) {
-        auto* localNetComp = ecsPtr->GetComponent<MTRD::NetworkComponent>(localPlayerEntity);
-        if (localNetComp && localNetComp->networkID == 0 && size == sizeof(uint32_t)) {
-            uint32_t assignedID = *(uint32_t*)data;
-            localNetComp->networkID = assignedID;
-            printf("Assigned networkID: %u\n", assignedID);
-            return;
-        }
-    }
-
-    if (!objItemListPtr) return;
-
-    // Check for disconnect flag (MSB set to 1)
-    if (senderID & 0x80000000) {
-        // Remove flag to get the actual client ID
-        uint32_t disconnectedID = senderID & 0x7FFFFFFF;
-        auto it = remoteEntities.find(disconnectedID);
-        if (it != remoteEntities.end()) {
-            ecsPtr->RemoveEntity(it->second);
-            remoteEntities.erase(it);
-            printf("Removed entity for disconnected client %u\n", disconnectedID);
-        }
-        return;
-    }
-
-    // New connection signal (empty packet)
-    if (size == 0 && senderID != 0) {
-        printf("New client connected with ID %u\n", senderID);
-        return;
-    }
-
-    // Ignore packets that are too small
-    if (size < sizeof(MTRD::NetworkMessage)) return;
-
-    const MTRD::NetworkMessage* msg = static_cast<const MTRD::NetworkMessage*>(data);
-
-    // Ignore packets sent by the local player
-    if (localPlayerEntity != SIZE_MAX) {
-        auto* localNetComp = ecsPtr->GetComponent<MTRD::NetworkComponent>(localPlayerEntity);
-        if (localNetComp && localNetComp->networkID == msg->networkID) {
-            return;
-        }
-    }
-
-    auto it = remoteEntities.find(msg->networkID);
-    if (it == remoteEntities.end()) {
-        // Create a new entity for a new discovered remote player
-        size_t entity = ecsPtr->AddEntity();
-
-        auto* netComp = ecsPtr->AddComponent<MTRD::NetworkComponent>(entity);
-        netComp->networkID = msg->networkID;
-        netComp->isLocal = false;
-
-        auto* transform = ecsPtr->AddComponent<MTRD::TransformComponent>(entity);
-        transform->position = glm::vec3(msg->posX, msg->posY, msg->posZ);
-        transform->rotation = glm::vec3(msg->rotX, msg->rotY, msg->rotZ);
-        transform->angleRotationRadians = 0;
-        transform->scale = glm::vec3(1.f);
-
-        // Asign visual meshes and materials
-        if (!objItemListPtr->empty()) {
-            auto* render = ecsPtr->AddComponent<MTRD::RenderComponent>(entity);
-            render->meshes_ = &(*objItemListPtr)[0].meshes;
-            render->materials_ = &(*objItemListPtr)[0].materials;
-        }
-
-        remoteEntities[msg->networkID] = entity;
-        printf("Created remote entity for client %u\n", msg->networkID);
-    } else {
-        // Update existing remote player position and rotation
-        size_t entity = it->second;
-        auto* transform = ecsPtr->GetComponent<MTRD::TransformComponent>(entity);
-        if (transform) {
-            transform->position = glm::vec3(msg->posX, msg->posY, msg->posZ);
-            transform->rotation = glm::vec3(msg->rotX, msg->rotY, msg->rotZ);
-        }
-    }
-}
-
 int MTRD::main() {
     constexpr bool IS_SERVER = true;
     constexpr uint16_t PORT = 1234;
-    constexpr const char* SERVER_IP = "127.0.0.1";
+    constexpr const char* SERVER_IP = "127.0.0.1";      //This is loopback default ip
+    //Change this to change the mesh of the player (0 for cube, 1 for sphere, 2 for sphere with texture)
+	constexpr float meshIdSelector = 0;             
 
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 
@@ -118,6 +32,52 @@ int MTRD::main() {
     Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0, 5, 10));
     camera.setTarget(glm::vec3(0, 0, 0));
+
+    std::vector<ObjItem> objItemList;
+    objItemList.push_back(eng.generateCube(1));
+    objItemList.push_back(eng.generateSphere(0.5f, 20, 20));
+    objItemList.push_back(eng.generateSphere(0.5f, 20, 20, 1));
+    eng.windowLoadAllMaterials(objItemList);
+
+    ECSManager& ecs = eng.getEcs();
+    ecs.AddComponentType<MTRD::NetworkComponent>();
+    ecs.AddComponentType<MTRD::TransformComponent>();
+    ecs.AddComponentType<MTRD::RenderComponent>();
+
+    size_t player = SIZE_MAX;
+
+    if (!IS_SERVER) {
+        player = ecs.AddEntity();
+
+        float randomX = static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 6.0f)) - 3.0f;
+        float randomZ = static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 6.0f)) - 3.0f;
+
+        auto* netComp = ecs.AddComponent<MTRD::NetworkComponent>(player);
+        netComp->networkID = 0;
+		netComp->meshId_ = meshIdSelector;
+        netComp->isLocal = true;
+
+        auto* transform = ecs.AddComponent<MTRD::TransformComponent>(player);
+        transform->position = glm::vec3(randomX, 0, randomZ);
+        transform->rotation = glm::vec3(0, 0, 0);
+        transform->angleRotationRadians = 0;
+        transform->scale = glm::vec3(1.f);
+
+        auto* render = ecs.AddComponent<MTRD::RenderComponent>(player);
+		assert(meshIdSelector < objItemList.size());
+        render->meshes_ = &objItemList[meshIdSelector].meshes;
+        render->materials_ = &objItemList[meshIdSelector].materials;
+
+        printf("Player created at (%.2f, %.2f), waiting for networkID...\n",
+            randomX, randomZ);
+    }
+
+    // --- Network management ---
+    SimplePacketReciver simplPacRec 
+        = SimplePacketReciver(
+            &objItemList,
+            &ecs,
+            player);
 
     NetworkManager netMgr;
     if (IS_SERVER) {
@@ -134,46 +94,17 @@ int MTRD::main() {
         printf("=== CLIENT MODE ===\n");
     }
 
-    std::vector<ObjItem> objItemList;
-    objItemList.push_back(eng.generateSphere(0.5f, 20, 20));
-    eng.windowLoadAllMaterials(objItemList);
-    sphereObjItem = &objItemList;
-    objItemListPtr = &objItemList;
-
-    ECSManager& ecs = eng.getEcs();
-    ecsPtr = &ecs;
-    ecs.AddComponentType<MTRD::NetworkComponent>();
-    ecs.AddComponentType<MTRD::TransformComponent>();
-    ecs.AddComponentType<MTRD::RenderComponent>();
-
-    size_t player = SIZE_MAX;
-
-    if (!IS_SERVER) {
-        player = ecs.AddEntity();
-        localPlayerEntity = player;
-
-        float randomX = static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 6.0f)) - 3.0f;
-        float randomZ = static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 6.0f)) - 3.0f;
-
-        auto* netComp = ecs.AddComponent<MTRD::NetworkComponent>(player);
-        netComp->networkID = 0;
-        netComp->isLocal = true;
-
-        auto* transform = ecs.AddComponent<MTRD::TransformComponent>(player);
-        transform->position = glm::vec3(randomX, 0, randomZ);
-        transform->rotation = glm::vec3(0, 0, 0);
-        transform->angleRotationRadians = 0;
-        transform->scale = glm::vec3(1.f);
-
-        auto* render = ecs.AddComponent<MTRD::RenderComponent>(player);
-        render->meshes_ = &objItemList[0].meshes;
-        render->materials_ = &objItemList[0].materials;
-
-        printf("Player created at (%.2f, %.2f), waiting for networkID...\n",
-            randomX, randomZ);
-    }
-
-    float moveSpeed = 0.1f;
+    NetworkSystem netSys = NetworkSystem(
+        ecs,
+        netMgr,
+        std::bind(
+            &MTRD::SimplePacketReciver::OnReceivePacket,
+            &simplPacRec,
+            std::placeholders::_1,
+            std::placeholders::_2,
+            std::placeholders::_3
+        ));
+    // --- *** ---
 
     while (!eng.windowShouldClose()) {
         eng.windowInitFrame();
@@ -182,17 +113,17 @@ int MTRD::main() {
             auto* transform = ecs.GetComponent<MTRD::TransformComponent>(player);
             if (transform) {
                 if (eng.inputIsKeyPressed(Input::Keyboard::W))
-                    transform->position.z -= moveSpeed;
+                    transform->position.z -= 0.1f;
                 if (eng.inputIsKeyPressed(Input::Keyboard::S))
-                    transform->position.z += moveSpeed;
+                    transform->position.z += 0.1f;
                 if (eng.inputIsKeyPressed(Input::Keyboard::A))
-                    transform->position.x -= moveSpeed;
+                    transform->position.x -= 0.1f;
                 if (eng.inputIsKeyPressed(Input::Keyboard::D))
-                    transform->position.x += moveSpeed;
+                    transform->position.x += 0.1f;
             }
         }
 
-        MTRD::NetworkSystem::Process(ecs, eng, netMgr, OnReceivePacket);
+        netSys.Process();
 
         eng.RenderScene();
 

@@ -2,56 +2,69 @@
 #include "MotArda/common/Components/NetworkComponent.hpp"
 #include "MotArda/common/Components/TransformComponent.hpp"
 
-void MTRD::NetworkSystem::Process(ECSManager& ecs, MotardaEng& eng, NetworkManager& netMgr, std::function<void(uint32_t, const void*, size_t)> receiveCallback) {
-    if (!netMgr.IsConnected()) return;
+namespace MTRD {
 
-    netMgr.PollEvents(receiveCallback);
+    NetworkSystem::NetworkSystem(ECSManager& ecs,
+        NetworkManager& netMgr,
+        MessageCallback receiveCallback)
+        : ecs_(ecs),
+        netMgr_(netMgr),
+        receiveCallback_(receiveCallback) 
+    {}
 
-    auto entities = ecs.GetEntitiesWithComponents<TransformComponent, NetworkComponent>();
+    void NetworkSystem::Process() {
+        if (!netMgr_.IsConnected()) return;
 
-    if (netMgr.IsServer()) {
-        for (size_t entity : entities) {
-            auto* netComp = ecs.GetComponent<NetworkComponent>(entity);
-            auto* transform = ecs.GetComponent<TransformComponent>(entity);
+        netMgr_.PollEvents(receiveCallback_);
 
-            if (netComp && transform && netComp->isLocal) {
-                NetworkMessage msg;
-                msg.networkID = netComp->networkID;
-                msg.posX = transform->position.x;
-                msg.posY = transform->position.y;
-                msg.posZ = transform->position.z;
-                msg.rotX = transform->rotation.x;
-                msg.rotY = transform->rotation.y;
-                msg.rotZ = transform->rotation.z;
+        auto entities = ecs_.GetEntitiesWithComponents<TransformComponent, NetworkComponent>();
 
-                netMgr.BroadcastPacket(&msg, sizeof(msg), false);
+        if (netMgr_.IsServer()) {
+            for (size_t entity : entities) {
+                auto* netComp = ecs_.GetComponent<NetworkComponent>(entity);
+                auto* transform = ecs_.GetComponent<TransformComponent>(entity);
+
+                if (netComp && transform && netComp->isLocal) {
+                    NetworkMessage msg;
+                    msg.networkID = netComp->networkID;
+                    msg.meshId_ = netComp->meshId_;
+                    msg.posX = transform->position.x;
+                    msg.posY = transform->position.y;
+                    msg.posZ = transform->position.z;
+                    msg.rotX = transform->rotation.x;
+                    msg.rotY = transform->rotation.y;
+                    msg.rotZ = transform->rotation.z;
+
+                    netMgr_.BroadcastPacket(&msg, sizeof(msg), false);
+                }
             }
-        }
-    } else {
-        for (size_t entity : entities) {
-            auto* netComp = ecs.GetComponent<NetworkComponent>(entity);
-            auto* transform = ecs.GetComponent<TransformComponent>(entity);
+        } else {
+            for (size_t entity : entities) {
+                auto* netComp = ecs_.GetComponent<NetworkComponent>(entity);
+                auto* transform = ecs_.GetComponent<TransformComponent>(entity);
 
-            if (netComp && transform && netComp->isLocal && netComp->networkID != 0) {
-                NetworkMessage msg;
-                msg.networkID = netComp->networkID;
-                msg.posX = transform->position.x;
-                msg.posY = transform->position.y;
-                msg.posZ = transform->position.z;
-                msg.rotX = transform->rotation.x;
-                msg.rotY = transform->rotation.y;
-                msg.rotZ = transform->rotation.z;
+                if (netComp && transform && netComp->isLocal && netComp->networkID != 0) {
+                    NetworkMessage msg;
+                    msg.networkID = netComp->networkID;
+                    msg.meshId_ = netComp->meshId_;
+                    msg.posX = transform->position.x;
+                    msg.posY = transform->position.y;
+                    msg.posZ = transform->position.z;
+                    msg.rotX = transform->rotation.x;
+                    msg.rotY = transform->rotation.y;
+                    msg.rotZ = transform->rotation.z;
 
-                netMgr.SendPacket(0, &msg, sizeof(msg), false);
+                    netMgr_.SendPacket(0, &msg, sizeof(msg), false);
+                }
             }
         }
     }
-}
 
-void MTRD::NetworkSystem::HandleReceive(uint32_t senderID, const void* data, size_t size) {
-    if (size < sizeof(NetworkMessage)) return;
+    void NetworkSystem::HandleReceive(uint32_t senderID, const void* data, size_t size) {
+        if (size < sizeof(NetworkMessage)) return;
 
-    const NetworkMessage* msg = static_cast<const NetworkMessage*>(data);
-    (void)senderID;
-    (void)msg;
+        const NetworkMessage* msg = static_cast<const NetworkMessage*>(data);
+        (void)senderID;
+        (void)msg;
+    }
 }
