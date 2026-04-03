@@ -108,18 +108,18 @@ int MTRD::main() {
 
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 
-    auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda Multiplayer");
+    auto maybeEng = MotardaEng::createEngine(800, 600, "Motarda Multiplayer");
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
 
     eng.SetDebugMode(true);
-    eng.SetRenderType(MTRD::MotardaEng::RenderType::Base);
+    eng.SetRenderType(MotardaEng::RenderType::Base);
 
-    MTRD::Camera& camera = eng.getCamera();
+    Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0, 5, 10));
     camera.setTarget(glm::vec3(0, 0, 0));
 
-    MTRD::NetworkManager netMgr;
+    NetworkManager netMgr;
     if (IS_SERVER) {
         if (!netMgr.InitServer(PORT, 32)) {
             printf("Failed to start server\n");

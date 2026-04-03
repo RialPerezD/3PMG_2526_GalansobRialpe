@@ -1,4 +1,5 @@
 /build
 /stage
+/src/win64/build/build
 nul
 .vs
