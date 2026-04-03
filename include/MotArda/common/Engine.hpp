@@ -11,6 +11,7 @@
 #include "Camera.hpp"
 #include "Sprite.hpp"
 #include <MotArda/win64/Systems/RenderDefferredSystem.hpp>
+#include <MotArda/win64/Systems/RenderPbrSystem.hpp>
 #include "PhysxMaster.hpp"
 
 namespace MTRD {
@@ -193,7 +194,8 @@ namespace MTRD {
 			Lights,
 			LightsWithShadows,
 			Bidimensional,
-			DeferredWithLights
+			DeferredWithLights,
+			Pbr
 		};
 
 		void SetRenderType(RenderType type);
@@ -236,6 +238,7 @@ namespace MTRD {
 		std::unique_ptr<RenderLightsSystem> renderLightsSystem_;
 		std::unique_ptr<ShadowMapSystem> shadowSystem_;
 		std::unique_ptr<RenderDefferredSystem> defferredSystem_;
+		std::unique_ptr<RenderPbrSystem> pbrSystem_;
 		RenderType actualRenderType_ = RenderType::Base;
 
 		bool initialized2D;

@@ -13,6 +13,9 @@ namespace MTRD {
         glm::vec3 ambient;
         float shininess;
 
+        float metallic = 0.0f;
+        float roughness = 0.5f;
+
         bool loadeable;
 
         std::string diffuseTexPath;

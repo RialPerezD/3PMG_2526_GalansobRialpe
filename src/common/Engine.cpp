@@ -8,6 +8,7 @@
 
 #include "MotArda/win64/window.hpp"
 #include <MotArda/common/Geometries.hpp>
+#include <MotArda/win64/Systems/RenderPbrSystem.hpp>
 
 namespace MTRD {
     std::optional<MotardaEng> MotardaEng::createEngine(
@@ -307,6 +308,10 @@ namespace MTRD {
                 defferredSystem_ = std::make_unique<RenderDefferredSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
                 shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
                 break;
+            case RenderType::Pbr:
+                pbrSystem_ = std::make_unique<RenderPbrSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
+                shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
+                break;
 		}
     }
 
@@ -361,6 +366,19 @@ namespace MTRD {
             defferredSystem_->SetShadowCubemaps(shadowSystem_->getAllDepthCubemaps());
 
             defferredSystem_->Render(ecs_, model_, true);
+            break;
+
+        case RenderType::Pbr:
+            if (!pbrSystem_) {
+                printf("There are no PBR render system");
+                return;
+            }
+            shadowSystem_->RenderShadowMap(ecs_, model_);
+
+            pbrSystem_->SetShadowMaps(shadowSystem_->getAllDepthMaps());
+            pbrSystem_->SetShadowCubemaps(shadowSystem_->getAllDepthCubemaps());
+
+            pbrSystem_->Render(ecs_, model_, true);
             break;
         }
 
