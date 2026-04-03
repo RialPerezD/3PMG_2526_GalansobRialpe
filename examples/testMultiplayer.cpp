@@ -102,9 +102,9 @@ void OnReceivePacket(uint32_t senderID, const void* data, size_t size) {
 }
 
 int MTRD::main() {
-    constexpr bool IS_SERVER = false;
+    constexpr bool IS_SERVER = true;
     constexpr uint16_t PORT = 1234;
-    constexpr const char* SERVER_IP = "172.18.1.23";
+    constexpr const char* SERVER_IP = "127.0.0.1";
 
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 
