@@ -123,6 +123,9 @@ workspace "MotArda"
 		targetdir "stage/%{prj.name}/libs/%{cfg.buildcfg}"
 		objdir "build/obj/%{prj.name}/%{cfg.buildcfg}"
 		conan_config_lib()
+		filter "system:windows"
+			links { "Ws2_32", "Winmm" }
+		filter {}
 		postbuildcommands {
             "{COPYDIR} ../deps ../stage/deps",
             "{COPYDIR} ../assets ../stage/assets",
@@ -140,7 +143,9 @@ workspace "MotArda"
 			"src/win64/Systems/*.cpp", "include/MotArda/win64/Systems/*.hpp",
 
 			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h",
-			"deps/imgui/*.cpp"
+			"deps/imgui/*.cpp",
+
+			"deps/enet/src/*.c"
 		}
 
     local example_files = os.matchfiles("examples/*.cpp")

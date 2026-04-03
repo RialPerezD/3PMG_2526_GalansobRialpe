@@ -1,7 +1,7 @@
 [requires]
 glfw/3.3.8
 sol2/3.3.0
-spdlog/1.17.0
+spdlog/1.14.1
 
 [generators]
 premake

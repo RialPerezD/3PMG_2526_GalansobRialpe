@@ -120,7 +120,9 @@ workspace "MotArda"
         kind "StaticLib"
         targetdir "build/%{cfg.buildcfg}"
         conan_config_lib()
-        physx_config()
+		filter "system:windows"
+			links { "Ws2_32", "Winmm" }
+		filter {}
 
     files{
         "premake5.lua",
@@ -133,7 +135,9 @@ workspace "MotArda"
         "src/win64/Systems/*.cpp", "include/MotArda/win64/Systems/*.hpp",
     
         "deps/glad/src/glad.c", "deps/glad/include/glad/glad.h",
-        "deps/imgui/*.cpp"
+        "deps/imgui/*.cpp",
+
+		"deps/enet/src/*.c"
         }
 
     local example_files = os.matchfiles("examples/*.cpp")
