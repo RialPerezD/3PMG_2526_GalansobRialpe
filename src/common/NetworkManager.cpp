@@ -1,4 +1,5 @@
 #include "MotArda/common/NetworkManager.hpp"
+#include "MotArda/common/Logger.hpp"
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
@@ -11,7 +12,9 @@ namespace MTRD {
         static bool enetInitialized = false;
         if (!enetInitialized) {
             if (enet_initialize() != 0) {
-                printf("[NetworkManager] Failed to initialize ENet\n");
+                //printf("[NetworkManager] Failed to initialize ENet\n");
+                MTRD::Logger::error("[NetworkManager] Failed to initialize ENet\n");
+
             } else {
                 enetInitialized = true;
                 atexit(enet_deinitialize);
@@ -32,12 +35,16 @@ namespace MTRD {
 
         host_ = enet_host_create(&address, maxClients, 2, 0, 0);
         if (!host_) {
-            printf("[NetworkManager] Failed to create server on port %u\n", port);
+            //printf("[NetworkManager] Failed to create server on port %u\n", port);
+            MTRD::Logger::error("[NetworkManager] Failed to create server on port {}\n", port);
+
             return false;
         }
 
         isServer_ = true;
-        printf("[NetworkManager] Server started on port %u\n", port);
+        //printf("[NetworkManager] Server started on port %u\n", port);
+        MTRD::Logger::info("[NetworkManager] Server started on port {}\n", port);
+
         return true;
     }
 
@@ -47,7 +54,8 @@ namespace MTRD {
 
         host_ = enet_host_create(NULL, 1, 2, 0, 0);
         if (!host_) {
-            printf("[NetworkManager] Failed to create client host\n");
+            //printf("[NetworkManager] Failed to create client host\n");
+            MTRD::Logger::error("[NetworkManager] Failed to create client host\n");
             return false;
         }
 
@@ -60,12 +68,16 @@ namespace MTRD {
         if (enet_host_service(host_, &event, 5000) > 0 &&
             event.type == ENET_EVENT_TYPE_CONNECT) {
             isServer_ = false;
-            printf("[NetworkManager] Connected to server\n");
+            //printf("[NetworkManager] Connected to server\n");
+            MTRD::Logger::info("[NetworkManager] Connected to server\n");
+
             return true;
         } else {
             enet_peer_reset(peer_);
             peer_ = nullptr;
-            printf("[NetworkManager] Connection failed: Server unreachable\n");
+            //printf("[NetworkManager] Connection failed: Server unreachable\n");
+            MTRD::Logger::error("[NetworkManager] Connection failed: Server unreachable\n");
+
             return false;
         }
     }
@@ -99,14 +111,18 @@ namespace MTRD {
             case ENET_EVENT_TYPE_CONNECT:
                 if (isServer_) {
                     if (peers_.size() >= 10) {
-                        printf("[NetworkManager] Server full, rejecting client\n");
+                        //printf("[NetworkManager] Server full, rejecting client\n");
+                        MTRD::Logger::info("[NetworkManager] Server full, rejecting client\n");
+
                         enet_peer_disconnect_now(event.peer, 0);
                     } else {
                         NetworkPeer np;
                         np.networkID = GenerateNetworkID();
                         np.peer = event.peer;
                         peers_.push_back(np);
-                        printf("[NetworkManager] Client connected (ID: %u)\n", np.networkID);
+                        //printf("[NetworkManager] Client connected (ID: %u)\n", np.networkID);
+                        MTRD::Logger::info("[NetworkManager] Client connected (ID: {})\n", np.networkID);
+
 
                         ENetPacket* packet = enet_packet_create(&np.networkID, sizeof(np.networkID), ENET_PACKET_FLAG_RELIABLE);
                         enet_peer_send(event.peer, 0, packet);
@@ -159,7 +175,9 @@ namespace MTRD {
                             break;
                         }
                     }
-                    printf("[NetworkManager] Client disconnected (ID: %u)\n", disconnectedID);
+                    //printf("[NetworkManager] Client disconnected (ID: %u)\n", disconnectedID);
+                    MTRD::Logger::info("[NetworkManager] Client disconnected (ID: {})\n", disconnectedID);
+
 
                     uint32_t disconnectMsg = disconnectedID | 0x80000000;
                     ENetPacket* broadcastPacket = enet_packet_create(&disconnectMsg, sizeof(disconnectMsg), ENET_PACKET_FLAG_RELIABLE);

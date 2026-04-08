@@ -9,6 +9,7 @@
 #include "MotArda/win64/window.hpp"
 #include <MotArda/common/Geometries.hpp>
 #include <MotArda/win64/Systems/RenderPbrSystem.hpp>
+#include "MotArda/common/Logger.hpp"
 
 namespace MTRD {
     std::optional<MotardaEng> MotardaEng::createEngine(
@@ -160,7 +161,8 @@ namespace MTRD {
     const char* MotardaEng::loadShaderFile(const char* filename) {
         std::ifstream file(filename);
         if (!file.is_open()) {
-            std::cerr << "Error: no se pudo abrir el archivo " << filename << std::endl;
+            //std::cerr << "Error: no se pudo abrir el archivo " << filename << std::endl;
+            MTRD::Logger::error("No se pudo abrir el archivo");
             return nullptr;
         }
 
@@ -322,7 +324,8 @@ namespace MTRD {
         switch (actualRenderType_) {
         case RenderType::Base:
             if (!renderSystem_) {
-                printf("There are no render system");
+                //printf("There are no render system");
+                MTRD::Logger::error("There are no render system");
                 return;
             }
             renderSystem_->Render(ecs_, model_);
@@ -330,7 +333,9 @@ namespace MTRD {
 
         case RenderType::Lights:
             if (!renderLightsSystem_) {
-                printf("There are no light render system");
+                //printf("There are no light render system");
+                MTRD::Logger::error("There are no light system");
+
                 return;
             }
             renderLightsSystem_->Render(ecs_, model_);
@@ -338,7 +343,10 @@ namespace MTRD {
 
         case RenderType::LightsWithShadows:
             if (!shadowSystem_ || !renderLightsSystem_) {
-                printf("There are no light or shadow render system");
+                //printf("There are no light or shadow render system");
+                MTRD::Logger::error("There are no light or shadow render system");
+
+
                 return;
             }
             shadowSystem_->RenderShadowMap(ecs_, model_);
@@ -349,7 +357,9 @@ namespace MTRD {
 
         case RenderType::Bidimensional:
             if (!renderSystem_) {
-                printf("There are no 2d render system");
+                //printf("There are no 2d render system");
+                MTRD::Logger::error("There are no 2d render system");
+
                 return;
             }
             renderSystem_->Render(ecs_, model_);
@@ -357,7 +367,9 @@ namespace MTRD {
 
         case RenderType::DeferredWithLights:
             if (!defferredSystem_) {
-                printf("There are no deferred render system");
+                //printf("There are no deferred render system");
+                MTRD::Logger::error("There are no deferred render system");
+
                 return;
             }
             shadowSystem_->RenderShadowMap(ecs_, model_);
@@ -370,7 +382,9 @@ namespace MTRD {
 
         case RenderType::Pbr:
             if (!pbrSystem_) {
-                printf("There are no PBR render system");
+                //printf("There are no PBR render system");
+                MTRD::Logger::error("There are no render system");
+
                 return;
             }
             shadowSystem_->RenderShadowMap(ecs_, model_);

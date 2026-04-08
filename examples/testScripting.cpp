@@ -2,6 +2,7 @@
 #include "MotArda/common/ObjLoader.hpp"
 #include <MotArda/common/Ecs.hpp>
 #include <MotArda/common/Camera.hpp>
+#include "MotArda/common/Logger.hpp"
 
 #include <sol/sol.hpp>
 #include <memory>
@@ -253,7 +254,8 @@ int MTRD::main() {
     sol::load_result chunk = lua.load(lua_program);
     if (!chunk.valid()) {
         sol::error err = chunk;
-        std::cout << err.what() << std::endl;
+        //std::cout << err.what() << std::endl;
+        Logger::error("Error Lua: {}", err.what());
         return 1;
     }
     chunk();
@@ -313,7 +315,8 @@ int MTRD::main() {
         eng.windowInitFrame();
 
         if (!objsLoaded) {
-            printf("Cargando maya...\n");
+            //printf("Cargando maya...\n");
+            MTRD::Logger::debug("Maya cargada\n");
             eng.windowEndFrame();
             continue;
 
@@ -354,7 +357,8 @@ int MTRD::main() {
 
             if (!r.valid()) {
                 sol::error err = r;
-                std::cout << "[Lua Camera Error] " << err.what() << std::endl;
+                //std::cout << "[Lua Camera Error] " << err.what() << std::endl;
+                Logger::error("[Lua Camera Error] {}", err.what());
             }
         }
         // --- *** ---
@@ -368,7 +372,8 @@ int MTRD::main() {
             sol::protected_function_result r = lua_update_player(Pm);
             if (!r.valid()) {
                 sol::error err = r;
-                std::cout << "[Lua Error] " << err.what() << std::endl;
+                //std::cout << "[Lua Error] " << err.what() << std::endl;
+                Logger::error("[Lua Error] {}", err.what());
             }
         }
 

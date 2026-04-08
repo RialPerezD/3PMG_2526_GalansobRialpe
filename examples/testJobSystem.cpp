@@ -8,6 +8,7 @@
 #include "../deps/glm-master/glm/glm.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
+#include "MotArda/common/Logger.hpp"
 #include <MotArda/win64/Systems/RenderSystem.hpp>
 
 
@@ -16,6 +17,9 @@ static void error_callback(int error, const char* description) {
 }
 
 int MTRD::main() {
+
+    // --- Create Logger ---
+    MTRD::Logger::init("testJobSystem", MTRD::Logger::Level::Debug);
 
     // --- Create engine ---
     auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda OBJ Viewer");
@@ -88,7 +92,8 @@ int MTRD::main() {
         eng.windowInitFrame();
 
         if (!objsLoaded) {
-            printf("Cargando maya...\n");
+            //printf("Cargando maya...\n");
+            MTRD::Logger::debug("Cargando maya...\n");
             eng.windowEndFrame();
             continue;
 
@@ -162,11 +167,15 @@ int MTRD::main() {
 
             while (!objsLoaded) {
                 eng.windowEndFrame();
-                printf("Cargando maya %d...\n", objIndex);
+                //printf("Cargando maya %d...\n", objIndex);
+                MTRD::Logger::debug("Cargando maya {}...\n", objIndex);
+
+
                 eng.windowInitFrame();
             }
 
-            printf("Maya %d cargada\n", objIndex);
+            //printf("Maya %d cargada\n", objIndex);
+            MTRD::Logger::debug("Maya cargada\n");
 
             r->meshes_ = &ObjList[0].meshes;
             r->materials_ = &ObjList[0].materials;
@@ -177,6 +186,8 @@ int MTRD::main() {
         }
         eng.windowEndFrame();
     }
+    
+    MTRD::Logger::shutdown();
 
     return 0;
 }
