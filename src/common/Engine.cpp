@@ -81,13 +81,10 @@ namespace MTRD {
 
     void MotardaEng::windowEndFrame() {
         window_.swapBuffers();
-        window_.pollEvents();
         window_.imGuiEndFrame();
 
         input_.clearBuffers();
         input_.clearMouseBuffers();
-
-		//if (online_) onlineSystem_.PollEvents();
     }
 
 
@@ -103,6 +100,7 @@ namespace MTRD {
 
     void MotardaEng::windowInitFrame() {
         window_.viewportAndClear();
+        window_.pollEvents();
     }
 
 

@@ -149,9 +149,9 @@ namespace MTRD {
     bool Input::isMouseButtonPressed(MouseButton button) {
         int btn = -1;
         switch (button) {
-        case MouseButton::Left: btn = GLFW_MOUSE_BUTTON_LEFT; break;
-        case MouseButton::Right: btn = GLFW_MOUSE_BUTTON_RIGHT; break;
-        case MouseButton::Middle: btn = GLFW_MOUSE_BUTTON_MIDDLE; break;
+            case MouseButton::Left: btn = GLFW_MOUSE_BUTTON_LEFT; break;
+            case MouseButton::Right: btn = GLFW_MOUSE_BUTTON_RIGHT; break;
+            case MouseButton::Middle: btn = GLFW_MOUSE_BUTTON_MIDDLE; break;
         }
 
         return checkVector(btn, repeatMouseButton);
@@ -160,9 +160,9 @@ namespace MTRD {
     bool Input::isMouseButtonDown(MouseButton button) {
         int btn = -1;
         switch (button) {
-        case MouseButton::Left: btn = GLFW_MOUSE_BUTTON_LEFT; break;
-        case MouseButton::Right: btn = GLFW_MOUSE_BUTTON_RIGHT; break;
-        case MouseButton::Middle: btn = GLFW_MOUSE_BUTTON_MIDDLE; break;
+            case MouseButton::Left: btn = GLFW_MOUSE_BUTTON_LEFT; break;
+            case MouseButton::Right: btn = GLFW_MOUSE_BUTTON_RIGHT; break;
+            case MouseButton::Middle: btn = GLFW_MOUSE_BUTTON_MIDDLE; break;
         }
 
         if (checkVector(btn, pressMouseButton)) {

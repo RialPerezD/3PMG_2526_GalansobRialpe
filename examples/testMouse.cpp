@@ -90,6 +90,8 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::R)) camera.moveUp(movSpeed);
         if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.moveDown(movSpeed);
 
+        if (eng.inputIsKeyDown(Input::Keyboard::SPACE)) printf("Space Pressed \n");
+
         if (eng.inputIsMouseButtonPressed(Input::MouseButton::Left)) {
             glm::vec3 hitPoint = eng.raycastFromMouse(100.0f);
             std::cout << "Raycast hit: (" << hitPoint.x << ", " << hitPoint.y << ", " << hitPoint.z << ")" << std::endl;

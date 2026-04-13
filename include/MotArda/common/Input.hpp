@@ -46,7 +46,18 @@ namespace MTRD {
             W,
             X,
             Y,
-            Z
+            Z,
+            SPACE,
+			ENTER,
+            UP,
+			DOWN,
+			LEFT,
+            RIGHT,
+            ESCAPE,
+            SHIFT,
+            CONTROL,
+            ALT,
+			TAB
         };
         
         /**
