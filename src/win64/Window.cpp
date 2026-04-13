@@ -55,6 +55,7 @@ namespace MTRD {
         glfwMakeContextCurrent(glfw_window);
         gladLoadGL();
 
+        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
         // Imgui init
         IMGUI_CHECKVERSION();
@@ -129,6 +130,18 @@ namespace MTRD {
     void Window::setKeyCallback(void* keyCallback) {
         auto parsed = reinterpret_cast<void(*)(GLFWwindow*, int, int, int, int)>(keyCallback);
         glfwSetKeyCallback(glfw_window, parsed);
+    }
+
+    void Window::setMouseButtonCallback(void* mouseCallback) {
+        auto parsed = reinterpret_cast<void(*)(GLFWwindow*, int, int, int)>(mouseCallback);
+        glfwSetMouseButtonCallback(glfw_window, parsed);
+    }
+
+    void Window::getMousePosition(int& x, int& y) {
+        double xpos, ypos;
+        glfwGetCursorPos(glfw_window, &xpos, &ypos);
+        x = static_cast<int>(xpos);
+        y = static_cast<int>(ypos);
     }
 
 

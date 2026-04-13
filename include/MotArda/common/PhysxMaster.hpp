@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../deps/physx/include/PxPhysicsAPI.h"
+#include "../../deps/glm-master/glm/glm.hpp"
 #include "Components/PhysxComponent.hpp"
 #include "Components/TransformComponent.hpp"
 
@@ -16,6 +17,8 @@ namespace MTRD {
         
         void createActor(PhysxComponent* physxComp, TransformComponent* transform);
         void syncTransform(PhysxComponent* physxComp, TransformComponent* transform);
+
+        bool raycast(const glm::vec3& origin, const glm::vec3& direction, float maxDistance, glm::vec3& hitPosition, void*& hitActor);
 
         bool initialized;
     private:

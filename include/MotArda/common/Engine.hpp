@@ -143,6 +143,12 @@ namespace MTRD {
 		*/
 		bool inputIsKeyUp(Input::Keyboard key);
 
+		bool inputIsMouseButtonPressed(Input::MouseButton button);
+		bool inputIsMouseButtonDown(Input::MouseButton button);
+		void inputGetMousePosition(int& x, int& y);
+
+		glm::vec3 raycastFromMouse(float maxDistance);
+
 		/**
 		* @brief enqueueTask.
 		* @param std::function<void()> task Future function to be processed

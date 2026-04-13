@@ -112,4 +112,27 @@ namespace MTRD {
         transform->position.z = pxTransform.p.z;
     }
 
+    bool PhysxMaster::raycast(const glm::vec3& origin, const glm::vec3& direction, float maxDistance, glm::vec3& hitPosition, void*& hitActor) {
+        if (!gScene || !initialized) return false;
+
+        physx::PxVec3 pxOrigin(origin.x, origin.y, origin.z);
+        physx::PxVec3 pxDir(direction.x, direction.y, direction.z);
+        physx::PxVec3 pxNormalizedDir = pxDir.getNormalized();
+        physx::PxRaycastBuffer raycastHit;
+
+        bool status = gScene->raycast(pxOrigin, pxNormalizedDir, maxDistance, raycastHit);
+
+        if (status && raycastHit.hasBlock) {
+            hitPosition = glm::vec3(
+                raycastHit.block.position.x,
+                raycastHit.block.position.y,
+                raycastHit.block.position.z
+            );
+            hitActor = static_cast<void*>(raycastHit.block.actor);
+            return true;
+        }
+
+        return false;
+    }
+
 }

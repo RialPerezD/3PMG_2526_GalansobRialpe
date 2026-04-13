@@ -42,6 +42,7 @@ namespace MTRD {
         debug_ (true)
     {
         input_.generateAsciiMap();
+        input_.setWindow(&window_);
     }
 
 
@@ -82,6 +83,9 @@ namespace MTRD {
         window_.swapBuffers();
         window_.pollEvents();
         window_.imGuiEndFrame();
+
+        input_.clearBuffers();
+        input_.clearMouseBuffers();
 
 		//if (online_) onlineSystem_.PollEvents();
     }
@@ -126,6 +130,51 @@ namespace MTRD {
 
     bool MotardaEng::inputIsKeyUp(Input::Keyboard key) {
         return input_.isKeyUp(key);
+    }
+
+
+    bool MotardaEng::inputIsMouseButtonPressed(Input::MouseButton button) {
+        return input_.isMouseButtonPressed(button);
+    }
+
+    bool MotardaEng::inputIsMouseButtonDown(Input::MouseButton button) {
+        return input_.isMouseButtonDown(button);
+    }
+
+    void MotardaEng::inputGetMousePosition(int& x, int& y) {
+        input_.getMousePosition(x, y);
+    }
+
+    glm::vec3 MotardaEng::raycastFromMouse(float maxDistance) {
+        int mouseX, mouseY;
+        input_.setWindow(&window_);
+        input_.getMousePosition(mouseX, mouseY);
+
+        int width = window_.getWidth();
+        int height = window_.getHeight();
+
+        float ndcX = (2.0f * mouseX) / width - 1.0f;
+        float ndcY = 1.0f - (2.0f * mouseY) / height;
+
+        glm::mat4 invProj = glm::inverse(camera_.getProjection());
+        glm::mat4 invView = glm::inverse(camera_.getView());
+
+        glm::vec4 rayClip(ndcX, ndcY, -1.0f, 1.0f);
+        glm::vec4 rayEye = invProj * rayClip;
+        rayEye = glm::vec4(rayEye.x, rayEye.y, -1.0f, 0.0f);
+
+        glm::vec3 rayWorld = glm::vec3(invView * rayEye);
+        rayWorld = glm::normalize(rayWorld);
+
+        if (hasPhysx_ && physx_.initialized) {
+            glm::vec3 hitPosition;
+            void* hitActor;
+            if (physx_.raycast(camera_.getPosition(), rayWorld, maxDistance, hitPosition, hitActor)) {
+                return hitPosition;
+            }
+        }
+
+        return camera_.getPosition() + rayWorld * maxDistance;
     }
 
 

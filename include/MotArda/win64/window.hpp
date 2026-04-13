@@ -149,6 +149,8 @@ namespace MTRD {
         * when a key is pressed, repeated or released.
         */
         void setKeyCallback(void* keyCallback);
+        void setMouseButtonCallback(void* mouseCallback);
+        void getMousePosition(int& x, int& y);
         /**
         * @brief getLastFrameTime.
         * @return Returns delta time, a substraction between the result

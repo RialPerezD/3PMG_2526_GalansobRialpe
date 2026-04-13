@@ -14,6 +14,12 @@ namespace MTRD {
     */
 	class Input {
 	public:
+        enum class MouseButton {
+            Left,
+            Right,
+            Middle
+        };
+
         enum class Keyboard {
             A,
             B,
@@ -98,18 +104,23 @@ namespace MTRD {
         * @details It allows the input events to happen.
         */
         void setKeyboardCallback(Window& window);
-        /**
-        * @brief Release the vectors.
-        * @details Clears the pressKey and releaseKey vectors.
-        */
-        void clearBuffers();
+        void setMouseButtonCallback(Window& window);
+        void getMousePosition(int& x, int& y);
+        bool isMouseButtonPressed(MouseButton button);
+        bool isMouseButtonDown(MouseButton button);
+        void setWindow(Window* window);
+        void clearMouseBuffers();
+		void clearBuffers();
 
         //< Key pressed by the user.
         static std::vector<int> pressKey;
         //< Key being holded by the user.
-		static std::vector<int> repeatKey;
+        static std::vector<int> repeatKey;
         //< Key released this frame by the user.
         static std::vector<int> releaseKey;
+        static std::vector<int> pressMouseButton;
+        static std::vector<int> releaseMouseButton;
+        static std::vector<int> repeatMouseButton;
 
 
 	private:
@@ -121,5 +132,6 @@ namespace MTRD {
         Input();
         //< Map that matches a key with their ascii number
         std::map<Keyboard, std::vector<int>> asciiMap;
+        Window* window_ = nullptr;
 	};
 }
