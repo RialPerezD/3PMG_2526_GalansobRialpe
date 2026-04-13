@@ -144,6 +144,24 @@ namespace MTRD {
             asciiMap[static_cast<Keyboard>(i)].push_back(65 + i);
             asciiMap[static_cast<Keyboard>(i)].push_back(97 + i);
         }
+
+        asciiMap[Keyboard::SPACE].push_back(GLFW_KEY_SPACE);
+        asciiMap[Keyboard::ENTER].push_back(GLFW_KEY_ENTER);
+        asciiMap[Keyboard::UP].push_back(GLFW_KEY_UP);
+        asciiMap[Keyboard::DOWN].push_back(GLFW_KEY_DOWN);
+        asciiMap[Keyboard::LEFT].push_back(GLFW_KEY_LEFT);
+        asciiMap[Keyboard::RIGHT].push_back(GLFW_KEY_RIGHT);
+        asciiMap[Keyboard::ESCAPE].push_back(GLFW_KEY_ESCAPE);
+        asciiMap[Keyboard::TAB].push_back(GLFW_KEY_TAB);
+
+        asciiMap[Keyboard::SHIFT].push_back(GLFW_KEY_LEFT_SHIFT);
+        asciiMap[Keyboard::SHIFT].push_back(GLFW_KEY_RIGHT_SHIFT);
+
+        asciiMap[Keyboard::CONTROL].push_back(GLFW_KEY_LEFT_CONTROL);
+        asciiMap[Keyboard::CONTROL].push_back(GLFW_KEY_RIGHT_CONTROL);
+
+        asciiMap[Keyboard::ALT].push_back(GLFW_KEY_LEFT_ALT);
+        asciiMap[Keyboard::ALT].push_back(GLFW_KEY_RIGHT_ALT);
     }
 
     bool Input::isMouseButtonPressed(MouseButton button) {
