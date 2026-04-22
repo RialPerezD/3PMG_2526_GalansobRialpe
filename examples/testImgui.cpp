@@ -116,6 +116,7 @@ int MTRD::main() {
     // --- Setup engine info ---
     eng.SetDebugMode(true);
     eng.SetRenderType(MotardaEng::RenderType::LightsWithShadows);
+    eng.hasPhysx(true);
     eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
@@ -136,6 +137,7 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
     ecs.AddComponentType<MTRD::LightComponent>();
+    ecs.AddComponentType<MTRD::PhysxComponent>();
 
     GeneratePointLightEntitys(ecs, objItemList);
     // --- *** ---
