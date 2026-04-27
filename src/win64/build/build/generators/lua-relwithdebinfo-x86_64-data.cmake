@@ -6,7 +6,7 @@ set(lua_FIND_DEPENDENCY_NAMES "")
 
 ########### VARIABLES #######################################################################
 #############################################################################################
-set(lua_PACKAGE_FOLDER_RELWITHDEBINFO "C:/Users/David/.conan/data/lua/5.4.6/_/_/package/270dc4a2f77a5fc63ad24b950295fddb3a32f993")
+set(lua_PACKAGE_FOLDER_RELWITHDEBINFO "C:/Users/rialpe/.conan/data/lua/5.4.6/_/_/package/270dc4a2f77a5fc63ad24b950295fddb3a32f993")
 set(lua_BUILD_MODULES_PATHS_RELWITHDEBINFO )
 
 

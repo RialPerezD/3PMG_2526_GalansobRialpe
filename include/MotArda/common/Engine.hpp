@@ -181,6 +181,13 @@ namespace MTRD {
 		ObjItem generatePlane(float width, float height, int texureId = 0, bool debug = true);
 		ObjItem generateSphere(float radius, int segments, int rings, int texureId = 0, bool debug = true);
 
+		ObjItem GenerateTerrain(
+			float width,
+			float depth,
+			float maxHeight,
+			int textureId = 0,
+			bool debug = false);
+
 		// TODO , poner en la documentacion que esto inserta un transform y un render components por defecto
 		Sprite& generateSprite(GLuint textureIndex, float size, float deep = 0);
 		Sprite& generateSpriteSheet(GLuint textureIndex, float size, int frameWidth, int frameHeight, int columns, int rows, float deep = 0);

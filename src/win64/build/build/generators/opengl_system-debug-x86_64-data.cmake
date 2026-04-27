@@ -6,7 +6,7 @@ set(opengl_FIND_DEPENDENCY_NAMES "")
 
 ########### VARIABLES #######################################################################
 #############################################################################################
-set(opengl_PACKAGE_FOLDER_DEBUG "C:/Users/David/.conan/data/opengl/system/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9")
+set(opengl_PACKAGE_FOLDER_DEBUG "C:/Users/rialpe/.conan/data/opengl/system/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9")
 set(opengl_BUILD_MODULES_PATHS_DEBUG )
 
 

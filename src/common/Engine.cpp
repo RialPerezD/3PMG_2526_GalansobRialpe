@@ -8,6 +8,7 @@
 
 #include "MotArda/win64/window.hpp"
 #include <MotArda/common/Geometries.hpp>
+#include <MotArda/common/Terrain.hpp>
 #include <MotArda/win64/Systems/RenderPbrSystem.hpp>
 #include "MotArda/common/Logger.hpp"
 
@@ -237,6 +238,22 @@ namespace MTRD {
     ObjItem MotardaEng::generateSphere(float radius, int segments, int rings, int texureId, bool debug) {
         bool firstTime = false;
         return std::move(Geometries::GenerateSphere(window_, radius, segments, rings, firstTime, texureId, debug));
+    }
+
+
+    ObjItem MotardaEng::GenerateTerrain(float width, float depth, float maxHeight, int textureId, bool debug){
+        bool firstTime = false;
+        const std::string& heightmapPath = "";
+        return std::move(Terrain::GenerateFromHeightmap(
+            heightmapPath,
+            width,
+            depth,
+            maxHeight,
+            window_,
+            firstTime,
+            textureId,
+            debug
+        ));
     }
 
 

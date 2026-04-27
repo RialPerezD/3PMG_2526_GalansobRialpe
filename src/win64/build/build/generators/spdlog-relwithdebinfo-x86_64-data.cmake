@@ -9,7 +9,7 @@ set(fmt_FIND_MODE "NO_MODULE")
 
 ########### VARIABLES #######################################################################
 #############################################################################################
-set(spdlog_PACKAGE_FOLDER_RELWITHDEBINFO "C:/Users/David/.conan/data/spdlog/1.14.1/_/_/package/b42a9e555251e18069aa86db7f6bcd0e61384810")
+set(spdlog_PACKAGE_FOLDER_RELWITHDEBINFO "C:/Users/rialpe/.conan/data/spdlog/1.14.1/_/_/package/b42a9e555251e18069aa86db7f6bcd0e61384810")
 set(spdlog_BUILD_MODULES_PATHS_RELWITHDEBINFO )
 
 

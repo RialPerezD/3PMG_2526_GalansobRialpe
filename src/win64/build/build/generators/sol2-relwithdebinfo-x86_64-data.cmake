@@ -8,7 +8,7 @@ set(lua_FIND_MODE "NO_MODULE")
 
 ########### VARIABLES #######################################################################
 #############################################################################################
-set(sol2_PACKAGE_FOLDER_RELWITHDEBINFO "C:/Users/David/.conan/data/sol2/3.3.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9")
+set(sol2_PACKAGE_FOLDER_RELWITHDEBINFO "C:/Users/rialpe/.conan/data/sol2/3.3.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9")
 set(sol2_BUILD_MODULES_PATHS_RELWITHDEBINFO )
 
 

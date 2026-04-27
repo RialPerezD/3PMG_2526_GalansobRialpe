@@ -8,7 +8,7 @@ set(opengl_system_FIND_MODE "NO_MODULE")
 
 ########### VARIABLES #######################################################################
 #############################################################################################
-set(glfw_PACKAGE_FOLDER_RELWITHDEBINFO "C:/Users/David/.conan/data/glfw/3.3.8/_/_/package/66d2c625bcd2140499f6004f3f4f71b2b2d12ce2")
+set(glfw_PACKAGE_FOLDER_RELWITHDEBINFO "C:/Users/rialpe/.conan/data/glfw/3.3.8/_/_/package/66d2c625bcd2140499f6004f3f4f71b2b2d12ce2")
 set(glfw_BUILD_MODULES_PATHS_RELWITHDEBINFO )
 
 

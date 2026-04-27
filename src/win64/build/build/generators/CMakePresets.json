@@ -17,8 +17,8 @@
             "cacheVariables": {
                 "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
             },
-            "toolchainFile": "D:\\Clase\\3PMG_2526_GalansobRialpe\\src\\win64\\build\\build\\generators\\conan_toolchain.cmake",
-            "binaryDir": "D:\\Clase\\3PMG_2526_GalansobRialpe\\src\\win64\\build\\build"
+            "toolchainFile": "C:\\Dvd\\MotoresGrafica\\3PMG_2526_GalansobRialpe\\src\\win64\\build\\build\\generators\\conan_toolchain.cmake",
+            "binaryDir": "C:\\Dvd\\MotoresGrafica\\3PMG_2526_GalansobRialpe\\src\\win64\\build\\build"
         }
     ],
     "buildPresets": [
