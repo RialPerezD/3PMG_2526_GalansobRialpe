@@ -1,7 +1,9 @@
 #include "Motarda/common/Input.hpp"
+#include <GLFW/glfw3.h>
 
-#define GLFW_INCLUDE_NONE
-#include "GLFW/glfw3.h"
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 namespace MTRD {
     std::vector<int> Input::pressKey = {};
@@ -12,6 +14,8 @@ namespace MTRD {
     std::vector<int> Input::repeatMouseButton = {};
 
     void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+        ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
+
         if (action == 1) {
             Input::repeatKey.push_back(key);
             Input::pressKey.push_back(key);
@@ -27,6 +31,8 @@ namespace MTRD {
     }
 
     void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+        ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+
         if (action == 1) {
             Input::repeatMouseButton.push_back(button);
             Input::pressMouseButton.push_back(button);

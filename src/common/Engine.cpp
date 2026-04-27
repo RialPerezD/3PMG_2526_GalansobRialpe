@@ -52,23 +52,6 @@ namespace MTRD {
     }
 
 
-    /*OnlineSystem* MotardaEng::ActivateOnlineMode(
-        bool ImServer,
-        const char* ip,
-        float port
-    ) {
-        online_ = true;
-
-        if (enet_initialize() != 0) return nullptr;
-        atexit(enet_deinitialize);
-
-        onlineSystem_ = OnlineSystem(ImServer, ip, port);
-        if (!onlineSystem_.Init()) return nullptr;
-
-        return &onlineSystem_;
-    }*/
-
-
     bool MotardaEng::windowShouldClose(){
         return window_.shouldClose();
     }
