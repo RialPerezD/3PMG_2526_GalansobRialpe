@@ -31,6 +31,7 @@ int MTRD::main() {
 
     std::vector<ObjItem> objItemList;
     objItemList.push_back(std::move(eng.generateSphere(0.5f, 20, 20, 0)));
+    objItemList.push_back(std::move(eng.GenerateTerrain(50, 50, 100)));
     eng.windowLoadAllMaterials(objItemList);
 
 

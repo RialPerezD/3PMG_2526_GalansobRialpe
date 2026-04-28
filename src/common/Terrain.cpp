@@ -1,11 +1,14 @@
 #include "MotArda/common/Terrain.hpp"
 #include <vector>
 #include <string>
-
-#define STB_IMAGE_IMPLEMENTATION
+#include <algorithm>
 #include "stb_image.h"
 
 namespace MTRD {
+    std::string Terrain::GetDefaultHeightmapPath(){
+        return std::string();
+    }
+
 
     ObjItem Terrain::GenerateFromHeightmap(const std::string& heightmapPath, float width, float depth, float maxHeight, Window& window, bool& firstTime, int textureId, bool debug) {
         int texWidth, texHeight, channels;
@@ -18,8 +21,8 @@ namespace MTRD {
         }
 
         auto getHeight = [&](int x, int z) {
-            x = std::max(0, std::min(x, texWidth - 1));
-            z = std::max(0, std::min(z, texHeight - 1));
+            x = std::clamp(x, 0, static_cast<int>(texWidth) - 1);
+            z = std::clamp(z, 0, static_cast<int>(texHeight) - 1);
             return (data[z * texWidth + x] / 255.0f) * maxHeight;
             };
 

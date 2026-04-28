@@ -9,6 +9,8 @@
 namespace MTRD {
     class Terrain {
     public:
+        static std::string GetDefaultHeightmapPath();
+
         static ObjItem GenerateFromHeightmap(
             const std::string& heightmapPath,
             float width,
