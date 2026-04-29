@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     padInitializeDefault(&pad);
 
     // Other initialization goes here. As a demonstration, we print hello world.
-    printf("Test de consola!\n");
+    printf("Console Test!\n");
 
     // Main loop
     while (appletMainLoop())

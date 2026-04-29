@@ -37,14 +37,13 @@ include $(DEVKITPRO)/libnx/switch_rules
 #   of a homebrew executable (.nro). This is intended to be used for sysmodules.
 #   NACP building is skipped as well.
 #---------------------------------------------------------------------------------
-TARGET      :=  $(notdir $(CURDIR))
+TARGET      :=  main
 BUILD       :=  build
-SOURCES     :=  source
+SOURCES     :=  .
 DATA        :=  data
 INCLUDES    :=  include
 # New output directory
-OUTDIR      :=  SwitchCompiled
-#ROMFS      :=  romfs
+OUTDIR      :=  .
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -146,7 +145,7 @@ ifeq ($(strip $(NO_ICON)),)
 endif
 
 ifeq ($(strip $(NO_NACP)),)
-    export NROFLAGS += --nacp=$(CURDIR)/$(OUTDIR)/$(TARGET).nacp
+    export NROFLAGS += --nacp=$(OUTPUT).nacp
 endif
 
 ifneq ($(APP_TITLEID),)
@@ -182,29 +181,17 @@ DEPENDS :=  $(OFILES:.o=.d)
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
-ifeq ($(strip $(APP_JSON)),)
+all : $(OUTPUT).nro
+	@rm -f $(OUTPUT).elf $(OUTPUT).nacp
+	@echo "Build finished: $(TARGET).nro"
 
-all :   $(OUTPUT).nro
+$(OUTPUT).nro : $(OUTPUT).elf $(OUTPUT).nacp
 
-ifeq ($(strip $(NO_NACP)),)
-$(OUTPUT).nro   :   $(OUTPUT).elf $(OUTPUT).nacp
-else
-$(OUTPUT).nro   :   $(OUTPUT).elf
-endif
+$(OUTPUT).elf : $(OFILES)
 
-else
+$(OUTPUT).nacp : $(OFILES)
 
-all :   $(OUTPUT).nsp
-
-$(OUTPUT).nsp   :   $(OUTPUT).nso $(OUTPUT).npdm
-
-$(OUTPUT).nso   :   $(OUTPUT).elf
-
-endif
-
-$(OUTPUT).elf   :   $(OFILES)
-
-$(OFILES_SRC)   : $(HFILES_BIN)
+$(OFILES_SRC) : $(HFILES_BIN)
 
 #---------------------------------------------------------------------------------
 # you need a rule like this for each extension you use as binary data
