@@ -138,6 +138,7 @@ workspace "MotArda"
 			"src/common/*.cpp", "include/MotArda/common/*.hpp",
  			"src/common/Components/*.cpp", "include/MotArda/common/Components/*.hpp",
  			"src/common/Systems/*.cpp", "include/MotArda/common/Systems/*.hpp",
+			 "src/common/CardGame/*.cpp", "include/MotArda/common/CardGame/*.hpp",
 
 			"src/win64/*.cpp", "include/MotArda/win64/*.hpp",
 			"src/win64/Systems/*.cpp", "include/MotArda/win64/Systems/*.hpp",
