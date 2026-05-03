@@ -12,6 +12,8 @@
 #include <string>
 #include <memory>
 
+// CLIENTE
+
 enum class AppState {
     Menu,
     Connecting,
@@ -38,9 +40,16 @@ int MTRD::main() {
     eng.getCamera().setTarget(glm::vec3(0, 0, 0));
 
     // --- Carga de Geometría ---
+    std::vector <const char*> objsRoutes = { "table.obj" };
+    std::atomic<bool> objsLoaded = false;
+
+    std::vector<ObjItem> engineGeometries;
+    engineGeometries.push_back(std::move(eng.generateCube(1)));
+    eng.windowLoadAllMaterials(engineGeometries);
+
     std::vector<ObjItem> objItemList;
-    objItemList.push_back(std::move(eng.generateCube(1)));
-    eng.windowLoadAllMaterials(objItemList);
+    objItemList.push_back(ObjItem());
+
 
     // --- ECS Setup ---
     ECSManager& ecs = eng.getEcs();
@@ -48,15 +57,67 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
 
+    size_t table = ecs.AddEntity();
+
+    bool firstTime = true;
+
+    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(table);
+    t->position = glm::vec3(0.0f);
+    t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(0.05f);
+
+    /*MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(table);*/
+    MTRD::RenderComponent* r = nullptr;
+
+    size_t cube = ecs.AddEntity();
+
+    MTRD::TransformComponent* ct = ecs.AddComponent<MTRD::TransformComponent>(cube);
+    ct->position = glm::vec3(0.0f, 0.0f, 0.0f);
+    ct->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
+    ct->angleRotationRadians = -1;
+    ct->scale = glm::vec3(1.0f);
+
+    MTRD::RenderComponent* cr = ecs.AddComponent<MTRD::RenderComponent>(cube);
+
+    cr->meshes_ = &engineGeometries[0].meshes;
+    cr->materials_ = &engineGeometries[0].materials;
+
     size_t playerEntity = SIZE_MAX;
     NetworkManager netMgr;
     std::unique_ptr<NetworkSystem> netSys;
     std::unique_ptr<SimplePacketReciver> simplPacRec;
 
+    // async obj load
+    eng.enqueueTask([&]() {
+        objItemList = eng.loadObjs(objsRoutes);
+        objsLoaded.store(true, std::memory_order_release);
+        });
+
     // --- Main window bucle ---
     while (!eng.windowShouldClose()) {
 
         eng.windowInitFrame();
+
+        if (!objsLoaded.load(std::memory_order_acquire)) {
+            eng.windowEndFrame();
+            continue;
+        }
+        else if (firstTime) {
+            firstTime = false;
+
+            printf("ObjList size: %zu\n", objItemList.size());
+            if (!objItemList.empty()) {
+                printf("Meshes en [0]: %zu\n", objItemList[0].meshes.size());
+            }
+
+            eng.windowLoadAllMaterials(objItemList);
+
+            r = ecs.AddComponent<MTRD::RenderComponent>(table);
+
+            r->meshes_ = &objItemList[0].meshes;
+            r->materials_ = &objItemList[0].materials;
+        }
 
         if (currentState == AppState::Menu) {
             ImGui::SetNextWindowSize(ImVec2(350, 250), ImGuiCond_FirstUseEver);
@@ -101,15 +162,15 @@ int MTRD::main() {
             trans->scale = glm::vec3(1.0f);
 
             auto* rend = ecs.AddComponent<MTRD::RenderComponent>(playerEntity);
-            rend->meshes_ = &objItemList[0].meshes;
-            rend->materials_ = &objItemList[0].materials;
+            rend->meshes_ = &engineGeometries[0].meshes;
+            rend->materials_ = &engineGeometries[0].materials;
 
             currentState = AppState::Running;
         }
 
         if (currentState == AppState::Running) {
             if (!netSys) {
-                simplPacRec = std::make_unique<SimplePacketReciver>(&objItemList, &ecs, playerEntity);
+                simplPacRec = std::make_unique<SimplePacketReciver>(&engineGeometries, &ecs, playerEntity);
                 netSys = std::make_unique<NetworkSystem>(ecs, netMgr, std::bind(
                     &MTRD::SimplePacketReciver::OnReceivePacket, simplPacRec.get(),
                     std::placeholders::_1, std::placeholders::_2, std::placeholders::_3
@@ -127,7 +188,6 @@ int MTRD::main() {
         }
 
         eng.RenderScene();
-
         eng.windowEndFrame();
     }
 
