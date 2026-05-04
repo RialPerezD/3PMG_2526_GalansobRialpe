@@ -40,16 +40,15 @@ int MTRD::main() {
     eng.getCamera().setTarget(glm::vec3(0, 0, 0));
 
     // --- Carga de Geometría ---
-    std::vector <const char*> objsRoutes = { "table.obj" };
+    std::vector<const char*> objsRoutes = { "table.obj" };
     std::atomic<bool> objsLoaded = false;
 
-    std::vector<ObjItem> engineGeometries;
-    engineGeometries.push_back(std::move(eng.generateCube(1)));
-    eng.windowLoadAllMaterials(engineGeometries);
+    //std::vector<ObjItem> engineGeometries;
+    //engineGeometries.push_back(std::move(eng.generateCube(1)));
+    //eng.windowLoadAllMaterials(engineGeometries);
 
     std::vector<ObjItem> objItemList;
     objItemList.push_back(ObjItem());
-
 
     // --- ECS Setup ---
     ECSManager& ecs = eng.getEcs();
@@ -67,10 +66,9 @@ int MTRD::main() {
     t->angleRotationRadians = -1;
     t->scale = glm::vec3(0.05f);
 
-    /*MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(table);*/
-    MTRD::RenderComponent* r = nullptr;
+    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(table);
 
-    size_t cube = ecs.AddEntity();
+ /*   size_t cube = ecs.AddEntity();
 
     MTRD::TransformComponent* ct = ecs.AddComponent<MTRD::TransformComponent>(cube);
     ct->position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -79,9 +77,8 @@ int MTRD::main() {
     ct->scale = glm::vec3(1.0f);
 
     MTRD::RenderComponent* cr = ecs.AddComponent<MTRD::RenderComponent>(cube);
-
     cr->meshes_ = &engineGeometries[0].meshes;
-    cr->materials_ = &engineGeometries[0].materials;
+    cr->materials_ = &engineGeometries[0].materials;*/
 
     size_t playerEntity = SIZE_MAX;
     NetworkManager netMgr;
@@ -105,16 +102,8 @@ int MTRD::main() {
         }
         else if (firstTime) {
             firstTime = false;
-
-            printf("ObjList size: %zu\n", objItemList.size());
-            if (!objItemList.empty()) {
-                printf("Meshes en [0]: %zu\n", objItemList[0].meshes.size());
-            }
-
+            printf(">>> firstTime ejecutado, meshes: %zu\n", objItemList[0].meshes.size());
             eng.windowLoadAllMaterials(objItemList);
-
-            r = ecs.AddComponent<MTRD::RenderComponent>(table);
-
             r->meshes_ = &objItemList[0].meshes;
             r->materials_ = &objItemList[0].materials;
         }
@@ -162,15 +151,15 @@ int MTRD::main() {
             trans->scale = glm::vec3(1.0f);
 
             auto* rend = ecs.AddComponent<MTRD::RenderComponent>(playerEntity);
-            rend->meshes_ = &engineGeometries[0].meshes;
-            rend->materials_ = &engineGeometries[0].materials;
+            rend->meshes_ = &objItemList[0].meshes;
+            rend->materials_ = &objItemList[0].materials;
 
             currentState = AppState::Running;
         }
 
         if (currentState == AppState::Running) {
             if (!netSys) {
-                simplPacRec = std::make_unique<SimplePacketReciver>(&engineGeometries, &ecs, playerEntity);
+                simplPacRec = std::make_unique<SimplePacketReciver>(&objItemList, &ecs, playerEntity);
                 netSys = std::make_unique<NetworkSystem>(ecs, netMgr, std::bind(
                     &MTRD::SimplePacketReciver::OnReceivePacket, simplPacRec.get(),
                     std::placeholders::_1, std::placeholders::_2, std::placeholders::_3
@@ -186,6 +175,7 @@ int MTRD::main() {
             }
             netSys->Process();
         }
+
 
         eng.RenderScene();
         eng.windowEndFrame();
