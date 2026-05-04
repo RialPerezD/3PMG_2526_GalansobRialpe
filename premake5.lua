@@ -1,59 +1,147 @@
-local dkp = os.getenv("DEVKITPRO")
-local dka = os.getenv("DEVKITARM")
+conan = {}
 
-if not dkp then
-    error("DEVKITPRO NOT FOUND")
+configs = {'Debug', 'Release', 'RelWithDebInfo'}
+
+for i = 1,3 do
+    include("build/deps/"..configs[i].."/conanbuildinfo.premake.lua")
+    conan[configs[i]] = {}
+    local cfg = conan[configs[i]]
+    cfg["build_type"] = conan_build_type
+    cfg["arch"] = conan_arch
+    cfg["includedirs"] = conan_includedirs
+    cfg["libdirs"] = conan_libdirs
+    cfg["bindirs"] = conan_bindirs
+    cfg["libs"] = conan_libs
+    cfg["system_libs"] = conan_system_libs
+    cfg["defines"] = conan_defines
+    cfg["cxxflags"] = conan_cxxflags
+    cfg["cflags"] = conan_cflags
+    cfg["sharedlinkflags"] = conan_sharedlinkflags
+    cfg["exelinkflags"] = conan_exelinkflags
+    cfg["frameworks"] = conan_frameworks
+end
+
+function physx_config()
+    includedirs { "deps/physx/include" }
+    
+    filter "configurations:Debug"
+        libdirs { "deps/physx/lib/debug" }
+        links { 
+            "PhysX_64", 
+            "PhysXCommon_64", 
+            "PhysXFoundation_64", 
+            "PhysXExtensions_static_64",
+            "PhysXPvdSDK_static_64" 
+        }
+
+	postbuildcommands {
+		"{COPY} ../deps/physx/lib/debug/*.dll %{cfg.targetdir}"
+	}
+
+    filter "configurations:Release or RelWithDebInfo"
+        libdirs { "deps/physx/lib/release" }
+        links { 
+            "PhysX_64", 
+            "PhysXCommon_64", 
+            "PhysXFoundation_64", 
+            "PhysXExtensions_static_64",
+            "PhysXPvdSDK_static_64"
+        }
+
+	postbuildcommands {
+		"{COPY} ../deps/physx/lib/release/*.dll %{cfg.targetdir}"
+	}
+
+    filter {}
+end
+
+function conan_config_exec()
+    configs = {'Debug', 'Release', 'RelWithDebInfo'}
+    for i = 1,3 do
+        local cfg = conan[configs[i]]
+        filter("configurations:"..configs[i])
+            linkoptions { cfg["exelinkflags"] }
+            includedirs{ cfg["includedirs"] }
+            libdirs{ cfg["libdirs"] }
+            links{ cfg["libs"] }
+            links{ cfg["system_libs"] }
+            links{ cfg["frameworks"] }
+            defines{ cfg["defines"] }
+        filter{}
+    end
+end
+
+function conan_config_lib()
+    configs = {'Debug', 'Release', 'RelWithDebInfo'}
+    for i = 1,3 do
+        local cfg = conan[configs[i]]
+        filter("configurations:"..configs[i])
+            linkoptions { cfg["sharedlinkflags"] }
+            includedirs{ cfg["includedirs"] }
+            defines{ cfg["defines"] }
+        filter{}
+    end
 end
 
 workspace "MotArda"
     configurations {"Debug", "Release", "RelWithDebInfo"}
-    platforms { "Switch" }
-    defaultplatform "Switch"
-    
+    architecture "x64"
     location "build"
     cppdialect "c++20"
-    architecture "ARM" 
-
-    buildoptions {
-        "-march=armv8-a+crc+crypto",
-        "-mtune=cortex-a57",
-        "-mtp=soft",
-        "-fPIE"
-    }
+    startproject "Window"
 
     includedirs {
         "include",
         "deps/**/include",
+        "deps/**/src",
         "deps",
-        "deps/imgui/",
-        dkp .. "/libnx/include",
-        dkp .. "/portlibs/switch/include"
-    }
+        "deps/imgui/"
+        }
 
     filter "configurations:Debug"
-        defines { "DEBUG", "__SWITCH__" }
+        defines { "DEBUG" }
         symbols "On"
+        runtime "Debug"
 
     filter "configurations:Release"
-        defines { "NDEBUG", "__SWITCH__" }
+        defines { "NDEBUG" }
         optimize "On"
+        runtime "Release"
 
     filter "configurations:RelWithDebInfo"
-        defines { "NDEBUG", "__SWITCH__" }
+        defines { "NDEBUG" }
         optimize "On"
+        runtime "Release"
         symbols "On"
 
     filter {}
 
     project "MotArda"
         kind "StaticLib"
-        language "C++"
-        targetdir "build/lib/%{cfg.buildcfg}"
-        
-        files {
+        targetdir "build/%{cfg.buildcfg}"
+        conan_config_lib()
+		filter "system:windows"
+			links { "Ws2_32", "Winmm" }
+		filter {}
+
+    files{
+        "premake5.lua",
+        "src/win64/build/conanfile.txt",
+        "src/common/*.cpp", "include/MotArda/common/*.hpp",
+        "src/common/Components/*.cpp", "include/MotArda/common/Components/*.hpp",
+        "src/common/Systems/*.cpp", "include/MotArda/common/Systems/*.hpp",
+        "src/common/CardGame/*.cpp", "include/MotArda/common/CardGame/*.hpp",
+
+        "src/win64/*.cpp", "include/MotArda/win64/*.hpp",
+        "src/win64/Systems/*.cpp", "include/MotArda/win64/Systems/*.hpp",
+    
+        "deps/glad/src/glad.c", "deps/glad/include/glad/glad.h",
+        "deps/imgui/*.cpp",
+
+		"deps/enet/src/*.c"
         }
 
-    local example_files = os.matchfiles("examplesSwitch/*.cpp")
+    local example_files = os.matchfiles("examples/*.cpp")
 
     for _, filepath in ipairs(example_files) do
         local projectName = path.getbasename(filepath)
@@ -61,31 +149,13 @@ workspace "MotArda"
         project (projectName)
             kind "ConsoleApp"
             language "C++"
-            targetextension ".elf"
             targetdir ("build/" .. projectName .. "/%{cfg.buildcfg}")
-            
             includedirs "include"
+            links "MotArda"
             
-            libdirs { 
-                dkp .. "/libnx/lib",
-                dkp .. "/portlibs/switch/lib"
-            }
+            conan_config_exec()
+            physx_config()
             
-            links { "MotArda", "nx", "m" }
-
-            linkoptions {
-                "-specs=" .. dkp .. "/libnx/switch.specs",
-                "-g",
-                "-march=armv8-a+crc+crypto",
-                "-mtune=cortex-a57",
-                "-mtp=soft",
-                "-fPIE"
-            }
-
+            debugargs { _MAIN_SCRIPT_DIR .. "/examples/data" }
             files { filepath }
-
-            -- Comando para generar el .nro individual para cada proyecto
-            postbuildcommands {
-                dkp .. "/tools/bin/elf2nro %{cfg.targetdir}/" .. projectName .. ".elf %{cfg.targetdir}/" .. projectName .. ".nro"
-            }
     end

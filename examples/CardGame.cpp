@@ -36,11 +36,11 @@ int MTRD::main() {
     // --- Configuración básica ---
     eng.SetDebugMode(true);
     eng.SetRenderType(MotardaEng::RenderType::Base);
-    eng.getCamera().setPosition(glm::vec3(0, 20, 5));
+    eng.getCamera().setPosition(glm::vec3(0, 5, 10));
     eng.getCamera().setTarget(glm::vec3(0, 0, 0));
 
     // --- Carga de Geometría ---
-    std::vector<const char*> objsRoutes = { "table.obj" };
+    std::vector<const char*> objsRoutes = { "tableRound.obj" };
     std::atomic<bool> objsLoaded = false;
 
     std::vector<ObjItem> objItemList;
@@ -57,10 +57,10 @@ int MTRD::main() {
     bool firstTime = true;
 
     MTRD::TransformComponent* ttable = ecs.AddComponent<MTRD::TransformComponent>(table);
-    ttable->position = glm::vec3(0.0f, 0.0f, 0.0f);
-    ttable->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
+    ttable->position = glm::vec3(0.0f, 0.0f, 3.0f);
+    ttable->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
     ttable->angleRotationRadians = -1;
-    ttable->scale = glm::vec3(0.02f);
+    ttable->scale = glm::vec3(1.0f);
 
     MTRD::RenderComponent* rtable = ecs.AddComponent<MTRD::RenderComponent>(table);
 
