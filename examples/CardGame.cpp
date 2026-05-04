@@ -36,16 +36,12 @@ int MTRD::main() {
     // --- Configuración básica ---
     eng.SetDebugMode(true);
     eng.SetRenderType(MotardaEng::RenderType::Base);
-    eng.getCamera().setPosition(glm::vec3(0, 5, 10));
+    eng.getCamera().setPosition(glm::vec3(0, 20, 5));
     eng.getCamera().setTarget(glm::vec3(0, 0, 0));
 
     // --- Carga de Geometría ---
     std::vector<const char*> objsRoutes = { "table.obj" };
     std::atomic<bool> objsLoaded = false;
-
-    //std::vector<ObjItem> engineGeometries;
-    //engineGeometries.push_back(std::move(eng.generateCube(1)));
-    //eng.windowLoadAllMaterials(engineGeometries);
 
     std::vector<ObjItem> objItemList;
     objItemList.push_back(ObjItem());
@@ -60,25 +56,14 @@ int MTRD::main() {
 
     bool firstTime = true;
 
-    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(table);
-    t->position = glm::vec3(0.0f);
-    t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
-    t->angleRotationRadians = -1;
-    t->scale = glm::vec3(0.05f);
+    MTRD::TransformComponent* ttable = ecs.AddComponent<MTRD::TransformComponent>(table);
+    ttable->position = glm::vec3(0.0f, 0.0f, 0.0f);
+    ttable->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
+    ttable->angleRotationRadians = -1;
+    ttable->scale = glm::vec3(0.02f);
 
-    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(table);
+    MTRD::RenderComponent* rtable = ecs.AddComponent<MTRD::RenderComponent>(table);
 
- /*   size_t cube = ecs.AddEntity();
-
-    MTRD::TransformComponent* ct = ecs.AddComponent<MTRD::TransformComponent>(cube);
-    ct->position = glm::vec3(0.0f, 0.0f, 0.0f);
-    ct->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
-    ct->angleRotationRadians = -1;
-    ct->scale = glm::vec3(1.0f);
-
-    MTRD::RenderComponent* cr = ecs.AddComponent<MTRD::RenderComponent>(cube);
-    cr->meshes_ = &engineGeometries[0].meshes;
-    cr->materials_ = &engineGeometries[0].materials;*/
 
     size_t playerEntity = SIZE_MAX;
     NetworkManager netMgr;
@@ -104,8 +89,8 @@ int MTRD::main() {
             firstTime = false;
             printf(">>> firstTime ejecutado, meshes: %zu\n", objItemList[0].meshes.size());
             eng.windowLoadAllMaterials(objItemList);
-            r->meshes_ = &objItemList[0].meshes;
-            r->materials_ = &objItemList[0].materials;
+            rtable->meshes_ = &objItemList[0].meshes;
+            rtable->materials_ = &objItemList[0].materials;
         }
 
         if (currentState == AppState::Menu) {
@@ -146,13 +131,13 @@ int MTRD::main() {
             auto* netComp = ecs.AddComponent<MTRD::NetworkComponent>(playerEntity);
             netComp->isLocal = true;
 
-            auto* trans = ecs.AddComponent<MTRD::TransformComponent>(playerEntity);
-            trans->position = glm::vec3(0, 0, 0);
-            trans->scale = glm::vec3(1.0f);
+            auto* tplayer = ecs.AddComponent<MTRD::TransformComponent>(playerEntity);
+            tplayer->position = glm::vec3(0, 0, 0);
+            tplayer->scale = glm::vec3(1.0f);
 
-            auto* rend = ecs.AddComponent<MTRD::RenderComponent>(playerEntity);
-            rend->meshes_ = &objItemList[0].meshes;
-            rend->materials_ = &objItemList[0].materials;
+            auto* rplayer = ecs.AddComponent<MTRD::RenderComponent>(playerEntity);
+            rplayer->meshes_ = &objItemList[0].meshes;
+            rplayer->materials_ = &objItemList[0].materials;
 
             currentState = AppState::Running;
         }
