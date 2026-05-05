@@ -462,13 +462,12 @@ namespace MTRD {
             float deltaTime = windowGetLastFrameTime();
             physx_.update(deltaTime);
 
-            MTRD::TransformComponent* t;
-            MTRD::PhysxComponent* p;
-            // Sync physics to transforms
-            for (size_t id : ecs_.GetEntitiesWithComponents<MTRD::TransformComponent, MTRD::PhysxComponent>()) {
-                t = ecs_.GetComponent<MTRD::TransformComponent>(id);
-                p = ecs_.GetComponent<MTRD::PhysxComponent>(id);
-                physx_.syncTransform(p, t);
+            auto& physxList = ecs_.GetComponentList<MTRD::PhysxComponent>();
+            for (auto& [id, p] : physxList) {
+                MTRD::TransformComponent* t = ecs_.GetComponent<MTRD::TransformComponent>(id);
+                if (t != nullptr) {
+                    physx_.syncTransform(&p, t);
+                }
             }
         }
         // --- *** ---

@@ -169,8 +169,15 @@ std::vector<std::pair<size_t, T>>& ECSManager::GetComponentList() {
 template<typename T>
 T* ECSManager::GetComponent(size_t entity) {
     auto& list = GetComponentList<T>();
-    for (auto& [id, comp] : list)
-        if (id == entity) return &comp;
+
+    auto it = std::lower_bound(list.begin(), list.end(), entity,
+        [](const std::pair<size_t, T>& element, size_t id) {
+            return element.first < id;
+        });
+
+    if (it != list.end() && it->first == entity) {
+        return &it->second;
+    }
     return nullptr;
 }
 
@@ -178,8 +185,14 @@ T* ECSManager::GetComponent(size_t entity) {
 template<typename T>
 T* ECSManager::AddComponent(size_t entity) {
     auto& list = GetComponentList<T>();
-    list.emplace_back(entity, T());
-    return &list.back().second;
+
+    auto it = std::lower_bound(list.begin(), list.end(), entity,
+        [](const std::pair<size_t, T>& element, size_t id) {
+            return element.first < id;
+        });
+
+    it = list.emplace(it, entity, T());
+    return &it->second;
 }
 
 
