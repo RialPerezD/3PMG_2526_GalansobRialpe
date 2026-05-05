@@ -34,8 +34,8 @@ namespace MTRD {
             float uScale = static_cast<float>(frameWidth_) / (frameWidth_ * columns_);
             float vScale = static_cast<float>(frameHeight_) / (frameHeight_ * rows_);
             
-            renderComponent_->materials_[0][0].uvOffset = glm::vec2(uOffset, vOffset);
-            renderComponent_->materials_[0][0].uvScale = glm::vec2(uScale, vScale);
+            (*renderComponent_->materials_)[0].uvOffset = glm::vec2(uOffset, vOffset);
+            (*renderComponent_->materials_)[0].uvScale = glm::vec2(uScale, vScale);
         }
     }
 

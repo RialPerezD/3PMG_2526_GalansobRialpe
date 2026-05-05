@@ -40,7 +40,8 @@ namespace MTRD {
         initialized2D(false),
         hasPhysx_(false),
         basePlane_(std::move(generatePlane(20, 20))),
-        debug_(true) {
+        debug_(true),
+        online_(false){
         input_.generateAsciiMap();
         input_.setWindow(&window_);
     }

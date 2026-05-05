@@ -7,13 +7,18 @@
 namespace MTRD {
 
     Mesh::Mesh(
-        std::vector<Vertex> vertices,
+        const std::vector<Vertex>& vertices,
         Window& window,
-        std::string name,
+        const std::string& name,
         bool& firstTime,
         int materialId,
-        bool debug) {
-        name_ = name;
+        bool debug)
+        : name_(name),
+        meshSize(static_cast<int>(vertices.size())),
+        vao(GL_INVALID_INDEX),
+        gluintVertexBuffer(GL_INVALID_INDEX),
+        materialId_(materialId),
+        debug_(debug) {
 
         if (firstTime) {
             glfwMakeContextCurrent(window.getGlfwSecondaryWindow());
@@ -25,19 +30,8 @@ namespace MTRD {
             firstTime = false;
         }
 
-        meshSize = static_cast<int>(vertices.size());
-        vao = GL_INVALID_INDEX;
-        gluintVertexBuffer = GL_INVALID_INDEX;
-        materialId_ = materialId;
-
-        //const void* vertex = static_cast<const void*> (vertices.data());
-
         glCreateBuffers(1, &gluintVertexBuffer);
         glNamedBufferData(gluintVertexBuffer, sizeof(Vertex) * meshSize, vertices.data(), GL_STATIC_DRAW);
-
-        debug_ = debug;
-        vertices.clear();
-        glFlush();
 
         if (debug_) {
             glCheckError();

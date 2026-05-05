@@ -12,7 +12,16 @@ namespace MTRD {
 
     class Mesh {
     public:
-        Mesh(std::vector<Vertex> vertices, Window& window, std::string name, bool& firstTime, int materialId, bool debug);    
+        Mesh(
+            const std::vector<Vertex>& vertices,
+            Window& window,
+            const std::string& name,
+            bool& firstTime,
+            int materialId,
+            bool debug
+        );    
+        
+
         ~Mesh();
         Mesh(Mesh&& other);
         Mesh& operator=(Mesh&& other);
