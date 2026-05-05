@@ -34,9 +34,9 @@ function physx_config()
             "PhysXPvdSDK_static_64" 
         }
 
-	postbuildcommands {
-		"{COPY} ../deps/physx/lib/debug/*.dll %{cfg.targetdir}"
-	}
+    postbuildcommands {
+        "{COPY} ../deps/physx/lib/debug/*.dll %{cfg.targetdir}"
+    }
 
     filter "configurations:Release or RelWithDebInfo"
         libdirs { "deps/physx/lib/release" }
@@ -48,9 +48,9 @@ function physx_config()
             "PhysXPvdSDK_static_64"
         }
 
-	postbuildcommands {
-		"{COPY} ../deps/physx/lib/release/*.dll %{cfg.targetdir}"
-	}
+    postbuildcommands {
+        "{COPY} ../deps/physx/lib/release/*.dll %{cfg.targetdir}"
+    }
 
     filter {}
 end
@@ -89,6 +89,8 @@ workspace "MotArda"
     location "build"
     cppdialect "c++20"
     startproject "Window"
+    
+    warnings "Extra"
 
     includedirs {
         "include",
@@ -120,9 +122,13 @@ workspace "MotArda"
         kind "StaticLib"
         targetdir "build/%{cfg.buildcfg}"
         conan_config_lib()
-		filter "system:windows"
-			links { "Ws2_32", "Winmm" }
-		filter {}
+        filter "system:windows"
+            links { "Ws2_32", "Winmm" }
+        filter {}
+
+        filter "files:deps/enet/** or deps/glad/**"
+            warnings "Off" -- Desactiva la rigurosidad "Extra" para estas carpetas
+        filter {}
 
     files{
         "premake5.lua",
@@ -138,7 +144,7 @@ workspace "MotArda"
         "deps/glad/src/glad.c", "deps/glad/include/glad/glad.h",
         "deps/imgui/*.cpp",
 
-		"deps/enet/src/*.c"
+        "deps/enet/src/*.c"
         }
 
     local example_files = os.matchfiles("examples/*.cpp")

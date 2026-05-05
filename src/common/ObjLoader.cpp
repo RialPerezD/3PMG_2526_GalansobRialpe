@@ -53,7 +53,7 @@ namespace MTRD {
             material.diffuseTexPath = texturePath;
 
             material.loadeable = (mat.diffuse_texname.length() != 0);
-            material.diffuseTexID = -1;
+            material.diffuseTexID = GL_INVALID_INDEX;
 
             objLoader.materials.push_back(material);
         }

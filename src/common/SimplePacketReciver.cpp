@@ -18,7 +18,7 @@ namespace MTRD {
     ) {
         this->objItemListPtr = objItemListPtr;
         this->ecsPtr = ecsPtr;
-		this->localPlayerEntity = localPlayerEntity;
+        this->localPlayerEntity = localPlayerEntity;
     }
 
 
@@ -88,7 +88,7 @@ namespace MTRD {
 
             auto* netComp = ecsPtr->AddComponent<MTRD::NetworkComponent>(entity);
             netComp->networkID = msg->networkID;
-			netComp->meshId_ = msg->meshId_;
+            netComp->meshId_ = msg->meshId_;
             netComp->isLocal = false;
 
             auto* transform = ecsPtr->AddComponent<MTRD::TransformComponent>(entity);
@@ -100,8 +100,9 @@ namespace MTRD {
             // Asign visual meshes and materials
             if (!objItemListPtr->empty()) {
                 auto* render = ecsPtr->AddComponent<MTRD::RenderComponent>(entity);
-                render->meshes_ = &(*objItemListPtr)[netComp->meshId_].meshes;
-                render->materials_ = &(*objItemListPtr)[netComp->meshId_].materials;
+                size_t meshIdx = static_cast<size_t>(netComp->meshId_);
+                render->meshes_ = &(*objItemListPtr)[meshIdx].meshes;
+                render->materials_ = &(*objItemListPtr)[meshIdx].materials;
             }
 
             remoteEntities[msg->networkID] = entity;

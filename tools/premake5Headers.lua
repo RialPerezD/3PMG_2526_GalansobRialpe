@@ -90,6 +90,8 @@ workspace "MotArda"
 	location "build"
 	cppdialect "c++20"
 	startproject "Window"
+    
+    warnings "Extra"
 
 	includedirs {
 		"include",

@@ -3,13 +3,13 @@
 namespace MTRD {
 
     static physx::PxFilterFlags defaultFilterShader(
-        physx::PxFilterObjectAttributes attributes0,
-        physx::PxFilterData filterData0,
-        physx::PxFilterObjectAttributes attributes1,
-        physx::PxFilterData filterData1,
+        [[maybe_unused]] physx::PxFilterObjectAttributes attributes0,
+        [[maybe_unused]] physx::PxFilterData filterData0,
+        [[maybe_unused]] physx::PxFilterObjectAttributes attributes1,
+        [[maybe_unused]] physx::PxFilterData filterData1,
         physx::PxPairFlags& pairFlags,
-        const void* constantBlock,
-        physx::PxU32 constantBlockSize)
+        [[maybe_unused]] const void* constantBlock,
+        [[maybe_unused]] physx::PxU32 constantBlockSize)
     {
         pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
         return physx::PxFilterFlag::eDEFAULT;
@@ -47,7 +47,7 @@ namespace MTRD {
         initialized = true;
     }
 
-    void PhysxMaster::update(float deltaTime) {
+    void PhysxMaster::update([[maybe_unused]] float deltaTime) {
         if (!gScene || !initialized) return;
         
         const float fixedDt = 1.0f / 60.0f;

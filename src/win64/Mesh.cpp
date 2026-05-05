@@ -30,7 +30,7 @@ namespace MTRD {
         gluintVertexBuffer = GL_INVALID_INDEX;
         materialId_ = materialId;
 
-        const void* vertex = static_cast<const void*> (vertices.data());
+        //const void* vertex = static_cast<const void*> (vertices.data());
 
         glCreateBuffers(1, &gluintVertexBuffer);
         glNamedBufferData(gluintVertexBuffer, sizeof(Vertex) * meshSize, vertices.data(), GL_STATIC_DRAW);
