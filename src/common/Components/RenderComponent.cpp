@@ -2,8 +2,8 @@
 
 namespace MTRD {
     RenderComponent::RenderComponent() :
-        meshes_(new std::vector<std::unique_ptr<Mesh>>),
-        materials_(new std::vector<Material>()) {}
+        meshes_(nullptr),
+        materials_(nullptr) {}
 
     RenderComponent::RenderComponent(
         std::vector<std::unique_ptr<Mesh>>* meshes,
