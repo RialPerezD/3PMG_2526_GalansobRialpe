@@ -3,9 +3,7 @@
 #include <MotArda/common/Ecs.hpp>
 #include <MotArda/common/Camera.hpp>
 #include <MotArda/common/Components/LightComponent.hpp>
-
 #include <memory>
-
 #include <MotArda/win64/Systems/RenderLightsSystem.hpp>
 #include <MotArda/win64/Systems/ShadowMapSystem.hpp>
 #include <MotArda/win64/Texture.hpp>
@@ -14,79 +12,116 @@ static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
 }
 
+struct Platform {
+    float x, y, width, height;
+};
+
+bool checkGroundCollision(const glm::vec3& pos, const Platform& plat, float w, float h) {
+    float pL = plat.x - plat.width * 0.5f, pR = plat.x + plat.width * 0.5f;
+    float pT = plat.y + plat.height * 0.5f;
+    float mL = pos.x - w * 0.5f, mR = pos.x + w * 0.5f, mB = pos.y - h * 0.5f;
+
+    return (mR > pL && mL < pR && mB <= pT && mB >= pT - 0.3f);
+}
 
 int MTRD::main() {
-    // --- Rand seed ---
     std::srand(static_cast<unsigned>(std::time(nullptr)));
-    // --- *** ---
 
-
-    // --- Create engine ---
-    auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda OBJ Viewer");
+    auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Mario Bros - MotArda Engine");
     if (!maybeEng.has_value()) return 1;
 
     auto& eng = maybeEng.value();
-    // --- *** ---
-
-
-    // --- Camera ---
-    MTRD::Camera& camera = eng.getCamera();
-    camera.setPosition(glm::vec3(0, 0, 20));
-    camera.setTarget(glm::vec3(0.0f, 0.0f, 0.0f));
-    float movSpeed = 0.1f;
-    // --- *** ---
-
-
-    // --- Setup engine info ---
+    eng.getCamera().setPosition({ 0, 0, 20 });
+    eng.getCamera().setTarget({ 0, 0, 0 });
     eng.SetDebugMode(true);
     eng.SetRenderType(MotardaEng::RenderType::Bidimensional);
     eng.windowSetErrorCallback(error_callback);
-    // --- *** ---
 
 
-    // --- Create drawable entitys ---
     ECSManager& ecs = eng.getEcs();
-    // --- *** ---
 
-    // --- Load textures ---
-    GLuint skullTexture = Texture::LoadTexture("../assets/textures/12140_Skull_v3_L2/Skull.jpg");
-    GLuint tankTexture = Texture::LoadTexture("../assets/textures/tank/tanque.png");
-    // --- *** ---
+    std::vector<Texture> textureList;
+	textureList.push_back(Texture("../assets/textures/mario/MarioSheet.png"));
+    textureList.push_back(Texture("../assets/textures/mario/background.png"));
 
-    // --- Generate Sprites ---
-    Sprite sprite = eng.generateSprite(skullTexture, 1, 1);
-    Sprite sprite2 = eng.generateSprite(skullTexture, 25, 0);
+    GLuint marioTex = textureList[0].getId();
+    GLuint bgTex = textureList[1].getId();
 
-    Sprite animatedSprite = eng.generateSpriteSheet(tankTexture, 5, 64, 64, 3, 4, 3);
-    float animTimer = 0.0f;
+    Sprite bg = eng.generateSprite(bgTex, -16, 12);
+    ecs.GetComponent<TransformComponent>(bg.getId())->position = { 0, 0, -2.0f };
 
-    TransformComponent* spritTransform = ecs.GetComponent<TransformComponent>(sprite.getId());
-    // --- *** ---
+    Sprite mario = eng.generateSpriteSheet(marioTex, -1, 64, 32, 4, 2, 5);
+    auto* mTrans = ecs.GetComponent<TransformComponent>(mario.getId());
+    mTrans->position = { 0.0f, 0.0f, 0.0f };
 
-    // --- Main window bucle ---
+    std::vector<Platform> platforms;
+    for (float x = -12.0f; x <= 12.0f; x += 1.0f) platforms.push_back({ x, -4.25f, 1.0f, 1.0f });
+
+    std::vector<glm::vec2> extraPos = { {-4.0f, 2.5f}, {-2.0f, 2.5f}, {-1.0f, 2.5f} };
+    for (auto& p : extraPos) platforms.push_back({ p.x, p.y, 1.0f, 1.0f });
+
+    float velY = 0, gravity = -0.015f, jump = 0.5f, speed = 0.15f, animTimer = 0;
+    float mW = 0.8f, mH = 0.8f;
+    bool canJump = false, moving = false;
+    int frame = 0, side = 1;
+    mario.setFrame(1);
+
     while (!eng.windowShouldClose()) {
-
         eng.windowInitFrame();
 
-        // --- Input to move camera ---
-        if (eng.inputIsKeyPressed(Input::Keyboard::W)) spritTransform->position.y += movSpeed;
-        if (eng.inputIsKeyPressed(Input::Keyboard::S)) spritTransform->position.y -= movSpeed;
-        if (eng.inputIsKeyPressed(Input::Keyboard::A)) spritTransform->position.x -= movSpeed;
-        if (eng.inputIsKeyPressed(Input::Keyboard::D)) spritTransform->position.x += movSpeed;
-        // --- *** ---
-
-        // --- Animate sprite sheet ---
-        animTimer += eng.windowGetLastFrameTime();
-        if (animTimer >= 0.5f) {
-            animatedSprite.nextFrame();
-            animTimer = 0.0f;
+        moving = false;
+        if (eng.inputIsKeyPressed(Input::Keyboard::A)) {
+            side = 4;
+            float temPos = mTrans->position.x - speed;
+            if (temPos > -7) {
+                mTrans->position.x = temPos;
+                moving = true;
+            }
+        }else if (eng.inputIsKeyPressed(Input::Keyboard::D)) {
+            side = 1;
+            float temPos = mTrans->position.x + speed;
+            if (temPos < 7) {
+                mTrans->position.x = temPos;
+                moving = true;
+            }
         }
-        // --- *** ---
 
-        // Generate shadow map
+        if (eng.inputIsKeyPressed(Input::Keyboard::W) && canJump) { velY = jump; canJump = false; }
+
+        velY += gravity;
+        mTrans->position.y += velY;
+
+        bool onGround = false;
+        for (const auto& plat : platforms) {
+            if (velY < 0 && checkGroundCollision(mTrans->position, plat, mW, mH)) {
+                mTrans->position.y = (plat.y + plat.height * 0.5f) + mH * 0.5f;
+                velY = 0;
+                onGround = true;
+                break;
+            }
+        }
+        canJump = onGround;
+
+        if(!moving && canJump){ mario.setFrame(side); }
+
+        if (mTrans->position.y < -10.0f) { mTrans->position = { 0, 0, 0 }; velY = 0; }
+
+        animTimer += eng.windowGetLastFrameTime();
+        if (moving && animTimer >= 0.15f) {
+            if (canJump) {
+                mario.setFrame(frame + side);
+                frame = (frame + 1) % 3;
+            } else {
+                if (side == 4) {
+                    mario.setFrame(7);
+                } else {
+                    mario.setFrame(0);
+                }
+            }
+            animTimer = 0;
+        }
+
         eng.RenderScene();
-        // --- *** ---
-
         eng.windowEndFrame();
     }
 

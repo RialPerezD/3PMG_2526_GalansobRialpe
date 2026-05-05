@@ -34,14 +34,13 @@ namespace MTRD {
         window_{ std::move(window) },
         input_{ std::move(input) },
         jobSystem_{ std::move(js) },
-        vp_ (glm::mat4(1.0f)),
-        model_ (glm::mat4(1.0f)),
+        vp_(glm::mat4(1.0f)),
+        model_(glm::mat4(1.0f)),
         camera_(Camera::CreateCamera(windowGetSizeRatio())),
-        initialized2D (false),
+        initialized2D(false),
         hasPhysx_(false),
-        basePlane_ (std::move(generatePlane(20, 20))),
-        debug_ (true)
-    {
+        basePlane_(std::move(generatePlane(20, 20))),
+        debug_(true) {
         input_.generateAsciiMap();
         input_.setWindow(&window_);
     }
@@ -53,7 +52,7 @@ namespace MTRD {
     }
 
 
-    bool MotardaEng::windowShouldClose(){
+    bool MotardaEng::windowShouldClose() {
         return window_.shouldClose();
     }
 
@@ -88,7 +87,7 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowLoadAllMaterials(std::vector<ObjItem>& objItemsList){
+    void MotardaEng::windowLoadAllMaterials(std::vector<ObjItem>& objItemsList) {
         for (ObjItem& item : objItemsList) {
             window_.loadMaterials(item.materials);
         }
@@ -100,7 +99,7 @@ namespace MTRD {
     }
 
 
-    bool MotardaEng::inputIsKeyPressed(Input::Keyboard key) {
+    bool MTRD::MotardaEng::inputIsKeyPressed(Input::Keyboard key) {
         return input_.isKeyPressed(key);
     }
 
@@ -160,12 +159,12 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::enqueueTask(std::function<void()> task){
+    void MotardaEng::enqueueTask(std::function<void()> task) {
         jobSystem_.enqueue(task);
     }
 
 
-    std::vector<ObjItem> MotardaEng::loadObjs(std::vector<const char*> routes){
+    std::vector<ObjItem> MotardaEng::loadObjs(const std::vector<const char*>& routes) {
         std::vector<ObjItem> objItemsList = {};
 
         for (const char* route : routes) {
@@ -207,8 +206,8 @@ namespace MTRD {
 
 
     std::unique_ptr<Mesh> MotardaEng::createMesh(
-        std::vector<Vertex> vertices,
-        std::string name) {
+        const std::vector<Vertex>& vertices,
+        const std::string& name) {
 
         bool firstTime = false;
 
@@ -224,9 +223,9 @@ namespace MTRD {
 
 
     ObjItem MotardaEng::generateCube(float size, int texureId, bool debug) {
-		bool firstTime = false;
+        bool firstTime = false;
         return std::move(Geometries::GenerateCube(window_, size, firstTime, texureId, debug));
-	}
+    }
 
 
     ObjItem MotardaEng::generatePlane(float width, float height, int texureId, bool debug) {
@@ -241,7 +240,7 @@ namespace MTRD {
     }
 
 
-    ObjItem MotardaEng::GenerateTerrain(float width, float depth, float maxHeight, int textureId, bool debug){
+    ObjItem MotardaEng::GenerateTerrain(float width, float depth, float maxHeight, int textureId, bool debug) {
         bool firstTime = false;
         const std::string& heightmapPath = "";
         return std::move(Terrain::GenerateFromHeightmap(
@@ -342,37 +341,37 @@ namespace MTRD {
         hasPhysx_ = has;
 
         if (!physx_.initialized) {
-			physx_.init();
+            physx_.init();
         }
-	}
+    }
 
 
-    void MotardaEng::SetRenderType(RenderType type){
+    void MotardaEng::SetRenderType(RenderType type) {
         actualRenderType_ = type;
 
         switch (type) {
-            case RenderType::Base:
-                renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
-                break;
-            case RenderType::Lights:
-                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
-                break;
-            case RenderType::LightsWithShadows:
-                renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
-                shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
-                break;
-            case RenderType::Bidimensional:
-                renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
-                break;
-            case RenderType::DeferredWithLights:
-                defferredSystem_ = std::make_unique<RenderDefferredSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
-                shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
-                break;
-            case RenderType::Pbr:
-                pbrSystem_ = std::make_unique<RenderPbrSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
-                shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
-                break;
-		}
+        case RenderType::Base:
+            renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
+            break;
+        case RenderType::Lights:
+            renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
+            break;
+        case RenderType::LightsWithShadows:
+            renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
+            shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
+            break;
+        case RenderType::Bidimensional:
+            renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
+            break;
+        case RenderType::DeferredWithLights:
+            defferredSystem_ = std::make_unique<RenderDefferredSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
+            shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
+            break;
+        case RenderType::Pbr:
+            pbrSystem_ = std::make_unique<RenderPbrSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
+            shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
+            break;
+        }
     }
 
 
