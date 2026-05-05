@@ -1,4 +1,3 @@
-#pragma once
 #include "Motarda/win64/Texture.hpp"
 #include <string>
 #include <MotArda/win64/Debug.hpp>
@@ -8,11 +7,9 @@
 #include "../deps/stb_image.h" 
 
 namespace MTRD {
-    GLuint Texture::LoadTexture(const char* route, bool debug_){
-
-        GLuint tex = GL_INVALID_INDEX;
-        glGenTextures(1, &tex);
-        glBindTexture(GL_TEXTURE_2D, tex);
+    Texture::Texture(const char* route, bool debug_) {
+        glGenTextures(1, &id_);
+        glBindTexture(GL_TEXTURE_2D, id_);
 
         if (debug_) {
             glCheckError();
@@ -34,7 +31,8 @@ namespace MTRD {
 
         if (!data) {
             std::cerr << "Error cargando textura: " << route << std::endl;
-            return GL_INVALID_INDEX;
+            id_ = GL_INVALID_INDEX;
+            return;
         }
 
         GLenum format;
@@ -65,7 +63,29 @@ namespace MTRD {
         if (debug_) {
             glCheckError();
         }
+    }
 
-        return tex;
+
+    Texture::~Texture() {
+        if (id_ != GL_INVALID_INDEX) {
+            glDeleteTextures(1, &id_);
+        }
+    }
+
+
+    Texture::Texture(Texture&& other) noexcept : id_(other.id_) {
+        other.id_ = GL_INVALID_INDEX;
+    }
+
+
+    Texture& Texture::operator=(Texture&& other) noexcept {
+        if (this != &other) {
+            if (id_ != GL_INVALID_INDEX) {
+                glDeleteTextures(1, &id_); // Liberamos el recurso actual antes de aceptar el nuevo
+            }
+            id_ = other.id_;
+            other.id_ = GL_INVALID_INDEX;
+        }
+        return *this;
     }
 }

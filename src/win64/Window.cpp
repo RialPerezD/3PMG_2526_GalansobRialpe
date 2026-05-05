@@ -174,22 +174,22 @@ namespace MTRD {
 
 
     void Window::loadMaterials(std::vector<Material>& materials) {
-        std::unordered_map<std::string, GLuint> textureCache;
-
         for (auto& mat : materials) {
             if (!mat.diffuseTexPath.empty()) {
 
                 std::string key(mat.diffuseTexPath);
-                if (textureCache.find(key) != textureCache.end()) {
-                    mat.diffuseTexID = textureCache[key];
+                auto it = textureCache.find(key);
+
+                if (it != textureCache.end()) {
+                   mat.diffuseTexID = it->second.getId();
                     continue;
                 }
 
-                GLuint tex = -1;
-                tex = Texture::LoadTexture(mat.diffuseTexPath.c_str(), debug_);
+                Texture tex(mat.diffuseTexPath.c_str(), debug_);
 
-                textureCache[key] = tex; // Guardamos la textura en la cache
-                mat.diffuseTexID = tex;
+                mat.diffuseTexID = tex.getId();
+
+                textureCache.insert({ key, std::move(tex) });
             }
         }
     }

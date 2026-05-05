@@ -3,7 +3,20 @@
 
 namespace MTRD {
     class Texture {
+    private:
+        GLuint id_ = GL_INVALID_INDEX;
+
     public:
-        static GLuint LoadTexture(const char* route, bool debug = false);
+        Texture(const char* route, bool debug = false);
+
+        ~Texture();
+
+        Texture(Texture&& other) noexcept;
+        Texture& operator=(Texture&& other) noexcept;
+
+        Texture(const Texture&) = delete;
+        Texture& operator=(const Texture&) = delete;
+
+        GLuint getId() const { return id_; }
     };
 }

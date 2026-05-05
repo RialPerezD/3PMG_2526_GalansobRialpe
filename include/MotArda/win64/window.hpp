@@ -216,6 +216,7 @@ namespace MTRD {
         //< Last frame time
         double lastFrameTime_ = 0.0;
 
+        std::unordered_map<std::string, Texture> textureCache;
 
     };
 }
