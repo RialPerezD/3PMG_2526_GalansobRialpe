@@ -146,7 +146,7 @@ namespace MTRD {
     }
 
     void Input::generateAsciiMap() {
-        for (int i = 0; i < 27; i++) {
+        for (int i = 0; i < 26; i++) {
             asciiMap[static_cast<Keyboard>(i)].push_back(65 + i);
             asciiMap[static_cast<Keyboard>(i)].push_back(97 + i);
         }

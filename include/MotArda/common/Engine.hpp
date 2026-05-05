@@ -229,21 +229,18 @@ namespace MTRD {
         */
         MotardaEng(Window window, Input input, JobSystem js);
 
+        // --- 1. Recursos base del sistema (Se inicializan primero) ---
+        Window window_;
+        Input input_;
+        JobSystem jobSystem_;
+
+        // --- 2. Estado basico del motor ---
         bool debug_;
         bool online_;
 
-        //< Object of Window class.
-        Window window_;
-        //< Object of Input class.
-        Input input_;
-        //< Object of JobSystem class.
-        JobSystem jobSystem_;
-
+        // --- 3. Sistemas logicos y ECS ---
         Camera camera_;
         ECSManager ecs_;
-
-        // --- Online Information ---
-        //OnlineSystem onlineSystem_;
 
         // --- Render Information ---
         glm::mat4x4 vp_;

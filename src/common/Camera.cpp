@@ -19,7 +19,9 @@ namespace MTRD {
         sensitivity_(0.1f),
         view_(1.0f),
         projection_(1.0f),
-        viewProj_(1.0f) {
+        viewProj_(1.0f)
+    {
+        updateAll();
     }
 
 
@@ -69,8 +71,13 @@ namespace MTRD {
         front_.z = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
         front_ = glm::normalize(front_);
 
-        right_ = glm::normalize(glm::cross(front_, up_));
-        view_ = glm::lookAt(position_, position_ + front_, up_);
+        glm::vec3 tempUp = up_;
+        if (glm::abs(glm::dot(front_, tempUp)) > 0.999f) {
+            tempUp = (tempUp.z == 0.0f) ? glm::vec3(0.0f, 0.0f, 1.0f) : glm::vec3(1.0f, 0.0f, 0.0f);
+        }
+
+        right_ = glm::normalize(glm::cross(front_, tempUp));
+        view_ = glm::lookAt(position_, position_ + front_, glm::cross(right_, front_));
     }
 
 
