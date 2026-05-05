@@ -60,53 +60,46 @@ namespace MTRD {
     }
 
     void RenderPbrSystem::InitGBuffer() {
-        glGenFramebuffers(1, &gBufferFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBO);
+        glCreateFramebuffers(1, &gBufferFBO);
 
-        glGenTextures(1, &gPosition);
-        glBindTexture(GL_TEXTURE_2D, gPosition);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth_, windowHeight_, 0, GL_RGBA, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
+        glCreateTextures(GL_TEXTURE_2D, 1, &gPosition);
+        glTextureStorage2D(gPosition, 1, GL_RGBA16F, windowWidth_, windowHeight_);
+        glTextureParameteri(gPosition, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTextureParameteri(gPosition, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTextureParameteri(gPosition, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(gPosition, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glNamedFramebufferTexture(gBufferFBO, GL_COLOR_ATTACHMENT0, gPosition, 0);
 
-        glGenTextures(1, &gNormal);
-        glBindTexture(GL_TEXTURE_2D, gNormal);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth_, windowHeight_, 0, GL_RGBA, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
+        glCreateTextures(GL_TEXTURE_2D, 1, &gNormal);
+        glTextureStorage2D(gNormal, 1, GL_RGBA16F, windowWidth_, windowHeight_);
+        glTextureParameteri(gNormal, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTextureParameteri(gNormal, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glNamedFramebufferTexture(gBufferFBO, GL_COLOR_ATTACHMENT1, gNormal, 0);
 
-        glGenTextures(1, &gAlbedoMetallic);
-        glBindTexture(GL_TEXTURE_2D, gAlbedoMetallic);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, windowWidth_, windowHeight_, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoMetallic, 0);
+        glCreateTextures(GL_TEXTURE_2D, 1, &gAlbedoMetallic);
+        glTextureStorage2D(gAlbedoMetallic, 1, GL_RGBA8, windowWidth_, windowHeight_);
+        glTextureParameteri(gAlbedoMetallic, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTextureParameteri(gAlbedoMetallic, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glNamedFramebufferTexture(gBufferFBO, GL_COLOR_ATTACHMENT2, gAlbedoMetallic, 0);
 
-        glGenTextures(1, &gRoughness);
-        glBindTexture(GL_TEXTURE_2D, gRoughness);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, windowWidth_, windowHeight_, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gRoughness, 0);
+        glCreateTextures(GL_TEXTURE_2D, 1, &gRoughness);
+        glTextureStorage2D(gRoughness, 1, GL_R8, windowWidth_, windowHeight_);
+        glTextureParameteri(gRoughness, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTextureParameteri(gRoughness, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glNamedFramebufferTexture(gBufferFBO, GL_COLOR_ATTACHMENT3, gRoughness, 0);
 
         unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-        glDrawBuffers(4, attachments);
+        glNamedFramebufferDrawBuffers(gBufferFBO, 4, attachments);
 
-        glGenRenderbuffers(1, &rboDepth);
-        glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, windowWidth_, windowHeight_);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+        glCreateRenderbuffers(1, &rboDepth);
+        glNamedRenderbufferStorage(rboDepth, GL_DEPTH_COMPONENT24, windowWidth_, windowHeight_);
+        glNamedFramebufferRenderbuffer(gBufferFBO, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        if (glCheckNamedFramebufferStatus(gBufferFBO, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             MTRD::Logger::error("Framebuffer not complete!");
             std::abort();
         }
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         gBufferInitialized = true;
     }
 
@@ -156,8 +149,7 @@ namespace MTRD {
                     Material mat = render->materials_->at(mesh->materialId_);
                     if (!mat.loadeable) continue;
 
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
+                    glBindTextureUnit(0, mat.diffuseTexID);
                     glUniform1i(glGetUniformLocation(gBufferProgram.programId_, "diffuseTexture"), 0);
 
                     glUniform3f(glGetUniformLocation(gBufferProgram.programId_, "DIFFUSE"), mat.diffuse.x, mat.diffuse.y, mat.diffuse.z);
@@ -184,20 +176,16 @@ namespace MTRD {
 
         glUseProgram(lightingProgram.programId_);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, gPosition);
+        glBindTextureUnit(0, gPosition);
         glUniform1i(glGetUniformLocation(lightingProgram.programId_, "gPosition"), 0);
 
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, gNormal);
+        glBindTextureUnit(1, gNormal);
         glUniform1i(glGetUniformLocation(lightingProgram.programId_, "gNormal"), 1);
 
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, gAlbedoMetallic);
+        glBindTextureUnit(2, gAlbedoMetallic);
         glUniform1i(glGetUniformLocation(lightingProgram.programId_, "gAlbedoMetallic"), 2);
 
-        glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, gRoughness);
+        glBindTextureUnit(3, gRoughness);
         glUniform1i(glGetUniformLocation(lightingProgram.programId_, "gRoughness"), 3);
 
         glUniform3f(glGetUniformLocation(lightingProgram.programId_, "viewPos"), viewPos_.x, viewPos_.y, viewPos_.z);
@@ -234,9 +222,8 @@ namespace MTRD {
                 glm::mat4 lightSpace = dirLight.getLightSpaceMatrix();
                 glUniformMatrix4fv(glGetUniformLocation(lightingProgram.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpace));
 
-                glActiveTexture(GL_TEXTURE4);
                 GLuint shadowTex = (current2DShadowIndex < depthMaps_.size()) ? depthMaps_[current2DShadowIndex] : 0;
-                glBindTexture(GL_TEXTURE_2D, shadowTex);
+                glBindTextureUnit(4, shadowTex);
                 glUniform1i(glGetUniformLocation(lightingProgram.programId_, "shadowTexture"), 4);
 
                 RenderQuad();
@@ -255,9 +242,8 @@ namespace MTRD {
                 glm::mat4 lightSpace = spot.getLightSpaceMatrix();
                 glUniformMatrix4fv(glGetUniformLocation(lightingProgram.programId_, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpace));
 
-                glActiveTexture(GL_TEXTURE4);
                 GLuint shadowTex = (current2DShadowIndex < depthMaps_.size()) ? depthMaps_[current2DShadowIndex] : 0;
-                glBindTexture(GL_TEXTURE_2D, shadowTex);
+                glBindTextureUnit(4, shadowTex);
                 glUniform1i(glGetUniformLocation(lightingProgram.programId_, "shadowTexture"), 4);
 
                 RenderQuad();
@@ -273,9 +259,8 @@ namespace MTRD {
                 glUniform1f(glGetUniformLocation(lightingProgram.programId_, "spotLinear"), point.linear_);
                 glUniform1f(glGetUniformLocation(lightingProgram.programId_, "spotQuadratic"), point.quadratic_);
 
-                glActiveTexture(GL_TEXTURE5);
                 GLuint shadowCube = (currentCubeShadowIndex < depthCubemaps_.size()) ? depthCubemaps_[currentCubeShadowIndex] : 0;
-                glBindTexture(GL_TEXTURE_CUBE_MAP, shadowCube);
+                glBindTextureUnit(5, shadowCube);
                 glUniform1i(glGetUniformLocation(lightingProgram.programId_, "shadowCubeMap"), 5);
 
                 RenderQuad();
@@ -300,17 +285,19 @@ namespace MTRD {
                  1.0f,  1.0f, 0.0f, 1.0f, 1.0f
             };
 
-            glGenVertexArrays(1, &quadVAO);
-            glBindVertexArray(quadVAO);
+            glCreateVertexArrays(1, &quadVAO);
+            glCreateBuffers(1, &quadVBO);
+            glNamedBufferData(quadVBO, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
 
-            glGenBuffers(1, &quadVBO);
-            glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+            glVertexArrayVertexBuffer(quadVAO, 0, quadVBO, 0, 5 * sizeof(float));
 
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+            glEnableVertexArrayAttrib(quadVAO, 0);
+            glVertexArrayAttribFormat(quadVAO, 0, 3, GL_FLOAT, GL_FALSE, 0);
+            glVertexArrayAttribBinding(quadVAO, 0, 0);
+
+            glEnableVertexArrayAttrib(quadVAO, 1);
+            glVertexArrayAttribFormat(quadVAO, 1, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(float));
+            glVertexArrayAttribBinding(quadVAO, 1, 0);
         }
 
         glBindVertexArray(quadVAO);

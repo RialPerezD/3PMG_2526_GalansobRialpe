@@ -12,8 +12,7 @@ namespace MTRD {
         std::string name,
         bool& firstTime,
         int materialId,
-        bool debug)
-    {
+        bool debug) {
         name_ = name;
 
         if (firstTime) {
@@ -33,13 +32,12 @@ namespace MTRD {
 
         const void* vertex = static_cast<const void*> (vertices.data());
 
-        glGenBuffers(1, &gluintVertexBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, gluintVertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshSize, vertices.data(), GL_STATIC_DRAW);
+        glCreateBuffers(1, &gluintVertexBuffer);
+        glNamedBufferData(gluintVertexBuffer, sizeof(Vertex) * meshSize, vertices.data(), GL_STATIC_DRAW);
 
         debug_ = debug;
         vertices.clear();
-		glFlush();
+        glFlush();
 
         if (debug_) {
             glCheckError();
@@ -49,8 +47,6 @@ namespace MTRD {
 
     Mesh::~Mesh() {
         if (vao != GL_INVALID_INDEX && vao != 0) {
-            glBindVertexArray(0);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
             glDeleteBuffers(1, &gluintVertexBuffer);
             glDeleteVertexArrays(1, &vao);
         }
@@ -67,8 +63,7 @@ namespace MTRD {
         materialId_(other.materialId_),
         debug_(other.debug_),
         meshSize(other.meshSize),
-        name_(std::move(other.name_))
-    {
+        name_(std::move(other.name_)) {
         other.vao = 0;
         other.gluintVertexBuffer = 0;
     }
@@ -99,8 +94,7 @@ namespace MTRD {
     }
 
     void Mesh::GenerateVao() {
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
+        glCreateVertexArrays(1, &vao);
 
         if (debug_) {
             glCheckError();
@@ -109,21 +103,22 @@ namespace MTRD {
 
 
     void Mesh::SetVertexAtribs(const std::vector<VertexAttribute>& attributes) {
-        glBindVertexArray(vao);
-        glBindBuffer(GL_ARRAY_BUFFER, gluintVertexBuffer);
+        const GLuint bindingIndex = 0;
+        glVertexArrayVertexBuffer(vao, bindingIndex, gluintVertexBuffer, 0, sizeof(Vertex));
 
         for (int i = 0; i < attributes.size(); i++) {
             if (attributes[i].location < 0) continue;
 
-            glEnableVertexAttribArray(attributes[i].location);
-            glVertexAttribPointer(
+            glEnableVertexArrayAttrib(vao, attributes[i].location);
+            glVertexArrayAttribFormat(
+                vao,
                 attributes[i].location,
                 attributes[i].size,
                 GL_FLOAT,
                 GL_FALSE,
-                sizeof(Vertex),
-                (void*)attributes[i].offset
+                static_cast<GLuint>(attributes[i].offset)
             );
+            glVertexArrayAttribBinding(vao, attributes[i].location, bindingIndex);
 
             if (debug_) {
                 glCheckError();

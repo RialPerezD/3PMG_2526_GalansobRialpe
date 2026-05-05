@@ -16,9 +16,8 @@ namespace MTRD {
             Shader::FragmentFromFile("../assets/shaders/textured_lights_obj_fragment.txt", debug),
             debug }
             , viewPos_(viewPos),
-            windowWidth_(windowWidth),
-            windowHeight_(windowHeight)
-    {
+        windowWidth_(windowWidth),
+        windowHeight_(windowHeight) {
         attributes = {
             { "position", 3, offsetof(Vertex, position), -1},
             { "uv", 2, offsetof(Vertex, uv), -1},
@@ -65,14 +64,11 @@ namespace MTRD {
             glUniform1i(glGetUniformLocation(program.programId_, "shadowCubeMap"), 2);
 
             if (isOmni) {
-                glActiveTexture(GL_TEXTURE2);
                 GLuint shadowCube = (shadowMapIndex < depthCubemaps_.size()) ? depthCubemaps_[shadowMapIndex] : 0;
-                glBindTexture(GL_TEXTURE_CUBE_MAP, shadowCube);
-            }
-            else {
-                glActiveTexture(GL_TEXTURE1);
+                glBindTextureUnit(2, shadowCube);
+            } else {
                 GLuint shadowTex = (shadowMapIndex < depthMaps_.size()) ? depthMaps_[shadowMapIndex] : 0;
-                glBindTexture(GL_TEXTURE_2D, shadowTex);
+                glBindTextureUnit(1, shadowTex);
             }
 
             for (size_t i = 0; i < render->meshes_->size(); i++) {
@@ -82,8 +78,7 @@ namespace MTRD {
                     Material mat = render->materials_->at(mesh->materialId_);
                     if (!mat.loadeable) continue;
 
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
+                    glBindTextureUnit(0, mat.diffuseTexID);
                     glUniform1i((GLint)loc, 0);
 
                     glUniform3f(glGetUniformLocation(program.programId_, "DIFFUSE"), mat.diffuse.x, mat.diffuse.y, mat.diffuse.z);

@@ -56,8 +56,7 @@ namespace MTRD {
 
                     if (!mat.loadeable) continue;
 
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
+                    glBindTextureUnit(0, mat.diffuseTexID);
                     glUniform1i(loc, 0);
 
                     glUniform2f(uvOffsetLoc, mat.uvOffset.x, mat.uvOffset.y);

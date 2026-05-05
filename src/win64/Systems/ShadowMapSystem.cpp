@@ -14,8 +14,7 @@ namespace MTRD {
             Shader::GeometryFromFile("../assets/shaders/omni_shadow_geom.txt", debug),
             Shader::FragmentFromFile("../assets/shaders/omni_shadow_frag.txt", debug),
             debug
-        }
-    {
+        } {
         attributes = {
             { "position", 3, offsetof(Vertex, position), -1},
             { "uv", 2, offsetof(Vertex, uv), -1},
@@ -29,43 +28,36 @@ namespace MTRD {
     }
 
     void ShadowMapSystem::CreateShadowMapResource(GLuint& fbo, GLuint& depthMap) {
-        glGenFramebuffers(1, &fbo);
-        glGenTextures(1, &depthMap);
-        glBindTexture(GL_TEXTURE_2D, depthMap);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+        glCreateFramebuffers(1, &fbo);
 
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-        glDrawBuffer(GL_NONE);
-        glReadBuffer(GL_NONE);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glCreateTextures(GL_TEXTURE_2D, 1, &depthMap);
+        glTextureStorage2D(depthMap, 1, GL_DEPTH_COMPONENT16, SHADOW_WIDTH, SHADOW_HEIGHT);
+        glTextureParameteri(depthMap, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTextureParameteri(depthMap, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTextureParameteri(depthMap, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        glTextureParameteri(depthMap, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+        float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        glTextureParameterfv(depthMap, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+        glNamedFramebufferTexture(fbo, GL_DEPTH_ATTACHMENT, depthMap, 0);
+        glNamedFramebufferDrawBuffer(fbo, GL_NONE);
+        glNamedFramebufferReadBuffer(fbo, GL_NONE);
     }
 
     void ShadowMapSystem::CreateOmniShadowResource(GLuint& fbo, GLuint& cubemap) {
-        glGenFramebuffers(1, &fbo);
-        glGenTextures(1, &cubemap);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
-        for (unsigned int i = 0; i < 6; ++i) {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
-                SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-        }
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glCreateFramebuffers(1, &fbo);
 
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, cubemap, 0);
-        glDrawBuffer(GL_NONE);
-        glReadBuffer(GL_NONE);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &cubemap);
+        glTextureStorage2D(cubemap, 1, GL_DEPTH_COMPONENT16, SHADOW_WIDTH, SHADOW_HEIGHT);
+        glTextureParameteri(cubemap, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTextureParameteri(cubemap, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTextureParameteri(cubemap, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(cubemap, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(cubemap, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        glNamedFramebufferTexture(fbo, GL_DEPTH_ATTACHMENT, cubemap, 0);
+        glNamedFramebufferDrawBuffer(fbo, GL_NONE);
+        glNamedFramebufferReadBuffer(fbo, GL_NONE);
     }
 
     void ShadowMapSystem::RenderShadowMap(ECSManager& ecs, glm::mat4& model) {
