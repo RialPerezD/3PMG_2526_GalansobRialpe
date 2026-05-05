@@ -192,7 +192,6 @@ namespace MTRD {
     const char* MotardaEng::loadShaderFile(const char* filename) {
         std::ifstream file(filename);
         if (!file.is_open()) {
-            //std::cerr << "Error: no se pudo abrir el archivo " << filename << std::endl;
             MTRD::Logger::error("No se pudo abrir el archivo");
             return nullptr;
         }
@@ -200,9 +199,10 @@ namespace MTRD {
         std::stringstream buffer;
         buffer << file.rdbuf();
 
-        std::string* shaderSource = new std::string(buffer.str());
+        static std::string shaderSource;
+        shaderSource = buffer.str();
 
-        return shaderSource->c_str();
+        return shaderSource.c_str();
     }
 
 
