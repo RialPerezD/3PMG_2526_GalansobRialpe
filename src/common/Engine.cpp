@@ -382,7 +382,6 @@ namespace MTRD {
         switch (actualRenderType_) {
         case RenderType::Base:
             if (!renderSystem_) {
-                //printf("There are no render system");
                 MTRD::Logger::error("There are no render system");
                 return;
             }
@@ -391,7 +390,6 @@ namespace MTRD {
 
         case RenderType::Lights:
             if (!renderLightsSystem_) {
-                //printf("There are no light render system");
                 MTRD::Logger::error("There are no light system");
 
                 return;
@@ -401,7 +399,6 @@ namespace MTRD {
 
         case RenderType::LightsWithShadows:
             if (!shadowSystem_ || !renderLightsSystem_) {
-                //printf("There are no light or shadow render system");
                 MTRD::Logger::error("There are no light or shadow render system");
 
 
@@ -415,7 +412,6 @@ namespace MTRD {
 
         case RenderType::Bidimensional:
             if (!renderSystem_) {
-                //printf("There are no 2d render system");
                 MTRD::Logger::error("There are no 2d render system");
 
                 return;
@@ -425,7 +421,6 @@ namespace MTRD {
 
         case RenderType::DeferredWithLights:
             if (!defferredSystem_) {
-                //printf("There are no deferred render system");
                 MTRD::Logger::error("There are no deferred render system");
 
                 return;
@@ -440,7 +435,6 @@ namespace MTRD {
 
         case RenderType::Pbr:
             if (!pbrSystem_) {
-                //printf("There are no PBR render system");
                 MTRD::Logger::error("There are no render system");
 
                 return;

@@ -4,6 +4,7 @@
 #include <MotArda/win64/Material.hpp>
 #include <string>
 #include <vector>
+#include <MotArda/common/Logger.hpp>
 
 namespace MTRD {
     RenderPbrSystem::RenderPbrSystem(
@@ -101,7 +102,8 @@ namespace MTRD {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            printf("Framebuffer not complete!");
+            MTRD::Logger::error("Framebuffer not complete!");
+            std::abort();
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

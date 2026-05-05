@@ -1,5 +1,6 @@
 #include "MotArda/common/SimplePacketReciver.hpp"
 #include <MotArda/common/Systems/NetworkSystem.hpp>
+#include <MotArda/common/Logger.hpp>
 
 namespace MTRD {
 
@@ -30,7 +31,7 @@ namespace MTRD {
             if (localNetComp && localNetComp->networkID == 0 && size == sizeof(uint32_t)) {
                 uint32_t assignedID = *(uint32_t*)data;
                 localNetComp->networkID = assignedID;
-                printf("Assigned networkID: %u\n", assignedID);
+                MTRD::Logger::info("Assigned networkID: %u\n", assignedID);
                 return;
             }
         }
@@ -45,14 +46,14 @@ namespace MTRD {
             if (it != remoteEntities.end()) {
                 ecsPtr->RemoveEntity(it->second);
                 remoteEntities.erase(it);
-                printf("Removed entity for disconnected client %u\n", disconnectedID);
+                MTRD::Logger::info("Removed entity for disconnected client %u\n", disconnectedID);
             }
             return;
         }
 
         // New connection signal (empty packet)
         if (size == 0 && senderID != 0) {
-            printf("New client connected with ID %u\n", senderID);
+            MTRD::Logger::info("New client connected with ID %u\n", senderID);
             return;
         }
 
@@ -65,7 +66,7 @@ namespace MTRD {
         if (size == sizeof(MTRD::ChatMessage)) {
             const MTRD::ChatMessage* chatMsg = static_cast<const MTRD::ChatMessage*>(data);
             if (chatMsg->text[0] != '\0') {
-                printf("Chat message received from %u: %s\n", senderID, chatMsg->text);
+                MTRD::Logger::info("Chat message received from %u: %s\n", senderID, chatMsg->text);
             }
             return;
         }
@@ -104,7 +105,7 @@ namespace MTRD {
             }
 
             remoteEntities[msg->networkID] = entity;
-            printf("Created remote entity for client %u\n", msg->networkID);
+            MTRD::Logger::info("Created remote entity for client %u\n", msg->networkID);
         } else {
             // Update existing remote player position and rotation
             size_t entity = it->second;
