@@ -37,9 +37,15 @@ int MTRD::main() {
     eng.SetRenderType(MotardaEng::RenderType::Bidimensional);
     eng.windowSetErrorCallback(error_callback);
 
+    std::vector<Texture> textureList;
+
     ECSManager& ecs = eng.getEcs();
-    GLuint marioTex = Texture::LoadTexture("../assets/textures/mario/MarioSheet.png");
-    GLuint bgTex = Texture::LoadTexture("../assets/textures/mario/background.png");
+
+	textureList.push_back(Texture("../assets/textures/mario/MarioSheet.png"));
+    textureList.push_back(Texture("../assets/textures/mario/background.png"));
+
+    GLuint marioTex = textureList[0].getId();
+    GLuint bgTex = textureList[1].getId();
 
     Sprite bg = eng.generateSprite(bgTex, -16, 12);
     ecs.GetComponent<TransformComponent>(bg.getId())->position = { 0, 0, -2.0f };

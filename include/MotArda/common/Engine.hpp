@@ -260,5 +260,7 @@ namespace MTRD {
 		bool hasPhysx_;
 		PhysxMaster physx_;
 		// --- *** ---
+
+		std::vector<Sprite> sprites_;
 	};
 }
