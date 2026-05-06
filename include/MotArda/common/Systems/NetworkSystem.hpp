@@ -5,14 +5,28 @@
 
 namespace MTRD {
 
-    struct NetworkMessage {
+    enum messageType {
+        a,
+        b,
+        c,
+        d
+    };
+#pragma pack(1)
+    struct NetMessage {
+        messageType mt;
+    };
+
+
+#pragma pack(1)
+    struct NetworkMessage : NetMessage {
         uint32_t networkID;
         float meshId_;
         float posX, posY, posZ;
         float rotX, rotY, rotZ;
     };
 
-    struct ChatMessage {
+#pragma pack(1)
+    struct ChatMessage : NetMessage {
         uint32_t senderNetworkID;
         char text[256];
     };
