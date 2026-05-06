@@ -40,7 +40,10 @@ int MTRD::main() {
     eng.getCamera().setTarget(glm::vec3(0, 0, 0));
 
     // --- Carga de Geometría ---
-    std::vector<const char*> objsRoutes = { "tableRound.obj" };
+    std::vector<const char*> objsRoutes = { "tableRound.obj",
+                                            "86jfmjiufzv2.obj",
+                                            "12140_Skull_v3_L2.obj",
+                                            "indoor_plant_02.obj" };
     std::atomic<bool> objsLoaded = false;
 
     std::vector<ObjItem> objItemList;
@@ -52,18 +55,72 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
 
-    size_t table = ecs.AddEntity();
+    size_t player1 = ecs.AddEntity();
+    size_t player2 = ecs.AddEntity();
+    size_t player3 = ecs.AddEntity();
+    size_t player4 = ecs.AddEntity();
 
     bool firstTime = true;
 
-    MTRD::TransformComponent* ttable = ecs.AddComponent<MTRD::TransformComponent>(table);
+    // TABLE
+    size_t table = ecs.AddEntity();
+    ecs.AddComponent<MTRD::TransformComponent>(table);
+    ecs.AddComponent<MTRD::RenderComponent>(table);
+
+    auto* ttable = ecs.GetComponent<MTRD::TransformComponent>(table);
     ttable->position = glm::vec3(0.0f, 0.0f, 3.0f);
     ttable->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
     ttable->angleRotationRadians = -1;
     ttable->scale = glm::vec3(1.0f);
 
-    MTRD::RenderComponent* rtable = ecs.AddComponent<MTRD::RenderComponent>(table);
 
+    // PLAYER 1
+    ecs.AddComponent<MTRD::TransformComponent>(player1);
+    ecs.AddComponent<MTRD::RenderComponent>(player1);
+
+    auto* tplayer1 = ecs.GetComponent<MTRD::TransformComponent>(player1);
+    tplayer1->position = glm::vec3(-5.0f, 0.0f, 3.0f);
+    tplayer1->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+    tplayer1->angleRotationRadians = -1;
+    tplayer1->scale = glm::vec3(1.0f);
+
+
+    // PLAYER 2
+    ecs.AddComponent<MTRD::TransformComponent>(player2);
+    ecs.AddComponent<MTRD::RenderComponent>(player2);
+
+    auto* tplayer2 = ecs.GetComponent<MTRD::TransformComponent>(player2);
+    tplayer2->position = glm::vec3(5.0f, 0.0f, 3.0f);
+    tplayer2->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+    tplayer2->angleRotationRadians = -1;
+    tplayer2->scale = glm::vec3(1.0f);
+
+
+    // PLAYER 3
+    ecs.AddComponent<MTRD::TransformComponent>(player3);
+    ecs.AddComponent<MTRD::RenderComponent>(player3);
+
+    auto* tplayer3 = ecs.GetComponent<MTRD::TransformComponent>(player3);
+    tplayer3->position = glm::vec3(-5.0f, 0.0f, 0.0f);
+    tplayer3->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+    tplayer3->angleRotationRadians = -1;
+    tplayer3->scale = glm::vec3(1.0f);
+
+
+    // PLAYER 4
+    ecs.AddComponent<MTRD::TransformComponent>(player4);
+    ecs.AddComponent<MTRD::RenderComponent>(player4);
+
+    auto* tplayer4 = ecs.GetComponent<MTRD::TransformComponent>(player4);
+    tplayer4->position = glm::vec3(5.0f, 0.0f, 0.0f);
+    tplayer4->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+    tplayer4->angleRotationRadians = -1;
+    tplayer4->scale = glm::vec3(1.0f);
+
+
+
+    //ttable = ecs.GetComponent<MTRD::TransformComponent>(table); primero crear los componentes con el add y luego
+    //settear la posición y las cossas con GetComponent, porq se están chafando los componentes anteriores
 
     size_t playerEntity = SIZE_MAX;
     NetworkManager netMgr;
@@ -89,8 +146,25 @@ int MTRD::main() {
             firstTime = false;
             printf(">>> firstTime ejecutado, meshes: %zu\n", objItemList[0].meshes.size());
             eng.windowLoadAllMaterials(objItemList);
+            auto* rtable = ecs.GetComponent<MTRD::RenderComponent>(table);
             rtable->meshes_ = &objItemList[0].meshes;
             rtable->materials_ = &objItemList[0].materials;
+
+            auto* rplayer1 = ecs.GetComponent<MTRD::RenderComponent>(player1);
+            rplayer1->meshes_ = &objItemList[1].meshes;
+            rplayer1->materials_ = &objItemList[1].materials;
+
+            auto* rplayer2 = ecs.GetComponent<MTRD::RenderComponent>(player2);
+            rplayer2->meshes_ = &objItemList[2].meshes;
+            rplayer2->materials_ = &objItemList[2].materials;
+
+            auto* rplayer3 = ecs.GetComponent<MTRD::RenderComponent>(player3);
+            rplayer3->meshes_ = &objItemList[3].meshes;
+            rplayer3->materials_ = &objItemList[3].materials;
+
+            auto* rplayer4 = ecs.GetComponent<MTRD::RenderComponent>(player4);
+            rplayer4->meshes_ = &objItemList[3].meshes;
+            rplayer4->materials_ = &objItemList[3].materials;
         }
 
         if (currentState == AppState::Menu) {
@@ -123,6 +197,15 @@ int MTRD::main() {
             ImGui::Begin("Info Jugador");
             ImGui::Text("Nick: %s", nickBuffer);
             ImGui::Text("Modo: %s", isServer ? "Servidor" : "Cliente");
+
+            auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
+            if (netComp) {
+                if (netComp->networkID != 0)
+                    ImGui::Text("Tu ID de red: %u", netComp->networkID);
+                else
+                    ImGui::TextDisabled("Esperando ID del servidor...");
+            }
+
             ImGui::End();
         }
 
