@@ -1,3 +1,8 @@
+//Desactivar macros de windows pra poder usar min y max de glm
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #include <MotArda/win64/Systems/RenderLightsSystem.hpp>
 #include <MotArda/win64/Debug.hpp>
 #include <string>
@@ -18,6 +23,7 @@ namespace MTRD {
             Shader::FragmentFromFile("../assets/shaders/textured_lights_obj_fragment.txt", debug),
             debug }
             , viewPos_(viewPos),
+            vp_(vp),
         windowWidth_(windowWidth),
         windowHeight_(windowHeight) {
         attributes = {
@@ -49,6 +55,30 @@ namespace MTRD {
     }
 
     void RenderLightsSystem::DrawCall(ECSManager& ecs, glm::mat4x4& model, size_t loc, const std::vector<size_t>& renderables, size_t shadowMapIndex, bool isOmni) {
+        Frustum frustum;
+        {
+            const glm::mat4& vp = vp_;
+            frustum.planes[0].normal = glm::vec3(vp[0][3] + vp[0][0], vp[1][3] + vp[1][0], vp[2][3] + vp[2][0]);
+            frustum.planes[0].d = vp[3][3] + vp[3][0];
+            frustum.planes[1].normal = glm::vec3(vp[0][3] - vp[0][0], vp[1][3] - vp[1][0], vp[2][3] - vp[2][0]);
+            frustum.planes[1].d = vp[3][3] - vp[3][0];
+            frustum.planes[2].normal = glm::vec3(vp[0][3] + vp[0][1], vp[1][3] + vp[1][1], vp[2][3] + vp[2][1]);
+            frustum.planes[2].d = vp[3][3] + vp[3][1];
+            frustum.planes[3].normal = glm::vec3(vp[0][3] - vp[0][1], vp[1][3] - vp[1][1], vp[2][3] - vp[2][1]);
+            frustum.planes[3].d = vp[3][3] - vp[3][1];
+            frustum.planes[4].normal = glm::vec3(vp[0][3] + vp[0][2], vp[1][3] + vp[1][2], vp[2][3] + vp[2][2]);
+            frustum.planes[4].d = vp[3][3] + vp[3][2];
+            frustum.planes[5].normal = glm::vec3(vp[0][3] - vp[0][2], vp[1][3] - vp[1][2], vp[2][3] - vp[2][2]);
+            frustum.planes[5].d = vp[3][3] - vp[3][2];
+            for (int pi = 0; pi < 6; pi++) {
+                float len = glm::length(frustum.planes[pi].normal);
+                if (len > 0.0f) {
+                    frustum.planes[pi].normal /= len;
+                    frustum.planes[pi].d /= len;
+                }
+            }
+        }
+
         for (size_t id : renderables) {
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
             TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
@@ -107,6 +137,15 @@ namespace MTRD {
 
                         if (lodLevel != desiredLod) continue;
                     }
+                }
+
+                if (mesh->aabbMin != mesh->aabbMax) {
+                    glm::vec3 sMin = transform->scale * mesh->aabbMin;
+                    glm::vec3 sMax = transform->scale * mesh->aabbMax;
+                    glm::vec3 worldAabbMin = transform->position + glm::min(sMin, sMax);
+                    glm::vec3 worldAabbMax = transform->position + glm::max(sMin, sMax);
+                    if (!IsAABBInFrustum(frustum, worldAabbMin, worldAabbMax))
+                        continue;
                 }
 
                 if (mesh->materialId_ != -1) {

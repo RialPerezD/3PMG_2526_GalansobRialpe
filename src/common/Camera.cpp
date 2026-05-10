@@ -125,6 +125,63 @@ namespace MTRD {
     const glm::mat4& Camera::getProjection() const noexcept { return projection_; }
     const glm::mat4& Camera::getViewProj() const noexcept { return viewProj_; }
 
+    Frustum Camera::getFrustum() const noexcept {
+        Frustum frustum;
+        const glm::mat4& vp = viewProj_;
+
+        frustum.planes[0].normal = glm::vec3(
+            vp[0][3] + vp[0][0],
+            vp[1][3] + vp[1][0],
+            vp[2][3] + vp[2][0]
+        );
+        frustum.planes[0].d = vp[3][3] + vp[3][0];
+
+        frustum.planes[1].normal = glm::vec3(
+            vp[0][3] - vp[0][0],
+            vp[1][3] - vp[1][0],
+            vp[2][3] - vp[2][0]
+        );
+        frustum.planes[1].d = vp[3][3] - vp[3][0];
+
+        frustum.planes[2].normal = glm::vec3(
+            vp[0][3] + vp[0][1],
+            vp[1][3] + vp[1][1],
+            vp[2][3] + vp[2][1]
+        );
+        frustum.planes[2].d = vp[3][3] + vp[3][1];
+
+        frustum.planes[3].normal = glm::vec3(
+            vp[0][3] - vp[0][1],
+            vp[1][3] - vp[1][1],
+            vp[2][3] - vp[2][1]
+        );
+        frustum.planes[3].d = vp[3][3] - vp[3][1];
+
+        frustum.planes[4].normal = glm::vec3(
+            vp[0][3] + vp[0][2],
+            vp[1][3] + vp[1][2],
+            vp[2][3] + vp[2][2]
+        );
+        frustum.planes[4].d = vp[3][3] + vp[3][2];
+
+        frustum.planes[5].normal = glm::vec3(
+            vp[0][3] - vp[0][2],
+            vp[1][3] - vp[1][2],
+            vp[2][3] - vp[2][2]
+        );
+        frustum.planes[5].d = vp[3][3] - vp[3][2];
+
+        for (int i = 0; i < 6; i++) {
+            float length = glm::length(frustum.planes[i].normal);
+            if (length > 0.0f) {
+                frustum.planes[i].normal /= length;
+                frustum.planes[i].d /= length;
+            }
+        }
+
+        return frustum;
+    }
+
     glm::vec3& Camera::getPosition() noexcept { return position_; }
     const glm::vec3& Camera::getFront() const noexcept { return front_; }
 

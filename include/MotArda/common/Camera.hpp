@@ -4,6 +4,28 @@
 
 namespace MTRD {
 
+    struct FrustumPlane {
+        glm::vec3 normal;
+        float d;
+    };
+
+    struct Frustum {
+        FrustumPlane planes[6];
+    };
+
+    inline bool IsAABBInFrustum(const Frustum& frustum, const glm::vec3& aabbMin, const glm::vec3& aabbMax) {
+        for (int i = 0; i < 6; i++) {
+            const FrustumPlane& plane = frustum.planes[i];
+            glm::vec3 pVertex = aabbMin;
+            if (plane.normal.x >= 0.0f) pVertex.x = aabbMax.x;
+            if (plane.normal.y >= 0.0f) pVertex.y = aabbMax.y;
+            if (plane.normal.z >= 0.0f) pVertex.z = aabbMax.z;
+            if (glm::dot(plane.normal, pVertex) + plane.d < 0.0f)
+                return false;
+        }
+        return true;
+    }
+
     /**
     * @class Camera
     * @brief Manages the camera of the engine.
@@ -134,6 +156,11 @@ namespace MTRD {
         * @details Gets projection x view
         */
         const glm::mat4& getViewProj() const noexcept;
+        /**
+        * @brief getFrustum
+        * @details Extracts frustum planes from the view-projection matrix
+        */
+        Frustum getFrustum() const noexcept;
         /**
         * @brief getPosition
         * @details Gets camera position

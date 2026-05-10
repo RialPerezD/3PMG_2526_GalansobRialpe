@@ -1,3 +1,8 @@
+//Desactivar macros de windows pra poder usar min y max de glm
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #define FNL_IMPL
 #include "FastNoiseLite.h"
 
@@ -139,6 +144,13 @@ namespace MTRD {
 
                     CalculateNormals(triangleList, dummyIndices);
 
+                    glm::vec3 minPos = triangleList[0].position;
+                    glm::vec3 maxPos = triangleList[0].position;
+                    for (const auto& v : triangleList) {
+                        minPos = glm::min(minPos, v.position);
+                        maxPos = glm::max(maxPos, v.position);
+                    }
+
                     float chunkCenterX = (cx + 0.5f) * CHUNK_WORLD_SIZE_X - halfWidth;
                     float chunkCenterZ = (cz + 0.5f) * CHUNK_WORLD_SIZE_Z - halfDepth;
 
@@ -154,6 +166,8 @@ namespace MTRD {
                         triangleList, window, meshName,
                         firstTime, textureId, debug
                     );
+                    mesh->aabbMin = minPos;
+                    mesh->aabbMax = maxPos;
                     meshes.push_back(std::move(mesh));
                 }
             }

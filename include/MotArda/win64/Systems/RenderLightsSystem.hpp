@@ -5,6 +5,7 @@
 #include <MotArda/common/Components/RenderComponent.hpp>
 #include <MotArda/common/Components/LightComponent.hpp>
 #include <MotArda/common/Ecs.hpp>
+#include <MotArda/common/Camera.hpp>
 #include "../deps/glm-master/glm/glm.hpp"
 #include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
 #include "../deps/glm-master/glm/gtc/type_ptr.hpp"
@@ -39,6 +40,7 @@ namespace MTRD {
         bool debug_ = true;
         Program program;
         glm::vec3& viewPos_;
+        glm::mat4x4& vp_;
         float shininess = 32.0f;
         float far_plane = 25.0f;
         std::vector<GLuint> depthMaps_;

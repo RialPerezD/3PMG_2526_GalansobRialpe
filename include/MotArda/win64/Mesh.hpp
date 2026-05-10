@@ -43,5 +43,7 @@ namespace MTRD {
         int meshSize;
         bool debug_;
         std::string name_;
+        glm::vec3 aabbMin = glm::vec3(0.0f);
+        glm::vec3 aabbMax = glm::vec3(0.0f);
     };
 }
