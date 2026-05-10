@@ -22,7 +22,7 @@ int MTRD::main() {
 
     MTRD::Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0, 15, 30));
-    float movSpeed = 0.2f;
+    float movSpeed = 0.1f;
     bool followPlayer = false;
     bool pPressed = false;
 
@@ -36,7 +36,7 @@ int MTRD::main() {
     std::unique_ptr<MTRD::Terrain> terrain = eng.CreateTerrain(50, 50, 40);
 
     std::vector<std::shared_ptr<ObjItem>> objItemList;
-    objItemList.push_back(eng.generateSphere(0.5f, 20, 20, 0));
+    objItemList.push_back(eng.generateSphere(0.5f, 100, 100, 0));
     objItemList.push_back(terrain->ObjItem_);
     eng.windowLoadAllMaterials(objItemList);
 
@@ -63,7 +63,7 @@ int MTRD::main() {
     t->position = glm::vec3(0, 0, 0);
     t->rotation = glm::vec3(0, 0, 0);
     t->angleRotationRadians = -1;
-    t->scale = glm::vec3(1.f);
+    t->scale = glm::vec3(0.5f);
 
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
     r->objitem_ = objItemList[0];
@@ -107,27 +107,27 @@ int MTRD::main() {
             if (eng.inputIsKeyPressed(Input::Keyboard::E)) orbitAngle += 0.05f;
 
             float h = terrain->GetHeightAt(pt->position.x / tr->scale.x, pt->position.z / tr->scale.z);
-            pt->position.y = (h * tr->scale.y) + 0.5f;
+            pt->position.y = (h * tr->scale.y) + 0.25f;
 
             float camX = pt->position.x + orbitDistance * sin(orbitAngle);
             float camZ = pt->position.z + orbitDistance * cos(orbitAngle);
 
-            camera.setPosition(glm::vec3(camX, pt->position.y + 8.0f, camZ));
+            camera.setPosition(glm::vec3(camX, pt->position.y + 1.0f, camZ));
             camera.setTarget(pt->position);
         } else {
-            if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
-            if (eng.inputIsKeyPressed(Input::Keyboard::S)) camera.moveBackward(movSpeed);
-            if (eng.inputIsKeyPressed(Input::Keyboard::A)) camera.moveLeft(movSpeed);
-            if (eng.inputIsKeyPressed(Input::Keyboard::D)) camera.moveRight(movSpeed);
+            if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed * 2.0f);
+            if (eng.inputIsKeyPressed(Input::Keyboard::S)) camera.moveBackward(movSpeed * 2.0f);
+            if (eng.inputIsKeyPressed(Input::Keyboard::A)) camera.moveLeft(movSpeed * 2.0f);
+            if (eng.inputIsKeyPressed(Input::Keyboard::D)) camera.moveRight(movSpeed * 2.0f);
 
-            if (eng.inputIsKeyPressed(Input::Keyboard::E)) camera.rotate(10.0f, 0.0f);
-            if (eng.inputIsKeyPressed(Input::Keyboard::Q)) camera.rotate(-10.0f, 0.0f);
+            if (eng.inputIsKeyPressed(Input::Keyboard::E)) camera.rotate(20.0f, 0.0f);
+            if (eng.inputIsKeyPressed(Input::Keyboard::Q)) camera.rotate(-20.0f, 0.0f);
 
-            if (eng.inputIsKeyPressed(Input::Keyboard::R)) camera.moveUp(movSpeed);
-            if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.moveDown(movSpeed);
+            if (eng.inputIsKeyPressed(Input::Keyboard::R)) camera.moveUp(movSpeed * 2.0f);
+            if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.moveDown(movSpeed * 2.0f);
 
-            if (eng.inputIsKeyPressed(Input::Keyboard::F)) camera.rotate(0.0f, 10.0f);
-            if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -10.0f);
+            if (eng.inputIsKeyPressed(Input::Keyboard::F)) camera.rotate(0.0f, 20.0f);
+            if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -20.0f);
         }
 
         eng.RenderScene();

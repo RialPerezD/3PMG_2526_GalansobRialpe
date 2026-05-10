@@ -1,5 +1,6 @@
 #include <MotArda/win64/Systems/ShadowMapSystem.hpp>
 #include <MotArda/win64/Debug.hpp>
+#include <cstdio>
 
 namespace MTRD {
     ShadowMapSystem::ShadowMapSystem(glm::mat4& model, bool& debug)
@@ -171,6 +172,16 @@ namespace MTRD {
 
             for (size_t i = 0; i < render->objitem_->meshes.size(); i++) {
                 Mesh* mesh = render->objitem_->meshes[i].get();
+
+                if (mesh->name_.size() > 8 && mesh->name_.substr(0, 8) == "terrain_") {
+                    int gx, gz, nc, lodLevel;
+                    float cx, cz;
+                    if (std::sscanf(mesh->name_.c_str(), "terrain_%d_%d_nc%d_lod%d_wx%f_wz%f",
+                        &gx, &gz, &nc, &lodLevel, &cx, &cz) == 6) {
+                        if (lodLevel != 0) continue;
+                    }
+                }
+
                 if (mesh->vao == GL_INVALID_INDEX || mesh->vao == 0) {
                     mesh->GenerateVao();
                     mesh->SetVertexAtribs(attributes);

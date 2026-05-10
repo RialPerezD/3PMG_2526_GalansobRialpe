@@ -7,8 +7,17 @@
 #include <random>
 #include <cmath>
 #include <vector>
+#include <sstream>
 
 namespace MTRD {
+
+    static float SampleHeight(fnl_state& noise, float maxHeight, float worldX, float worldZ) {
+        float rawNoise = fnlGetNoise2D(&noise, worldX, worldZ);
+        float normalizedNoise = (rawNoise + 1.0f) * 0.5f;
+        float height = normalizedNoise * normalizedNoise * maxHeight;
+        height += pow(normalizedNoise, 4.0f) * (maxHeight * 0.35f);
+        return height;
+    }
 
     void Terrain::CalculateNormals(
         std::vector<Vertex>& vertices,
@@ -47,9 +56,6 @@ namespace MTRD {
         int textureId,
         bool debug
     ) {
-        std::vector<Vertex> gridVertices;
-        gridVertices.reserve((resolution + 1) * (resolution + 1));
-
         fnl_state noise = fnlCreateState();
         noise.seed = seed_;
         noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
@@ -68,70 +74,90 @@ namespace MTRD {
         float halfWidth = width * 0.5f;
         float halfDepth = depth * 0.5f;
 
-        for (int z = 0; z <= resolution; z++) {
-            for (int x = 0; x <= resolution; x++) {
-                float percentX = static_cast<float>(x) / resolution;
-                float percentZ = static_cast<float>(z) / resolution;
-
-                float worldX = percentX * width - halfWidth;
-                float worldZ = percentZ * depth - halfDepth;
-
-                float rawNoise = fnlGetNoise2D(&noise, worldX, worldZ);
-                float normalizedNoise = (rawNoise + 1.0f) * 0.5f;
-
-                float continentalness = normalizedNoise * normalizedNoise;
-                float mountainMask = pow(normalizedNoise, 4.0f);
-
-                float height = continentalness * maxHeight;
-                height += mountainMask * (maxHeight * 0.35f);
-
-                Vertex vertex{};
-                vertex.position = glm::vec3(worldX, height, worldZ);
-                vertex.uv = glm::vec2(percentX, percentZ);
-                gridVertices.push_back(vertex);
-            }
-        }
-
-        std::vector<Vertex> triangleList;
-        triangleList.reserve(resolution * resolution * 6);
-
-        auto getIdx = [resolution](int x, int z) {
-            return x + (z * (resolution + 1));
-            };
-
-        for (int z = 0; z < resolution; z++) {
-            for (int x = 0; x < resolution; x++) {
-                int i0 = getIdx(x, z);
-                int i1 = getIdx(x + 1, z);
-                int i2 = getIdx(x, z + 1);
-                int i3 = getIdx(x + 1, z + 1);
-
-                triangleList.push_back(gridVertices[i0]);
-                triangleList.push_back(gridVertices[i2]);
-                triangleList.push_back(gridVertices[i1]);
-
-                triangleList.push_back(gridVertices[i1]);
-                triangleList.push_back(gridVertices[i2]);
-                triangleList.push_back(gridVertices[i3]);
-            }
-        }
-
-        std::vector<uint32_t> dummyIndices(triangleList.size());
-        for (size_t i = 0; i < dummyIndices.size(); ++i) dummyIndices[i] = static_cast<uint32_t>(i);
-
-        CalculateNormals(triangleList, dummyIndices);
-
-        auto mesh = std::make_unique<Mesh>(
-            triangleList,
-            window,
-            "terrain",
-            firstTime,
-            textureId,
-            debug
-        );
+        const int CHUNK_SIZE = 16;
+        const int NUM_CHUNKS_X = resolution / CHUNK_SIZE;
+        const int NUM_CHUNKS_Z = resolution / CHUNK_SIZE;
+        const float CHUNK_WORLD_SIZE_X = width / NUM_CHUNKS_X;
+        const float CHUNK_WORLD_SIZE_Z = depth / NUM_CHUNKS_Z;
+        const int LOD_STEPS[4] = { 1, 2, 4, 8 };
 
         std::vector<std::unique_ptr<Mesh>> meshes;
-        meshes.push_back(std::move(mesh));
+
+        for (int cz = 0; cz < NUM_CHUNKS_Z; cz++) {
+            for (int cx = 0; cx < NUM_CHUNKS_X; cx++) {
+                for (int lodIdx = 0; lodIdx < 4; lodIdx++) {
+                    int step = LOD_STEPS[lodIdx];
+                    int vertsPerEdge = CHUNK_SIZE / step;
+                    int numVerts = (vertsPerEdge + 1) * (vertsPerEdge + 1);
+
+                    std::vector<Vertex> vertices;
+                    vertices.reserve(numVerts);
+
+                    int zStart = cz * CHUNK_SIZE;
+                    int zEnd = (cz + 1) * CHUNK_SIZE;
+                    int xStart = cx * CHUNK_SIZE;
+                    int xEnd = (cx + 1) * CHUNK_SIZE;
+
+                    for (int z = zStart; z <= zEnd; z += step) {
+                        for (int x = xStart; x <= xEnd; x += step) {
+                            float percentX = static_cast<float>(x) / resolution;
+                            float percentZ = static_cast<float>(z) / resolution;
+                            float worldX = percentX * width - halfWidth;
+                            float worldZ = percentZ * depth - halfDepth;
+                            float height = SampleHeight(noise, maxHeight, worldX, worldZ);
+
+                            Vertex vertex{};
+                            vertex.position = glm::vec3(worldX, height, worldZ);
+                            vertex.uv = glm::vec2(percentX, percentZ);
+                            vertices.push_back(vertex);
+                        }
+                    }
+
+                    std::vector<Vertex> triangleList;
+                    triangleList.reserve(vertsPerEdge * vertsPerEdge * 6);
+
+                    for (int z = 0; z < vertsPerEdge; z++) {
+                        for (int x = 0; x < vertsPerEdge; x++) {
+                            int i0 = x + z * (vertsPerEdge + 1);
+                            int i1 = (x + 1) + z * (vertsPerEdge + 1);
+                            int i2 = x + (z + 1) * (vertsPerEdge + 1);
+                            int i3 = (x + 1) + (z + 1) * (vertsPerEdge + 1);
+
+                            triangleList.push_back(vertices[i0]);
+                            triangleList.push_back(vertices[i2]);
+                            triangleList.push_back(vertices[i1]);
+
+                            triangleList.push_back(vertices[i1]);
+                            triangleList.push_back(vertices[i2]);
+                            triangleList.push_back(vertices[i3]);
+                        }
+                    }
+
+                    std::vector<uint32_t> dummyIndices(triangleList.size());
+                    for (size_t i = 0; i < dummyIndices.size(); ++i)
+                        dummyIndices[i] = static_cast<uint32_t>(i);
+
+                    CalculateNormals(triangleList, dummyIndices);
+
+                    float chunkCenterX = (cx + 0.5f) * CHUNK_WORLD_SIZE_X - halfWidth;
+                    float chunkCenterZ = (cz + 0.5f) * CHUNK_WORLD_SIZE_Z - halfDepth;
+
+                    std::ostringstream nameStream;
+                    nameStream << "terrain_" << cx << "_" << cz
+                        << "_nc" << NUM_CHUNKS_X
+                        << "_lod" << lodIdx
+                        << "_wx" << chunkCenterX
+                        << "_wz" << chunkCenterZ;
+                    std::string meshName = nameStream.str();
+
+                    auto mesh = std::make_unique<Mesh>(
+                        triangleList, window, meshName,
+                        firstTime, textureId, debug
+                    );
+                    meshes.push_back(std::move(mesh));
+                }
+            }
+        }
 
         const float lutLevels[5] = {
             0.0f,

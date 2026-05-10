@@ -2,6 +2,8 @@
 #include <MotArda/win64/Debug.hpp>
 #include <string>
 #include <vector>
+#include <cstdio>
+#include <cmath>
 
 namespace MTRD {
     RenderLightsSystem::RenderLightsSystem(glm::mat4x4& vp,
@@ -71,8 +73,41 @@ namespace MTRD {
                 glBindTextureUnit(1, shadowTex);
             }
 
+            int camGridX = -1, camGridZ = -1;
+
             for (size_t i = 0; i < render->objitem_->meshes.size(); i++) {
                 Mesh* mesh = render->objitem_->meshes[i].get();
+
+                if (mesh->name_.size() > 8 && mesh->name_.substr(0, 8) == "terrain_") {
+                    int gx, gz, nc, lodLevel;
+                    float cx, cz;
+                    if (std::sscanf(mesh->name_.c_str(), "terrain_%d_%d_nc%d_lod%d_wx%f_wz%f",
+                        &gx, &gz, &nc, &lodLevel, &cx, &cz) == 6) {
+                        if (camGridX == -1) {
+                            float denomX = (float)gx + 0.5f - (float)nc * 0.5f;
+                            float chunkSizeX = (std::abs(denomX) > 0.001f) ? (cx / denomX) : 1.0f;
+                            float denomZ = (float)gz + 0.5f - (float)nc * 0.5f;
+                            float chunkSizeZ = (std::abs(denomZ) > 0.001f) ? (cz / denomZ) : 1.0f;
+                            float halfWidth = chunkSizeX * nc * 0.5f;
+                            float halfDepth = chunkSizeZ * nc * 0.5f;
+                            glm::vec3 localCamPos = (viewPos_ - transform->position) / transform->scale;
+                            camGridX = glm::clamp((int)std::floor((localCamPos.x + halfWidth) / chunkSizeX), 0, nc - 1);
+                            camGridZ = glm::clamp((int)std::floor((localCamPos.z + halfDepth) / chunkSizeZ), 0, nc - 1);
+                        }
+
+                        int dx = std::abs(gx - camGridX);
+                        int dz = std::abs(gz - camGridZ);
+                        int ringDist = dx > dz ? dx : dz;
+
+                        int desiredLod;
+                        if (ringDist <= 3) desiredLod = 0;
+                        else if (ringDist <= 7) desiredLod = 1;
+                        else if (ringDist <= 11) desiredLod = 2;
+                        else desiredLod = 3;
+
+                        if (lodLevel != desiredLod) continue;
+                    }
+                }
 
                 if (mesh->materialId_ != -1) {
                     Material mat = render->objitem_->materials.at(mesh->materialId_);
