@@ -3,8 +3,10 @@
 
 #include "MotArda/common/Terrain.hpp"
 
+#include <glad/glad.h>
 #include <random>
 #include <cmath>
+#include <vector>
 
 namespace MTRD {
 
@@ -45,12 +47,8 @@ namespace MTRD {
         }
     }
 
-    ObjItem Terrain::GenerateProcedural(
-        int seed,
+    void Terrain::GenerateProcedural(
         int resolution,
-        float width,
-        float depth,
-        float maxHeight,
         Window& window,
         bool& firstTime,
         int textureId,
@@ -66,7 +64,7 @@ namespace MTRD {
 
         fnl_state noise = fnlCreateState();
 
-        noise.seed = seed;
+        noise.seed = seed_;
 
         noise.noise_type =
             FNL_NOISE_OPENSIMPLEX2;
@@ -87,10 +85,10 @@ namespace MTRD {
         // =====================================================
 
         const float lakeLevel =
-            maxHeight * 0.15f;
+            maxHeight * 0.20f;
 
         const float grassLevel =
-            maxHeight * 0.30f;
+            maxHeight * 0.35f;
 
         const float forestLevel =
             maxHeight * 0.50f;
@@ -251,27 +249,105 @@ namespace MTRD {
         );
 
         // =====================================================
+        // LUT TEXTURE
+        // =====================================================
+
+        const float lutLevels[5] = {
+            0.0f,
+            lakeLevel / maxHeight,
+            grassLevel / maxHeight,
+            forestLevel / maxHeight,
+            rockLevel / maxHeight
+        };
+
+        const glm::vec3 lutColors[5] = {
+            glm::vec3(0.10f, 0.30f, 0.90f), // Lake - blue
+            glm::vec3(0.30f, 0.65f, 0.20f), // Grass - green
+            glm::vec3(0.15f, 0.40f, 0.10f), // Forest - dark green
+            glm::vec3(0.60f, 0.60f, 0.58f), // Rock - gray
+            glm::vec3(0.92f, 0.92f, 0.95f)  // Snow - white
+        };
+
+        const int LUT_SIZE = 256;
+        std::vector<unsigned char> lutData(LUT_SIZE * 3);
+
+        for (int i = 0; i < LUT_SIZE; i++) {
+            float t = i / (float)(LUT_SIZE - 1);
+
+            int seg = 0;
+            for (int j = 0; j < 4; j++) {
+                if (t >= lutLevels[j]) seg = j;
+            }
+
+            float segStart = lutLevels[seg];
+            float segEnd = (seg < 4) ? lutLevels[seg + 1] : 1.0f;
+            float segRange = segEnd - segStart;
+            float localT = (segRange > 0.0f)
+                ? glm::clamp((t - segStart) / segRange, 0.0f, 1.0f)
+                : 0.0f;
+
+            glm::vec3 color = glm::mix(lutColors[seg], lutColors[seg + 1], localT);
+
+            lutData[i * 3 + 0] = (unsigned char)(glm::clamp(color.r, 0.0f, 1.0f) * 255.0f);
+            lutData[i * 3 + 1] = (unsigned char)(glm::clamp(color.g, 0.0f, 1.0f) * 255.0f);
+            lutData[i * 3 + 2] = (unsigned char)(glm::clamp(color.b, 0.0f, 1.0f) * 255.0f);
+        }
+
+        GLuint lutTexture;
+        glCreateTextures(GL_TEXTURE_2D, 1, &lutTexture);
+        glTextureStorage2D(lutTexture, 1, GL_RGB8, LUT_SIZE, 1);
+        glTextureSubImage2D(lutTexture, 0, 0, 0, LUT_SIZE, 1, GL_RGB, GL_UNSIGNED_BYTE, lutData.data());
+
+        glTextureParameteri(lutTexture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(lutTexture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(lutTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTextureParameteri(lutTexture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        // =====================================================
         // MATERIAL
         // =====================================================
 
         std::vector<Material> materials;
-
         Material terrainMat;
-
-        terrainMat.name =
-            "terrain_diffuse";
-
-        terrainMat.diffuseTexPath =
-            "../assets/textures/terrain/diffuse.jpg";
+        terrainMat.name = "terrain_diffuse";
+        terrainMat.diffuseTexPath = "";
+        terrainMat.diffuseTexID = lutTexture;
+        terrainMat.useHeightLUT = true;
+        terrainMat.maxHeight = maxHeight;
+		terrainMat.specular = glm::vec3(0.0f);
+		terrainMat.shininess = 1.0f;
 
         materials.push_back(
             terrainMat
         );
 
-        return ObjItem(
+        ObjItem_ = std::make_shared<ObjItem>(
             std::move(meshes),
             materials
         );
     }
 
+    float Terrain::GetHeightAt(float worldX, float worldZ) {
+        fnl_state noise = fnlCreateState();
+
+        noise.seed = seed_;
+        noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
+        noise.fractal_type = FNL_FRACTAL_FBM;
+        noise.octaves = 5;
+        noise.lacunarity = 2.0f;
+        noise.gain = 0.5f; 
+        noise.frequency = 0.01f;
+
+        float rawNoise = fnlGetNoise2D(&noise, worldX, worldZ);
+
+        float normalizedNoise = (rawNoise + 1.0f) * 0.5f;
+
+        float continentalness = normalizedNoise * normalizedNoise;
+        float mountainMask = pow(normalizedNoise, 4.0f);
+
+        float height = continentalness * maxHeight;
+        height += mountainMask * (maxHeight * 0.35f);
+
+        return height;
+    }
 }

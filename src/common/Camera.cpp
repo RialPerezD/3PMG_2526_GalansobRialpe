@@ -55,7 +55,7 @@ namespace MTRD {
             glm::radians(45.f),
             ratio,
             0.1f,
-            100.f
+            1000.f
         );
 
         camera.updateAll();

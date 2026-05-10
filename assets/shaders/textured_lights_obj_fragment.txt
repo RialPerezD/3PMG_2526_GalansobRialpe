@@ -10,6 +10,9 @@ uniform vec3 viewPos;
 uniform float shininess;
 
 uniform bool useAmbient;
+
+uniform bool useHeightLUT;
+uniform float maxHeight;
 uniform vec3 ambientColor;
 uniform float ambientIntensity;
 
@@ -72,7 +75,13 @@ float CalculatePointShadow(vec3 fragPos, vec3 lightPos) {
 }
 
 void main() {
-    vec3 texColor = texture(diffuseTexture, fragTexCoords).rgb;
+    vec3 texColor;
+    if (useHeightLUT) {
+        float h = clamp(fragPosition.y / maxHeight, 0.0, 1.0);
+        texColor = texture(diffuseTexture, vec2(h, 0.5)).rgb;
+    } else {
+        texColor = texture(diffuseTexture, fragTexCoords).rgb;
+    }
     vec3 norm = normalize(fragNormal);
     vec3 viewDir = normalize(viewPos - fragWorldPosition);
 

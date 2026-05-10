@@ -13,6 +13,7 @@
 #include <MotArda/win64/Systems/RenderDefferredSystem.hpp>
 #include <MotArda/win64/Systems/RenderPbrSystem.hpp>
 #include "PhysxMaster.hpp"
+#include "MotArda/common/Terrain.hpp"
 
 namespace MTRD {
 
@@ -181,7 +182,7 @@ namespace MTRD {
         std::shared_ptr<ObjItem> generatePlane(float width, float height, int texureId = 0, bool debug = true);
         std::shared_ptr<ObjItem> generateSphere(float radius, int segments, int rings, int texureId = 0, bool debug = true);
 
-        std::shared_ptr<ObjItem> GenerateTerrain(
+        std::unique_ptr<Terrain> CreateTerrain(
             float width,
             float depth,
             float maxHeight,

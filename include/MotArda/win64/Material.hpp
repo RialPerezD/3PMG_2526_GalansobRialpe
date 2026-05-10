@@ -16,6 +16,9 @@ namespace MTRD {
         float metallic = 0.0f;
         float roughness = 0.5f;
 
+        bool useHeightLUT = false;
+        float maxHeight = 0.0f;
+
         bool loadeable;
 
         std::string diffuseTexPath;

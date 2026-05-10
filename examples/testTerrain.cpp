@@ -6,11 +6,11 @@
 #include <memory>
 #include <MotArda/win64/Systems/RenderLightsSystem.hpp>
 #include <MotArda/win64/Systems/ShadowMapSystem.hpp>
+#include <MotArda/common/Terrain.hpp>
 
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw error: %s\n", description);
 }
-
 
 int MTRD::main() {
     std::srand(static_cast<unsigned>(std::time(nullptr)));
@@ -21,19 +21,24 @@ int MTRD::main() {
     auto& eng = maybeEng.value();
 
     MTRD::Camera& camera = eng.getCamera();
-    camera.setPosition(glm::vec3(0, 1, 20));
-    camera.setTarget(glm::vec3(0.0f, -5.0f, 0.0f));
-    float movSpeed = 0.5f;
+    camera.setPosition(glm::vec3(0, 15, 30));
+    float movSpeed = 0.2f;
+    bool followPlayer = false;
+    bool pPressed = false;
+
+    float orbitAngle = 0.0f;
+    float orbitDistance = 15.0f;
 
     eng.SetDebugMode(true);
     eng.SetRenderType(MotardaEng::RenderType::LightsWithShadows);
     eng.windowSetErrorCallback(error_callback);
 
+    std::unique_ptr<MTRD::Terrain> terrain = eng.CreateTerrain(50, 50, 40);
+
     std::vector<std::shared_ptr<ObjItem>> objItemList;
     objItemList.push_back(eng.generateSphere(0.5f, 20, 20, 0));
-    objItemList.push_back(eng.GenerateTerrain(50, 50, 20));
+    objItemList.push_back(terrain->ObjItem_);
     eng.windowLoadAllMaterials(objItemList);
-
 
     ECSManager& ecs = eng.getEcs();
 
@@ -42,22 +47,20 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::MovementComponent>();
     ecs.AddComponentType<MTRD::LightComponent>();
 
-
     size_t lightEntity = ecs.AddEntity();
     MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
     lightComp->directionalLights.push_back(
         MTRD::DirectionalLight(
-            glm::vec3(-1.0f, -1.0f, 0.0f),
+            glm::vec3(0.0f, -1.0f, 0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
             1.0f
         )
     );
 
-
     size_t player = ecs.AddEntity();
 
     MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
-    t->position = glm::vec3(0, -2.5f, 0);
+    t->position = glm::vec3(0, 0, 0);
     t->rotation = glm::vec3(0, 0, 0);
     t->angleRotationRadians = -1;
     t->scale = glm::vec3(1.f);
@@ -65,31 +68,67 @@ int MTRD::main() {
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
     r->objitem_ = objItemList[0];
 
-    size_t terrain = ecs.AddEntity();
+    size_t terrainEntity = ecs.AddEntity();
 
-    MTRD::TransformComponent* tr = ecs.AddComponent<MTRD::TransformComponent>(terrain);
-    tr->position = glm::vec3(0, -2.5f, 0);
+    MTRD::TransformComponent* tr = ecs.AddComponent<MTRD::TransformComponent>(terrainEntity);
+    tr->position = glm::vec3(0, 0, 0);
     tr->rotation = glm::vec3(0, 0, 0);
     tr->angleRotationRadians = -1;
-    tr->scale = glm::vec3(1.f);
+    tr->scale = glm::vec3(2.f);
 
-    MTRD::RenderComponent* rr = ecs.AddComponent<MTRD::RenderComponent>(terrain);
+    MTRD::RenderComponent* rr = ecs.AddComponent<MTRD::RenderComponent>(terrainEntity);
     rr->objitem_ = objItemList[1];
-
 
     while (!eng.windowShouldClose()) {
         eng.windowInitFrame();
 
-        if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::S)) camera.moveBackward(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::A)) camera.moveLeft(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::D)) camera.moveRight(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::R)) camera.moveUp(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.moveDown(movSpeed);
-        if (eng.inputIsKeyPressed(Input::Keyboard::E)) camera.rotate(10.0f, 0.0f);
-        if (eng.inputIsKeyPressed(Input::Keyboard::Q)) camera.rotate(-10.0f, 0.0f);
-        if (eng.inputIsKeyPressed(Input::Keyboard::F)) camera.rotate(0.0f, 10.0f);
-        if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -10.0f);
+        if (eng.inputIsKeyPressed(Input::Keyboard::P)) {
+            if (!pPressed) {
+                followPlayer = !followPlayer;
+                pPressed = true;
+            }
+        } else {
+            pPressed = false;
+        }
+
+        MTRD::TransformComponent* pt = ecs.GetComponent<MTRD::TransformComponent>(player);
+
+        if (followPlayer) {
+            glm::vec3 camFront = camera.getFront();
+            glm::vec3 forward = glm::normalize(glm::vec3(camFront.x, 0.0f, camFront.z));
+            glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+            if (eng.inputIsKeyPressed(Input::Keyboard::W)) pt->position += forward * movSpeed;
+            if (eng.inputIsKeyPressed(Input::Keyboard::S)) pt->position -= forward * movSpeed;
+            if (eng.inputIsKeyPressed(Input::Keyboard::A)) pt->position -= right * movSpeed;
+            if (eng.inputIsKeyPressed(Input::Keyboard::D)) pt->position += right * movSpeed;
+
+            if (eng.inputIsKeyPressed(Input::Keyboard::Q)) orbitAngle -= 0.05f;
+            if (eng.inputIsKeyPressed(Input::Keyboard::E)) orbitAngle += 0.05f;
+
+            float h = terrain->GetHeightAt(pt->position.x / tr->scale.x, pt->position.z / tr->scale.z);
+            pt->position.y = (h * tr->scale.y) + 0.5f;
+
+            float camX = pt->position.x + orbitDistance * sin(orbitAngle);
+            float camZ = pt->position.z + orbitDistance * cos(orbitAngle);
+
+            camera.setPosition(glm::vec3(camX, pt->position.y + 8.0f, camZ));
+            camera.setTarget(pt->position);
+        } else {
+            if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
+            if (eng.inputIsKeyPressed(Input::Keyboard::S)) camera.moveBackward(movSpeed);
+            if (eng.inputIsKeyPressed(Input::Keyboard::A)) camera.moveLeft(movSpeed);
+            if (eng.inputIsKeyPressed(Input::Keyboard::D)) camera.moveRight(movSpeed);
+
+            if (eng.inputIsKeyPressed(Input::Keyboard::E)) camera.rotate(10.0f, 0.0f);
+            if (eng.inputIsKeyPressed(Input::Keyboard::Q)) camera.rotate(-10.0f, 0.0f);
+
+            if (eng.inputIsKeyPressed(Input::Keyboard::R)) camera.moveUp(movSpeed);
+            if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.moveDown(movSpeed);
+
+            if (eng.inputIsKeyPressed(Input::Keyboard::F)) camera.rotate(0.0f, 10.0f);
+            if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -10.0f);
+        }
 
         eng.RenderScene();
         eng.windowEndFrame();

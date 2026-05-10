@@ -83,6 +83,9 @@ namespace MTRD {
 
                     glUniform3f(glGetUniformLocation(program.programId_, "DIFFUSE"), mat.diffuse.x, mat.diffuse.y, mat.diffuse.z);
                     glUniform3f(glGetUniformLocation(program.programId_, "SPECULAR"), mat.specular.x, mat.specular.y, mat.specular.z);
+
+                    glUniform1i(glGetUniformLocation(program.programId_, "useHeightLUT"), mat.useHeightLUT);
+                    glUniform1f(glGetUniformLocation(program.programId_, "maxHeight"), mat.maxHeight);
                 }
 
                 if (mesh->vao == GL_INVALID_INDEX || mesh->vao == 0) {
