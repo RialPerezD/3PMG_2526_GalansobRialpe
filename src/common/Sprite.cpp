@@ -24,7 +24,7 @@ namespace MTRD {
         
         currentFrame_ = frame;
         
-        if (renderComponent_ && renderComponent_->materials_ && !renderComponent_->materials_->empty()) {
+        if (renderComponent_ && renderComponent_->objitem_ && !renderComponent_->objitem_->materials.empty()) {
             int col = currentFrame_ % columns_;
             int row = currentFrame_ / columns_;
             
@@ -34,8 +34,8 @@ namespace MTRD {
             float uScale = static_cast<float>(frameWidth_) / (frameWidth_ * columns_);
             float vScale = static_cast<float>(frameHeight_) / (frameHeight_ * rows_);
             
-            (*renderComponent_->materials_)[0].uvOffset = glm::vec2(uOffset, vOffset);
-            (*renderComponent_->materials_)[0].uvScale = glm::vec2(uScale, vScale);
+            renderComponent_->objitem_->materials[0].uvOffset = glm::vec2(uOffset, vOffset);
+            renderComponent_->objitem_->materials[0].uvScale = glm::vec2(uScale, vScale);
         }
     }
 

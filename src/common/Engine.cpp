@@ -39,7 +39,7 @@ namespace MTRD {
         camera_(Camera::CreateCamera(windowGetSizeRatio())),
         initialized2D(false),
         hasPhysx_(false),
-        basePlane_(std::move(generatePlane(20, 20))),
+        basePlane_(generatePlane(20, 20)),
         debug_(true),
         online_(false){
         input_.generateAsciiMap();
@@ -88,9 +88,9 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::windowLoadAllMaterials(std::vector<ObjItem>& objItemsList) {
-        for (ObjItem& item : objItemsList) {
-            window_.loadMaterials(item.materials);
+    void MotardaEng::windowLoadAllMaterials(std::vector<std::shared_ptr<ObjItem>>& objItemsList) {
+        for (auto& item : objItemsList) {
+            window_.loadMaterials(item->materials);
         }
     }
 
@@ -165,8 +165,8 @@ namespace MTRD {
     }
 
 
-    std::vector<ObjItem> MotardaEng::loadObjs(const std::vector<const char*>& routes) {
-        std::vector<ObjItem> objItemsList = {};
+    std::vector<std::shared_ptr<ObjItem>> MotardaEng::loadObjs(const std::vector<const char*>& routes) {
+        std::vector<std::shared_ptr<ObjItem>> objItemsList = {};
 
         for (const char* route : routes) {
             auto maybeObjLoader = ObjLoader::loadObj(
@@ -182,7 +182,7 @@ namespace MTRD {
                 objLoader.getMaterials()
             );
 
-            objItemsList.push_back(std::move(item));
+            objItemsList.push_back(std::make_shared<ObjItem>(std::move(item)));
         }
 
         return objItemsList;
@@ -223,28 +223,28 @@ namespace MTRD {
     }
 
 
-    ObjItem MotardaEng::generateCube(float size, int texureId, bool debug) {
+    std::shared_ptr<ObjItem> MotardaEng::generateCube(float size, int texureId, bool debug) {
         bool firstTime = false;
-        return std::move(Geometries::GenerateCube(window_, size, firstTime, texureId, debug));
+        return std::make_shared<ObjItem>(Geometries::GenerateCube(window_, size, firstTime, texureId, debug));
     }
 
 
-    ObjItem MotardaEng::generatePlane(float width, float height, int texureId, bool debug) {
+    std::shared_ptr<ObjItem> MotardaEng::generatePlane(float width, float height, int texureId, bool debug) {
         bool firstTime = false;
-        return std::move(Geometries::GeneratePlane(window_, width, height, firstTime, texureId, debug));
+        return std::make_shared<ObjItem>(Geometries::GeneratePlane(window_, width, height, firstTime, texureId, debug));
     }
 
 
-    ObjItem MotardaEng::generateSphere(float radius, int segments, int rings, int texureId, bool debug) {
+    std::shared_ptr<ObjItem> MotardaEng::generateSphere(float radius, int segments, int rings, int texureId, bool debug) {
         bool firstTime = false;
-        return std::move(Geometries::GenerateSphere(window_, radius, segments, rings, firstTime, texureId, debug));
+        return std::make_shared<ObjItem>(Geometries::GenerateSphere(window_, radius, segments, rings, firstTime, texureId, debug));
     }
 
 
-    ObjItem MotardaEng::GenerateTerrain(float width, float depth, float maxHeight, int textureId, bool debug) {
+    std::shared_ptr<ObjItem> MotardaEng::GenerateTerrain(float width, float depth, float maxHeight, int textureId, bool debug) {
         bool firstTime = false;
         const std::string& heightmapPath = "";
-        return std::move(Terrain::GenerateFromHeightmap(
+        return std::make_shared<ObjItem>(Terrain::GenerateFromHeightmap(
             heightmapPath,
             width,
             depth,
@@ -274,14 +274,10 @@ namespace MTRD {
         t->angleRotationRadians = 1.5708f;
 
         RenderComponent* r = ecs_.AddComponent<MTRD::RenderComponent>(spriteId);
-        r->meshes_ = &basePlane_.meshes;
-
-        if (r->materials_ == nullptr) {
-            r->materials_ = new std::vector<Material>;
-        }
-        r->materials_->emplace_back();
-
-        (*r->materials_)[0].diffuseTexID = textureIndex;
+        r->objitem_ = generatePlane(1, 1, 0, debug_);
+        r->objitem_->materials.clear();
+        r->objitem_->materials.emplace_back();
+        r->objitem_->materials[0].diffuseTexID = textureIndex;
 
 
         sprites_.emplace_back(spriteId, deep);
@@ -305,14 +301,10 @@ namespace MTRD {
         t->angleRotationRadians = 1.5708f;
 
         RenderComponent* r = ecs_.AddComponent<MTRD::RenderComponent>(spriteId);
-        r->meshes_ = &basePlane_.meshes;
-
-        if (r->materials_ == nullptr) {
-            r->materials_ = new std::vector<Material>;
-        }
-        r->materials_->emplace_back();
-
-        (*r->materials_)[0].diffuseTexID = textureIndex;
+        r->objitem_ = generatePlane(1, 1, 0, debug_);
+        r->objitem_->materials.clear();
+        r->objitem_->materials.emplace_back();
+        r->objitem_->materials[0].diffuseTexID = textureIndex;
 
         sprites_.emplace_back(spriteId, deep);
         Sprite& sprite = sprites_.back();

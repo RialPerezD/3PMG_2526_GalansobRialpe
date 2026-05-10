@@ -53,7 +53,6 @@ int MTRD::main() {
     t->angleRotationRadians = -1;
     t->scale = glm::vec3(0.05f);
 
-    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
     
     //Set the vertex coordinates to create a custom geometry
     std::vector<Vertex> vertexList = {
@@ -75,8 +74,8 @@ int MTRD::main() {
         }
     };
 
-    std::vector<ObjItem> ObjList;
-    ObjList.push_back(ObjItem());
+    std::vector<std::shared_ptr<ObjItem>> ObjList;
+    ObjList.push_back(std::make_shared<ObjItem>());
 
     // Use createMesh(ListOfVertex, "NameOfTheMesh") to create a mesh with custom vertices
     std::unique_ptr<Mesh> TriangleMesh = eng.createMesh(vertexList, "triangle");
@@ -89,13 +88,13 @@ int MTRD::main() {
     mat.loadeable = true;
     mat.diffuseTexPath = "../assets/textures/blank/blank.jpg";
 
-    ObjList[0].materials.push_back(mat);
-    ObjList[0].meshes.push_back(std::move(TriangleMesh));
+    ObjList[0]->materials.push_back(mat);
+    ObjList[0]->meshes.push_back(std::move(TriangleMesh));
 
     eng.windowLoadAllMaterials(ObjList);
 
-    r->meshes_ = &ObjList[0].meshes;
-    r->materials_ = &ObjList[0].materials;
+    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
+    r->objitem_ = ObjList[0];
     // --- *** ---
 
     while (!eng.windowShouldClose()) {

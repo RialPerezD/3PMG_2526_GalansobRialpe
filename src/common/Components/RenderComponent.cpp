@@ -2,13 +2,9 @@
 
 namespace MTRD {
     RenderComponent::RenderComponent() :
-        meshes_(nullptr),
-        materials_(nullptr) {}
+        objitem_(nullptr) {}
 
-    RenderComponent::RenderComponent(
-        std::vector<std::unique_ptr<Mesh>>* meshes,
-        std::vector<Material>* mats){
-        meshes_ = meshes;
-        materials_ = mats;
+    RenderComponent::RenderComponent(std::shared_ptr<ObjItem> obj) {
+        objitem_ = obj;
     }
 }

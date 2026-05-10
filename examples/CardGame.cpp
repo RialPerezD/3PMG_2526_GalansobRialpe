@@ -33,21 +33,21 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
 
-    // --- Configuración básica ---
+    // --- Configuraciï¿½n bï¿½sica ---
     eng.SetDebugMode(true);
     eng.SetRenderType(MotardaEng::RenderType::Base);
     eng.getCamera().setPosition(glm::vec3(0, 5, 10));
     eng.getCamera().setTarget(glm::vec3(0, 0, 0));
 
-    // --- Carga de Geometría ---
+    // --- Carga de Geometrï¿½a ---
     std::vector<const char*> objsRoutes = { "tableRound.obj",
                                             "86jfmjiufzv2.obj",
                                             "12140_Skull_v3_L2.obj",
                                             "indoor_plant_02.obj" };
     std::atomic<bool> objsLoaded = false;
 
-    std::vector<ObjItem> objItemList;
-    objItemList.push_back(ObjItem());
+    std::vector<std::shared_ptr<ObjItem>> objItemList;
+    objItemList.push_back(std::make_shared<ObjItem>());
 
     // --- ECS Setup ---
     ECSManager& ecs = eng.getEcs();
@@ -120,7 +120,7 @@ int MTRD::main() {
 
 
     //ttable = ecs.GetComponent<MTRD::TransformComponent>(table); primero crear los componentes con el add y luego
-    //settear la posición y las cossas con GetComponent, porq se están chafando los componentes anteriores
+    //settear la posiciï¿½n y las cossas con GetComponent, porq se estï¿½n chafando los componentes anteriores
 
     size_t playerEntity = SIZE_MAX;
     NetworkManager netMgr;
@@ -144,27 +144,22 @@ int MTRD::main() {
         }
         else if (firstTime) {
             firstTime = false;
-            printf(">>> firstTime ejecutado, meshes: %zu\n", objItemList[0].meshes.size());
+            printf(">>> firstTime ejecutado, meshes: %zu\n", objItemList[0]->meshes.size());
             eng.windowLoadAllMaterials(objItemList);
             auto* rtable = ecs.GetComponent<MTRD::RenderComponent>(table);
-            rtable->meshes_ = &objItemList[0].meshes;
-            rtable->materials_ = &objItemList[0].materials;
+            rtable->objitem_ = objItemList[0];
 
             auto* rplayer1 = ecs.GetComponent<MTRD::RenderComponent>(player1);
-            rplayer1->meshes_ = &objItemList[1].meshes;
-            rplayer1->materials_ = &objItemList[1].materials;
+            rplayer1->objitem_ = objItemList[1];
 
             auto* rplayer2 = ecs.GetComponent<MTRD::RenderComponent>(player2);
-            rplayer2->meshes_ = &objItemList[2].meshes;
-            rplayer2->materials_ = &objItemList[2].materials;
+            rplayer2->objitem_ = objItemList[2];
 
             auto* rplayer3 = ecs.GetComponent<MTRD::RenderComponent>(player3);
-            rplayer3->meshes_ = &objItemList[3].meshes;
-            rplayer3->materials_ = &objItemList[3].materials;
+            rplayer3->objitem_ = objItemList[3];
 
             auto* rplayer4 = ecs.GetComponent<MTRD::RenderComponent>(player4);
-            rplayer4->meshes_ = &objItemList[3].meshes;
-            rplayer4->materials_ = &objItemList[3].materials;
+            rplayer4->objitem_ = objItemList[3];
         }
 
         if (currentState == AppState::Menu) {
@@ -219,8 +214,7 @@ int MTRD::main() {
             tplayer->scale = glm::vec3(1.0f);
 
             auto* rplayer = ecs.AddComponent<MTRD::RenderComponent>(playerEntity);
-            rplayer->meshes_ = &objItemList[0].meshes;
-            rplayer->materials_ = &objItemList[0].materials;
+            rplayer->objitem_ = objItemList[0];
 
             currentState = AppState::Running;
         }

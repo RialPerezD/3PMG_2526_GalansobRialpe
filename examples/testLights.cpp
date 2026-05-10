@@ -19,7 +19,7 @@ glm::vec3 spotLigthCenter = glm::vec3(10,0,0);
 glm::vec3 pointLigthCenter = glm::vec3(-10, 0, 0);
 
 // Create the structure that will be illuminated by the corresponding light.
-void GenerateSpotLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objItemList) {
+void GenerateSpotLightEntitys(ECSManager& ecs, std::vector<std::shared_ptr<MTRD::ObjItem>>& objItemList) {
     size_t player = ecs.AddEntity();
     size_t floor = ecs.AddEntity();
     size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
@@ -32,8 +32,7 @@ void GenerateSpotLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objIt
     t->scale = glm::vec3(1.f);
 
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
-    r->meshes_ = &objItemList[0].meshes;
-    r->materials_ = &objItemList[0].materials;
+    r->objitem_ = objItemList[0];
 
     MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
     m->position = glm::vec3(0) + spotLigthCenter;
@@ -49,8 +48,7 @@ void GenerateSpotLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objIt
     t->scale = glm::vec3(1.f);
 
     r = ecs.AddComponent<MTRD::RenderComponent>(floor);
-    r->meshes_ = &objItemList[1].meshes;
-    r->materials_ = &objItemList[1].materials;
+    r->objitem_ = objItemList[1];
 
     m = ecs.AddComponent<MTRD::MovementComponent>(floor);
     m->position = glm::vec3(0) + spotLigthCenter;
@@ -67,8 +65,7 @@ void GenerateSpotLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objIt
         t->scale = glm::vec3(1.f);
 
         r = ecs.AddComponent<MTRD::RenderComponent>(cubes[i]);
-        r->meshes_ = &objItemList[2].meshes;
-        r->materials_ = &objItemList[2].materials;
+        r->objitem_ = objItemList[2];
 
         m = ecs.AddComponent<MTRD::MovementComponent>(cubes[i]);
         m->position = glm::vec3(0) + spotLigthCenter;
@@ -127,7 +124,7 @@ void GenerateSpotLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng) 
 }
 
 // Create the structure that will be illuminated by the corresponding light.
-void GeneratePointLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objItemList) {
+void GeneratePointLightEntitys(ECSManager& ecs, std::vector<std::shared_ptr<MTRD::ObjItem>>& objItemList) {
     size_t player = ecs.AddEntity();
     size_t floor = ecs.AddEntity();
     size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
@@ -140,8 +137,7 @@ void GeneratePointLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objI
     t->scale = glm::vec3(1.f);
 
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
-    r->meshes_ = &objItemList[0].meshes;
-    r->materials_ = &objItemList[0].materials;
+    r->objitem_ = objItemList[0];
 
     MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
     m->position = glm::vec3(0) + pointLigthCenter;
@@ -157,8 +153,7 @@ void GeneratePointLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objI
     t->scale = glm::vec3(1.f);
 
     r = ecs.AddComponent<MTRD::RenderComponent>(floor);
-    r->meshes_ = &objItemList[1].meshes;
-    r->materials_ = &objItemList[1].materials;
+    r->objitem_ = objItemList[1];
 
     m = ecs.AddComponent<MTRD::MovementComponent>(floor);
     m->position = glm::vec3(0) + pointLigthCenter;
@@ -175,8 +170,7 @@ void GeneratePointLightEntitys(ECSManager& ecs, std::vector<MTRD::ObjItem>& objI
         t->scale = glm::vec3(1.f);
 
         r = ecs.AddComponent<MTRD::RenderComponent>(cubes[i]);
-        r->meshes_ = &objItemList[2].meshes;
-        r->materials_ = &objItemList[2].materials;
+        r->objitem_ = objItemList[2];
 
         m = ecs.AddComponent<MTRD::MovementComponent>(cubes[i]);
         m->position = glm::vec3(0) + pointLigthCenter;
@@ -242,10 +236,10 @@ int MTRD::main() {
 
 
     // --- Create Geometry to use in elements ---
-    std::vector<ObjItem> objItemList;
-    objItemList.push_back(std::move(eng.generateSphere(0.5f, 20, 20, 1)));
-    objItemList.push_back(std::move(eng.generatePlane(20, 20, 1)));
-    objItemList.push_back(std::move(eng.generateCube(1)));
+    std::vector<std::shared_ptr<ObjItem>> objItemList;
+    objItemList.push_back(eng.generateSphere(0.5f, 20, 20, 1));
+    objItemList.push_back(eng.generatePlane(20, 20, 1));
+    objItemList.push_back(eng.generateCube(1));
     eng.windowLoadAllMaterials(objItemList);
     // --- *** ---
 

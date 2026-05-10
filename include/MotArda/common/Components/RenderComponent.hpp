@@ -12,10 +12,7 @@ namespace MTRD {
     public:
         std::shared_ptr<ObjItem> objitem_;
 
-        std::vector<std::unique_ptr<Mesh>>* meshes_;
-        std::vector<Material>* materials_;
-
         RenderComponent();
-        RenderComponent(std::vector<std::unique_ptr<Mesh>>* meshes, std::vector<Material>* mats);
+        RenderComponent(std::shared_ptr<ObjItem> obj);
     };
 }

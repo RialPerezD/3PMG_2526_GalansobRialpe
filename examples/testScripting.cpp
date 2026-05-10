@@ -150,7 +150,7 @@ int MTRD::main() {
     };
     std::atomic<bool> objsLoaded = false;
 
-    std::vector<ObjItem> ObjList;
+    std::vector<std::shared_ptr<ObjItem>> ObjList;
     // --- *** ---
 
     sol::state lua;
@@ -202,8 +202,7 @@ int MTRD::main() {
     // Render(Render) binding
     lua.new_usertype<MTRD::RenderComponent>(
         "Render",
-        "position", &MTRD::RenderComponent::meshes_,
-        "uv", &MTRD::RenderComponent::materials_
+        "objitem", &MTRD::RenderComponent::objitem_
     );
 
     // Camera binding
@@ -335,8 +334,7 @@ int MTRD::main() {
                     t->scale = glm::vec3(scl);
 
                     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
-                    r->meshes_ = &ObjList[0].meshes;
-                    r->materials_ = &ObjList[0].materials;
+                    r->objitem_ = ObjList[0];
 
                     MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(entity);
                     m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
@@ -346,8 +344,7 @@ int MTRD::main() {
             }
 
             MTRD::RenderComponent* Pr = ecs.AddComponent<MTRD::RenderComponent>(player);
-            Pr->meshes_ = &ObjList[1].meshes;
-            Pr->materials_ = &ObjList[1].materials;
+            Pr->objitem_ = ObjList[1];
         }
 
         // --- Input to move camera ---

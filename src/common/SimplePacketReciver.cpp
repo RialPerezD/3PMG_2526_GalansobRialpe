@@ -12,7 +12,7 @@ namespace MTRD {
 
 
     SimplePacketReciver::SimplePacketReciver(
-        std::vector<MTRD::ObjItem>* objItemListPtr,
+        std::vector<std::shared_ptr<MTRD::ObjItem>>* objItemListPtr,
         ECSManager* ecsPtr,
         size_t localPlayerEntity
     ) {
@@ -97,12 +97,10 @@ namespace MTRD {
             transform->angleRotationRadians = 0;
             transform->scale = glm::vec3(1.f);
 
-            // Asign visual meshes and materials
             if (!objItemListPtr->empty()) {
                 auto* render = ecsPtr->AddComponent<MTRD::RenderComponent>(entity);
                 size_t meshIdx = static_cast<size_t>(netComp->meshId_);
-                render->meshes_ = &(*objItemListPtr)[meshIdx].meshes;
-                render->materials_ = &(*objItemListPtr)[meshIdx].materials;
+                render->objitem_ = (*objItemListPtr)[meshIdx];
             }
 
             remoteEntities[msg->networkID] = entity;

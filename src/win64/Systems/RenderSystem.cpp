@@ -48,11 +48,11 @@ namespace MTRD {
             }
             program.SetupUniforms(uniforms);
 
-            for (size_t i = 0; i < render->meshes_->size(); i++) {
-                Mesh* mesh = render->meshes_->at(i).get();
+            for (size_t i = 0; i < render->objitem_->meshes.size(); i++) {
+                Mesh* mesh = render->objitem_->meshes[i].get();
 
                 if (mesh->materialId_ != -1) {
-                    Material mat = render->materials_->at(mesh->materialId_);
+                    Material mat = render->objitem_->materials.at(mesh->materialId_);
 
                     if (!mat.loadeable) continue;
 

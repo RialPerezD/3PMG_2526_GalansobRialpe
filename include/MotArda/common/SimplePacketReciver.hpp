@@ -10,14 +10,14 @@ namespace MTRD {
 	public:
 		SimplePacketReciver();
 		SimplePacketReciver(
-			std::vector<MTRD::ObjItem>* objItemListPtr,
+			std::vector<std::shared_ptr<MTRD::ObjItem>>* objItemListPtr,
 			ECSManager* ecsPtr,
 			size_t localPlayerEntity
 			);
 		void OnReceivePacket(uint32_t senderID, const void* data, size_t size);
 
 		std::map<uint32_t, size_t> remoteEntities;
-		std::vector<MTRD::ObjItem>* objItemListPtr;
+		std::vector<std::shared_ptr<MTRD::ObjItem>>* objItemListPtr;
 		ECSManager* ecsPtr;
 		size_t localPlayerEntity;
 	};

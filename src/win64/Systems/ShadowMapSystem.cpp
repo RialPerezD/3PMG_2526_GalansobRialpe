@@ -169,8 +169,8 @@ namespace MTRD {
             currentProg.SetupUniforms(uniforms);
             currentProg.SetupAtributeLocations(attributes);
 
-            for (size_t i = 0; i < render->meshes_->size(); i++) {
-                Mesh* mesh = render->meshes_->at(i).get();
+            for (size_t i = 0; i < render->objitem_->meshes.size(); i++) {
+                Mesh* mesh = render->objitem_->meshes[i].get();
                 if (mesh->vao == GL_INVALID_INDEX || mesh->vao == 0) {
                     mesh->GenerateVao();
                     mesh->SetVertexAtribs(attributes);

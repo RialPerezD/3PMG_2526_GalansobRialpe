@@ -29,9 +29,9 @@ int MTRD::main() {
     eng.SetRenderType(MotardaEng::RenderType::Base);
     eng.windowSetErrorCallback(error_callback);
 
-    std::vector<ObjItem> objItemList;
-    objItemList.push_back(std::move(eng.generateSphere(0.5f, 20, 20, 0)));
-    objItemList.push_back(std::move(eng.GenerateTerrain(50, 50, 100)));
+    std::vector<std::shared_ptr<ObjItem>> objItemList;
+    objItemList.push_back(eng.generateSphere(0.5f, 20, 20, 0));
+    objItemList.push_back(eng.GenerateTerrain(50, 50, 100));
     eng.windowLoadAllMaterials(objItemList);
 
 
@@ -50,8 +50,7 @@ int MTRD::main() {
     t->scale = glm::vec3(1.f);
 
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
-    r->meshes_ = &objItemList[0].meshes;
-    r->materials_ = &objItemList[0].materials;
+    r->objitem_ = objItemList[0];
 
 
     while (!eng.windowShouldClose()) {

@@ -38,7 +38,7 @@ int MTRD::main() {
     // Atomic bool which indicates if the Obj has been loaded to the multithread task
     std::atomic<bool> objsLoaded = false;
 
-    std::vector<ObjItem> ObjList;
+    std::vector<std::shared_ptr<ObjItem>> ObjList;
 
     // --- Ecs ---
     ECSManager& ecs = eng.getEcs();
@@ -95,8 +95,7 @@ int MTRD::main() {
             firstTime = false;
             eng.windowLoadAllMaterials(ObjList);
 
-            r->meshes_ = &ObjList[0].meshes;
-            r->materials_ = &ObjList[0].materials;
+            r->objitem_ = ObjList[0];
         }
 
         // --- Input to move camera ---

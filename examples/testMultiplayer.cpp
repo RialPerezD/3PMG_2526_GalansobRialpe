@@ -35,7 +35,7 @@ int MTRD::main() {
     camera.setPosition(glm::vec3(0, 5, 10));
     camera.setTarget(glm::vec3(0, 0, 0));
 
-    std::vector<ObjItem> objItemList;
+    std::vector<std::shared_ptr<ObjItem>> objItemList;
     objItemList.push_back(eng.generateCube(1));
     objItemList.push_back(eng.generateSphere(0.5f, 20, 20));
     objItemList.push_back(eng.generateSphere(0.5f, 20, 20, 1));
@@ -71,8 +71,7 @@ int MTRD::main() {
 
         auto* render = ecs.AddComponent<MTRD::RenderComponent>(player);
 		assert(meshIdSelector < objItemList.size());
-        render->meshes_ = &objItemList[meshIdSelector].meshes;
-        render->materials_ = &objItemList[meshIdSelector].materials;
+        render->objitem_ = objItemList[meshIdSelector];
 
         printf("Player created at (%.2f, %.2f), waiting for networkID...\n",
             randomX, randomZ);

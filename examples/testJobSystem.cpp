@@ -43,8 +43,8 @@ int MTRD::main() {
     std::vector <const char*> objsRoutes = { "12140_Skull_v3_L2.obj" };
     std::atomic<bool> objsLoaded = false;
 
-    std::vector<ObjItem> ObjList;
-    ObjList.push_back(ObjItem());
+    std::vector<std::shared_ptr<ObjItem>> ObjList;
+    ObjList.push_back(std::make_shared<ObjItem>());
 
     // --- Ecs ---
     ECSManager& ecs = eng.getEcs();
@@ -102,10 +102,8 @@ int MTRD::main() {
             firstTime = false;
             eng.windowLoadAllMaterials(ObjList);
 
-            r->meshes_ = &ObjList[0].meshes;
-            r->materials_ = &ObjList[0].materials;
+            r->objitem_ = ObjList[0];
         }
-
 
         // --- Input to move camera ---
         if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
@@ -177,8 +175,7 @@ int MTRD::main() {
             //printf("Maya %d cargada\n", objIndex);
             MTRD::Logger::debug("Maya cargada\n");
 
-            r->meshes_ = &ObjList[0].meshes;
-            r->materials_ = &ObjList[0].materials;
+            r->objitem_ = ObjList[0];
 
             eng.windowLoadAllMaterials(ObjList);
 

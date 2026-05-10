@@ -115,7 +115,7 @@ namespace MTRD {
         * @details Calls windowLoadMaterials() inside a for loop in order
         * to load the materials for all the objects.
         */
-        void windowLoadAllMaterials(std::vector<ObjItem>& objItemsList);
+        void windowLoadAllMaterials(std::vector<std::shared_ptr<ObjItem>>& objItemsList);
         /**
         * @brief windowGetLastFrameTime.
         * @details Manage the time in seconds by calling "getLastFrameTime" from
@@ -166,7 +166,7 @@ namespace MTRD {
         * Next, a new ObjItem type varaible is created to store the shapes and materials,
         * and finally, we move "item" into the first list of objects.
         */
-        std::vector<ObjItem> loadObjs(const std::vector <const char*>& routes);
+        std::vector<std::shared_ptr<ObjItem>> loadObjs(const std::vector <const char*>& routes);
         /**
         * @brief loadObjs.
         * @param const char* filename Name of the shader.
@@ -177,11 +177,11 @@ namespace MTRD {
 
         std::unique_ptr<Mesh> createMesh(const std::vector<Vertex>& vertices, const std::string& name);
 
-        ObjItem generateCube(float size, int texureId = 0, bool debug = true);
-        ObjItem generatePlane(float width, float height, int texureId = 0, bool debug = true);
-        ObjItem generateSphere(float radius, int segments, int rings, int texureId = 0, bool debug = true);
+        std::shared_ptr<ObjItem> generateCube(float size, int texureId = 0, bool debug = true);
+        std::shared_ptr<ObjItem> generatePlane(float width, float height, int texureId = 0, bool debug = true);
+        std::shared_ptr<ObjItem> generateSphere(float radius, int segments, int rings, int texureId = 0, bool debug = true);
 
-        ObjItem GenerateTerrain(
+        std::shared_ptr<ObjItem> GenerateTerrain(
             float width,
             float depth,
             float maxHeight,
@@ -254,7 +254,7 @@ namespace MTRD {
         RenderType actualRenderType_ = RenderType::Base;
 
         bool initialized2D;
-        ObjItem basePlane_;
+        std::shared_ptr<ObjItem> basePlane_;
 
         bool hasPhysx_;
         PhysxMaster physx_;

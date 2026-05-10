@@ -31,10 +31,10 @@ int MTRD::main() {
     eng.hasPhysx(true);
     eng.windowSetErrorCallback(error_callback);
 
-    std::vector<ObjItem> objItemList;
-    objItemList.push_back(std::move(eng.generateSphere(0.5f, 20, 20)));
-    objItemList.push_back(std::move(eng.generatePlane(20, 20)));
-    objItemList.push_back(std::move(eng.generateCube(1)));
+    std::vector<std::shared_ptr<ObjItem>> objItemList;
+    objItemList.push_back(eng.generateSphere(0.5f, 20, 20));
+    objItemList.push_back(eng.generatePlane(20, 20));
+    objItemList.push_back(eng.generateCube(1));
     eng.windowLoadAllMaterials(objItemList);
 
     ECSManager& ecs = eng.getEcs();
@@ -52,8 +52,7 @@ int MTRD::main() {
     t->scale = glm::vec3(1.f);
 
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(floor);
-    r->meshes_ = &objItemList[1].meshes;
-    r->materials_ = &objItemList[1].materials;
+    r->objitem_ = objItemList[1];
 
     MTRD::PhysxComponent* floorPhysx = ecs.AddComponent<MTRD::PhysxComponent>(floor);
     floorPhysx->shapeType = MTRD::PhysxShapeType::Box;
@@ -70,8 +69,7 @@ int MTRD::main() {
     t->scale = glm::vec3(1.f);
 
     r = ecs.AddComponent<MTRD::RenderComponent>(box);
-    r->meshes_ = &objItemList[2].meshes;
-    r->materials_ = &objItemList[2].materials;
+    r->objitem_ = objItemList[2];
 
     MTRD::PhysxComponent* boxPhysx = ecs.AddComponent<MTRD::PhysxComponent>(box);
     boxPhysx->shapeType = MTRD::PhysxShapeType::Box;
