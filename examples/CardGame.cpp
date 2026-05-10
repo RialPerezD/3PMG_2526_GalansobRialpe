@@ -55,12 +55,8 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
 
-    size_t player1 = ecs.AddEntity();
-    size_t player2 = ecs.AddEntity();
-    size_t player3 = ecs.AddEntity();
-    size_t player4 = ecs.AddEntity();
-
     bool firstTime = true;
+    bool meshAssigned = false;
 
     // TABLE
     size_t table = ecs.AddEntity();
@@ -220,24 +216,106 @@ int MTRD::main() {
         }
 
         if (currentState == AppState::Running) {
-            if (!netSys) {
-                simplPacRec = std::make_unique<SimplePacketReciver>(&objItemList, &ecs, playerEntity);
-                netSys = std::make_unique<NetworkSystem>(ecs, netMgr, std::bind(
-                    &MTRD::SimplePacketReciver::OnReceivePacket, simplPacRec.get(),
-                    std::placeholders::_1, std::placeholders::_2, std::placeholders::_3
-                ));
-            }
 
-            if (!isServer && playerEntity != SIZE_MAX) {
-                auto* transform = ecs.GetComponent<MTRD::TransformComponent>(playerEntity);
-                if (transform) {
-                    if (eng.inputIsKeyPressed(Input::Keyboard::W)) transform->position.z -= 0.1f;
-                    if (eng.inputIsKeyPressed(Input::Keyboard::S)) transform->position.z += 0.1f;
+            // Wait for the player ID to be received in order to assign the mesh
+            if (!meshAssigned && playerEntity != SIZE_MAX) {
+                auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
+                if (netComp && netComp->networkID != 0) {
+                    int slot = netComp->networkID - 1;
+
+                    // Hard-coded player positions
+                    glm::vec3 slotPositions[4] = {
+                        glm::vec3(-5.0f, 0.0f, 3.0f),
+                        glm::vec3(5.0f, 0.0f, 3.0f),
+                        glm::vec3(-5.0f, 0.0f, 0.0f),
+                        glm::vec3(5.0f, 0.0f, 0.0f),
+                    };
+                    glm::vec3 slotScales[4] = {
+                        glm::vec3(0.0003f),
+                        glm::vec3(0.07f),
+                        glm::vec3(0.1f),
+                        glm::vec3(0.1f),
+                    };
+
+                    size_t objIdx;
+                    if (slot < 3) {
+                        objIdx = slot + 1;
+                    }
+                    else {
+                        objIdx = 3;
+                    }
+
+                    auto* t = ecs.GetComponent<MTRD::TransformComponent>(playerEntity);
+                    if (t) {
+                        t->position = slotPositions[slot];
+                        t->scale = slotScales[slot];
+                    }
+
+                    ecs.AddComponent<MTRD::RenderComponent>(playerEntity);
+                    auto* r = ecs.GetComponent<MTRD::RenderComponent>(playerEntity);
+                    if (r) {
+                        r->meshes_ = &objItemList[objIdx].meshes;
+                        r->materials_ = &objItemList[objIdx].materials;
+                    }
+
+                    auto* netComp2 = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
+                    if (netComp2) {
+                        netComp2->meshId_ = static_cast<float>(objIdx);
+                    }
+
+                    meshAssigned = true;
                 }
             }
-            netSys->Process();
-        }
 
+            // Polling manual hasta que el netSys est� creado
+            if (!netSys) {
+                netMgr.PollEvents([&](uint32_t senderID, const void* data, size_t size) {
+                    if (simplPacRec) {
+                        simplPacRec->OnReceivePacket(senderID, data, size);
+                    }
+                    });
+
+                // Crear netSys solo cuando ya tenemos el mesh asignado
+                if (meshAssigned) {
+                    netSys = std::make_unique<NetworkSystem>(ecs, netMgr, std::bind(
+                        &MTRD::SimplePacketReciver::OnReceivePacket, simplPacRec.get(),
+                        std::placeholders::_1, std::placeholders::_2, std::placeholders::_3
+                    ));
+                }
+            }
+            else {
+                if (!isServer && playerEntity != SIZE_MAX) {
+                    auto* transform = ecs.GetComponent<MTRD::TransformComponent>(playerEntity);
+                    if (transform) {
+                        if (eng.inputIsKeyPressed(Input::Keyboard::W)) transform->position.z -= 0.1f;
+                        if (eng.inputIsKeyPressed(Input::Keyboard::S)) transform->position.z += 0.1f;
+                    }
+                }
+
+                glm::vec3 slotScales[4] = {
+                    glm::vec3(0.0003f),
+                    glm::vec3(0.0003f),
+                    glm::vec3(0.07f),
+                    glm::vec3(0.1f),
+                };
+
+                auto entities = ecs.GetEntitiesWithComponents<MTRD::NetworkComponent, MTRD::TransformComponent>();
+                for (size_t entity : entities) {
+                    // This IF will skip the current player
+                    if (entity == playerEntity) continue;
+
+                    auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(entity);
+                    auto* t = ecs.GetComponent<MTRD::TransformComponent>(entity);
+                    if (netComp && t) {
+                        size_t meshIdx = static_cast<size_t>(netComp->meshId_);
+                        if (meshIdx < 4) {
+                            t->scale = slotScales[meshIdx];
+                        }
+                    }
+                }
+                netSys->Process();
+            }
+        }
 
         eng.RenderScene();
         eng.windowEndFrame();
