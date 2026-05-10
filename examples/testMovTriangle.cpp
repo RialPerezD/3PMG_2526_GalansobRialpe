@@ -80,6 +80,7 @@ int MTRD::main() {
 
     ObjList[0]->materials.push_back(mat);
     ObjList[0]->meshes.push_back(std::move(TriangleMesh));
+    ObjList[0]->meshes[0]->materialId_ = 0;
 
     eng.windowLoadAllMaterials(ObjList);
 
