@@ -26,12 +26,12 @@ int MTRD::main() {
     float movSpeed = 0.5f;
 
     eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Base);
+    eng.SetRenderType(MotardaEng::RenderType::LightsWithShadows);
     eng.windowSetErrorCallback(error_callback);
 
     std::vector<std::shared_ptr<ObjItem>> objItemList;
     objItemList.push_back(eng.generateSphere(0.5f, 20, 20, 0));
-    objItemList.push_back(eng.GenerateTerrain(50, 50, 100));
+    objItemList.push_back(eng.GenerateTerrain(50, 50, 20));
     eng.windowLoadAllMaterials(objItemList);
 
 
@@ -40,6 +40,19 @@ int MTRD::main() {
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
     ecs.AddComponentType<MTRD::MovementComponent>();
+    ecs.AddComponentType<MTRD::LightComponent>();
+
+
+    size_t lightEntity = ecs.AddEntity();
+    MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
+    lightComp->directionalLights.push_back(
+        MTRD::DirectionalLight(
+            glm::vec3(-1.0f, -1.0f, 0.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            1.0f
+        )
+    );
+
 
     size_t player = ecs.AddEntity();
 
@@ -51,6 +64,17 @@ int MTRD::main() {
 
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
     r->objitem_ = objItemList[0];
+
+    size_t terrain = ecs.AddEntity();
+
+    MTRD::TransformComponent* tr = ecs.AddComponent<MTRD::TransformComponent>(terrain);
+    tr->position = glm::vec3(0, -2.5f, 0);
+    tr->rotation = glm::vec3(0, 0, 0);
+    tr->angleRotationRadians = -1;
+    tr->scale = glm::vec3(1.f);
+
+    MTRD::RenderComponent* rr = ecs.AddComponent<MTRD::RenderComponent>(terrain);
+    rr->objitem_ = objItemList[1];
 
 
     while (!eng.windowShouldClose()) {

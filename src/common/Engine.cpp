@@ -243,9 +243,9 @@ namespace MTRD {
 
     std::shared_ptr<ObjItem> MotardaEng::GenerateTerrain(float width, float depth, float maxHeight, int textureId, bool debug) {
         bool firstTime = false;
-        const std::string& heightmapPath = "";
-        return std::make_shared<ObjItem>(Terrain::GenerateFromHeightmap(
-            heightmapPath,
+        return std::make_shared<ObjItem>(Terrain::GenerateProcedural(
+            1,
+            256,
             width,
             depth,
             maxHeight,

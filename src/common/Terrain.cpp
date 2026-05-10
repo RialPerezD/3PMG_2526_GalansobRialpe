@@ -1,79 +1,277 @@
+#define FNL_IMPL
+#include "FastNoiseLite.h"
+
 #include "MotArda/common/Terrain.hpp"
-#include <vector>
-#include <string>
-#include <algorithm>
-#include "stb_image.h"
+
+#include <random>
+#include <cmath>
 
 namespace MTRD {
-    std::string Terrain::GetDefaultHeightmapPath(){
-        return std::string();
-    }
 
+    void Terrain::CalculateNormals(
+        std::vector<Vertex>& vertices,
+        const std::vector<uint32_t>& indices
+    ) {
 
-    ObjItem Terrain::GenerateFromHeightmap(const std::string& heightmapPath, float width, float depth, float maxHeight, Window& window, bool& firstTime, int textureId, bool debug) {
-        int texWidth, texHeight, channels;
-        unsigned char* data = stbi_load(heightmapPath.c_str(), &texWidth, &texHeight, &channels, 1);
+        for (auto& v : vertices)
+            v.normal = glm::vec3(0.0f);
 
-        std::vector<Vertex> vertices;
+        for (size_t i = 0; i < indices.size(); i += 3) {
 
-        if (!data) {
-            return ObjItem({}, {});
+            Vertex& v0 = vertices[indices[i]];
+            Vertex& v1 = vertices[indices[i + 1]];
+            Vertex& v2 = vertices[indices[i + 2]];
+
+            glm::vec3 edge1 =
+                v1.position - v0.position;
+
+            glm::vec3 edge2 =
+                v2.position - v0.position;
+
+            glm::vec3 normal =
+                glm::cross(edge1, edge2);
+
+            v0.normal += normal;
+            v1.normal += normal;
+            v2.normal += normal;
         }
 
-        auto getHeight = [&](int x, int z) {
-            x = std::clamp(x, 0, static_cast<int>(texWidth) - 1);
-            z = std::clamp(z, 0, static_cast<int>(texHeight) - 1);
-            return (data[z * texWidth + x] / 255.0f) * maxHeight;
-            };
+        for (auto& v : vertices) {
 
-        auto getNormal = [&](int x, int z) {
-            float hL = getHeight(x - 1, z);
-            float hR = getHeight(x + 1, z);
-            float hD = getHeight(x, z - 1);
-            float hU = getHeight(x, z + 1);
-            return glm::normalize(glm::vec3(hL - hR, 2.0f, hD - hU));
-            };
+            if (glm::length(v.normal) > 0.0f)
+                v.normal = glm::normalize(v.normal);
+            else
+                v.normal = glm::vec3(0.0f, 1.0f, 0.0f);
+        }
+    }
 
-        for (int z = 0; z < texHeight - 1; ++z) {
-            for (int x = 0; x < texWidth - 1; ++x) {
-                float x0 = (static_cast<float>(x) / (texWidth - 1) - 0.5f) * width;
-                float x1 = (static_cast<float>(x + 1) / (texWidth - 1) - 0.5f) * width;
-                float z0 = (static_cast<float>(z) / (texHeight - 1) - 0.5f) * depth;
-                float z1 = (static_cast<float>(z + 1) / (texHeight - 1) - 0.5f) * depth;
+    ObjItem Terrain::GenerateProcedural(
+        int seed,
+        int resolution,
+        float width,
+        float depth,
+        float maxHeight,
+        Window& window,
+        bool& firstTime,
+        int textureId,
+        bool debug
+    ) {
 
-                glm::vec3 p00(x0, getHeight(x, z), z0);
-                glm::vec3 p10(x1, getHeight(x + 1, z), z0);
-                glm::vec3 p01(x0, getHeight(x, z + 1), z1);
-                glm::vec3 p11(x1, getHeight(x + 1, z + 1), z1);
+        std::vector<Vertex> gridVertices;
+        gridVertices.reserve((resolution + 1) * (resolution + 1));
 
-                glm::vec2 uv00(static_cast<float>(x) / (texWidth - 1), static_cast<float>(z) / (texHeight - 1));
-                glm::vec2 uv10(static_cast<float>(x + 1) / (texWidth - 1), static_cast<float>(z) / (texHeight - 1));
-                glm::vec2 uv01(static_cast<float>(x) / (texWidth - 1), static_cast<float>(z + 1) / (texHeight - 1));
-                glm::vec2 uv11(static_cast<float>(x + 1) / (texWidth - 1), static_cast<float>(z + 1) / (texHeight - 1));
+        // =====================================================
+        // FAST NOISE LITE
+        // =====================================================
 
-                vertices.push_back(Vertex(p00, uv00, getNormal(x, z)));
-                vertices.push_back(Vertex(p01, uv01, getNormal(x, z + 1)));
-                vertices.push_back(Vertex(p10, uv10, getNormal(x + 1, z)));
+        fnl_state noise = fnlCreateState();
 
-                vertices.push_back(Vertex(p10, uv10, getNormal(x + 1, z)));
-                vertices.push_back(Vertex(p01, uv01, getNormal(x, z + 1)));
-                vertices.push_back(Vertex(p11, uv11, getNormal(x + 1, z + 1)));
+        noise.seed = seed;
+
+        noise.noise_type =
+            FNL_NOISE_OPENSIMPLEX2;
+
+        noise.fractal_type =
+            FNL_FRACTAL_FBM;
+
+        noise.octaves = 5;
+
+        noise.lacunarity = 2.0f;
+
+        noise.gain = 0.5f;
+
+        noise.frequency = 0.01f;
+
+        // =====================================================
+        // BIOME LEVELS
+        // =====================================================
+
+        const float lakeLevel =
+            maxHeight * 0.15f;
+
+        const float grassLevel =
+            maxHeight * 0.30f;
+
+        const float forestLevel =
+            maxHeight * 0.50f;
+
+        const float rockLevel =
+            maxHeight * 0.70f;
+
+        const float snowLevel =
+            maxHeight * 0.85f;
+
+        // =====================================================
+        // TERRAIN SIZE
+        // =====================================================
+
+        float halfWidth =
+            width * 0.5f;
+
+        float halfDepth =
+            depth * 0.5f;
+
+        // =====================================================
+        // GENERATE VERTICES
+        // =====================================================
+
+        for (int z = 0; z <= resolution; z++) {
+
+            for (int x = 0; x <= resolution; x++) {
+
+                float percentX =
+                    static_cast<float>(x) /
+                    resolution;
+
+                float percentZ =
+                    static_cast<float>(z) /
+                    resolution;
+
+                float worldX =
+                    percentX * width -
+                    halfWidth;
+
+                float worldZ =
+                    percentZ * depth -
+                    halfDepth;
+
+                // =============================================
+                // NOISE SAMPLE
+                // =============================================
+
+                float rawNoise =
+                    fnlGetNoise2D(
+                        &noise,
+                        worldX,
+                        worldZ
+                    );
+
+                // [-1,1] -> [0,1]
+
+                float normalizedNoise =
+                    (rawNoise + 1.0f) * 0.5f;
+
+                // Terrain shaping
+
+                float continentalness =
+                    normalizedNoise *
+                    normalizedNoise;
+
+                float mountainMask =
+                    pow(normalizedNoise, 4.0f);
+
+                float height =
+                    continentalness *
+                    maxHeight;
+
+                height +=
+                    mountainMask *
+                    (maxHeight * 0.35f);
+
+                // =============================================
+                // VERTEX
+                // =============================================
+
+                Vertex vertex{};
+
+                vertex.position = glm::vec3(
+                    worldX,
+                    height,
+                    worldZ
+                );
+
+                vertex.uv = glm::vec2(
+                    percentX,
+                    percentZ
+                );
+
+                gridVertices.push_back(vertex);
             }
         }
 
-        stbi_image_free(data);
+        // =====================================================
+        // INDICES
+        // =====================================================
 
-        auto mesh = std::make_unique<Mesh>(vertices, window, "terrain", firstTime, textureId, debug);
+        std::vector<Vertex> triangleList;
+        triangleList.reserve(resolution * resolution * 6);
+
+        auto getIdx = [resolution](int x, int z) {
+            return x + (z * (resolution + 1));
+            };
+
+        for (int z = 0; z < resolution; z++) {
+            for (int x = 0; x < resolution; x++) {
+                int i0 = getIdx(x, z);
+                int i1 = getIdx(x + 1, z);
+                int i2 = getIdx(x, z + 1);
+                int i3 = getIdx(x + 1, z + 1);
+
+                triangleList.push_back(gridVertices[i0]);
+                triangleList.push_back(gridVertices[i2]);
+                triangleList.push_back(gridVertices[i1]);
+
+                triangleList.push_back(gridVertices[i1]);
+                triangleList.push_back(gridVertices[i2]);
+                triangleList.push_back(gridVertices[i3]);
+            }
+        }
+
+        // =====================================================
+        // NORMALS
+        // =====================================================
+
+        std::vector<uint32_t> dummyIndices(triangleList.size());
+        for (size_t i = 0; i < dummyIndices.size(); ++i) {
+            dummyIndices[i] = static_cast<uint32_t>(i);
+        }
+
+        CalculateNormals(
+            triangleList,
+            dummyIndices
+        );
+
+        // =====================================================
+        // MESH
+        // =====================================================
+
+        auto mesh = std::make_unique<Mesh>(
+            triangleList,
+            window,
+            "terrain",
+            firstTime,
+            textureId,
+            debug
+        );
+
         std::vector<std::unique_ptr<Mesh>> meshes;
-        meshes.push_back(std::move(mesh));
+
+        meshes.push_back(
+            std::move(mesh)
+        );
+
+        // =====================================================
+        // MATERIAL
+        // =====================================================
 
         std::vector<Material> materials;
-        Material terrainMat;
-        terrainMat.name = "terrain_diffuse";
-        terrainMat.diffuseTexPath = "../assets/textures/terrain/diffuse.jpg";
-        materials.push_back(terrainMat);
 
-        return std::move(ObjItem(std::move(meshes), materials));
+        Material terrainMat;
+
+        terrainMat.name =
+            "terrain_diffuse";
+
+        terrainMat.diffuseTexPath =
+            "../assets/textures/terrain/diffuse.jpg";
+
+        materials.push_back(
+            terrainMat
+        );
+
+        return ObjItem(
+            std::move(meshes),
+            materials
+        );
     }
 
 }
