@@ -21,7 +21,7 @@ int MTRD::main() {
     auto& eng = maybeEng.value();
 
     MTRD::Camera& camera = eng.getCamera();
-    camera.setPosition(glm::vec3(0, 15, 30));
+    camera.setPosition(glm::vec3(0, 50, 30));
     float movSpeed = 0.1f;
     bool followPlayer = false;
     bool pPressed = false;
@@ -33,7 +33,7 @@ int MTRD::main() {
     eng.SetRenderType(MotardaEng::RenderType::LightsWithShadows);
     eng.windowSetErrorCallback(error_callback);
 
-    std::unique_ptr<MTRD::Terrain> terrain = eng.CreateTerrain(50, 50, 40);
+    std::unique_ptr<MTRD::Terrain> terrain = eng.CreateTerrain(100, 100, 40);
 
     std::vector<std::shared_ptr<ObjItem>> objItemList;
     objItemList.push_back(eng.generateSphere(0.5f, 100, 100, 0));
