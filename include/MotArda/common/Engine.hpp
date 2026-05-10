@@ -186,6 +186,7 @@ namespace MTRD {
             float width,
             float depth,
             float maxHeight,
+            int seed = -1,
             int textureId = 0,
             bool debug = false);
 

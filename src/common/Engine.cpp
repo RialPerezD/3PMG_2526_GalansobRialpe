@@ -241,9 +241,13 @@ namespace MTRD {
     }
 
 
-    std::unique_ptr<Terrain> MotardaEng::CreateTerrain(float width, float depth, float maxHeight, int textureId, bool debug) {
+    std::unique_ptr<Terrain> MotardaEng::CreateTerrain(float width, float depth, float maxHeight, int seed, int textureId, bool debug) {
         
-		auto terrain = std::make_unique<Terrain>(width, depth, maxHeight, std::rand());
+        if(seed == -1) {
+            seed = std::rand();
+		}
+
+		auto terrain = std::make_unique<Terrain>(width, depth, maxHeight, seed);
 
         bool firstTime = false;
 		terrain.get()->GenerateProcedural(256, window_, firstTime, textureId, debug);
