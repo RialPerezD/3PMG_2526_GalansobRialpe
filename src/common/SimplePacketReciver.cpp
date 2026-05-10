@@ -1,15 +1,17 @@
 #include "MotArda/common/SimplePacketReciver.hpp"
-#include <MotArda/common/Systems/NetworkSystem.hpp>
-#include <MotArda/common/Logger.hpp>
+#include "MotArda/common/Systems/NetworkSystem.hpp"
+#include "MotArda/common/Logger.hpp"
+#include "MotArda/common/Components/NetworkComponent.hpp"
+#include "MotArda/common/Components/TransformComponent.hpp"
+#include "MotArda/common/Components/RenderComponent.hpp"
 
 namespace MTRD {
 
     SimplePacketReciver::SimplePacketReciver()
-        :ecsPtr(nullptr),
+        : ecsPtr(nullptr),
         objItemListPtr(nullptr),
         localPlayerEntity(SIZE_MAX) {
     }
-
 
     SimplePacketReciver::SimplePacketReciver(
         std::vector<std::shared_ptr<MTRD::ObjItem>>* objItemListPtr,
@@ -21,99 +23,96 @@ namespace MTRD {
         this->localPlayerEntity = localPlayerEntity;
     }
 
-
     void SimplePacketReciver::OnReceivePacket(uint32_t senderID, const void* data, size_t size) {
-        if (!ecsPtr) return;
+        if (!ecsPtr || !data) return;
 
-        // Handle local player network ID assignment
-        if (localPlayerEntity != SIZE_MAX) {
+        // 1. Manejar asignación de ID local (paquetes crudos del NetworkManager de 4 bytes)
+        if (localPlayerEntity != SIZE_MAX && size == sizeof(uint32_t)) {
             auto* localNetComp = ecsPtr->GetComponent<MTRD::NetworkComponent>(localPlayerEntity);
-            if (localNetComp && localNetComp->networkID == 0 && size == sizeof(uint32_t)) {
-                uint32_t assignedID = *(uint32_t*)data;
+            if (localNetComp && localNetComp->networkID == 0) {
+                uint32_t assignedID = *static_cast<const uint32_t*>(data);
                 localNetComp->networkID = assignedID;
-                MTRD::Logger::info("Assigned networkID: %u\n", assignedID);
+                MTRD::Logger::info("Assigned local networkID: {}\n", assignedID);
                 return;
             }
         }
 
-        if (!objItemListPtr) return;
-
-        // Check for disconnect flag (MSB set to 1)
+        // 2. Manejar desconexiones (Flag MSB del NetworkManager)
         if (senderID & 0x80000000) {
-            // Remove flag to get the actual client ID
             uint32_t disconnectedID = senderID & 0x7FFFFFFF;
             auto it = remoteEntities.find(disconnectedID);
             if (it != remoteEntities.end()) {
                 ecsPtr->RemoveEntity(it->second);
                 remoteEntities.erase(it);
-                MTRD::Logger::info("Removed entity for disconnected client %u\n", disconnectedID);
+                MTRD::Logger::info("Removed entity for disconnected client {}\n", disconnectedID);
             }
             return;
         }
 
-        // New connection signal (empty packet)
-        if (size == 0 && senderID != 0) {
-            MTRD::Logger::info("New client connected with ID %u\n", senderID);
-            return;
-        }
+        // 3. Procesar mensajes con protocolo NetMessage (Header + Payload)
+        if (size < sizeof(NetMessage)) return;
 
-        // Ignore packets that are too small
-        if (size < sizeof(MTRD::NetworkMessage)) {
-            return;
-        }
+        const NetMessage* header = static_cast<const NetMessage*>(data);
+        const uint8_t* payloadPtr = static_cast<const uint8_t*>(data) + sizeof(NetMessage);
 
-        // Check if it's a chat message (exactly ChatMessage size)
-        if (size == sizeof(MTRD::ChatMessage)) {
-            const MTRD::ChatMessage* chatMsg = static_cast<const MTRD::ChatMessage*>(data);
-            if (chatMsg->text[0] != '\0') {
-                MTRD::Logger::info("Chat message received from %u: %s\n", senderID, chatMsg->text);
-            }
-            return;
-        }
+        switch (header->type) {
+        case MessageType::EntityUpdate: {
+            if (size < sizeof(NetMessage) + sizeof(EntityUpdatePayload)) return;
 
-        const MTRD::NetworkMessage* msg = static_cast<const MTRD::NetworkMessage*>(data);
+            const EntityUpdatePayload* payload = reinterpret_cast<const EntityUpdatePayload*>(payloadPtr);
 
-        // Ignore packets sent by the local player
-        if (localPlayerEntity != SIZE_MAX) {
-            auto* localNetComp = ecsPtr->GetComponent<MTRD::NetworkComponent>(localPlayerEntity);
-            if (localNetComp && localNetComp->networkID == msg->networkID) {
-                return;
-            }
-        }
-
-        auto it = remoteEntities.find(msg->networkID);
-        if (it == remoteEntities.end()) {
-            // Create a new entity for a new discovered remote player
-            size_t entity = ecsPtr->AddEntity();
-
-            auto* netComp = ecsPtr->AddComponent<MTRD::NetworkComponent>(entity);
-            netComp->networkID = msg->networkID;
-            netComp->meshId_ = msg->meshId_;
-            netComp->isLocal = false;
-
-            auto* transform = ecsPtr->AddComponent<MTRD::TransformComponent>(entity);
-            transform->position = glm::vec3(msg->posX, msg->posY, msg->posZ);
-            transform->rotation = glm::vec3(msg->rotX, msg->rotY, msg->rotZ);
-            transform->angleRotationRadians = 0;
-            transform->scale = glm::vec3(1.f);
-
-            if (!objItemListPtr->empty()) {
-                auto* render = ecsPtr->AddComponent<MTRD::RenderComponent>(entity);
-                size_t meshIdx = static_cast<size_t>(netComp->meshId_);
-                render->objitem_ = (*objItemListPtr)[meshIdx];
+            // Ignorar si es nuestro propio ID (evitar eco)
+            if (localPlayerEntity != SIZE_MAX) {
+                auto* localNetComp = ecsPtr->GetComponent<MTRD::NetworkComponent>(localPlayerEntity);
+                if (localNetComp && localNetComp->networkID == payload->networkID) return;
             }
 
-            remoteEntities[msg->networkID] = entity;
-            MTRD::Logger::info("Created remote entity for client %u\n", msg->networkID);
-        } else {
-            // Update existing remote player position and rotation
-            size_t entity = it->second;
-            auto* transform = ecsPtr->GetComponent<MTRD::TransformComponent>(entity);
-            if (transform) {
-                transform->position = glm::vec3(msg->posX, msg->posY, msg->posZ);
-                transform->rotation = glm::vec3(msg->rotX, msg->rotY, msg->rotZ);
+            auto it = remoteEntities.find(payload->networkID);
+            if (it == remoteEntities.end()) {
+                // Crear nueva entidad remota
+                size_t entity = ecsPtr->AddEntity();
+
+                auto* netComp = ecsPtr->AddComponent<MTRD::NetworkComponent>(entity);
+                netComp->networkID = payload->networkID;
+                netComp->meshId_ = payload->meshId_;
+                netComp->isLocal = false;
+
+                auto* transform = ecsPtr->AddComponent<MTRD::TransformComponent>(entity);
+                transform->position = { payload->posX, payload->posY, payload->posZ };
+                transform->rotation = { payload->rotX, payload->rotY, payload->rotZ };
+                transform->scale = glm::vec3(1.0f);
+
+                if (objItemListPtr && !objItemListPtr->empty()) {
+                    auto* render = ecsPtr->AddComponent<MTRD::RenderComponent>(entity);
+                    size_t meshIdx = static_cast<size_t>(payload->meshId_);
+                    if (meshIdx < objItemListPtr->size()) {
+                        render->objitem_ = (*objItemListPtr)[meshIdx];
+                    }
+                }
+
+                remoteEntities[payload->networkID] = entity;
+                MTRD::Logger::info("Created remote entity for client {}\n", payload->networkID);
+            } else {
+                // Actualizar entidad existente
+                size_t entity = it->second;
+                auto* transform = ecsPtr->GetComponent<MTRD::TransformComponent>(entity);
+                if (transform) {
+                    transform->position = { payload->posX, payload->posY, payload->posZ };
+                    transform->rotation = { payload->rotX, payload->rotY, payload->rotZ };
+                }
             }
+            break;
+        }
+
+        case MessageType::Chat: {
+            if (size < sizeof(NetMessage) + sizeof(ChatPayload)) return;
+            const ChatPayload* payload = reinterpret_cast<const ChatPayload*>(payloadPtr);
+            MTRD::Logger::info("Chat message from {}: {}\n", header->senderId, payload->text);
+            break;
+        }
+
+        default:
+            break;
         }
     }
-
 }

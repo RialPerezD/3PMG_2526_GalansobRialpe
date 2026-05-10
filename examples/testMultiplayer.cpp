@@ -18,9 +18,8 @@
 int MTRD::main() {
     constexpr bool IS_SERVER = true;
     constexpr uint16_t PORT = 1234;
-    constexpr const char* SERVER_IP = "127.0.0.1";      //This is loopback default ip
-    //Change this to change the mesh of the player (0 for cube, 1 for sphere, 2 for sphere with texture)
-	constexpr float meshIdSelector = 0;             
+    constexpr const char* SERVER_IP = "127.0.0.1";
+    constexpr float meshIdSelector = 0;
 
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 
@@ -49,7 +48,6 @@ int MTRD::main() {
     size_t player = SIZE_MAX;
 
     std::deque<std::string> chatMessages;
-    std::string chatInputBuffer;
     chatMessages.push_back("Welcome to the chat!");
 
     if (!IS_SERVER) {
@@ -60,7 +58,7 @@ int MTRD::main() {
 
         auto* netComp = ecs.AddComponent<MTRD::NetworkComponent>(player);
         netComp->networkID = 0;
-		netComp->meshId_ = meshIdSelector;
+        netComp->meshId_ = meshIdSelector;
         netComp->isLocal = true;
 
         auto* transform = ecs.AddComponent<MTRD::TransformComponent>(player);
@@ -70,54 +68,29 @@ int MTRD::main() {
         transform->scale = glm::vec3(1.f);
 
         auto* render = ecs.AddComponent<MTRD::RenderComponent>(player);
-		assert(meshIdSelector < objItemList.size());
+        assert(meshIdSelector < objItemList.size());
         render->objitem_ = objItemList[meshIdSelector];
 
         printf("Player created at (%.2f, %.2f), waiting for networkID...\n",
             randomX, randomZ);
     }
 
-    // --- Network management ---
-    SimplePacketReciver simplPacRec 
-        = SimplePacketReciver(
-            &objItemList,
-            &ecs,
-            player);
+    SimplePacketReciver simplPacRec(&objItemList, &ecs, player);
 
     NetworkManager netMgr;
     if (IS_SERVER) {
-        if (!netMgr.InitServer(PORT, 32)) {
-            printf("Failed to start server\n");
-            return 1;
-        }
-        printf("=== SERVER MODE ===\n");
+        if (!netMgr.InitServer(PORT, 32)) return 1;
     } else {
-        if (!netMgr.InitClient(SERVER_IP, PORT)) {
-            printf("Failed to connect to server\n");
-            return 1;
-        }
-        printf("=== CLIENT MODE ===\n");
+        if (!netMgr.InitClient(SERVER_IP, PORT)) return 1;
     }
 
-    NetworkSystem netSys = NetworkSystem(
-        ecs,
-        netMgr,
-        std::bind(
-            &MTRD::SimplePacketReciver::OnReceivePacket,
-            &simplPacRec,
-            std::placeholders::_1,
-            std::placeholders::_2,
-            std::placeholders::_3
-        ));
-    
-    netSys.SetChatCallback([&chatMessages](const MTRD::ChatMessage& msg) {
-        std::string fullMsg = "Player " + std::to_string(msg.senderNetworkID) + ": " + msg.text;
+    NetworkSystem netSys(ecs, netMgr, std::bind(&MTRD::SimplePacketReciver::OnReceivePacket, &simplPacRec, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+
+    netSys.SetChatCallback([&chatMessages](uint32_t senderId, const MTRD::ChatPayload& payload) {
+        std::string fullMsg = "Player " + std::to_string(senderId) + ": " + payload.text;
         chatMessages.push_back(fullMsg);
-        if (chatMessages.size() > 20) {
-            chatMessages.pop_front();
-        }
-    });
-    // --- *** ---
+        if (chatMessages.size() > 20) chatMessages.pop_front();
+        });
 
     static char tempBuffer[256] = "";
     while (!eng.windowShouldClose()) {
@@ -126,72 +99,56 @@ int MTRD::main() {
         if (!IS_SERVER && player != SIZE_MAX) {
             auto* transform = ecs.GetComponent<MTRD::TransformComponent>(player);
             if (transform) {
-                if (eng.inputIsKeyPressed(Input::Keyboard::W))
-                    transform->position.z -= 0.1f;
-                if (eng.inputIsKeyPressed(Input::Keyboard::S))
-                    transform->position.z += 0.1f;
-                if (eng.inputIsKeyPressed(Input::Keyboard::A))
-                    transform->position.x -= 0.1f;
-                if (eng.inputIsKeyPressed(Input::Keyboard::D))
-                    transform->position.x += 0.1f;
+                if (eng.inputIsKeyPressed(Input::Keyboard::W)) transform->position.z -= 0.1f;
+                if (eng.inputIsKeyPressed(Input::Keyboard::S)) transform->position.z += 0.1f;
+                if (eng.inputIsKeyPressed(Input::Keyboard::A)) transform->position.x -= 0.1f;
+                if (eng.inputIsKeyPressed(Input::Keyboard::D)) transform->position.x += 0.1f;
             }
         }
 
-        ImGui::SetNextWindowSize(ImVec2(300, 250), ImGuiCond_FirstUseEver);
         ImGui::Begin("Chat", nullptr, ImGuiWindowFlags_NoCollapse);
         ImGui::BeginChild("ChatMessages", ImVec2(0, -30), true);
-
-        for (const auto& msg : chatMessages) {
-            ImGui::TextWrapped("%s", msg.c_str());
-        }
-
-        if (!chatMessages.empty()) {
-            ImGui::SetScrollHereY(1.0f);
-        }
-
-        // --- ImGuiChat ---
+        for (const auto& msg : chatMessages) ImGui::TextWrapped("%s", msg.c_str());
+        if (!chatMessages.empty()) ImGui::SetScrollHereY(1.0f);
         ImGui::EndChild();
-        ImGui::PushItemWidth(-60);
-        ImGui::InputText("Message", tempBuffer, IM_ARRAYSIZE(tempBuffer));
-        ImGui::SameLine();
 
-        if (ImGui::Button("Send") || (ImGui::IsItemFocused() && ImGui::IsKeyPressed(ImGuiKey_Enter))) {
+        ImGui::PushItemWidth(-60);
+        bool pressedEnter = (ImGui::IsItemFocused() && ImGui::IsKeyPressed(ImGuiKey_Enter));
+        if (ImGui::InputText("Message", tempBuffer, IM_ARRAYSIZE(tempBuffer), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Send")) {
             if (tempBuffer[0] != '\0') {
-                uint32_t senderID = 0;
+                struct FullChatPacket {
+                    NetMessage header;
+                    ChatPayload payload;
+                } packet;
+
+                uint32_t myID = 0;
                 if (!IS_SERVER) {
                     auto* localNetComp = ecs.GetComponent<MTRD::NetworkComponent>(player);
-                    if (localNetComp) {
-                        senderID = localNetComp->networkID;
-                    }
+                    if (localNetComp) myID = localNetComp->networkID;
                 }
-                MTRD::ChatMessage chatMsg;
-                chatMsg.senderNetworkID = senderID;
-                strncpy_s(chatMsg.text, tempBuffer, 255);
-                chatMsg.text[255] = '\0';
-                
+
+                packet.header.type = MessageType::Chat;
+                packet.header.senderId = myID;
+                strncpy(packet.payload.text, tempBuffer, 255);
+                packet.payload.text[255] = '\0';
+
                 if (IS_SERVER) {
                     chatMessages.push_back("Server: " + std::string(tempBuffer));
-                    netMgr.BroadcastPacket(&chatMsg, sizeof(chatMsg), true);
+                    netMgr.BroadcastPacket(&packet, sizeof(packet), true);
                 } else {
-                    netMgr.SendPacket(0, &chatMsg, sizeof(chatMsg), true);
-                    chatMessages.push_back(tempBuffer);
+                    netMgr.SendPacket(0, &packet, sizeof(packet), true);
+                    chatMessages.push_back("Me: " + std::string(tempBuffer));
                 }
-                
-                if (chatMessages.size() > 20) {
-                    chatMessages.pop_front();
-                }
+
+                if (chatMessages.size() > 20) chatMessages.pop_front();
                 memset(tempBuffer, 0, sizeof(tempBuffer));
             }
         }
-
         ImGui::PopItemWidth();
         ImGui::End();
-        // --- *** ---
-
 
         netSys.Process();
         eng.RenderScene();
-
         eng.windowEndFrame();
     }
 

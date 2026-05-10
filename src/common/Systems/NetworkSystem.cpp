@@ -3,6 +3,7 @@
 #include "MotArda/common/Components/TransformComponent.hpp"
 #include <cstring>
 #include <iostream>
+#include <vector>
 
 namespace MTRD {
 
@@ -12,73 +13,93 @@ namespace MTRD {
         : ecs_(ecs),
         netMgr_(netMgr),
         receiveCallback_(receiveCallback),
-        chatCallback_(nullptr)
-    {}
+        chatCallback_(nullptr) {
+    }
 
     void NetworkSystem::Process() {
         if (!netMgr_.IsConnected()) return;
 
         netMgr_.PollEvents([this](uint32_t senderID, const void* data, size_t size) {
-            if (receiveCallback_) {
-                receiveCallback_(senderID, data, size);
-            }
-
-            if (chatCallback_ && size >= sizeof(ChatMessage)) {
-                const ChatMessage* chatMsg = static_cast<const ChatMessage*>(data);
-                if (chatMsg->text[0] != '\0') {
-                    chatCallback_(*chatMsg);
-                }
-            }
-        });
+            HandleReceive(senderID, data, size);
+            });
 
         auto entities = ecs_.GetEntitiesWithComponents<TransformComponent, NetworkComponent>();
 
-        if (netMgr_.IsServer()) {
-            for (size_t entity : entities) {
-                auto* netComp = ecs_.GetComponent<NetworkComponent>(entity);
-                auto* transform = ecs_.GetComponent<TransformComponent>(entity);
+        for (size_t entity : entities) {
+            auto* netComp = ecs_.GetComponent<NetworkComponent>(entity);
+            auto* transform = ecs_.GetComponent<TransformComponent>(entity);
 
-                if (netComp && transform && netComp->isLocal) {
-                    NetworkMessage msg;
-                    msg.networkID = netComp->networkID;
-                    msg.meshId_ = netComp->meshId_;
-                    msg.posX = transform->position.x;
-                    msg.posY = transform->position.y;
-                    msg.posZ = transform->position.z;
-                    msg.rotX = transform->rotation.x;
-                    msg.rotY = transform->rotation.y;
-                    msg.rotZ = transform->rotation.z;
+            if (netComp && transform && (netMgr_.IsServer() || netComp->isLocal)) {
+                if (!netMgr_.IsServer() && netComp->networkID == 0) continue;
 
-                    netMgr_.BroadcastPacket(&msg, sizeof(msg), false);
-                }
-            }
-        } else {
-            for (size_t entity : entities) {
-                auto* netComp = ecs_.GetComponent<NetworkComponent>(entity);
-                auto* transform = ecs_.GetComponent<TransformComponent>(entity);
+                struct FullUpdatePacket {
+                    NetMessage header;
+                    EntityUpdatePayload payload;
+                } packet;
 
-                if (netComp && transform && netComp->isLocal && netComp->networkID != 0) {
-                    NetworkMessage msg;
-                    msg.networkID = netComp->networkID;
-                    msg.meshId_ = netComp->meshId_;
-                    msg.posX = transform->position.x;
-                    msg.posY = transform->position.y;
-                    msg.posZ = transform->position.z;
-                    msg.rotX = transform->rotation.x;
-                    msg.rotY = transform->rotation.y;
-                    msg.rotZ = transform->rotation.z;
+                packet.header.type = MessageType::EntityUpdate;
+                packet.header.senderId = netComp->networkID;
 
-                    netMgr_.SendPacket(0, &msg, sizeof(msg), false);
+                packet.payload.networkID = netComp->networkID;
+                packet.payload.meshId_ = netComp->meshId_;
+                packet.payload.posX = transform->position.x;
+                packet.payload.posY = transform->position.y;
+                packet.payload.posZ = transform->position.z;
+                packet.payload.rotX = transform->rotation.x;
+                packet.payload.rotY = transform->rotation.y;
+                packet.payload.rotZ = transform->rotation.z;
+
+                if (netMgr_.IsServer()) {
+                    netMgr_.BroadcastPacket(&packet, sizeof(packet), false);
+                } else {
+                    netMgr_.SendPacket(0, &packet, sizeof(packet), false);
                 }
             }
         }
     }
 
     void NetworkSystem::HandleReceive(uint32_t senderID, const void* data, size_t size) {
-        if (size < sizeof(NetworkMessage)) return;
+        if (!data) return;
 
-        const NetworkMessage* msg = static_cast<const NetworkMessage*>(data);
-        (void)senderID;
-        (void)msg;
+        if (receiveCallback_) {
+            receiveCallback_(senderID, data, size);
+        }
+
+        if (size < sizeof(NetMessage)) return;
+
+        const NetMessage* header = static_cast<const NetMessage*>(data);
+
+        switch (header->type) {
+        case MessageType::EntityUpdate: {
+            if (size >= sizeof(NetMessage) + sizeof(EntityUpdatePayload)) {
+                const EntityUpdatePayload* payload = reinterpret_cast<const EntityUpdatePayload*>(
+                    static_cast<const uint8_t*>(data) + sizeof(NetMessage)
+                    );
+
+                auto entities = ecs_.GetEntitiesWithComponents<NetworkComponent, TransformComponent>();
+                for (size_t entity : entities) {
+                    auto* netComp = ecs_.GetComponent<NetworkComponent>(entity);
+                    if (netComp && netComp->networkID == payload->networkID && !netComp->isLocal) {
+                        auto* transform = ecs_.GetComponent<TransformComponent>(entity);
+                        transform->position = { payload->posX, payload->posY, payload->posZ };
+                        transform->rotation = { payload->rotX, payload->rotY, payload->rotZ };
+                        break;
+                    }
+                }
+            }
+            break;
+        }
+        case MessageType::Chat: {
+            if (chatCallback_ && size >= sizeof(NetMessage) + sizeof(ChatPayload)) {
+                const ChatPayload* payload = reinterpret_cast<const ChatPayload*>(
+                    static_cast<const uint8_t*>(data) + sizeof(NetMessage)
+                    );
+                chatCallback_(header->senderId, *payload);
+            }
+            break;
+        }
+        default:
+            break;
+        }
     }
 }

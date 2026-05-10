@@ -2,39 +2,39 @@
 #include "../Ecs.hpp"
 #include "../NetworkManager.hpp"
 #include <functional>
+#include <cstdint>
 
 namespace MTRD {
 
-    enum messageType {
-        a,
-        b,
-        c,
-        d
+    enum class MessageType : uint8_t {
+        EntityUpdate,
+        Chat,
+        ConnectionStatus,
+        Action
     };
-#pragma pack(1)
+
+#pragma pack(push, 1)
     struct NetMessage {
-        messageType mt;
+        MessageType type;
+        uint32_t senderId;
     };
 
-
-#pragma pack(1)
-    struct NetworkMessage : NetMessage {
+    struct EntityUpdatePayload {
         uint32_t networkID;
         float meshId_;
         float posX, posY, posZ;
         float rotX, rotY, rotZ;
     };
 
-#pragma pack(1)
-    struct ChatMessage : NetMessage {
-        uint32_t senderNetworkID;
+    struct ChatPayload {
         char text[256];
     };
+#pragma pack(pop)
 
     class NetworkSystem {
     public:
         using MessageCallback = std::function<void(uint32_t, const void*, size_t)>;
-        using ChatCallback = std::function<void(const ChatMessage&)>;
+        using ChatCallback = std::function<void(uint32_t, const ChatPayload&)>;
 
         NetworkSystem(ECSManager& ecs,
             NetworkManager& netMgr,
