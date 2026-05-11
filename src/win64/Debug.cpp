@@ -1,4 +1,5 @@
 #include "Motarda/win64/Debug.hpp"
+#include "MotArda/common/Logger.hpp"
 #include <string>
 #include <iostream>
 
@@ -19,7 +20,7 @@ namespace MTRD {
             case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
             case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
             }
-            std::cout << error << " | " << file << " (" << line << ")" << std::endl;
+            MTRD::Logger::error("{} | {} | ({})", error, file, line);
         }
         return errorCode;
     }
@@ -36,39 +37,38 @@ namespace MTRD {
         // ignore non-significant error/warning codes
         if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
 
-        std::cout << "---------------" << std::endl;
-        std::cout << "Debug message (" << id << "): " << message << std::endl;
+        std::string out = "---------------\n";
+        out += "Debug message (" + std::to_string(id) + "): " + message + "\n";
 
-        switch (source)
+        switch (source) 
         {
-        case GL_DEBUG_SOURCE_API:             std::cout << "Source: API"; break;
-        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   std::cout << "Source: Window System"; break;
-        case GL_DEBUG_SOURCE_SHADER_COMPILER: std::cout << "Source: Shader Compiler"; break;
-        case GL_DEBUG_SOURCE_THIRD_PARTY:     std::cout << "Source: Third Party"; break;
-        case GL_DEBUG_SOURCE_APPLICATION:     std::cout << "Source: Application"; break;
-        case GL_DEBUG_SOURCE_OTHER:           std::cout << "Source: Other"; break;
-        } std::cout << std::endl;
+            case GL_DEBUG_SOURCE_API:              out += "Source: API"; break;
+            case GL_DEBUG_SOURCE_WINDOW_SYSTEM:    out += "Source: Window System"; break;
+            case GL_DEBUG_SOURCE_SHADER_COMPILER:  out += "Source: Shader Compiler"; break;
+            case GL_DEBUG_SOURCE_THIRD_PARTY:      out += "Source: Third Party"; break;
+            case GL_DEBUG_SOURCE_APPLICATION:      out += "Source: Application"; break;
+            case GL_DEBUG_SOURCE_OTHER:            out += "Source: Other"; break;
+        } out += "\n";
 
-        switch (type)
-        {
-        case GL_DEBUG_TYPE_ERROR:               std::cout << "Type: Error"; break;
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: std::cout << "Type: Deprecated Behaviour"; break;
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  std::cout << "Type: Undefined Behaviour"; break;
-        case GL_DEBUG_TYPE_PORTABILITY:         std::cout << "Type: Portability"; break;
-        case GL_DEBUG_TYPE_PERFORMANCE:         std::cout << "Type: Performance"; break;
-        case GL_DEBUG_TYPE_MARKER:              std::cout << "Type: Marker"; break;
-        case GL_DEBUG_TYPE_PUSH_GROUP:          std::cout << "Type: Push Group"; break;
-        case GL_DEBUG_TYPE_POP_GROUP:           std::cout << "Type: Pop Group"; break;
-        case GL_DEBUG_TYPE_OTHER:               std::cout << "Type: Other"; break;
-        } std::cout << std::endl;
+        switch (type) {
+            case GL_DEBUG_TYPE_ERROR:               out += "Type: Error"; break;
+            case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: out += "Type: Deprecated Behaviour"; break;
+            case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  out += "Type: Undefined Behaviour"; break;
+            case GL_DEBUG_TYPE_PORTABILITY:         out += "Type: Portability"; break;
+            case GL_DEBUG_TYPE_PERFORMANCE:         out += "Type: Performance"; break;
+            case GL_DEBUG_TYPE_MARKER:              out += "Type: Marker"; break;
+            case GL_DEBUG_TYPE_PUSH_GROUP:          out += "Type: Push Group"; break;
+            case GL_DEBUG_TYPE_POP_GROUP:           out += "Type: Pop Group"; break;
+            case GL_DEBUG_TYPE_OTHER:               out += "Type: Other"; break;
+        } out += "\n";
 
-        switch (severity)
-        {
-        case GL_DEBUG_SEVERITY_HIGH:         std::cout << "Severity: high"; break;
-        case GL_DEBUG_SEVERITY_MEDIUM:       std::cout << "Severity: medium"; break;
-        case GL_DEBUG_SEVERITY_LOW:          std::cout << "Severity: low"; break;
-        case GL_DEBUG_SEVERITY_NOTIFICATION: std::cout << "Severity: notification"; break;
-        } std::cout << std::endl;
-        std::cout << std::endl;
+        switch (severity) {
+            case GL_DEBUG_SEVERITY_HIGH:         out += "Severity: high"; break;
+            case GL_DEBUG_SEVERITY_MEDIUM:       out += "Severity: medium"; break;
+            case GL_DEBUG_SEVERITY_LOW:          out += "Severity: low"; break;
+            case GL_DEBUG_SEVERITY_NOTIFICATION: out += "Severity: notification"; break;
+        }
+
+        MTRD::Logger::debug(out.c_str());
     }
 }
