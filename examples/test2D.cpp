@@ -1,4 +1,5 @@
 #include "MotArda/common/Engine.hpp"
+#include "MotArda/common/Logger.hpp"
 #include "MotArda/common/ObjLoader.hpp"
 #include <MotArda/common/Ecs.hpp>
 #include <MotArda/common/Camera.hpp>
@@ -9,7 +10,7 @@
 #include <MotArda/win64/Texture.hpp>
 
 static void error_callback(int error, const char* description) {
-    fprintf(stderr, "Glfw error: %s\n", description);
+    MTRD::Logger::error("Glfw error: {}\n", description);
 }
 
 struct Platform {

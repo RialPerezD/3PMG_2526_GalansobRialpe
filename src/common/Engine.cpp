@@ -1,4 +1,5 @@
 #include <enet/enet.h>
+#include "MotArda/common/Logger.hpp"
 #include "Motarda/common/Engine.hpp"
 #include <memory>
 #include <fstream>

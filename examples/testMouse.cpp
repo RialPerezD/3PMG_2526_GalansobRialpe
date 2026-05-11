@@ -1,4 +1,5 @@
 #include "MotArda/common/Engine.hpp"
+#include "MotArda/common/Logger.hpp"
 #include "MotArda/common/ObjLoader.hpp"
 #include <MotArda/common/Ecs.hpp>
 #include <MotArda/common/Camera.hpp>
@@ -9,7 +10,7 @@
 #include <iostream>
 
 static void error_callback(int error, const char* description) {
-    fprintf(stderr, "Glfw error: %s\n", description);
+    MTRD::Logger::error("Glfw error: {}\n", description);
 }
 
 
@@ -88,16 +89,17 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::R)) camera.moveUp(movSpeed);
         if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.moveDown(movSpeed);
 
-        if (eng.inputIsKeyDown(Input::Keyboard::SPACE)) printf("Space Pressed \n");
+        if (eng.inputIsKeyDown(Input::Keyboard::SPACE)) MTRD::Logger::info("Space pressed\n");
+
 
         if (eng.inputIsMouseButtonPressed(Input::MouseButton::Left)) {
             glm::vec3 hitPoint = eng.raycastFromMouse(100.0f);
-            std::cout << "Raycast hit: (" << hitPoint.x << ", " << hitPoint.y << ", " << hitPoint.z << ")" << std::endl;
+            MTRD::Logger::info("Raycast hit: ({}, {}, {})", hitPoint.x, hitPoint.y, hitPoint.z);
         }
 
         if (eng.inputIsMouseButtonDown(Input::MouseButton::Right)) {
             glm::vec3 hitPoint = eng.raycastFromMouse(100.0f);
-            std::cout << "Raycast hit: (" << hitPoint.x << ", " << hitPoint.y << ", " << hitPoint.z << ")" << std::endl;
+            MTRD::Logger::info("Raycast hit: ({}, {}, {})", hitPoint.x, hitPoint.y, hitPoint.z);
         }
 
         eng.RenderScene();

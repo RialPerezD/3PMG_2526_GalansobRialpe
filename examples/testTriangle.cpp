@@ -1,4 +1,5 @@
 #include "MotArda/common/Engine.hpp"
+#include "MotArda/common/Logger.hpp"
 
 #include <memory>
 #include "../deps/glm-master/glm/glm.hpp"
@@ -11,7 +12,8 @@
 
 static void error_callback(int error, const char* description)
 {
-    fprintf(stderr, "Glfw error: %s\n", description);
+    MTRD::Logger::error("Glfw error: {}\n", description);
+
 }
 
 int MTRD::main() {

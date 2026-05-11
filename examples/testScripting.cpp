@@ -115,7 +115,7 @@ end
 static MTRD::MotardaEng* g_engine = nullptr;
 
 static void error_callback(int error, const char* description) {
-    fprintf(stderr, "Glfw error: %s\n", description);
+    MTRD::Logger::error("Glfw error: {}\n", description);
 }
 
 int MTRD::main() {
@@ -253,7 +253,6 @@ int MTRD::main() {
     sol::load_result chunk = lua.load(lua_program);
     if (!chunk.valid()) {
         sol::error err = chunk;
-        //std::cout << err.what() << std::endl;
         Logger::error("Error Lua: {}", err.what());
         return 1;
     }
@@ -314,8 +313,7 @@ int MTRD::main() {
         eng.windowInitFrame();
 
         if (!objsLoaded) {
-            //printf("Cargando maya...\n");
-            MTRD::Logger::debug("Maya cargada\n");
+            MTRD::Logger::debug("Cargando maya...\n");
             eng.windowEndFrame();
             continue;
 
@@ -354,7 +352,6 @@ int MTRD::main() {
 
             if (!r.valid()) {
                 sol::error err = r;
-                //std::cout << "[Lua Camera Error] " << err.what() << std::endl;
                 Logger::error("[Lua Camera Error] {}", err.what());
             }
         }
@@ -369,7 +366,6 @@ int MTRD::main() {
             sol::protected_function_result r = lua_update_player(Pm);
             if (!r.valid()) {
                 sol::error err = r;
-                //std::cout << "[Lua Error] " << err.what() << std::endl;
                 Logger::error("[Lua Error] {}", err.what());
             }
         }

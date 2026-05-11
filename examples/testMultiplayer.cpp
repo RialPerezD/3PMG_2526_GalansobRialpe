@@ -1,4 +1,5 @@
 #include "MotArda/common/Engine.hpp"
+#include "MotArda/common/Logger.hpp"
 #include "MotArda/common/ObjLoader.hpp"
 #include "MotArda/common/Ecs.hpp"
 #include "MotArda/common/NetworkManager.hpp"
@@ -71,7 +72,7 @@ int MTRD::main() {
         assert(meshIdSelector < objItemList.size());
         render->objitem_ = objItemList[meshIdSelector];
 
-        printf("Player created at (%.2f, %.2f), waiting for networkID...\n",
+        MTRD::Logger::info("Player created at ({:.2f}, {:.2f}), waiting for networkID...", 
             randomX, randomZ);
     }
 
@@ -88,6 +89,7 @@ int MTRD::main() {
 
     netSys.SetChatCallback([&chatMessages](uint32_t senderId, const MTRD::ChatPayload& payload) {
         std::string fullMsg = "Player " + std::to_string(senderId) + ": " + payload.text;
+
         chatMessages.push_back(fullMsg);
         if (chatMessages.size() > 20) chatMessages.pop_front();
         });
