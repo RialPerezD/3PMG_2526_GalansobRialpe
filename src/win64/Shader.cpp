@@ -1,10 +1,11 @@
-#include "Motarda/win64/Shader.hpp"
+#include <Motarda/Shader.hpp>
+#include <MotArda/Debug.hpp>
+#include <MotArda/Logger.hpp>
+
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <iostream>
-#include <MotArda/win64/Debug.hpp>
-#include <MotArda/common/Logger.hpp>
 
 namespace MTRD {
 

@@ -1,4 +1,4 @@
-#include "MotArda/common/JobSystem.hpp"
+#include <MotArda/JobSystem.hpp>
 
 namespace MTRD {
 

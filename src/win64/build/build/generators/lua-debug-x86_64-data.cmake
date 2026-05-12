@@ -6,7 +6,7 @@ set(lua_FIND_DEPENDENCY_NAMES "")
 
 ########### VARIABLES #######################################################################
 #############################################################################################
-set(lua_PACKAGE_FOLDER_DEBUG "C:/Users/David/.conan/data/lua/5.4.6/_/_/package/164640aad040835ac89882393a96d89200694f04")
+set(lua_PACKAGE_FOLDER_DEBUG "C:/Users/rialpe/.conan/data/lua/5.4.6/_/_/package/164640aad040835ac89882393a96d89200694f04")
 set(lua_BUILD_MODULES_PATHS_DEBUG )
 
 

@@ -1,5 +1,5 @@
-#include <MotArda/win64/Systems/RenderSystem.hpp>
-#include <MotArda/win64/Debug.hpp>
+#include <MotArda/Systems/RenderSystem.hpp>
+#include <MotArda/Debug.hpp>
 
 
 namespace MTRD {

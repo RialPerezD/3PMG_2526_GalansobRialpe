@@ -1,5 +1,5 @@
-#include <MotArda/win64/Systems/ShadowMapSystem.hpp>
-#include <MotArda/win64/Debug.hpp>
+#include <MotArda/Systems/ShadowMapSystem.hpp>
+#include <MotArda/Debug.hpp>
 #include <cstdio>
 
 namespace MTRD {

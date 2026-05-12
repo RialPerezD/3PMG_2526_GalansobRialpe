@@ -1,7 +1,7 @@
-#include "../include/MotArda/win64/Program.hpp"
-#include <MotArda/win64/Debug.hpp>
+#include <MotArda/Program.hpp>
+#include <MotArda/Debug.hpp>
+#include <MotArda/Logger.hpp>
 #include <stdio.h>
-#include <MotArda/common/Logger.hpp>
 
 namespace MTRD {
     Program::Program(const Shader& vertexShader, const Shader& fragmentShader, bool debug) {

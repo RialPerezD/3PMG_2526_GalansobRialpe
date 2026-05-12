@@ -1,10 +1,10 @@
-#include <MotArda/win64/Systems/RenderPbrSystem.hpp>
-#include <MotArda/win64/Debug.hpp>
-#include <MotArda/win64/Mesh.hpp>
-#include <MotArda/win64/Material.hpp>
+#include <MotArda/Systems/RenderPbrSystem.hpp>
+#include <MotArda/Debug.hpp>
+#include <MotArda/Mesh.hpp>
+#include <MotArda/Material.hpp>
 #include <string>
 #include <vector>
-#include <MotArda/common/Logger.hpp>
+#include <MotArda/Logger.hpp>
 
 namespace MTRD {
     RenderPbrSystem::RenderPbrSystem(

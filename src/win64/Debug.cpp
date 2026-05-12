@@ -1,5 +1,5 @@
-#include "Motarda/win64/Debug.hpp"
-#include "MotArda/common/Logger.hpp"
+#include "Motarda/Debug.hpp"
+#include "MotArda/Logger.hpp"
 #include <string>
 #include <iostream>
 

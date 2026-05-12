@@ -1,4 +1,4 @@
-#include "MotArda/common/Components/NetworkComponent.hpp"
+#include <MotArda/Components/NetworkComponent.hpp>
 
 MTRD::NetworkComponent::NetworkComponent()
     : networkID(0), meshId_(0), isLocal(true) {

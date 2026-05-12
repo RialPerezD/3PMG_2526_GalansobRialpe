@@ -1,4 +1,4 @@
-#include "MotArda/common/VertexAttributes.hpp"
+#include <MotArda/VertexAttributes.hpp>
 
 
 namespace MTRD {

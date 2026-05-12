@@ -1,9 +1,9 @@
-#include "MotArda/common/SimplePacketReciver.hpp"
-#include "MotArda/common/Systems/NetworkSystem.hpp"
-#include "MotArda/common/Logger.hpp"
-#include "MotArda/common/Components/NetworkComponent.hpp"
-#include "MotArda/common/Components/TransformComponent.hpp"
-#include "MotArda/common/Components/RenderComponent.hpp"
+#include <MotArda/SimplePacketReciver.hpp>
+#include <MotArda/Systems/NetworkSystem.hpp>
+#include <MotArda/Logger.hpp>
+#include <MotArda/Components/NetworkComponent.hpp>
+#include <MotArda/Components/TransformComponent.hpp>
+#include <MotArda/Components/RenderComponent.hpp>
 
 namespace MTRD {
 

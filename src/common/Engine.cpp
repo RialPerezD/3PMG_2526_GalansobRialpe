@@ -1,17 +1,18 @@
 #include <enet/enet.h>
-#include "MotArda/common/Logger.hpp"
-#include "Motarda/common/Engine.hpp"
+#include <MotArda/Logger.hpp>
+#include <Motarda/Engine.hpp>
+#include <MotArda/window.hpp>
+#include <MotArda/Geometries.hpp>
+#include <MotArda/Terrain.hpp>
+#include <MotArda/Systems/RenderPbrSystem.hpp>
+#include <MotArda/Logger.hpp>
+
 #include <memory>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <iostream>
 
-#include "MotArda/win64/window.hpp"
-#include <MotArda/common/Geometries.hpp>
-#include <MotArda/common/Terrain.hpp>
-#include <MotArda/win64/Systems/RenderPbrSystem.hpp>
-#include "MotArda/common/Logger.hpp"
 
 namespace MTRD {
     std::optional<MotardaEng> MotardaEng::createEngine(

@@ -1,13 +1,13 @@
-#include "Motarda/win64/Texture.hpp"
-#include "MotArda/common/Logger.hpp"
+#include <Motarda/Texture.hpp>
+#include <MotArda/Logger.hpp>
+#include <MotArda/Debug.hpp>
 #include <string>
-#include <MotArda/win64/Debug.hpp>
 #include <iostream>
 #include <cmath>
 #include <algorithm>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "../deps/stb_image.h" 
+#include <../include/stb_image.h>
 
 namespace MTRD {
     Texture::Texture(const char* route, bool debug_) {

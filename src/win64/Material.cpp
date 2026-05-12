@@ -1,4 +1,4 @@
-#include "../include/MotArda/win64/Material.hpp"
+#include <MotArda/Material.hpp>
 
 namespace MTRD {
     Material::Material() {

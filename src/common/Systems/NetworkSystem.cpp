@@ -1,6 +1,7 @@
-#include "MotArda/common/Systems/NetworkSystem.hpp"
-#include "MotArda/common/Components/NetworkComponent.hpp"
-#include "MotArda/common/Components/TransformComponent.hpp"
+#include <MotArda/Systems/NetworkSystem.hpp>
+#include <MotArda/Components/NetworkComponent.hpp>
+#include <MotArda/Components/TransformComponent.hpp>
+
 #include <cstring>
 #include <iostream>
 #include <vector>

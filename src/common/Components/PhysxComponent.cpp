@@ -1,4 +1,4 @@
-#include "MotArda/common/Components/PhysxComponent.hpp"
+#include <MotArda/Components/PhysxComponent.hpp>
 
 namespace MTRD {
     PhysxComponent::PhysxComponent()

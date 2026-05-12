@@ -1,4 +1,5 @@
-#include "MotArda/common/Logger.hpp"
+#include <MotArda/Logger.hpp>
+
 #include <iostream>
 
 namespace MTRD {

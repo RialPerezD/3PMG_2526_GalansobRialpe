@@ -1,8 +1,10 @@
-#include "MotArda/common/Geometries.hpp"
-#include <MotArda/win64/Mesh.hpp>
-#include <MotArda/win64/Material.hpp>
+#include <MotArda/Geometries.hpp>
+#include <MotArda/Mesh.hpp>
+#include <MotArda/Material.hpp>
+
 #include <cmath>
 #include <vector>
+
 #include "../../deps/glm-master/glm/ext/scalar_constants.hpp"
 
 namespace MTRD {

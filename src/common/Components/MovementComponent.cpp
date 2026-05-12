@@ -1,4 +1,4 @@
-#include "MotArda/common/Components/MovementComponent.hpp"
+#include <MotArda/Components/MovementComponent.hpp>
 
 MTRD::MovementComponent::MovementComponent(){
     position = { 0,0,0 };

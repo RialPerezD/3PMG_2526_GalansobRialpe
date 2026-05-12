@@ -4,9 +4,9 @@
 #endif
 
 #define FNL_IMPL
-#include "FastNoiseLite.h"
+#include <FastNoiseLite.h>
 
-#include "MotArda/common/Terrain.hpp"
+#include <MotArda/Terrain.hpp>
 
 #include <glad/glad.h>
 #include <random>

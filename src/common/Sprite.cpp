@@ -1,5 +1,5 @@
-#include "MotArda/common/Sprite.hpp"
-#include <MotArda/common/Components/RenderComponent.hpp>
+#include <MotArda/Sprite.hpp>
+#include <MotArda/Components/RenderComponent.hpp>
 
 namespace MTRD {
 

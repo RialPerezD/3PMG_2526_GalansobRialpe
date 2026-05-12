@@ -1,14 +1,13 @@
+#include <MotArda/Engine.hpp>
+#include <MotArda/Debug.hpp>
+#include <Motarda/Window.hpp>
 
-#include "Motarda/win64/Window.hpp"
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <iostream>
 #include <filesystem>
-
 #include <algorithm>
-#include <MotArda/common/Engine.hpp>
-#include <MotArda/win64/Debug.hpp>
 
 namespace MTRD {
     Window::~Window() {

@@ -1,4 +1,4 @@
-#include "../include/MotArda/common/Vertex.hpp"
+#include <MotArda/Vertex.hpp>
 
 namespace MTRD {
     Vertex::Vertex() : position(0.0f), uv(0.0f), normal(0.0f) {}

@@ -1,13 +1,15 @@
-#include "MotArda/common/ObjLoader.hpp"
+#include <MotArda/ObjLoader.hpp>
+#include <MotArda/Logger.hpp>
+
 #include <fstream>
 #include <filesystem>
 #include <sstream>
 #include <iostream>
-#include "../deps/glm-master/glm/glm.hpp"
+
+#include <glm/glm.hpp>
 
 #define TINYOBJLOADER_IMPLEMENTATION
-#include "../deps/tiny_obj_loader.h"
-#include "MotArda/common/Logger.hpp"
+#include <../include/tiny_obj_loader.h>
 
 namespace MTRD {
 

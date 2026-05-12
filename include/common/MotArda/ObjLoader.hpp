@@ -1,0 +1,37 @@
+#pragma once
+
+#include <MotArda/Mesh.hpp>
+#include <MotArda/Material.hpp>
+
+#include <optional>
+#include <vector>
+#include <string>
+#include <memory>
+
+#include "glad/glad.h"
+#include "../../deps/glm-master/glm/glm.hpp"
+
+namespace MTRD {
+
+    class Window;
+
+    class ObjLoader {
+    public:
+        static std::optional<ObjLoader> loadObj(
+            const std::string& filepath,
+            Window& window
+        );
+
+        ObjLoader() = default;
+        ObjLoader(const ObjLoader&) = delete;
+        ObjLoader(ObjLoader&&) = default;
+
+        std::vector<std::unique_ptr<Mesh>> getMeshes() { return std::move(meshes); }
+        std::vector<Material> getMaterials() { return std::move(materials); }
+
+    private:
+        std::vector<std::unique_ptr<Mesh>> meshes;
+        std::vector<Material> materials;
+    };
+
+}

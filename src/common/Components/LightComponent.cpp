@@ -1,4 +1,5 @@
-#include <MotArda/common/Components/LightComponent.hpp>
+#include <MotArda/Components/LightComponent.hpp>
+
 #include "../../../deps/glm-master/glm/ext/matrix_clip_space.hpp"
 #include "../../../deps/glm-master/glm/ext/matrix_transform.hpp"
 

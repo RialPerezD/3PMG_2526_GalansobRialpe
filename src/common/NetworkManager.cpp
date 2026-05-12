@@ -1,5 +1,6 @@
-#include "MotArda/common/NetworkManager.hpp"
-#include "MotArda/common/Logger.hpp"
+#include <MotArda/NetworkManager.hpp>
+#include <MotArda/Logger.hpp>
+
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>

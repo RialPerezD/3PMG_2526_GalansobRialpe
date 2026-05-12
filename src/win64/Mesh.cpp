@@ -1,6 +1,6 @@
-#include "../include/MotArda/win64/Mesh.hpp"
-#include "../include/MotArda/win64/Debug.hpp"
-#include <MotArda/win64/window.hpp>
+#include <MotArda/Debug.hpp>
+#include <MotArda/Mesh.hpp>
+#include <MotArda/window.hpp>
 #include <iostream>
 #include <memory>
 

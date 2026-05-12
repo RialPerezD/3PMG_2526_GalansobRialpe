@@ -1,4 +1,4 @@
-#include "MotArda/common/Components/RenderComponent.hpp"
+#include <MotArda/Components/RenderComponent.hpp>
 
 namespace MTRD {
     RenderComponent::RenderComponent() :

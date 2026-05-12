@@ -1,4 +1,4 @@
-#include "MotArda/common/Components/TransformComponent.hpp"
+#include <MotArda/Components/TransformComponent.hpp>
 
 MTRD::TransformComponent::TransformComponent(){
     position = { 0,0,0 };

@@ -3,8 +3,8 @@
 #define NOMINMAX
 #endif
 
-#include <MotArda/win64/Systems/RenderLightsSystem.hpp>
-#include <MotArda/win64/Debug.hpp>
+#include <MotArda/Systems/RenderLightsSystem.hpp>
+#include <MotArda/Debug.hpp>
 #include <string>
 #include <vector>
 #include <cstdio>

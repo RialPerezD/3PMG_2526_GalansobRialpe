@@ -32,8 +32,8 @@ if(NOT "${POLICY_CMP0091}" STREQUAL NEW)
 endif()
 set(CMAKE_MSVC_RUNTIME_LIBRARY "$<$<CONFIG:Release>:MultiThreadedDLL>$<$<CONFIG:RelWithDebInfo>:MultiThreadedDLL>$<$<CONFIG:Debug>:MultiThreadedDebugDLL>")
 
-string(APPEND CONAN_CXX_FLAGS " /MP16")
-string(APPEND CONAN_C_FLAGS " /MP16")
+string(APPEND CONAN_CXX_FLAGS " /MP12")
+string(APPEND CONAN_C_FLAGS " /MP12")
 
 # Extra c, cxx, linkflags and defines
 
@@ -61,23 +61,23 @@ set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
 # Definition of CMAKE_MODULE_PATH
 # The root (which is the default builddirs) path of dependencies in the host context
-list(PREPEND CMAKE_MODULE_PATH "C:/Users/David/.conan/data/glfw/3.3.8/_/_/package/87788707645a6a7a0bda278a5f55360eeefe8ff3/" "C:/Users/David/.conan/data/sol2/3.3.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/" "C:/Users/David/.conan/data/opengl/system/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/" "C:/Users/David/.conan/data/lua/5.4.6/_/_/package/164640aad040835ac89882393a96d89200694f04/")
+list(PREPEND CMAKE_MODULE_PATH "C:/Users/rialpe/.conan/data/glfw/3.3.8/_/_/package/87788707645a6a7a0bda278a5f55360eeefe8ff3/" "C:/Users/rialpe/.conan/data/sol2/3.3.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/" "C:/Users/rialpe/.conan/data/opengl/system/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/" "C:/Users/rialpe/.conan/data/lua/5.4.6/_/_/package/164640aad040835ac89882393a96d89200694f04/")
 # the generators folder (where conan generates files, like this toolchain)
 list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 
 # Definition of CMAKE_PREFIX_PATH, CMAKE_XXXXX_PATH
 # The Conan local "generators" folder, where this toolchain is saved.
 list(PREPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR} )
-list(PREPEND CMAKE_PROGRAM_PATH "C:/Users/David/.conan/data/glfw/3.3.8/_/_/package/87788707645a6a7a0bda278a5f55360eeefe8ff3/bin" "C:/Users/David/.conan/data/spdlog/1.14.1/_/_/package/7a4b7dbecf529c983055e2bf9c7700819db975cc/bin" "C:/Users/David/.conan/data/lua/5.4.6/_/_/package/164640aad040835ac89882393a96d89200694f04/bin" "C:/Users/David/.conan/data/fmt/10.2.1/_/_/package/2c52a23dc25833dd4323e8144302393f0061b96b/bin")
-list(PREPEND CMAKE_LIBRARY_PATH "C:/Users/David/.conan/data/glfw/3.3.8/_/_/package/87788707645a6a7a0bda278a5f55360eeefe8ff3/lib" "C:/Users/David/.conan/data/spdlog/1.14.1/_/_/package/7a4b7dbecf529c983055e2bf9c7700819db975cc/lib" "C:/Users/David/.conan/data/lua/5.4.6/_/_/package/164640aad040835ac89882393a96d89200694f04/lib" "C:/Users/David/.conan/data/fmt/10.2.1/_/_/package/2c52a23dc25833dd4323e8144302393f0061b96b/lib")
-list(PREPEND CMAKE_INCLUDE_PATH "C:/Users/David/.conan/data/glfw/3.3.8/_/_/package/87788707645a6a7a0bda278a5f55360eeefe8ff3/include" "C:/Users/David/.conan/data/sol2/3.3.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include" "C:/Users/David/.conan/data/spdlog/1.14.1/_/_/package/7a4b7dbecf529c983055e2bf9c7700819db975cc/include" "C:/Users/David/.conan/data/lua/5.4.6/_/_/package/164640aad040835ac89882393a96d89200694f04/include" "C:/Users/David/.conan/data/fmt/10.2.1/_/_/package/2c52a23dc25833dd4323e8144302393f0061b96b/include")
+list(PREPEND CMAKE_PROGRAM_PATH "C:/Users/rialpe/.conan/data/glfw/3.3.8/_/_/package/87788707645a6a7a0bda278a5f55360eeefe8ff3/bin" "C:/Users/rialpe/.conan/data/spdlog/1.14.1/_/_/package/7a4b7dbecf529c983055e2bf9c7700819db975cc/bin" "C:/Users/rialpe/.conan/data/lua/5.4.6/_/_/package/164640aad040835ac89882393a96d89200694f04/bin" "C:/Users/rialpe/.conan/data/fmt/10.2.1/_/_/package/2c52a23dc25833dd4323e8144302393f0061b96b/bin")
+list(PREPEND CMAKE_LIBRARY_PATH "C:/Users/rialpe/.conan/data/glfw/3.3.8/_/_/package/87788707645a6a7a0bda278a5f55360eeefe8ff3/lib" "C:/Users/rialpe/.conan/data/spdlog/1.14.1/_/_/package/7a4b7dbecf529c983055e2bf9c7700819db975cc/lib" "C:/Users/rialpe/.conan/data/lua/5.4.6/_/_/package/164640aad040835ac89882393a96d89200694f04/lib" "C:/Users/rialpe/.conan/data/fmt/10.2.1/_/_/package/2c52a23dc25833dd4323e8144302393f0061b96b/lib")
+list(PREPEND CMAKE_INCLUDE_PATH "C:/Users/rialpe/.conan/data/glfw/3.3.8/_/_/package/87788707645a6a7a0bda278a5f55360eeefe8ff3/include" "C:/Users/rialpe/.conan/data/sol2/3.3.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include" "C:/Users/rialpe/.conan/data/spdlog/1.14.1/_/_/package/7a4b7dbecf529c983055e2bf9c7700819db975cc/include" "C:/Users/rialpe/.conan/data/lua/5.4.6/_/_/package/164640aad040835ac89882393a96d89200694f04/include" "C:/Users/rialpe/.conan/data/fmt/10.2.1/_/_/package/2c52a23dc25833dd4323e8144302393f0061b96b/include")
 
 
 
 if (DEFINED ENV{PKG_CONFIG_PATH})
-set(ENV{PKG_CONFIG_PATH} "D:/Clase/3PMG_2526_GalansobRialpe/src/win64/build/build/generators;$ENV{PKG_CONFIG_PATH}")
+set(ENV{PKG_CONFIG_PATH} "C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/src/win64/build/build/generators;$ENV{PKG_CONFIG_PATH}")
 else()
-set(ENV{PKG_CONFIG_PATH} "D:/Clase/3PMG_2526_GalansobRialpe/src/win64/build/build/generators;")
+set(ENV{PKG_CONFIG_PATH} "C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/src/win64/build/build/generators;")
 endif()
 
 
