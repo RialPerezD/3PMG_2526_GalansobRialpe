@@ -1,12 +1,12 @@
-#include "MotArda/common/Engine.hpp"
-#include "MotArda/common/ObjLoader.hpp"
-#include "MotArda/common/Ecs.hpp"
-#include "MotArda/common/NetworkManager.hpp"
-#include "MotArda/common/Systems/NetworkSystem.hpp"
-#include "MotArda/common/Components/NetworkComponent.hpp"
-#include "MotArda/common/Components/TransformComponent.hpp"
-#include "MotArda/common/Components/RenderComponent.hpp"
-#include "MotArda/common/SimplePacketReciver.hpp"
+#include <MotArda/Engine.hpp>
+#include <MotArda/ObjLoader.hpp>
+#include <MotArda/Ecs.hpp>
+#include <MotArda/NetworkManager.hpp>
+#include <MotArda/Systems/NetworkSystem.hpp>
+#include <MotArda/Components/NetworkComponent.hpp>
+#include <MotArda/Components/TransformComponent.hpp>
+#include <MotArda/Components/RenderComponent.hpp>
+#include <MotArda/SimplePacketReciver.hpp>
 
 #include <iostream>
 #include <string>
@@ -33,13 +33,13 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
 
-    // --- Configuraci�n b�sica ---
+    // --- Configuracion basica ---
     eng.SetDebugMode(true);
     eng.SetRenderType(MotardaEng::RenderType::Base);
     eng.getCamera().setPosition(glm::vec3(0, 5, 10));
     eng.getCamera().setTarget(glm::vec3(0, 0, 0));
 
-    // --- Carga de Geometr�a ---
+    // --- Carga de Geometrï¿½a ---
     std::vector<const char*> objsRoutes = { "tableRound.obj",
                                             "86jfmjiufzv2.obj",
                                             "12140_Skull_v3_L2.obj",
@@ -69,55 +69,6 @@ int MTRD::main() {
     ttable->angleRotationRadians = -1;
     ttable->scale = glm::vec3(1.0f);
 
-
-    // PLAYER 1
-    ecs.AddComponent<MTRD::TransformComponent>(player1);
-    ecs.AddComponent<MTRD::RenderComponent>(player1);
-
-    auto* tplayer1 = ecs.GetComponent<MTRD::TransformComponent>(player1);
-    tplayer1->position = glm::vec3(-5.0f, 0.0f, 3.0f);
-    tplayer1->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-    tplayer1->angleRotationRadians = -1;
-    tplayer1->scale = glm::vec3(1.0f);
-
-
-    // PLAYER 2
-    ecs.AddComponent<MTRD::TransformComponent>(player2);
-    ecs.AddComponent<MTRD::RenderComponent>(player2);
-
-    auto* tplayer2 = ecs.GetComponent<MTRD::TransformComponent>(player2);
-    tplayer2->position = glm::vec3(5.0f, 0.0f, 3.0f);
-    tplayer2->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-    tplayer2->angleRotationRadians = -1;
-    tplayer2->scale = glm::vec3(1.0f);
-
-
-    // PLAYER 3
-    ecs.AddComponent<MTRD::TransformComponent>(player3);
-    ecs.AddComponent<MTRD::RenderComponent>(player3);
-
-    auto* tplayer3 = ecs.GetComponent<MTRD::TransformComponent>(player3);
-    tplayer3->position = glm::vec3(-5.0f, 0.0f, 0.0f);
-    tplayer3->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-    tplayer3->angleRotationRadians = -1;
-    tplayer3->scale = glm::vec3(1.0f);
-
-
-    // PLAYER 4
-    ecs.AddComponent<MTRD::TransformComponent>(player4);
-    ecs.AddComponent<MTRD::RenderComponent>(player4);
-
-    auto* tplayer4 = ecs.GetComponent<MTRD::TransformComponent>(player4);
-    tplayer4->position = glm::vec3(5.0f, 0.0f, 0.0f);
-    tplayer4->rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-    tplayer4->angleRotationRadians = -1;
-    tplayer4->scale = glm::vec3(1.0f);
-
-
-
-    //ttable = ecs.GetComponent<MTRD::TransformComponent>(table); primero crear los componentes con el add y luego
-    //settear la posici�n y las cossas con GetComponent, porq se est�n chafando los componentes anteriores
-
     size_t playerEntity = SIZE_MAX;
     NetworkManager netMgr;
     std::unique_ptr<NetworkSystem> netSys;
@@ -144,18 +95,6 @@ int MTRD::main() {
             eng.windowLoadAllMaterials(objItemList);
             auto* rtable = ecs.GetComponent<MTRD::RenderComponent>(table);
             rtable->objitem_ = objItemList[0];
-
-            auto* rplayer1 = ecs.GetComponent<MTRD::RenderComponent>(player1);
-            rplayer1->objitem_ = objItemList[1];
-
-            auto* rplayer2 = ecs.GetComponent<MTRD::RenderComponent>(player2);
-            rplayer2->objitem_ = objItemList[2];
-
-            auto* rplayer3 = ecs.GetComponent<MTRD::RenderComponent>(player3);
-            rplayer3->objitem_ = objItemList[3];
-
-            auto* rplayer4 = ecs.GetComponent<MTRD::RenderComponent>(player4);
-            rplayer4->objitem_ = objItemList[3];
         }
 
         if (currentState == AppState::Menu) {
@@ -209,8 +148,8 @@ int MTRD::main() {
             tplayer->position = glm::vec3(0, 0, 0);
             tplayer->scale = glm::vec3(1.0f);
 
-            auto* rplayer = ecs.AddComponent<MTRD::RenderComponent>(playerEntity);
-            rplayer->objitem_ = objItemList[0];
+            // Crear simplPacRec aqui para empezar a recibir la ID del servidor
+            simplPacRec = std::make_unique<SimplePacketReciver>(&objItemList, &ecs, playerEntity);
 
             currentState = AppState::Running;
         }
@@ -254,8 +193,8 @@ int MTRD::main() {
                     ecs.AddComponent<MTRD::RenderComponent>(playerEntity);
                     auto* r = ecs.GetComponent<MTRD::RenderComponent>(playerEntity);
                     if (r) {
-                        r->meshes_ = &objItemList[objIdx].meshes;
-                        r->materials_ = &objItemList[objIdx].materials;
+                        r->objitem_ = objItemList[objIdx];
+
                     }
 
                     auto* netComp2 = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
@@ -267,7 +206,7 @@ int MTRD::main() {
                 }
             }
 
-            // Polling manual hasta que el netSys est� creado
+            // Polling manual hasta que el netSys esta creado
             if (!netSys) {
                 netMgr.PollEvents([&](uint32_t senderID, const void* data, size_t size) {
                     if (simplPacRec) {
@@ -289,6 +228,23 @@ int MTRD::main() {
                     if (transform) {
                         if (eng.inputIsKeyPressed(Input::Keyboard::W)) transform->position.z -= 0.1f;
                         if (eng.inputIsKeyPressed(Input::Keyboard::S)) transform->position.z += 0.1f;
+                    }
+
+                    if (eng.inputIsKeyPressed(Input::Keyboard::C)) {
+                        auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
+
+                        if (netComp && netComp->networkID != 0) {
+                            MTRD::CardPacket packet;
+                            packet.header.type = MTRD::MessageType::CardPlay;
+                            packet.header.senderId = netComp->networkID;
+
+                            packet.payload.suit = 0;
+                            packet.payload.value = 5;
+
+                            netMgr.SendPacket(0, &packet, sizeof(packet), true);
+
+                            printf(">>> Carta enviada: %d de %d\n", packet.payload.value, packet.payload.suit);
+                        }
                     }
                 }
 

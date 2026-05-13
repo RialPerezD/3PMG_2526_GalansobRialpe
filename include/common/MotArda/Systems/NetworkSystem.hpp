@@ -12,7 +12,8 @@ namespace MTRD {
         EntityUpdate,
         Chat,
         ConnectionStatus,
-        Action
+        Action,
+        CardPlay
     };
 
 #pragma pack(push, 1)
@@ -26,6 +27,16 @@ namespace MTRD {
         float meshId_;
         float posX, posY, posZ;
         float rotX, rotY, rotZ;
+    };
+
+    struct CardPayload {
+        uint32_t suit;
+        uint32_t value;
+    };
+
+    struct CardPacket {
+        NetMessage header;
+        CardPayload payload;
     };
 
     struct ChatPayload {
