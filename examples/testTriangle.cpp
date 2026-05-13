@@ -5,9 +5,6 @@
 #include <MotArda/Systems/RenderSystem.hpp>
 
 #include <memory>
-#include "../deps/glm-master/glm/glm.hpp"
-#include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
-#include "../deps/glm-master/glm/gtc/type_ptr.hpp"
 
 
 static void error_callback(int error, const char* description)

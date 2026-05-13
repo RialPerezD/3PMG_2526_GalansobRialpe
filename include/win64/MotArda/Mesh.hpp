@@ -6,9 +6,10 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "glad/glad.h"
 
-#include "../../deps/glm-master/glm/glm.hpp"
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+
 
 namespace MTRD {
     class Window;

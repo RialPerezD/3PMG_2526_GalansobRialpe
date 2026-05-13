@@ -6,6 +6,7 @@
 #include <MotArda/ObjLoader.hpp>
 #include <MotArda/Camera.hpp>
 #include <MotArda/Sprite.hpp>
+#include <MotArda/Terrain.hpp>
 
 #include <MotArda/Systems/RenderLightsSystem.hpp>
 #include <MotArda/Systems/ShadowMapSystem.hpp>
@@ -16,7 +17,6 @@
 #include <optional>
 
 #include "PhysxMaster.hpp"
-#include "MotArda/Terrain.hpp"
 
 namespace MTRD {
 

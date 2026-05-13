@@ -2,13 +2,13 @@
 
 #include <MotArda/Mesh.hpp>
 #include <MotArda/Material.hpp>
-#include "MotArda/ObjItem.hpp"
+#include <MotArda/ObjItem.hpp>
 
 #include <string>
 #include <vector>
-#include "glad/glad.h"
+#include <glad/glad.h>
 
-#include "../../deps/glm-master/glm/glm.hpp"
+#include <glm/glm.hpp>
 
 namespace MTRD {
     class RenderComponent {

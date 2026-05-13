@@ -1,14 +1,15 @@
-#include "MotArda/common/Engine.hpp"
-#include "MotArda/common/Logger.hpp"
-#include "MotArda/common/ObjLoader.hpp"
-#include "MotArda/common/Ecs.hpp"
-#include "MotArda/common/NetworkManager.hpp"
-#include "MotArda/common/Systems/NetworkSystem.hpp"
-#include "MotArda/common/Components/NetworkComponent.hpp"
-#include "MotArda/common/Components/TransformComponent.hpp"
-#include "MotArda/common/Components/RenderComponent.hpp"
-#include "MotArda/common/Components/MovementComponent.hpp"
-#include "MotArda/common/SimplePacketReciver.hpp"
+#include <MotArda/Engine.hpp>
+#include <MotArda/Logger.hpp>
+#include <MotArda/ObjLoader.hpp>
+#include <MotArda/Ecs.hpp>
+#include <MotArda/NetworkManager.hpp>
+#include <MotArda/Systems/NetworkSystem.hpp>
+#include <MotArda/Components/NetworkComponent.hpp>
+#include <MotArda/Components/TransformComponent.hpp>
+#include <MotArda/Components/RenderComponent.hpp>
+#include <MotArda/Components/MovementComponent.hpp>
+#include <MotArda/SimplePacketReciver.hpp>
+
 #include <cstdlib>
 #include <ctime>
 #include <map>
@@ -24,7 +25,7 @@ int MTRD::main() {
 
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 
-    auto maybeEng = MotardaEng::createEngine(800, 600, "Motarda Multiplayer");
+    auto maybeEng = MotardaEng::createEngine(800, 600, "MotArda Multiplayer");
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
 

@@ -7,9 +7,9 @@
 #include <MotArda/Ecs.hpp>
 #include <MotArda/Camera.hpp>
 
-#include "../../deps/glm-master/glm/glm.hpp"
-#include "../../deps/glm-master/glm/gtc/matrix_transform.hpp"
-#include "../../deps/glm-master/glm/gtc/type_ptr.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <vector>
 

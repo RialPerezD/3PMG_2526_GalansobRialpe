@@ -1,10 +1,10 @@
-#include "MotArda/common/Engine.hpp"
-#include "MotArda/common/Logger.hpp"
-#include "MotArda/common/ObjLoader.hpp"
-#include <MotArda/common/Ecs.hpp>
-#include <MotArda/common/Camera.hpp>
-#include <MotArda/common/Components/LightComponent.hpp>
-#include <MotArda/common/Components/PhysxComponent.hpp>
+#include <MotArda/Engine.hpp>
+#include <MotArda/Logger.hpp>
+#include <MotArda/ObjLoader.hpp>
+#include <MotArda/Ecs.hpp>
+#include <MotArda/Camera.hpp>
+#include <MotArda/Components/LightComponent.hpp>
+#include <MotArda/Components/PhysxComponent.hpp>
 
 #include <memory>
 #include <iostream>

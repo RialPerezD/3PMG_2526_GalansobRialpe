@@ -94,11 +94,11 @@ workspace "MotArda"
     warnings "Extra"
 
 	includedirs {
-		"include",
-		"deps/**/include",
-		"deps/**/src",
-		"deps",
-		"deps/imgui/"
+        "include/common",
+        "include/win64",
+        "deps/**/include",
+        "deps/imgui/",
+        "deps/glm-master"
 		}
 
 	filter "configurations:Debug"

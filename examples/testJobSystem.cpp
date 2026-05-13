@@ -1,15 +1,15 @@
-#include "MotArda/common/Engine.hpp"
-#include "MotArda/common/ObjLoader.hpp"
-#include <MotArda/common/Ecs.hpp>
-#include <MotArda/common/Camera.hpp>
+#include <MotArda/Engine.hpp>
+#include <MotArda/ObjLoader.hpp>
+#include <MotArda/Ecs.hpp>
+#include <MotArda/Camera.hpp>
+#include <MotArda/Logger.hpp>
+#include <MotArda/Systems/RenderSystem.hpp>
 
 #include <memory>
 
-#include "../deps/glm-master/glm/glm.hpp"
-#include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
-#include "../deps/glm-master/glm/gtc/type_ptr.hpp"
-#include "MotArda/common/Logger.hpp"
-#include <MotArda/win64/Systems/RenderSystem.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 static void error_callback(int error, const char* description) {

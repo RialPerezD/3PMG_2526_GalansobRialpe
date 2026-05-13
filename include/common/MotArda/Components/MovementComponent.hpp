@@ -1,5 +1,6 @@
 #pragma once
-#include "../../deps/glm-master/glm/glm.hpp"
+
+#include <glm/glm.hpp>
 
 namespace MTRD {
 

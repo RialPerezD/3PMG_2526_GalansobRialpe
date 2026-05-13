@@ -3,8 +3,9 @@
 #include <MotArda/Components/PhysxComponent.hpp>
 #include <MotArda/Components/TransformComponent.hpp>
 
-#include "../../deps/physx/include/PxPhysicsAPI.h"
-#include "../../deps/glm-master/glm/glm.hpp"
+
+
+#include <glm/glm.hpp>
 
 namespace MTRD {
 

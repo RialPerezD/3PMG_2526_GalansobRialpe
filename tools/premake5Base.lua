@@ -34,9 +34,9 @@ function physx_config()
             "PhysXPvdSDK_static_64" 
         }
 
-	postbuildcommands {
-		"{COPY} ../deps/physx/lib/debug/*.dll %{cfg.targetdir}"
-	}
+    postbuildcommands {
+        "{COPY} ../deps/physx/lib/debug/*.dll %{cfg.targetdir}"
+    }
 
     filter "configurations:Release or RelWithDebInfo"
         libdirs { "deps/physx/lib/release" }
@@ -48,9 +48,9 @@ function physx_config()
             "PhysXPvdSDK_static_64"
         }
 
-	postbuildcommands {
-		"{COPY} ../deps/physx/lib/release/*.dll %{cfg.targetdir}"
-	}
+    postbuildcommands {
+        "{COPY} ../deps/physx/lib/release/*.dll %{cfg.targetdir}"
+    }
 
     filter {}
 end
@@ -93,11 +93,11 @@ workspace "MotArda"
     warnings "Extra"
 
     includedirs {
-        "include",
+        "include/common",
+        "include/win64",
         "deps/**/include",
-        "deps/**/src",
-        "deps",
-        "deps/imgui/"
+        "deps/imgui/",
+        "deps/glm-master"
         }
 
     filter "configurations:Debug"
@@ -122,25 +122,29 @@ workspace "MotArda"
         kind "StaticLib"
         targetdir "build/%{cfg.buildcfg}"
         conan_config_lib()
-		filter "system:windows"
-			links { "Ws2_32", "Winmm" }
-		filter {}
+        filter "system:windows"
+            links { "Ws2_32", "Winmm" }
+        filter {}
+
+        filter "files:deps/enet/** or deps/glad/**"
+            warnings "Off" -- Desactiva la rigurosidad "Extra" para estas carpetas
+        filter {}
 
     files{
         "premake5.lua",
         "src/win64/build/conanfile.txt",
-        "src/common/*.cpp", "include/MotArda/common/*.hpp",
-        "src/common/Components/*.cpp", "include/MotArda/common/Components/*.hpp",
-        "src/common/Systems/*.cpp", "include/MotArda/common/Systems/*.hpp",
-        "src/common/CardGame/*.cpp", "include/MotArda/common/CardGame/*.hpp",
+        "src/common/*.cpp", "include/common/MotArda/*.hpp",
+        "src/common/Components/*.cpp", "include/common/MotArda/Components/*.hpp",
+        "src/common/Systems/*.cpp", "include/common/MotArda/Systems/*.hpp",
+        "src/common/CardGame/*.cpp", "include/common/MotArda/CardGame/*.hpp",
 
-        "src/win64/*.cpp", "include/MotArda/win64/*.hpp",
-        "src/win64/Systems/*.cpp", "include/MotArda/win64/Systems/*.hpp",
+        "src/win64/*.cpp", "include/win64/MotArda/*.hpp",
+        "src/win64/Systems/*.cpp", "include/win64/MotArda/Systems/*.hpp",
     
         "deps/glad/src/glad.c", "deps/glad/include/glad/glad.h",
         "deps/imgui/*.cpp",
 
-		"deps/enet/src/*.c"
+        "deps/enet/src/*.c"
         }
 
     local example_files = os.matchfiles("examples/*.cpp")

@@ -1,13 +1,13 @@
-#include "MotArda/common/Engine.hpp"
-#include "MotArda/common/Logger.hpp"
+#include <MotArda/Engine.hpp>
+#include <MotArda/Logger.hpp>
+#include <MotArda/Ecs.hpp>
+#include <MotArda/Camera.hpp>
+#include <MotArda/Systems/RenderSystem.hpp>
 
 #include <memory>
-#include "../deps/glm-master/glm/glm.hpp"
-#include "../deps/glm-master/glm/gtc/matrix_transform.hpp"
-#include "../deps/glm-master/glm/gtc/type_ptr.hpp"
-#include <MotArda/common/Ecs.hpp>
-#include <MotArda/common/Camera.hpp>
-#include <MotArda/win64/Systems/RenderSystem.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 static void error_callback(int error, const char* description){
@@ -17,7 +17,7 @@ static void error_callback(int error, const char* description){
 
 int MTRD::main() {
 
-    auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda triangle");
+    auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "MotArda triangle");
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
 

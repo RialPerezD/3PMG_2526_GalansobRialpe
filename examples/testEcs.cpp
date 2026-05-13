@@ -1,12 +1,12 @@
-#include "MotArda/common/Engine.hpp"
-#include "MotArda/common/Logger.hpp"
-#include "MotArda/common/ObjLoader.hpp"
-#include <MotArda/common/Ecs.hpp>
-#include <MotArda/common/Camera.hpp>
+#include <MotArda/Engine.hpp>
+#include <MotArda/Logger.hpp>
+#include <MotArda/ObjLoader.hpp>
+#include <MotArda/Ecs.hpp>
+#include <MotArda/Camera.hpp>
+#include <MotArda/Systems/RenderSystem.hpp>
 
 #include <memory>
 
-#include <MotArda/win64/Systems/RenderSystem.hpp>
 
 static void error_callback(int error, const char* description) {
     MTRD::Logger::error("Glfw error: {}\n", description);

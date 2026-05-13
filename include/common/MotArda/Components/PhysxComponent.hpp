@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../deps/glm-master/glm/glm.hpp"
-#include "../../deps/physx/include/PxPhysicsAPI.h"
+#include <glm/glm.hpp>
+#include <PxPhysicsAPI.h>
 
 namespace MTRD {
 
