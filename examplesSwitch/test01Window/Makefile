@@ -2,6 +2,11 @@
 .SUFFIXES:
 #---------------------------------------------------------------------------------
 
+export APP_TITLE   := Eden
+export APP_AUTHOR  := Motarda
+export APP_VERSION := 1.0.0
+export APP_TITLEID := 0100ABCD01234567
+
 ifeq ($(strip $(DEVKITPRO)),)
 $(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>/devkitpro")
 endif
@@ -90,7 +95,6 @@ $(BUILD):
 
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).nro $(TARGET).nacp $(TARGET).elf
 
 #---------------------------------------------------------------------------------
 else
@@ -103,6 +107,7 @@ all : $(OUTPUT).nro
 	@echo "Build finished: $(notdir $(OUTPUT)).nro"
 
 $(OUTPUT).nro : $(OUTPUT).elf $(OUTPUT).nacp
+	@elf2nro $< $@ --nacp=$(OUTPUT).nacp --romfsdir=$(TOPDIR)/../../assets
 
 $(OUTPUT).elf : $(OFILES)
 

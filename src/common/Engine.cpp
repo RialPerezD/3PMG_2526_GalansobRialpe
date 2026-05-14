@@ -390,9 +390,9 @@ namespace MTRD {
         switch (actualRenderType_) {
         case RenderType::Base:
             if (!renderSystem_) {
-#ifndef __SWITCH__
-                MTRD::Logger::error("There are no render system");
-#endif
+                #ifndef __SWITCH__
+                    MTRD::Logger::error("There are no render system");
+                #endif
                 return;
             }
             renderSystem_->Render(ecs_, model_);
@@ -400,10 +400,9 @@ namespace MTRD {
 
         case RenderType::Lights:
             if (!renderLightsSystem_) {
-#ifndef __SWITCH__
-                MTRD::Logger::error("There are no light system");
-#endif
-
+                #ifndef __SWITCH__
+                    MTRD::Logger::error("There are no light system");
+                #endif
                 return;
             }
             renderLightsSystem_->Render(ecs_, model_);
@@ -411,11 +410,9 @@ namespace MTRD {
 
         case RenderType::LightsWithShadows:
             if (!shadowSystem_ || !renderLightsSystem_) {
-#ifndef __SWITCH__
-                MTRD::Logger::error("There are no light or shadow render system");
-#endif
-
-
+                #ifndef __SWITCH__
+                    MTRD::Logger::error("There are no light or shadow render system");
+                #endif
                 return;
             }
             shadowSystem_->RenderShadowMap(ecs_, model_);
@@ -426,10 +423,9 @@ namespace MTRD {
 
         case RenderType::Bidimensional:
             if (!renderSystem_) {
-#ifndef __SWITCH__
-                MTRD::Logger::error("There are no 2d render system");
-#endif
-
+                #ifndef __SWITCH__
+                    MTRD::Logger::error("There are no 2d render system");
+                #endif
                 return;
             }
             renderSystem_->Render(ecs_, model_);
@@ -437,10 +433,9 @@ namespace MTRD {
 
         case RenderType::DeferredWithLights:
             if (!defferredSystem_) {
-#ifndef __SWITCH__
-                MTRD::Logger::error("There are no deferred render system");
-#endif
-
+                #ifndef __SWITCH__
+                    MTRD::Logger::error("There are no deferred render system");
+                #endif
                 return;
             }
             shadowSystem_->RenderShadowMap(ecs_, model_);
@@ -453,10 +448,9 @@ namespace MTRD {
 
         case RenderType::Pbr:
             if (!pbrSystem_) {
-#ifndef __SWITCH__
-                MTRD::Logger::error("There are no render system");
-#endif
-
+                #ifndef __SWITCH__
+                    MTRD::Logger::error("There are no render system");
+                #endif
                 return;
             }
             shadowSystem_->RenderShadowMap(ecs_, model_);
@@ -471,21 +465,21 @@ namespace MTRD {
         window_.imGuiRender();
 
 
-#ifndef __SWITCH__
-        // --- Physics update ---
-        if (hasPhysx_) {
-            float deltaTime = windowGetLastFrameTime();
-            physx_.update(deltaTime);
+        #ifndef __SWITCH__
+            // --- Physics update ---
+            if (hasPhysx_) {
+                float deltaTime = windowGetLastFrameTime();
+                physx_.update(deltaTime);
 
-            auto& physxList = ecs_.GetComponentList<MTRD::PhysxComponent>();
-            for (auto& [id, p] : physxList) {
-                MTRD::TransformComponent* t = ecs_.GetComponent<MTRD::TransformComponent>(id);
-                if (t != nullptr) {
-                    physx_.syncTransform(&p, t);
+                auto& physxList = ecs_.GetComponentList<MTRD::PhysxComponent>();
+                for (auto& [id, p] : physxList) {
+                    MTRD::TransformComponent* t = ecs_.GetComponent<MTRD::TransformComponent>(id);
+                    if (t != nullptr) {
+                        physx_.syncTransform(&p, t);
+                    }
                 }
             }
-        }
-        // --- *** ---
-#endif
+            // --- *** ---
+        #endif
     }
 }
