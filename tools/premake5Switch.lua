@@ -12,7 +12,7 @@ workspace "MotArda"
     
     location "build"
     cppdialect "c++20"
-    architecture "ARM" 
+    architecture "ARM64" 
 
     buildoptions {
         "-march=armv8-a+crc+crypto",
@@ -22,10 +22,8 @@ workspace "MotArda"
     }
 
     includedirs {
-        "include",
-        "deps/**/include",
-        "deps",
-        "deps/imgui/",
+        "include/common",
+        "include/switch",
         dkp .. "/libnx/include",
         dkp .. "/portlibs/switch/include"
     }
@@ -51,20 +49,37 @@ workspace "MotArda"
         targetdir "build/lib/%{cfg.buildcfg}"
         
         files {
+        "src/common/*.cpp", "include/common/MotArda/*.hpp",
+        "src/common/Components/*.cpp", "include/common/MotArda/Components/*.hpp",
+        "src/common/Systems/*.cpp", "include/common/MotArda/Systems/*.hpp",
+        "src/common/CardGame/*.cpp", "include/common/MotArda/CardGame/*.hpp",
+
+        "src/switch/*.cpp", "include/switch/MotArda/*.hpp",
+        "src/switch/Systems/*.cpp", "include/switch/MotArda/Systems/*.hpp",
+    
+        "deps/glad/src/glad.c", "deps/glad/include/glad/glad.h",
+        "deps/imgui/*.cpp",
         }
 
-    local example_files = os.matchfiles("examplesSwitch/*.cpp")
+    local example_files = os.matchfiles("examplesSwitch/**/*.cpp")
 
-    for _, filepath in ipairs(example_files) do
-        local projectName = path.getbasename(filepath)
+for _, filepath in ipairs(example_files) do
+        local directory = path.getdirectory(filepath)
+        local projectName = path.getname(directory)
 
         project (projectName)
             kind "ConsoleApp"
             language "C++"
             targetextension ".elf"
-            targetdir ("build/" .. projectName .. "/%{cfg.buildcfg}")
+            targetdir ("build/examples/" .. projectName .. "/%{cfg.buildcfg}")
+            objdir ("build/obj/" .. projectName .. "/%{cfg.buildcfg}")
             
-            includedirs "include"
+            includedirs { 
+                "include/common", 
+                "include/switch",
+                dkp .. "/libnx/include",
+                dkp .. "/portlibs/switch/include" 
+            }
             
             libdirs { 
                 dkp .. "/libnx/lib",
@@ -84,7 +99,6 @@ workspace "MotArda"
 
             files { filepath }
 
-            -- Comando para generar el .nro individual para cada proyecto
             postbuildcommands {
                 dkp .. "/tools/bin/elf2nro %{cfg.targetdir}/" .. projectName .. ".elf %{cfg.targetdir}/" .. projectName .. ".nro"
             }
