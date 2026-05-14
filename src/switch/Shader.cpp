@@ -1,4 +1,4 @@
-#include <Motarda/Shader.hpp>
+#include <MotArda/Shader.hpp>
 #include <MotArda/Debug.hpp>
 #include <MotArda/Logger.hpp>
 

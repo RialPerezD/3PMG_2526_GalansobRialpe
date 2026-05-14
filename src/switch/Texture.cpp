@@ -1,4 +1,4 @@
-#include <Motarda/Texture.hpp>
+#include <MotArda/Texture.hpp>
 #include <MotArda/Logger.hpp>
 #include <MotArda/Debug.hpp>
 #include <string>

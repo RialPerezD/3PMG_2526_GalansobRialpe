@@ -1,9 +1,6 @@
-#include <Motarda/Input.hpp>
+#include <MotArda/Input.hpp>
 
-#include <GLFW/glfw3.h>
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
+#include <algorithm>
 
 namespace MTRD {
     std::vector<int> Input::pressKey = {};
@@ -13,44 +10,55 @@ namespace MTRD {
     std::vector<int> Input::releaseMouseButton = {};
     std::vector<int> Input::repeatMouseButton = {};
 
-    void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-        ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
+    PadState Input::s_padState;
+    u64 Input::s_prevButtons = 0;
+    bool Input::s_padInitialized = false;
 
-        if (action == 1) {
-            Input::repeatKey.push_back(key);
-            Input::pressKey.push_back(key);
-        } else if (action == 0) {
-            Input::repeatKey.erase(std::remove(
-                Input::repeatKey.begin(),
-                Input::repeatKey.end(),
-                key),
-                Input::repeatKey.end());
-
-            Input::releaseKey.push_back(key);
-        }
-    }
-
-    void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-        ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
-
-        if (action == 1) {
-            Input::repeatMouseButton.push_back(button);
-            Input::pressMouseButton.push_back(button);
-        } else if (action == 0) {
-            Input::repeatMouseButton.erase(std::remove(
-                Input::repeatMouseButton.begin(),
-                Input::repeatMouseButton.end(),
-                button),
-                Input::repeatMouseButton.end());
-            Input::releaseMouseButton.push_back(button);
-        }
+    Input::Input() {
     }
 
     Input Input::inputCreate(Window& window) {
         Input inp;
-        inp.setKeyboardCallback(window);
-        inp.setMouseButtonCallback(window);
+        if (!s_padInitialized) {
+            padConfigureInput(1, HidNpadStyleSet_NpadStandard);
+            padInitializeDefault(&s_padState);
+            s_padInitialized = true;
+        }
+        (void)window;
         return inp;
+    }
+
+    void Input::poll() {
+        if (!s_padInitialized) return;
+
+        padUpdate(&s_padState);
+        u64 cur = padGetButtons(&s_padState);
+        u64 prev = s_prevButtons;
+
+        repeatKey.clear();
+        for (int i = 0; i < 32; i++) {
+            if (cur & (1ULL << i)) {
+                repeatKey.push_back(i);
+            }
+        }
+
+        pressKey.clear();
+        u64 down = cur & ~prev;
+        for (int i = 0; i < 32; i++) {
+            if (down & (1ULL << i)) {
+                pressKey.push_back(i);
+            }
+        }
+
+        releaseKey.clear();
+        u64 up = prev & ~cur;
+        for (int i = 0; i < 32; i++) {
+            if (up & (1ULL << i)) {
+                releaseKey.push_back(i);
+            }
+        }
+
+        s_prevButtons = cur;
     }
 
     void Input::clearBuffers() {
@@ -63,15 +71,12 @@ namespace MTRD {
         releaseMouseButton.clear();
     }
 
-    Input::Input() {
-    }
-
     void Input::setKeyboardCallback(Window& window) {
-        window.setKeyCallback(keyCallback);
+        (void)window;
     }
 
     void Input::setMouseButtonCallback(Window& window) {
-        window.setMouseButtonCallback(mouseButtonCallback);
+        (void)window;
     }
 
     void Input::setWindow(Window* window) {
@@ -79,9 +84,8 @@ namespace MTRD {
     }
 
     void Input::getMousePosition(int& x, int& y) {
-        if (window_) {
-            window_->getMousePosition(x, y);
-        }
+        x = 0;
+        y = 0;
     }
 
     bool checkVector(int numbr, std::vector<int> vector) {
@@ -146,57 +150,48 @@ namespace MTRD {
     }
 
     void Input::generateAsciiMap() {
-        for (int i = 0; i < 26; i++) {
-            asciiMap[static_cast<Keyboard>(i)].push_back(65 + i);
-            asciiMap[static_cast<Keyboard>(i)].push_back(97 + i);
-        }
+        // Map Switch HID buttons (bit index) to Keyboard enum
+        // HidNpadButton bits:
+        //   0: A, 1: B, 2: X, 3: Y
+        //   4: LStick, 5: RStick, 6: L, 7: R
+        //   8: ZL, 9: ZR, 10: Plus, 11: Minus
+        //   12: Left, 13: Up, 14: Right, 15: Down
+        //   16: LeftSL, 17: LeftSR, 18: RightSL, 19: RightSR
 
-        asciiMap[Keyboard::SPACE].push_back(GLFW_KEY_SPACE);
-        asciiMap[Keyboard::ENTER].push_back(GLFW_KEY_ENTER);
-        asciiMap[Keyboard::UP].push_back(GLFW_KEY_UP);
-        asciiMap[Keyboard::DOWN].push_back(GLFW_KEY_DOWN);
-        asciiMap[Keyboard::LEFT].push_back(GLFW_KEY_LEFT);
-        asciiMap[Keyboard::RIGHT].push_back(GLFW_KEY_RIGHT);
-        asciiMap[Keyboard::ESCAPE].push_back(GLFW_KEY_ESCAPE);
-        asciiMap[Keyboard::TAB].push_back(GLFW_KEY_TAB);
+        // D-pad -> WASD
+        asciiMap[Keyboard::W].push_back(13);  // Up -> W
+        asciiMap[Keyboard::S].push_back(15);  // Down -> S
+        asciiMap[Keyboard::A].push_back(12);  // Left -> A
+        asciiMap[Keyboard::D].push_back(14);  // Right -> D
 
-        asciiMap[Keyboard::SHIFT].push_back(GLFW_KEY_LEFT_SHIFT);
-        asciiMap[Keyboard::SHIFT].push_back(GLFW_KEY_RIGHT_SHIFT);
+        // Face buttons
+        asciiMap[Keyboard::E].push_back(0);   // A -> E (move up)
+        asciiMap[Keyboard::Q].push_back(1);   // B -> Q (move down)
+        asciiMap[Keyboard::R].push_back(2);   // X -> R (rotate)
+        asciiMap[Keyboard::T].push_back(3);   // Y -> T (rotate)
 
-        asciiMap[Keyboard::CONTROL].push_back(GLFW_KEY_LEFT_CONTROL);
-        asciiMap[Keyboard::CONTROL].push_back(GLFW_KEY_RIGHT_CONTROL);
+        // System buttons
+        asciiMap[Keyboard::ESCAPE].push_back(10);  // Plus -> ESCAPE
+        asciiMap[Keyboard::SPACE].push_back(11);   // Minus -> SPACE
 
-        asciiMap[Keyboard::ALT].push_back(GLFW_KEY_LEFT_ALT);
-        asciiMap[Keyboard::ALT].push_back(GLFW_KEY_RIGHT_ALT);
+        // Shoulder buttons
+        asciiMap[Keyboard::SHIFT].push_back(6);   // L -> SHIFT
+        asciiMap[Keyboard::CONTROL].push_back(7); // R -> CONTROL
+        asciiMap[Keyboard::ALT].push_back(8);     // ZL -> ALT
+        asciiMap[Keyboard::ENTER].push_back(9);   // ZR -> ENTER
+
+        // Left stick click -> TAB
+        asciiMap[Keyboard::TAB].push_back(4);     // LStick -> TAB
+        // Right stick click -> (unused, keep as spare)
     }
 
     bool Input::isMouseButtonPressed(MouseButton button) {
-        int btn = -1;
-        switch (button) {
-            case MouseButton::Left: btn = GLFW_MOUSE_BUTTON_LEFT; break;
-            case MouseButton::Right: btn = GLFW_MOUSE_BUTTON_RIGHT; break;
-            case MouseButton::Middle: btn = GLFW_MOUSE_BUTTON_MIDDLE; break;
-        }
-
-        return checkVector(btn, repeatMouseButton);
+        (void)button;
+        return false;
     }
 
     bool Input::isMouseButtonDown(MouseButton button) {
-        int btn = -1;
-        switch (button) {
-            case MouseButton::Left: btn = GLFW_MOUSE_BUTTON_LEFT; break;
-            case MouseButton::Right: btn = GLFW_MOUSE_BUTTON_RIGHT; break;
-            case MouseButton::Middle: btn = GLFW_MOUSE_BUTTON_MIDDLE; break;
-        }
-
-        if (checkVector(btn, pressMouseButton)) {
-            Input::pressMouseButton.erase(std::remove(
-                Input::pressMouseButton.begin(),
-                Input::pressMouseButton.end(),
-                btn),
-                Input::pressMouseButton.end());
-            return true;
-        }
+        (void)button;
         return false;
     }
 

@@ -20,15 +20,8 @@ namespace MTRD {
         materialId_(materialId),
         debug_(debug) {
 
-        if (firstTime) {
-            glfwMakeContextCurrent(window.getGlfwSecondaryWindow());
-
-            if (debug_) {
-                glCheckError();
-            }
-
-            firstTime = false;
-        }
+        (void)window;
+        (void)firstTime;
 
         glCreateBuffers(1, &gluintVertexBuffer);
         glNamedBufferData(gluintVertexBuffer, sizeof(Vertex) * meshSize, vertices.data(), GL_STATIC_DRAW);
@@ -84,7 +77,6 @@ namespace MTRD {
 
 
     void Mesh::RemoveContext() {
-        glfwMakeContextCurrent(NULL);
     }
 
     void Mesh::GenerateVao() {

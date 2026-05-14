@@ -1,0 +1,83 @@
+#include <MotArda/Systems/RenderSystem.hpp>
+#include <MotArda/Debug.hpp>
+
+
+namespace MTRD {
+	RenderSystem::RenderSystem(glm::mat4x4& vp, glm::mat4x4& model, bool& debug)
+		: debug_(debug),
+        program{
+			Shader::VertexFromFile("../assets/shaders/textured_obj_vertex.txt", debug),
+			Shader::FragmentFromFile("../assets/shaders/textured_obj_fragment.txt", debug),
+            debug}
+	{
+        attributes = {
+            { "position", 3, offsetof(Vertex, position), -1},
+            { "uv", 2, offsetof(Vertex, uv), -1},
+            { "normal", 3, offsetof(Vertex, normal), -1}
+        };
+
+        uniforms = {
+            {"VP", -1, Window::UniformTypes::Mat4, glm::value_ptr(vp)},
+            {"model", -1, Window::UniformTypes::Mat4, glm::value_ptr(model)},
+        };
+	}
+
+
+	void RenderSystem::Render(
+        ECSManager& ecs,
+        glm::mat4x4& model
+	) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+        glUseProgram(program.programId_);
+        auto loc = glGetUniformLocation(program.programId_, "diffuseTexture");
+        auto uvOffsetLoc = glGetUniformLocation(program.programId_, "uvOffset");
+        auto uvScaleLoc = glGetUniformLocation(program.programId_, "uvScale");
+        program.SetupAtributeLocations(attributes);
+
+        for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
+            RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
+            TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
+
+            model = glm::mat4(1.f);
+            model = glm::translate(model, transform->position);
+            model = glm::scale(model, transform->scale);
+            if (glm::length(transform->rotation) != 0) {
+                model = glm::rotate(model, transform->angleRotationRadians, transform->rotation);
+            }
+            program.SetupUniforms(uniforms);
+
+            for (size_t i = 0; i < render->objitem_->meshes.size(); i++) {
+                Mesh* mesh = render->objitem_->meshes[i].get();
+
+                if (mesh->materialId_ != -1) {
+                    Material mat = render->objitem_->materials.at(mesh->materialId_);
+
+                    if (!mat.loadeable) continue;
+
+                    glBindTextureUnit(0, mat.diffuseTexID);
+                    glUniform1i(loc, 0);
+
+                    glUniform2f(uvOffsetLoc, mat.uvOffset.x, mat.uvOffset.y);
+                    glUniform2f(uvScaleLoc, mat.uvScale.x, mat.uvScale.y);
+
+                    if (debug_) {
+                        glCheckError();
+                    }
+                }
+
+                if (mesh->vao == GL_INVALID_INDEX || mesh->vao == 0) {
+                    mesh->GenerateVao();
+                    mesh->SetVertexAtribs(attributes);
+                }
+                glBindVertexArray(mesh->vao);
+                glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(mesh->meshSize));
+
+                if (debug_) {
+                    glCheckError();
+                }
+            }
+        }
+	}
+}

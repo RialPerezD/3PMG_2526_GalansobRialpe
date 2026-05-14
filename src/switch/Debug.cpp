@@ -1,4 +1,4 @@
-#include "Motarda/Debug.hpp"
+#include <MotArda/Debug.hpp>
 #include "MotArda/Logger.hpp"
 #include <string>
 #include <iostream>

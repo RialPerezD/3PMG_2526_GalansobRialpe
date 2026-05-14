@@ -1,6 +1,7 @@
 #include <MotArda/Engine.hpp>
 #include <MotArda/Debug.hpp>
-#include <Motarda/Window.hpp>
+#include <MotArda/window.hpp>
+#include <MotArda/Input.hpp>
 
 #include <fstream>
 #include <sstream>
@@ -10,34 +11,40 @@
 #include <algorithm>
 
 namespace MTRD {
-    Window::~Window() {
-        if (glfw_window) {
-            glfwDestroyWindow(glfw_window);
 
-            ImGui_ImplOpenGL3_Shutdown();
-            ImGui_ImplGlfw_Shutdown();
-            ImGui::DestroyContext();
-        }
-
-        if (glfw_secondary_window) {
-            glfwDestroyWindow(glfw_secondary_window);
-        }
-
+    static double GetSystemTimeSeconds() {
+        return (double)svcGetSystemTick() / 19200000.0;
     }
 
+    Window::~Window() {
+        if (s_display) {
+            eglMakeCurrent(s_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+            if (s_context) {
+                eglDestroyContext(s_display, s_context);
+                s_context = nullptr;
+            }
+            if (s_surface) {
+                eglDestroySurface(s_display, s_surface);
+                s_surface = nullptr;
+            }
+            eglTerminate(s_display);
+            s_display = nullptr;
+        }
+    }
 
     Window::Window(Window&& right)
-        :glfw_window(right.glfw_window),
-        glfw_secondary_window(right.glfw_secondary_window),
+        : s_display(right.s_display),
+        s_context(right.s_context),
+        s_surface(right.s_surface),
         windowWidth_(right.windowWidth_),
         windowHeight_(right.windowHeight_),
         debug_(right.debug_),
         lastFrameTime_(right.lastFrameTime_)
     {
-        right.glfw_window = nullptr;
-        right.glfw_secondary_window = nullptr;
+        right.s_display = nullptr;
+        right.s_context = nullptr;
+        right.s_surface = nullptr;
     }
-
 
     void Window::checkErrors() {
         if (debug_) {
@@ -45,132 +52,120 @@ namespace MTRD {
         }
     }
 
-
-    Window::Window(GLFWwindow* glfwWindow, GLFWwindow* glfwSecondaryWindow, bool debug) :
-        glfw_window(glfwWindow),
-        glfw_secondary_window(glfwSecondaryWindow),
+    Window::Window(bool debug) :
+        s_display(nullptr),
+        s_context(nullptr),
+        s_surface(nullptr),
         debug_(debug)
     {
-        glfwMakeContextCurrent(glfw_window);
+    }
+
+    bool Window::initEgl(NWindow* win) {
+        s_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+        if (!s_display) {
+            return false;
+        }
+
+        eglInitialize(s_display, nullptr, nullptr);
+
+        if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
+            return false;
+        }
+
+        EGLConfig config;
+        EGLint numConfigs;
+        static const EGLint framebufferAttributeList[] = {
+            EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT,
+            EGL_RED_SIZE,     8,
+            EGL_GREEN_SIZE,   8,
+            EGL_BLUE_SIZE,    8,
+            EGL_ALPHA_SIZE,   8,
+            EGL_DEPTH_SIZE,   24,
+            EGL_STENCIL_SIZE, 8,
+            EGL_NONE
+        };
+        eglChooseConfig(s_display, framebufferAttributeList, &config, 1, &numConfigs);
+        if (numConfigs == 0) {
+            return false;
+        }
+
+        s_surface = eglCreateWindowSurface(s_display, config, win, nullptr);
+        if (!s_surface) {
+            return false;
+        }
+
+        static const EGLint contextAttributeList[] = {
+            EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR, EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR,
+            EGL_CONTEXT_MAJOR_VERSION_KHR, 4,
+            EGL_CONTEXT_MINOR_VERSION_KHR, 3,
+            EGL_NONE
+        };
+        s_context = eglCreateContext(s_display, config, EGL_NO_CONTEXT, contextAttributeList);
+        if (!s_context) {
+            eglDestroySurface(s_display, s_surface);
+            s_surface = nullptr;
+            return false;
+        }
+
+        eglMakeCurrent(s_display, s_surface, s_surface, s_context);
+        return true;
+    }
+
+    std::optional<Window> Window::windowCreate(int width, int height, const char* windowName, bool debug) {
+        Window wind(debug);
+        if (!wind.initEgl(nwindowGetDefault())) {
+            return std::nullopt;
+        }
+
         gladLoadGL();
 
-        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        wind.windowWidth_ = width;
+        wind.windowHeight_ = height;
+        wind.debug_ = debug;
 
-        // Imgui init
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-		ImGui::StyleColorsDark();
-        ImGui_ImplGlfw_InitForOpenGL(glfw_window, true);
-		ImGui_ImplOpenGL3_Init("#version 460");
-
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
-
-        if (debug_){
+        if (debug) {
             glEnable(GL_DEBUG_OUTPUT);
             glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
             glDebugMessageCallback(glDebugOutput, nullptr);
             glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
         }
+
+        return std::make_optional(std::move(wind));
     }
-
-
-    std::optional<Window> Window::windowCreate(int width, int height, const char* windowName, bool debug) {
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-
-        GLFWwindow* glfw_window = glfwCreateWindow(width, height, windowName, NULL, NULL);
-
-        if (glfw_window == nullptr) {
-            return std::nullopt;
-        }
-
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        GLFWwindow* glfw_secondary_window = glfwCreateWindow(1, 1, "", nullptr, glfw_window);
-
-        std::optional<Window> wind = std::make_optional(Window{ glfw_window, glfw_secondary_window, debug });
-        wind.value().windowWidth_ = width;
-        wind.value().windowHeight_ = height;
-        wind.value().debug_ = debug;
-
-        glfwSwapInterval(1);
-
-        return wind;
-    }
-
 
     bool Window::shouldClose() {
-        return glfwWindowShouldClose(glfw_window);
+        return !appletMainLoop();
     }
-
 
     void Window::pollEvents() {
-        glfwPollEvents();
+        Input::poll();
     }
-
 
     double Window::timer() {
-        return glfwGetTime();
+        return GetSystemTimeSeconds();
     }
-
 
     void Window::swapBuffers() {
-        glfwSwapBuffers(glfw_window);
+        eglSwapBuffers(s_display, s_surface);
     }
-
 
     void Window::setErrorCallback(void(*function)(int, const char*)) {
-        glfwSetErrorCallback(function);
+        (void)function;
     }
-
 
     float Window::getSizeRatio() {
         return windowWidth_ / (float)windowHeight_;
     }
-
-
-    void Window::setKeyCallback(void* keyCallback) {
-        auto parsed = reinterpret_cast<void(*)(GLFWwindow*, int, int, int, int)>(keyCallback);
-        glfwSetKeyCallback(glfw_window, parsed);
-    }
-
-    void Window::setMouseButtonCallback(void* mouseCallback) {
-        auto parsed = reinterpret_cast<void(*)(GLFWwindow*, int, int, int)>(mouseCallback);
-        glfwSetMouseButtonCallback(glfw_window, parsed);
-    }
-
-    void Window::getMousePosition(int& x, int& y) {
-        double xpos, ypos;
-        glfwGetCursorPos(glfw_window, &xpos, &ypos);
-        x = static_cast<int>(xpos);
-        y = static_cast<int>(ypos);
-    }
-
-
-    float Window::getLastFrameTime() {
-        double currentTime = timer();
-        float deltaTime = static_cast<float>(currentTime - lastFrameTime_);
-        lastFrameTime_ = currentTime;
-        return deltaTime;
-    }
-
 
     void Window::viewportAndClear() {
         glGetError();
         glViewport(0, 0, windowWidth_, windowHeight_);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
         if (debug_) {
             glCheckError();
         }
     }
-
 
     void Window::loadMaterials(std::vector<Material>& materials) {
         for (auto& mat : materials) {
@@ -193,31 +188,10 @@ namespace MTRD {
         }
     }
 
-
-    void Window::imGuiRender() {
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    float Window::getLastFrameTime() {
+        double currentTime = timer();
+        float deltaTime = static_cast<float>(currentTime - lastFrameTime_);
+        lastFrameTime_ = currentTime;
+        return deltaTime;
     }
-
-
-    void Window::imGuiEndFrame(){
-        ImGui::EndFrame();
-    }
-}
-
-
-// Entry point for window:
-int main()
-{
-    // Initializes the GLFW library and prepares it for use.
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-    glfwInit();
-
-    // Calls the main implemented by the usser
-    MTRD::main();
-
-    // Ileans up and releases all resources used by the GLFW library.
-    glfwTerminate();
-
-    return 0;
 }
