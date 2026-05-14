@@ -1,7 +1,6 @@
 #include <MotArda/Debug.hpp>
-#include "MotArda/Logger.hpp"
+#include <cstdio>
 #include <string>
-#include <iostream>
 
 
 namespace MTRD {
@@ -20,7 +19,7 @@ namespace MTRD {
             case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
             case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
             }
-            MTRD::Logger::error("{} | {} | ({})", error, file, line);
+            printf("GL ERROR: %s | %s | (%d)\n", error.c_str(), file, line);
         }
         return errorCode;
     }
@@ -69,6 +68,6 @@ namespace MTRD {
             case GL_DEBUG_SEVERITY_NOTIFICATION: out += "Severity: notification"; break;
         }
 
-        MTRD::Logger::debug(out.c_str());
+        printf("%s\n", out.c_str());
     }
 }

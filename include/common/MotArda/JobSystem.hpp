@@ -7,6 +7,7 @@
 #include <condition_variable>
 #include <functional>
 #include <iostream>
+#include <atomic>
 
 namespace MTRD {
     /**

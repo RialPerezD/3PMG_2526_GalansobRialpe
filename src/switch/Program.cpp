@@ -1,7 +1,6 @@
 #include <MotArda/Program.hpp>
 #include <MotArda/Debug.hpp>
-#include <MotArda/Logger.hpp>
-#include <stdio.h>
+#include <cstdio>
 
 namespace MTRD {
     Program::Program(const Shader& vertexShader, const Shader& fragmentShader, bool debug) {
@@ -16,10 +15,10 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetProgramInfoLog(programId_, sizeof(infoLog), NULL, infoLog);
-                MTRD::Logger::error("ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
+                printf("ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
             }
             else {
-                MTRD::Logger::info("Program linked successfully.\n");
+                printf("Program linked successfully.\n");
             }
         }
 
@@ -46,7 +45,7 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetProgramInfoLog(programId_, sizeof(infoLog), NULL, infoLog);
-                MTRD::Logger::error("ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
+                printf("ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
             }
         }
 

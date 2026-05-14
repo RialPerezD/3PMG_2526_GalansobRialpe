@@ -74,7 +74,6 @@ namespace MTRD {
         const float grassLevel = maxHeight * 0.35f;
         const float forestLevel = maxHeight * 0.50f;
         const float rockLevel = maxHeight * 0.70f;
-        const float snowLevel = maxHeight * 0.85f;
 
         float halfWidth = width * 0.5f;
         float halfDepth = depth * 0.5f;

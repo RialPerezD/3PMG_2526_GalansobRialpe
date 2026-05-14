@@ -1,11 +1,15 @@
+#ifndef __SWITCH__
 #include <enet/enet.h>
-#include <MotArda/Logger.hpp>
+#endif
 #include <Motarda/Engine.hpp>
 #include <MotArda/window.hpp>
 #include <MotArda/Geometries.hpp>
 #include <MotArda/Terrain.hpp>
 #include <MotArda/Systems/RenderPbrSystem.hpp>
+#ifndef __SWITCH__
 #include <MotArda/Logger.hpp>
+#include <MotArda/Logger.hpp>
+#endif
 
 #include <memory>
 #include <fstream>
@@ -36,14 +40,19 @@ namespace MTRD {
         window_{ std::move(window) },
         input_{ std::move(input) },
         jobSystem_{ std::move(js) },
+        debug_(true),
+#ifndef __SWITCH__
+        online_(false),
+#endif
+        camera_(Camera::CreateCamera(windowGetSizeRatio())),
         vp_(glm::mat4(1.0f)),
         model_(glm::mat4(1.0f)),
-        camera_(Camera::CreateCamera(windowGetSizeRatio())),
         initialized2D(false),
-        hasPhysx_(false),
-        basePlane_(generatePlane(20, 20)),
-        debug_(true),
-        online_(false){
+        basePlane_(generatePlane(20, 20))
+#ifndef __SWITCH__
+        , hasPhysx_(false)
+#endif
+    {
         input_.generateAsciiMap();
         input_.setWindow(&window_);
     }
@@ -150,6 +159,7 @@ namespace MTRD {
         glm::vec3 rayWorld = glm::vec3(invView * rayEye);
         rayWorld = glm::normalize(rayWorld);
 
+#ifndef __SWITCH__
         if (hasPhysx_ && physx_.initialized) {
             glm::vec3 hitPosition;
             void* hitActor;
@@ -157,6 +167,7 @@ namespace MTRD {
                 return hitPosition;
             }
         }
+#endif
 
         return camera_.getPosition() + rayWorld * maxDistance;
     }
@@ -194,7 +205,9 @@ namespace MTRD {
     const char* MotardaEng::loadShaderFile(const char* filename) {
         std::ifstream file(filename);
         if (!file.is_open()) {
+#ifndef __SWITCH__
             MTRD::Logger::error("No se pudo abrir el archivo");
+#endif
             return nullptr;
         }
 
@@ -323,6 +336,7 @@ namespace MTRD {
     }
 
 
+#ifndef __SWITCH__
     void MotardaEng::createPhysxActor(
         MTRD::PhysxComponent& p,
         MTRD::TransformComponent& t
@@ -338,6 +352,7 @@ namespace MTRD {
             physx_.init();
         }
     }
+#endif
 
 
     void MotardaEng::SetRenderType(RenderType type) {
@@ -375,7 +390,9 @@ namespace MTRD {
         switch (actualRenderType_) {
         case RenderType::Base:
             if (!renderSystem_) {
+#ifndef __SWITCH__
                 MTRD::Logger::error("There are no render system");
+#endif
                 return;
             }
             renderSystem_->Render(ecs_, model_);
@@ -383,7 +400,9 @@ namespace MTRD {
 
         case RenderType::Lights:
             if (!renderLightsSystem_) {
+#ifndef __SWITCH__
                 MTRD::Logger::error("There are no light system");
+#endif
 
                 return;
             }
@@ -392,7 +411,9 @@ namespace MTRD {
 
         case RenderType::LightsWithShadows:
             if (!shadowSystem_ || !renderLightsSystem_) {
+#ifndef __SWITCH__
                 MTRD::Logger::error("There are no light or shadow render system");
+#endif
 
 
                 return;
@@ -405,7 +426,9 @@ namespace MTRD {
 
         case RenderType::Bidimensional:
             if (!renderSystem_) {
+#ifndef __SWITCH__
                 MTRD::Logger::error("There are no 2d render system");
+#endif
 
                 return;
             }
@@ -414,7 +437,9 @@ namespace MTRD {
 
         case RenderType::DeferredWithLights:
             if (!defferredSystem_) {
+#ifndef __SWITCH__
                 MTRD::Logger::error("There are no deferred render system");
+#endif
 
                 return;
             }
@@ -428,7 +453,9 @@ namespace MTRD {
 
         case RenderType::Pbr:
             if (!pbrSystem_) {
+#ifndef __SWITCH__
                 MTRD::Logger::error("There are no render system");
+#endif
 
                 return;
             }
@@ -444,6 +471,7 @@ namespace MTRD {
         window_.imGuiRender();
 
 
+#ifndef __SWITCH__
         // --- Physics update ---
         if (hasPhysx_) {
             float deltaTime = windowGetLastFrameTime();
@@ -458,5 +486,6 @@ namespace MTRD {
             }
         }
         // --- *** ---
+#endif
     }
 }

@@ -1,5 +1,7 @@
 #include <MotArda/ObjLoader.hpp>
+#ifndef __SWITCH__
 #include <MotArda/Logger.hpp>
+#endif
 
 #include <fstream>
 #include <filesystem>
@@ -9,7 +11,7 @@
 #include <glm/glm.hpp>
 
 #define TINYOBJLOADER_IMPLEMENTATION
-#include <../include/tiny_obj_loader.h>
+#include <tiny_obj_loader.h>
 
 namespace MTRD {
 
@@ -25,7 +27,9 @@ namespace MTRD {
         std::string objPath = sourcePath + "objs/" + filenameNoExt + "/" + filepath;
 
         if (!reader.ParseFromFile(objPath)) {
+#ifndef __SWITCH__
             MTRD::Logger::error("Error al cargar el archivo .obj: {}", filepath);
+#endif
 
             return std::nullopt;
         }
@@ -34,9 +38,11 @@ namespace MTRD {
         const std::vector<tinyobj::shape_t>& shapes = reader.GetShapes();
         const std::vector<tinyobj::material_t>& materials = reader.GetMaterials();
 
+#ifndef __SWITCH__
         if (!reader.Warning().empty()) {
             MTRD::Logger::warn("TinyObj Warning: {}", reader.Warning());
         }
+#endif
 
         ObjLoader objLoader;
 

@@ -1,15 +1,16 @@
 #pragma once
 
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+
 #include <MotArda/Mesh.hpp>
 #include <MotArda/Material.hpp>
 
 #include <optional>
 #include <vector>
+
 #include <string>
 #include <memory>
-
-#include <glad/glad.h>
-#include <glm/glm.hpp>
 
 namespace MTRD {
 

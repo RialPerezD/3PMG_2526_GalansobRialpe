@@ -7,7 +7,7 @@ set(fmt_FIND_DEPENDENCY_NAMES "")
 
 ########### VARIABLES #######################################################################
 #############################################################################################
-set(fmt_PACKAGE_FOLDER_RELEASE "C:/Users/David/.conan/data/fmt/10.2.1/_/_/package/8c0a53bc9b0a08b9311ca89254091ba7fb4f89b4")
+set(fmt_PACKAGE_FOLDER_RELEASE "C:/Users/rialpe/.conan/data/fmt/10.2.1/_/_/package/8c0a53bc9b0a08b9311ca89254091ba7fb4f89b4")
 set(fmt_BUILD_MODULES_PATHS_RELEASE )
 
 

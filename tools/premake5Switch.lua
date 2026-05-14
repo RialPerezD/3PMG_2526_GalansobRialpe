@@ -12,7 +12,7 @@ workspace "MotArda"
     
     location "build"
     cppdialect "c++20"
-    architecture "ARM64" 
+    architecture "ARM" 
 
     buildoptions {
         "-march=armv8-a+crc+crypto",

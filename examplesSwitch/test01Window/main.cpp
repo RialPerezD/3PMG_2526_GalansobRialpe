@@ -7,6 +7,8 @@
 #include <EGL/eglext.h> // EGL extensions
 #include <glad/glad.h>  // glad library (OpenGL loader)
 
+#include <MotArda/Engine.hpp>
+
 //-----------------------------------------------------------------------------
 // nxlink support
 //-----------------------------------------------------------------------------

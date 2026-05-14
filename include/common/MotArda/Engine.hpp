@@ -7,6 +7,9 @@
 #include <MotArda/Camera.hpp>
 #include <MotArda/Sprite.hpp>
 #include <MotArda/Terrain.hpp>
+#ifndef __SWITCH__
+#include <MotArda/PhysxMaster.hpp>
+#endif
 
 #include <MotArda/Systems/RenderLightsSystem.hpp>
 #include <MotArda/Systems/ShadowMapSystem.hpp>
@@ -16,7 +19,6 @@
 
 #include <optional>
 
-#include "PhysxMaster.hpp"
 
 namespace MTRD {
 
@@ -203,8 +205,10 @@ namespace MTRD {
         const Camera& getCamera() const noexcept { return camera_; }
         ECSManager& getEcs() noexcept { return ecs_; }
         const ECSManager& getEcs() const noexcept { return ecs_; }
+#ifndef __SWITCH__
         void createPhysxActor(MTRD::PhysxComponent& p, MTRD::TransformComponent& t);
         void hasPhysx(bool has);
+#endif
 
         // --- *** ---
 
@@ -241,7 +245,9 @@ namespace MTRD {
 
         // --- 2. Estado basico del motor ---
         bool debug_;
+#ifndef __SWITCH__
         bool online_;
+#endif
 
         // --- 3. Sistemas logicos y ECS ---
         Camera camera_;
@@ -261,8 +267,10 @@ namespace MTRD {
         bool initialized2D;
         std::shared_ptr<ObjItem> basePlane_;
 
+#ifndef __SWITCH__
         bool hasPhysx_;
         PhysxMaster physx_;
+#endif
         // --- *** ---
 
         std::vector<Sprite> sprites_;

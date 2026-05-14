@@ -12,19 +12,33 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET      :=  $(notdir $(CURDIR))
 BUILD       :=  build
-SOURCES     :=  .
+SOURCES     :=  . \
+                ../../src/common \
+                ../../src/common/Components \
+                ../../src/common/Systems \
+                ../../src/switch \
+                ../../src/switch/Systems \
+                ../../deps/glad/src
+
 DATA        :=  data
-INCLUDES    :=  .
+INCLUDES    :=  . \
+                ../../include/common \
+                ../../include/switch \
+                ../../deps/glad/include \
+                ../../deps/tiny_obj/include \
+                ../../deps/FastNoise/include \
+                ../../deps/stb_image/include \
+                ../../deps/glm-master
 
 #---------------------------------------------------------------------------------
 ARCH    :=  -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 
-LIBS    := -lglad -lEGL -lglapi -ldrm_nouveau -lnx
+LIBS    := -lEGL -lglapi -ldrm_nouveau -lnx
 
 CFLAGS  :=  -g -Wall -O2 -ffunction-sections $(ARCH) -D__SWITCH__
 CFLAGS  +=  $(INCLUDE)
 
-CXXFLAGS    := $(CFLAGS) -fno-rtti -fno-exceptions
+CXXFLAGS    := $(CFLAGS) -fexceptions 
 
 ASFLAGS :=  -g $(ARCH)
 LDFLAGS =   -specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
@@ -44,10 +58,10 @@ export VPATH    :=  $(foreach dir,$(SOURCES),$(TOPDIR)/$(dir)) \
 
 export DEPSDIR  :=  $(CURDIR)/$(BUILD)
 
-CFILES      :=  $(wildcard *.c)
-CPPFILES    :=  $(wildcard *.cpp)
-SFILES      :=  $(wildcard *.s)
-BINFILES    :=  $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
+CFILES      :=  $(foreach dir,$(SOURCES),$(notdir $(wildcard $(TOPDIR)/$(dir)/*.c)))
+CPPFILES    :=  $(foreach dir,$(SOURCES),$(notdir $(wildcard $(TOPDIR)/$(dir)/*.cpp)))
+SFILES      :=  $(foreach dir,$(SOURCES),$(notdir $(wildcard $(TOPDIR)/$(dir)/*.s)))
+BINFILES    :=  $(foreach dir,$(DATA),$(notdir $(wildcard $(TOPDIR)/$(dir)/*.*)))
 
 ifeq ($(strip $(CPPFILES)),)
     export LD   :=  $(CC)
@@ -84,7 +98,6 @@ else
 
 DEPENDS :=  $(OFILES:.o=.d)
 
-# Esta es la parte que hemos modificado:
 all : $(OUTPUT).nro
 	@rm -f $(OUTPUT).elf $(OUTPUT).nacp
 	@echo "Build finished: $(notdir $(OUTPUT)).nro"
@@ -104,3 +117,5 @@ $(OFILES_SRC) : $(HFILES_BIN)
 -include $(DEPENDS)
 
 endif
+
+CXXFLAGS += -frtti

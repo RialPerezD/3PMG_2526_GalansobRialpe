@@ -1,358 +1,780 @@
 main.o: \
- D:/Clase/3PMG_2526_GalansobRialpe/examplesSwitch/test01Window/main.cpp \
- D:/SwitchDevkit/libnx/include/switch.h \
- D:/SwitchDevkit/libnx/include/switch/types.h \
- D:/SwitchDevkit/libnx/include/switch/result.h \
- D:/SwitchDevkit/libnx/include/switch/nro.h \
- D:/SwitchDevkit/libnx/include/switch/nacp.h \
- D:/SwitchDevkit/libnx/include/switch/arm/tls.h \
- D:/SwitchDevkit/libnx/include/switch/arm/cache.h \
- D:/SwitchDevkit/libnx/include/switch/arm/counter.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/svc.h \
- D:/SwitchDevkit/libnx/include/switch/arm/thread_context.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/wait.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/mutex.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/tmem.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/shmem.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/event.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/levent.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/uevent.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/utimer.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/rwlock.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/condvar.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/thread.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/semaphore.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/virtmem.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/detect.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/random.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/jit.h \
- D:/SwitchDevkit/libnx/include/switch/kernel/barrier.h \
- D:/SwitchDevkit/libnx/include/switch/sf/hipc.h \
- D:/SwitchDevkit/libnx/include/switch/sf/cmif.h \
- D:/SwitchDevkit/libnx/include/switch/sf/service.h \
- D:/SwitchDevkit/libnx/include/switch/sf/sessionmgr.h \
- D:/SwitchDevkit/libnx/include/switch/sf/tipc.h \
- D:/SwitchDevkit/libnx/include/switch/services/sm.h \
- D:/SwitchDevkit/libnx/include/switch/services/smm.h \
- D:/SwitchDevkit/libnx/include/switch/services/fs.h \
- D:/SwitchDevkit/libnx/include/switch/services/ncm_types.h \
- D:/SwitchDevkit/libnx/include/switch/crypto/sha256.h \
- D:/SwitchDevkit/libnx/include/switch/services/acc.h \
- D:/SwitchDevkit/libnx/include/switch/services/fsldr.h \
- D:/SwitchDevkit/libnx/include/switch/services/fspr.h \
- D:/SwitchDevkit/libnx/include/switch/services/apm.h \
- D:/SwitchDevkit/libnx/include/switch/services/applet.h \
- D:/SwitchDevkit/libnx/include/switch/services/pdm.h \
- D:/SwitchDevkit/libnx/include/switch/services/caps.h \
- D:/SwitchDevkit/libnx/include/switch/services/pm.h \
- D:/SwitchDevkit/libnx/include/switch/services/set.h \
- D:/SwitchDevkit/libnx/include/switch/services/time.h \
- D:/SwitchDevkit/libnx/include/switch/services/btdrv_types.h \
- D:/SwitchDevkit/libnx/include/switch/services/btdrv_ids.h \
- D:/SwitchDevkit/libnx/include/switch/services/btm_types.h \
- D:/SwitchDevkit/libnx/include/switch/services/async.h \
- D:/SwitchDevkit/libnx/include/switch/applets/error.h \
- D:/SwitchDevkit/libnx/include/switch/services/aud.h \
- D:/SwitchDevkit/libnx/include/switch/services/audctl.h \
- D:/SwitchDevkit/libnx/include/switch/audio/audio.h \
- D:/SwitchDevkit/libnx/include/switch/services/audin.h \
- D:/SwitchDevkit/libnx/include/switch/services/audout.h \
- D:/SwitchDevkit/libnx/include/switch/services/audrec.h \
- D:/SwitchDevkit/libnx/include/switch/services/audren.h \
- D:/SwitchDevkit/libnx/include/switch/services/auddev.h \
- D:/SwitchDevkit/libnx/include/switch/services/hwopus.h \
- D:/SwitchDevkit/libnx/include/switch/services/csrng.h \
- D:/SwitchDevkit/libnx/include/switch/services/lbl.h \
- D:/SwitchDevkit/libnx/include/switch/services/i2c.h \
- D:/SwitchDevkit/libnx/include/switch/services/gpio.h \
- D:/SwitchDevkit/libnx/include/switch/services/uart.h \
- D:/SwitchDevkit/libnx/include/switch/services/bpc.h \
- D:/SwitchDevkit/libnx/include/switch/services/pcv.h \
- D:/SwitchDevkit/libnx/include/switch/services/clkrst.h \
- D:/SwitchDevkit/libnx/include/switch/services/fan.h \
- D:/SwitchDevkit/libnx/include/switch/services/pgl.h \
- D:/SwitchDevkit/libnx/include/switch/services/psm.h \
- D:/SwitchDevkit/libnx/include/switch/services/spsm.h \
- D:/SwitchDevkit/libnx/include/switch/services/fatal.h \
- D:/SwitchDevkit/libnx/include/switch/services/usb.h \
- D:/SwitchDevkit/libnx/include/switch/services/usbds.h \
- D:/SwitchDevkit/libnx/include/switch/services/usbhs.h \
- D:/SwitchDevkit/libnx/include/switch/services/hid.h \
- D:/SwitchDevkit/libnx/include/switch/services/hidbus.h \
- D:/SwitchDevkit/libnx/include/switch/services/hiddbg.h \
- D:/SwitchDevkit/libnx/include/switch/services/hidsys.h \
- D:/SwitchDevkit/libnx/include/switch/services/irs.h \
- D:/SwitchDevkit/libnx/include/switch/services/pl.h \
- D:/SwitchDevkit/libnx/include/switch/services/vi.h \
- D:/SwitchDevkit/libnx/include/switch/services/nv.h \
- D:/SwitchDevkit/libnx/include/switch/services/nifm.h \
- D:/SwitchDevkit/libnx/include/switch/services/nim.h \
- D:/SwitchDevkit/libnx/include/switch/services/ns.h \
- D:/SwitchDevkit/libnx/include/switch/services/ldr.h \
- D:/SwitchDevkit/libnx/include/switch/services/ro.h \
- D:/SwitchDevkit/libnx/include/switch/services/tc.h \
- D:/SwitchDevkit/libnx/include/switch/services/ts.h \
- D:/SwitchDevkit/libnx/include/switch/services/ssl.h \
- D:/SwitchDevkit/libnx/include/switch/services/lr.h \
- D:/SwitchDevkit/libnx/include/switch/services/bt.h \
- D:/SwitchDevkit/libnx/include/switch/services/btdrv.h \
- D:/SwitchDevkit/libnx/include/switch/services/btm.h \
- D:/SwitchDevkit/libnx/include/switch/services/btmu.h \
- D:/SwitchDevkit/libnx/include/switch/services/btmsys.h \
- D:/SwitchDevkit/libnx/include/switch/services/spl.h \
- D:/SwitchDevkit/libnx/include/switch/services/ncm.h \
- D:/SwitchDevkit/libnx/include/switch/services/psc.h \
- D:/SwitchDevkit/libnx/include/switch/services/capsa.h \
- D:/SwitchDevkit/libnx/include/switch/services/capsc.h \
- D:/SwitchDevkit/libnx/include/switch/services/capsdc.h \
- D:/SwitchDevkit/libnx/include/switch/services/capsu.h \
- D:/SwitchDevkit/libnx/include/switch/services/capssc.h \
- D:/SwitchDevkit/libnx/include/switch/services/capssu.h \
- D:/SwitchDevkit/libnx/include/switch/services/capmtp.h \
- D:/SwitchDevkit/libnx/include/switch/services/nfc.h \
- D:/SwitchDevkit/libnx/include/switch/services/mii.h \
- D:/SwitchDevkit/libnx/include/switch/services/wlaninf.h \
- D:/SwitchDevkit/libnx/include/switch/services/pctl.h \
- D:/SwitchDevkit/libnx/include/switch/services/grc.h \
- D:/SwitchDevkit/libnx/include/switch/display/native_window.h \
- D:/SwitchDevkit/libnx/include/switch/nvidia/graphic_buffer.h \
- D:/SwitchDevkit/libnx/include/switch/display/types.h \
- D:/SwitchDevkit/libnx/include/switch/nvidia/types.h \
- D:/SwitchDevkit/libnx/include/switch/display/binder.h \
- D:/SwitchDevkit/libnx/include/switch/display/buffer_producer.h \
- D:/SwitchDevkit/libnx/include/switch/nvidia/fence.h \
- D:/SwitchDevkit/libnx/include/switch/nvidia/ioctl.h \
- D:/SwitchDevkit/libnx/include/switch/services/friends.h \
- D:/SwitchDevkit/libnx/include/switch/services/notif.h \
- D:/SwitchDevkit/libnx/include/switch/services/miiimg.h \
- D:/SwitchDevkit/libnx/include/switch/services/ldn.h \
- D:/SwitchDevkit/libnx/include/switch/services/lp2p.h \
- D:/SwitchDevkit/libnx/include/switch/services/news.h \
- D:/SwitchDevkit/libnx/include/switch/services/ins.h \
- D:/SwitchDevkit/libnx/include/switch/services/ectx.h \
- D:/SwitchDevkit/libnx/include/switch/services/avm.h \
- D:/SwitchDevkit/libnx/include/switch/services/mm.h \
- D:/SwitchDevkit/libnx/include/switch/display/parcel.h \
- D:/SwitchDevkit/libnx/include/switch/display/framebuffer.h \
- D:/SwitchDevkit/libnx/include/switch/nvidia/map.h \
- D:/SwitchDevkit/libnx/include/switch/nvidia/address_space.h \
- D:/SwitchDevkit/libnx/include/switch/nvidia/channel.h \
- D:/SwitchDevkit/libnx/include/switch/nvidia/gpu.h \
- D:/SwitchDevkit/libnx/include/switch/nvidia/gpu_channel.h \
- D:/SwitchDevkit/libnx/include/switch/audio/driver.h \
- D:/SwitchDevkit/libnx/include/switch/applets/libapplet.h \
- D:/SwitchDevkit/libnx/include/switch/applets/album_la.h \
- D:/SwitchDevkit/libnx/include/switch/applets/friends_la.h \
- D:/SwitchDevkit/libnx/include/switch/applets/hid_la.h \
- D:/SwitchDevkit/libnx/include/switch/applets/mii_la.h \
- D:/SwitchDevkit/libnx/include/switch/applets/nfp_la.h \
- D:/SwitchDevkit/libnx/include/switch/applets/nifm_la.h \
- D:/SwitchDevkit/libnx/include/switch/applets/pctlauth.h \
- D:/SwitchDevkit/libnx/include/switch/applets/psel.h \
- D:/SwitchDevkit/libnx/include/switch/applets/swkbd.h \
- D:/SwitchDevkit/libnx/include/switch/applets/web.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/env.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/hosversion.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/diag.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/nxlink.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/resolver.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/pad.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/ringcon.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/btdev.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/util/utf.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/devices/console.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/devices/usb_comms.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/devices/fs_dev.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/devices/romfs_dev.h \
- D:/SwitchDevkit/libnx/include/switch/runtime/devices/socket.h \
- D:/SwitchDevkit/libnx/include/switch/crypto/aes.h \
- D:/SwitchDevkit/libnx/include/switch/crypto/aes_cbc.h \
- D:/SwitchDevkit/libnx/include/switch/crypto/aes_ctr.h \
- D:/SwitchDevkit/libnx/include/switch/crypto/aes_xts.h \
- D:/SwitchDevkit/libnx/include/switch/crypto/cmac.h \
- D:/SwitchDevkit/libnx/include/switch/crypto/sha1.h \
- D:/SwitchDevkit/libnx/include/switch/crypto/hmac.h \
- D:/SwitchDevkit/libnx/include/switch/crypto/crc.h \
- D:/SwitchDevkit/portlibs/switch/include/EGL/egl.h \
- D:/SwitchDevkit/portlibs/switch/include/EGL/eglplatform.h \
- D:/SwitchDevkit/portlibs/switch/include/KHR/khrplatform.h \
- D:/SwitchDevkit/portlibs/switch/include/EGL/eglext.h \
- D:/SwitchDevkit/portlibs/switch/include/glad/glad.h
-D:/SwitchDevkit/libnx/include/switch.h:
-D:/SwitchDevkit/libnx/include/switch/types.h:
-D:/SwitchDevkit/libnx/include/switch/result.h:
-D:/SwitchDevkit/libnx/include/switch/nro.h:
-D:/SwitchDevkit/libnx/include/switch/nacp.h:
-D:/SwitchDevkit/libnx/include/switch/arm/tls.h:
-D:/SwitchDevkit/libnx/include/switch/arm/cache.h:
-D:/SwitchDevkit/libnx/include/switch/arm/counter.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/svc.h:
-D:/SwitchDevkit/libnx/include/switch/arm/thread_context.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/wait.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/mutex.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/tmem.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/shmem.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/event.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/levent.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/uevent.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/utimer.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/rwlock.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/condvar.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/thread.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/semaphore.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/virtmem.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/detect.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/random.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/jit.h:
-D:/SwitchDevkit/libnx/include/switch/kernel/barrier.h:
-D:/SwitchDevkit/libnx/include/switch/sf/hipc.h:
-D:/SwitchDevkit/libnx/include/switch/sf/cmif.h:
-D:/SwitchDevkit/libnx/include/switch/sf/service.h:
-D:/SwitchDevkit/libnx/include/switch/sf/sessionmgr.h:
-D:/SwitchDevkit/libnx/include/switch/sf/tipc.h:
-D:/SwitchDevkit/libnx/include/switch/services/sm.h:
-D:/SwitchDevkit/libnx/include/switch/services/smm.h:
-D:/SwitchDevkit/libnx/include/switch/services/fs.h:
-D:/SwitchDevkit/libnx/include/switch/services/ncm_types.h:
-D:/SwitchDevkit/libnx/include/switch/crypto/sha256.h:
-D:/SwitchDevkit/libnx/include/switch/services/acc.h:
-D:/SwitchDevkit/libnx/include/switch/services/fsldr.h:
-D:/SwitchDevkit/libnx/include/switch/services/fspr.h:
-D:/SwitchDevkit/libnx/include/switch/services/apm.h:
-D:/SwitchDevkit/libnx/include/switch/services/applet.h:
-D:/SwitchDevkit/libnx/include/switch/services/pdm.h:
-D:/SwitchDevkit/libnx/include/switch/services/caps.h:
-D:/SwitchDevkit/libnx/include/switch/services/pm.h:
-D:/SwitchDevkit/libnx/include/switch/services/set.h:
-D:/SwitchDevkit/libnx/include/switch/services/time.h:
-D:/SwitchDevkit/libnx/include/switch/services/btdrv_types.h:
-D:/SwitchDevkit/libnx/include/switch/services/btdrv_ids.h:
-D:/SwitchDevkit/libnx/include/switch/services/btm_types.h:
-D:/SwitchDevkit/libnx/include/switch/services/async.h:
-D:/SwitchDevkit/libnx/include/switch/applets/error.h:
-D:/SwitchDevkit/libnx/include/switch/services/aud.h:
-D:/SwitchDevkit/libnx/include/switch/services/audctl.h:
-D:/SwitchDevkit/libnx/include/switch/audio/audio.h:
-D:/SwitchDevkit/libnx/include/switch/services/audin.h:
-D:/SwitchDevkit/libnx/include/switch/services/audout.h:
-D:/SwitchDevkit/libnx/include/switch/services/audrec.h:
-D:/SwitchDevkit/libnx/include/switch/services/audren.h:
-D:/SwitchDevkit/libnx/include/switch/services/auddev.h:
-D:/SwitchDevkit/libnx/include/switch/services/hwopus.h:
-D:/SwitchDevkit/libnx/include/switch/services/csrng.h:
-D:/SwitchDevkit/libnx/include/switch/services/lbl.h:
-D:/SwitchDevkit/libnx/include/switch/services/i2c.h:
-D:/SwitchDevkit/libnx/include/switch/services/gpio.h:
-D:/SwitchDevkit/libnx/include/switch/services/uart.h:
-D:/SwitchDevkit/libnx/include/switch/services/bpc.h:
-D:/SwitchDevkit/libnx/include/switch/services/pcv.h:
-D:/SwitchDevkit/libnx/include/switch/services/clkrst.h:
-D:/SwitchDevkit/libnx/include/switch/services/fan.h:
-D:/SwitchDevkit/libnx/include/switch/services/pgl.h:
-D:/SwitchDevkit/libnx/include/switch/services/psm.h:
-D:/SwitchDevkit/libnx/include/switch/services/spsm.h:
-D:/SwitchDevkit/libnx/include/switch/services/fatal.h:
-D:/SwitchDevkit/libnx/include/switch/services/usb.h:
-D:/SwitchDevkit/libnx/include/switch/services/usbds.h:
-D:/SwitchDevkit/libnx/include/switch/services/usbhs.h:
-D:/SwitchDevkit/libnx/include/switch/services/hid.h:
-D:/SwitchDevkit/libnx/include/switch/services/hidbus.h:
-D:/SwitchDevkit/libnx/include/switch/services/hiddbg.h:
-D:/SwitchDevkit/libnx/include/switch/services/hidsys.h:
-D:/SwitchDevkit/libnx/include/switch/services/irs.h:
-D:/SwitchDevkit/libnx/include/switch/services/pl.h:
-D:/SwitchDevkit/libnx/include/switch/services/vi.h:
-D:/SwitchDevkit/libnx/include/switch/services/nv.h:
-D:/SwitchDevkit/libnx/include/switch/services/nifm.h:
-D:/SwitchDevkit/libnx/include/switch/services/nim.h:
-D:/SwitchDevkit/libnx/include/switch/services/ns.h:
-D:/SwitchDevkit/libnx/include/switch/services/ldr.h:
-D:/SwitchDevkit/libnx/include/switch/services/ro.h:
-D:/SwitchDevkit/libnx/include/switch/services/tc.h:
-D:/SwitchDevkit/libnx/include/switch/services/ts.h:
-D:/SwitchDevkit/libnx/include/switch/services/ssl.h:
-D:/SwitchDevkit/libnx/include/switch/services/lr.h:
-D:/SwitchDevkit/libnx/include/switch/services/bt.h:
-D:/SwitchDevkit/libnx/include/switch/services/btdrv.h:
-D:/SwitchDevkit/libnx/include/switch/services/btm.h:
-D:/SwitchDevkit/libnx/include/switch/services/btmu.h:
-D:/SwitchDevkit/libnx/include/switch/services/btmsys.h:
-D:/SwitchDevkit/libnx/include/switch/services/spl.h:
-D:/SwitchDevkit/libnx/include/switch/services/ncm.h:
-D:/SwitchDevkit/libnx/include/switch/services/psc.h:
-D:/SwitchDevkit/libnx/include/switch/services/capsa.h:
-D:/SwitchDevkit/libnx/include/switch/services/capsc.h:
-D:/SwitchDevkit/libnx/include/switch/services/capsdc.h:
-D:/SwitchDevkit/libnx/include/switch/services/capsu.h:
-D:/SwitchDevkit/libnx/include/switch/services/capssc.h:
-D:/SwitchDevkit/libnx/include/switch/services/capssu.h:
-D:/SwitchDevkit/libnx/include/switch/services/capmtp.h:
-D:/SwitchDevkit/libnx/include/switch/services/nfc.h:
-D:/SwitchDevkit/libnx/include/switch/services/mii.h:
-D:/SwitchDevkit/libnx/include/switch/services/wlaninf.h:
-D:/SwitchDevkit/libnx/include/switch/services/pctl.h:
-D:/SwitchDevkit/libnx/include/switch/services/grc.h:
-D:/SwitchDevkit/libnx/include/switch/display/native_window.h:
-D:/SwitchDevkit/libnx/include/switch/nvidia/graphic_buffer.h:
-D:/SwitchDevkit/libnx/include/switch/display/types.h:
-D:/SwitchDevkit/libnx/include/switch/nvidia/types.h:
-D:/SwitchDevkit/libnx/include/switch/display/binder.h:
-D:/SwitchDevkit/libnx/include/switch/display/buffer_producer.h:
-D:/SwitchDevkit/libnx/include/switch/nvidia/fence.h:
-D:/SwitchDevkit/libnx/include/switch/nvidia/ioctl.h:
-D:/SwitchDevkit/libnx/include/switch/services/friends.h:
-D:/SwitchDevkit/libnx/include/switch/services/notif.h:
-D:/SwitchDevkit/libnx/include/switch/services/miiimg.h:
-D:/SwitchDevkit/libnx/include/switch/services/ldn.h:
-D:/SwitchDevkit/libnx/include/switch/services/lp2p.h:
-D:/SwitchDevkit/libnx/include/switch/services/news.h:
-D:/SwitchDevkit/libnx/include/switch/services/ins.h:
-D:/SwitchDevkit/libnx/include/switch/services/ectx.h:
-D:/SwitchDevkit/libnx/include/switch/services/avm.h:
-D:/SwitchDevkit/libnx/include/switch/services/mm.h:
-D:/SwitchDevkit/libnx/include/switch/display/parcel.h:
-D:/SwitchDevkit/libnx/include/switch/display/framebuffer.h:
-D:/SwitchDevkit/libnx/include/switch/nvidia/map.h:
-D:/SwitchDevkit/libnx/include/switch/nvidia/address_space.h:
-D:/SwitchDevkit/libnx/include/switch/nvidia/channel.h:
-D:/SwitchDevkit/libnx/include/switch/nvidia/gpu.h:
-D:/SwitchDevkit/libnx/include/switch/nvidia/gpu_channel.h:
-D:/SwitchDevkit/libnx/include/switch/audio/driver.h:
-D:/SwitchDevkit/libnx/include/switch/applets/libapplet.h:
-D:/SwitchDevkit/libnx/include/switch/applets/album_la.h:
-D:/SwitchDevkit/libnx/include/switch/applets/friends_la.h:
-D:/SwitchDevkit/libnx/include/switch/applets/hid_la.h:
-D:/SwitchDevkit/libnx/include/switch/applets/mii_la.h:
-D:/SwitchDevkit/libnx/include/switch/applets/nfp_la.h:
-D:/SwitchDevkit/libnx/include/switch/applets/nifm_la.h:
-D:/SwitchDevkit/libnx/include/switch/applets/pctlauth.h:
-D:/SwitchDevkit/libnx/include/switch/applets/psel.h:
-D:/SwitchDevkit/libnx/include/switch/applets/swkbd.h:
-D:/SwitchDevkit/libnx/include/switch/applets/web.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/env.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/hosversion.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/diag.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/nxlink.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/resolver.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/pad.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/ringcon.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/btdev.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/util/utf.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/devices/console.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/devices/usb_comms.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/devices/fs_dev.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/devices/romfs_dev.h:
-D:/SwitchDevkit/libnx/include/switch/runtime/devices/socket.h:
-D:/SwitchDevkit/libnx/include/switch/crypto/aes.h:
-D:/SwitchDevkit/libnx/include/switch/crypto/aes_cbc.h:
-D:/SwitchDevkit/libnx/include/switch/crypto/aes_ctr.h:
-D:/SwitchDevkit/libnx/include/switch/crypto/aes_xts.h:
-D:/SwitchDevkit/libnx/include/switch/crypto/cmac.h:
-D:/SwitchDevkit/libnx/include/switch/crypto/sha1.h:
-D:/SwitchDevkit/libnx/include/switch/crypto/hmac.h:
-D:/SwitchDevkit/libnx/include/switch/crypto/crc.h:
-D:/SwitchDevkit/portlibs/switch/include/EGL/egl.h:
-D:/SwitchDevkit/portlibs/switch/include/EGL/eglplatform.h:
-D:/SwitchDevkit/portlibs/switch/include/KHR/khrplatform.h:
-D:/SwitchDevkit/portlibs/switch/include/EGL/eglext.h:
-D:/SwitchDevkit/portlibs/switch/include/glad/glad.h:
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/examplesSwitch/test01Window/main.cpp \
+ C:/devkitPro/libnx/include/switch.h \
+ C:/devkitPro/libnx/include/switch/types.h \
+ C:/devkitPro/libnx/include/switch/result.h \
+ C:/devkitPro/libnx/include/switch/nro.h \
+ C:/devkitPro/libnx/include/switch/nacp.h \
+ C:/devkitPro/libnx/include/switch/arm/tls.h \
+ C:/devkitPro/libnx/include/switch/arm/cache.h \
+ C:/devkitPro/libnx/include/switch/arm/counter.h \
+ C:/devkitPro/libnx/include/switch/kernel/svc.h \
+ C:/devkitPro/libnx/include/switch/arm/thread_context.h \
+ C:/devkitPro/libnx/include/switch/kernel/wait.h \
+ C:/devkitPro/libnx/include/switch/kernel/mutex.h \
+ C:/devkitPro/libnx/include/switch/kernel/tmem.h \
+ C:/devkitPro/libnx/include/switch/kernel/shmem.h \
+ C:/devkitPro/libnx/include/switch/kernel/event.h \
+ C:/devkitPro/libnx/include/switch/kernel/levent.h \
+ C:/devkitPro/libnx/include/switch/kernel/uevent.h \
+ C:/devkitPro/libnx/include/switch/kernel/utimer.h \
+ C:/devkitPro/libnx/include/switch/kernel/rwlock.h \
+ C:/devkitPro/libnx/include/switch/kernel/condvar.h \
+ C:/devkitPro/libnx/include/switch/kernel/thread.h \
+ C:/devkitPro/libnx/include/switch/kernel/semaphore.h \
+ C:/devkitPro/libnx/include/switch/kernel/virtmem.h \
+ C:/devkitPro/libnx/include/switch/kernel/detect.h \
+ C:/devkitPro/libnx/include/switch/kernel/random.h \
+ C:/devkitPro/libnx/include/switch/kernel/jit.h \
+ C:/devkitPro/libnx/include/switch/kernel/barrier.h \
+ C:/devkitPro/libnx/include/switch/sf/hipc.h \
+ C:/devkitPro/libnx/include/switch/sf/cmif.h \
+ C:/devkitPro/libnx/include/switch/sf/service.h \
+ C:/devkitPro/libnx/include/switch/sf/sessionmgr.h \
+ C:/devkitPro/libnx/include/switch/sf/tipc.h \
+ C:/devkitPro/libnx/include/switch/services/sm.h \
+ C:/devkitPro/libnx/include/switch/services/smm.h \
+ C:/devkitPro/libnx/include/switch/services/fs.h \
+ C:/devkitPro/libnx/include/switch/services/ncm_types.h \
+ C:/devkitPro/libnx/include/switch/crypto/sha256.h \
+ C:/devkitPro/libnx/include/switch/services/acc.h \
+ C:/devkitPro/libnx/include/switch/services/fsldr.h \
+ C:/devkitPro/libnx/include/switch/services/fspr.h \
+ C:/devkitPro/libnx/include/switch/services/apm.h \
+ C:/devkitPro/libnx/include/switch/services/applet.h \
+ C:/devkitPro/libnx/include/switch/services/pdm.h \
+ C:/devkitPro/libnx/include/switch/services/caps.h \
+ C:/devkitPro/libnx/include/switch/services/pm.h \
+ C:/devkitPro/libnx/include/switch/services/set.h \
+ C:/devkitPro/libnx/include/switch/services/time.h \
+ C:/devkitPro/libnx/include/switch/services/btdrv_types.h \
+ C:/devkitPro/libnx/include/switch/services/btdrv_ids.h \
+ C:/devkitPro/libnx/include/switch/services/btm_types.h \
+ C:/devkitPro/libnx/include/switch/services/async.h \
+ C:/devkitPro/libnx/include/switch/applets/error.h \
+ C:/devkitPro/libnx/include/switch/services/aud.h \
+ C:/devkitPro/libnx/include/switch/services/audctl.h \
+ C:/devkitPro/libnx/include/switch/audio/audio.h \
+ C:/devkitPro/libnx/include/switch/services/audin.h \
+ C:/devkitPro/libnx/include/switch/services/audout.h \
+ C:/devkitPro/libnx/include/switch/services/audrec.h \
+ C:/devkitPro/libnx/include/switch/services/audren.h \
+ C:/devkitPro/libnx/include/switch/services/auddev.h \
+ C:/devkitPro/libnx/include/switch/services/hwopus.h \
+ C:/devkitPro/libnx/include/switch/services/csrng.h \
+ C:/devkitPro/libnx/include/switch/services/lbl.h \
+ C:/devkitPro/libnx/include/switch/services/i2c.h \
+ C:/devkitPro/libnx/include/switch/services/gpio.h \
+ C:/devkitPro/libnx/include/switch/services/uart.h \
+ C:/devkitPro/libnx/include/switch/services/bpc.h \
+ C:/devkitPro/libnx/include/switch/services/pcv.h \
+ C:/devkitPro/libnx/include/switch/services/clkrst.h \
+ C:/devkitPro/libnx/include/switch/services/fan.h \
+ C:/devkitPro/libnx/include/switch/services/pgl.h \
+ C:/devkitPro/libnx/include/switch/services/psm.h \
+ C:/devkitPro/libnx/include/switch/services/spsm.h \
+ C:/devkitPro/libnx/include/switch/services/fatal.h \
+ C:/devkitPro/libnx/include/switch/services/usb.h \
+ C:/devkitPro/libnx/include/switch/services/usbds.h \
+ C:/devkitPro/libnx/include/switch/services/usbhs.h \
+ C:/devkitPro/libnx/include/switch/services/hid.h \
+ C:/devkitPro/libnx/include/switch/services/hidbus.h \
+ C:/devkitPro/libnx/include/switch/services/hiddbg.h \
+ C:/devkitPro/libnx/include/switch/services/hidsys.h \
+ C:/devkitPro/libnx/include/switch/services/irs.h \
+ C:/devkitPro/libnx/include/switch/services/pl.h \
+ C:/devkitPro/libnx/include/switch/services/vi.h \
+ C:/devkitPro/libnx/include/switch/services/nv.h \
+ C:/devkitPro/libnx/include/switch/services/nifm.h \
+ C:/devkitPro/libnx/include/switch/services/nim.h \
+ C:/devkitPro/libnx/include/switch/services/ns.h \
+ C:/devkitPro/libnx/include/switch/services/ldr.h \
+ C:/devkitPro/libnx/include/switch/services/ro.h \
+ C:/devkitPro/libnx/include/switch/services/tc.h \
+ C:/devkitPro/libnx/include/switch/services/ts.h \
+ C:/devkitPro/libnx/include/switch/services/ssl.h \
+ C:/devkitPro/libnx/include/switch/services/lr.h \
+ C:/devkitPro/libnx/include/switch/services/bt.h \
+ C:/devkitPro/libnx/include/switch/services/btdrv.h \
+ C:/devkitPro/libnx/include/switch/services/btm.h \
+ C:/devkitPro/libnx/include/switch/services/btmu.h \
+ C:/devkitPro/libnx/include/switch/services/btmsys.h \
+ C:/devkitPro/libnx/include/switch/services/spl.h \
+ C:/devkitPro/libnx/include/switch/services/ncm.h \
+ C:/devkitPro/libnx/include/switch/services/psc.h \
+ C:/devkitPro/libnx/include/switch/services/capsa.h \
+ C:/devkitPro/libnx/include/switch/services/capsc.h \
+ C:/devkitPro/libnx/include/switch/services/capsdc.h \
+ C:/devkitPro/libnx/include/switch/services/capsu.h \
+ C:/devkitPro/libnx/include/switch/services/capssc.h \
+ C:/devkitPro/libnx/include/switch/services/capssu.h \
+ C:/devkitPro/libnx/include/switch/services/capmtp.h \
+ C:/devkitPro/libnx/include/switch/services/nfc.h \
+ C:/devkitPro/libnx/include/switch/services/mii.h \
+ C:/devkitPro/libnx/include/switch/services/wlaninf.h \
+ C:/devkitPro/libnx/include/switch/services/pctl.h \
+ C:/devkitPro/libnx/include/switch/services/grc.h \
+ C:/devkitPro/libnx/include/switch/display/native_window.h \
+ C:/devkitPro/libnx/include/switch/nvidia/graphic_buffer.h \
+ C:/devkitPro/libnx/include/switch/display/types.h \
+ C:/devkitPro/libnx/include/switch/nvidia/types.h \
+ C:/devkitPro/libnx/include/switch/display/binder.h \
+ C:/devkitPro/libnx/include/switch/display/buffer_producer.h \
+ C:/devkitPro/libnx/include/switch/nvidia/fence.h \
+ C:/devkitPro/libnx/include/switch/nvidia/ioctl.h \
+ C:/devkitPro/libnx/include/switch/services/friends.h \
+ C:/devkitPro/libnx/include/switch/services/notif.h \
+ C:/devkitPro/libnx/include/switch/services/miiimg.h \
+ C:/devkitPro/libnx/include/switch/services/ldn.h \
+ C:/devkitPro/libnx/include/switch/services/lp2p.h \
+ C:/devkitPro/libnx/include/switch/services/news.h \
+ C:/devkitPro/libnx/include/switch/services/ins.h \
+ C:/devkitPro/libnx/include/switch/services/ectx.h \
+ C:/devkitPro/libnx/include/switch/services/avm.h \
+ C:/devkitPro/libnx/include/switch/services/mm.h \
+ C:/devkitPro/libnx/include/switch/display/parcel.h \
+ C:/devkitPro/libnx/include/switch/display/framebuffer.h \
+ C:/devkitPro/libnx/include/switch/nvidia/map.h \
+ C:/devkitPro/libnx/include/switch/nvidia/address_space.h \
+ C:/devkitPro/libnx/include/switch/nvidia/channel.h \
+ C:/devkitPro/libnx/include/switch/nvidia/gpu.h \
+ C:/devkitPro/libnx/include/switch/nvidia/gpu_channel.h \
+ C:/devkitPro/libnx/include/switch/audio/driver.h \
+ C:/devkitPro/libnx/include/switch/applets/libapplet.h \
+ C:/devkitPro/libnx/include/switch/applets/album_la.h \
+ C:/devkitPro/libnx/include/switch/applets/friends_la.h \
+ C:/devkitPro/libnx/include/switch/applets/hid_la.h \
+ C:/devkitPro/libnx/include/switch/applets/mii_la.h \
+ C:/devkitPro/libnx/include/switch/applets/nfp_la.h \
+ C:/devkitPro/libnx/include/switch/applets/nifm_la.h \
+ C:/devkitPro/libnx/include/switch/applets/pctlauth.h \
+ C:/devkitPro/libnx/include/switch/applets/psel.h \
+ C:/devkitPro/libnx/include/switch/applets/swkbd.h \
+ C:/devkitPro/libnx/include/switch/applets/web.h \
+ C:/devkitPro/libnx/include/switch/runtime/env.h \
+ C:/devkitPro/libnx/include/switch/runtime/hosversion.h \
+ C:/devkitPro/libnx/include/switch/runtime/diag.h \
+ C:/devkitPro/libnx/include/switch/runtime/nxlink.h \
+ C:/devkitPro/libnx/include/switch/runtime/resolver.h \
+ C:/devkitPro/libnx/include/switch/runtime/pad.h \
+ C:/devkitPro/libnx/include/switch/runtime/ringcon.h \
+ C:/devkitPro/libnx/include/switch/runtime/btdev.h \
+ C:/devkitPro/libnx/include/switch/runtime/util/utf.h \
+ C:/devkitPro/libnx/include/switch/runtime/devices/console.h \
+ C:/devkitPro/libnx/include/switch/runtime/devices/usb_comms.h \
+ C:/devkitPro/libnx/include/switch/runtime/devices/fs_dev.h \
+ C:/devkitPro/libnx/include/switch/runtime/devices/romfs_dev.h \
+ C:/devkitPro/libnx/include/switch/runtime/devices/socket.h \
+ C:/devkitPro/libnx/include/switch/crypto/aes.h \
+ C:/devkitPro/libnx/include/switch/crypto/aes_cbc.h \
+ C:/devkitPro/libnx/include/switch/crypto/aes_ctr.h \
+ C:/devkitPro/libnx/include/switch/crypto/aes_xts.h \
+ C:/devkitPro/libnx/include/switch/crypto/cmac.h \
+ C:/devkitPro/libnx/include/switch/crypto/sha1.h \
+ C:/devkitPro/libnx/include/switch/crypto/hmac.h \
+ C:/devkitPro/libnx/include/switch/crypto/crc.h \
+ C:/devkitPro/portlibs/switch/include/EGL/egl.h \
+ C:/devkitPro/portlibs/switch/include/EGL/eglplatform.h \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glad/include/KHR/khrplatform.h \
+ C:/devkitPro/portlibs/switch/include/EGL/eglext.h \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glad/include/glad/glad.h \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Engine.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/window.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Texture.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/ObjLoader.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/glm.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/_fixes.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/setup.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/simd/platform.h \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/fwd.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/qualifier.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/setup.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/vec2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec2.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/compute_vector_relational.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool2_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float2_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double2_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int2_sized.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/scalar_int_sized.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/setup.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint2_sized.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/scalar_uint_sized.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/vec3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec3.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/compute_vector_decl.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/_vectorize.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool3_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float3_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double3_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int3_sized.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint3_sized.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/vec4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec4.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool4_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float4_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double4_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int4_sized.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint4_sized.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat2x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x2.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/matrix.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat2x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x3.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x3_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x3_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat2x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x4.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x4_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x4_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat3x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x2.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x2_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x2_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat3x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x3.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/common.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_common.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/vector_relational.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_vector_relational.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/compute_common.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec1.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec1.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x3_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x3_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat3x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x4.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x4_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x4_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat4x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x2.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x2_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x2_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat4x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x3.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x3_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x3.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x3_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat4x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x4.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/geometric.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_geometric.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/exponential.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_exponential.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x4_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x4.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x4_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_matrix.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x2_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x2.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x2_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/trigonometric.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_trigonometric.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/packing.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_packing.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_half.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_half.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/integer.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_integer.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Mesh.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Vertex.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/VertexAttributes.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Material.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/ObjItem.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Input.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/JobSystem.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Camera.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/matrix_transform.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_projection.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/constants.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/scalar_constants.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/scalar_constants.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/constants.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_projection.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_clip_space.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_clip_space.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_transform.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_transform.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/matrix_transform.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Sprite.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Terrain.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderLightsSystem.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Shader.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Program.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/TransformComponent.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/RenderComponent.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/LightComponent.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Ecs.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/MovementComponent.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/type_ptr.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/quaternion.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_relational.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_relational.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_float.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_common.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_geometric.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_geometric.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_common.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_float.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_quat.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_relational.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_relational.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_quat.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_float_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_double.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_double_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_trigonometric.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_trigonometric.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_transform.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_transform.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/quaternion.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/epsilon.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/setup.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/epsilon.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/vec1.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool1.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool1_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float1.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float1_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double1.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double1_precision.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int1.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int1_sized.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint1.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint1_sized.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/type_ptr.inl \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/ShadowMapSystem.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderSystem.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderDefferredSystem.hpp \
+ C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderPbrSystem.hpp
+C:/devkitPro/libnx/include/switch.h:
+C:/devkitPro/libnx/include/switch/types.h:
+C:/devkitPro/libnx/include/switch/result.h:
+C:/devkitPro/libnx/include/switch/nro.h:
+C:/devkitPro/libnx/include/switch/nacp.h:
+C:/devkitPro/libnx/include/switch/arm/tls.h:
+C:/devkitPro/libnx/include/switch/arm/cache.h:
+C:/devkitPro/libnx/include/switch/arm/counter.h:
+C:/devkitPro/libnx/include/switch/kernel/svc.h:
+C:/devkitPro/libnx/include/switch/arm/thread_context.h:
+C:/devkitPro/libnx/include/switch/kernel/wait.h:
+C:/devkitPro/libnx/include/switch/kernel/mutex.h:
+C:/devkitPro/libnx/include/switch/kernel/tmem.h:
+C:/devkitPro/libnx/include/switch/kernel/shmem.h:
+C:/devkitPro/libnx/include/switch/kernel/event.h:
+C:/devkitPro/libnx/include/switch/kernel/levent.h:
+C:/devkitPro/libnx/include/switch/kernel/uevent.h:
+C:/devkitPro/libnx/include/switch/kernel/utimer.h:
+C:/devkitPro/libnx/include/switch/kernel/rwlock.h:
+C:/devkitPro/libnx/include/switch/kernel/condvar.h:
+C:/devkitPro/libnx/include/switch/kernel/thread.h:
+C:/devkitPro/libnx/include/switch/kernel/semaphore.h:
+C:/devkitPro/libnx/include/switch/kernel/virtmem.h:
+C:/devkitPro/libnx/include/switch/kernel/detect.h:
+C:/devkitPro/libnx/include/switch/kernel/random.h:
+C:/devkitPro/libnx/include/switch/kernel/jit.h:
+C:/devkitPro/libnx/include/switch/kernel/barrier.h:
+C:/devkitPro/libnx/include/switch/sf/hipc.h:
+C:/devkitPro/libnx/include/switch/sf/cmif.h:
+C:/devkitPro/libnx/include/switch/sf/service.h:
+C:/devkitPro/libnx/include/switch/sf/sessionmgr.h:
+C:/devkitPro/libnx/include/switch/sf/tipc.h:
+C:/devkitPro/libnx/include/switch/services/sm.h:
+C:/devkitPro/libnx/include/switch/services/smm.h:
+C:/devkitPro/libnx/include/switch/services/fs.h:
+C:/devkitPro/libnx/include/switch/services/ncm_types.h:
+C:/devkitPro/libnx/include/switch/crypto/sha256.h:
+C:/devkitPro/libnx/include/switch/services/acc.h:
+C:/devkitPro/libnx/include/switch/services/fsldr.h:
+C:/devkitPro/libnx/include/switch/services/fspr.h:
+C:/devkitPro/libnx/include/switch/services/apm.h:
+C:/devkitPro/libnx/include/switch/services/applet.h:
+C:/devkitPro/libnx/include/switch/services/pdm.h:
+C:/devkitPro/libnx/include/switch/services/caps.h:
+C:/devkitPro/libnx/include/switch/services/pm.h:
+C:/devkitPro/libnx/include/switch/services/set.h:
+C:/devkitPro/libnx/include/switch/services/time.h:
+C:/devkitPro/libnx/include/switch/services/btdrv_types.h:
+C:/devkitPro/libnx/include/switch/services/btdrv_ids.h:
+C:/devkitPro/libnx/include/switch/services/btm_types.h:
+C:/devkitPro/libnx/include/switch/services/async.h:
+C:/devkitPro/libnx/include/switch/applets/error.h:
+C:/devkitPro/libnx/include/switch/services/aud.h:
+C:/devkitPro/libnx/include/switch/services/audctl.h:
+C:/devkitPro/libnx/include/switch/audio/audio.h:
+C:/devkitPro/libnx/include/switch/services/audin.h:
+C:/devkitPro/libnx/include/switch/services/audout.h:
+C:/devkitPro/libnx/include/switch/services/audrec.h:
+C:/devkitPro/libnx/include/switch/services/audren.h:
+C:/devkitPro/libnx/include/switch/services/auddev.h:
+C:/devkitPro/libnx/include/switch/services/hwopus.h:
+C:/devkitPro/libnx/include/switch/services/csrng.h:
+C:/devkitPro/libnx/include/switch/services/lbl.h:
+C:/devkitPro/libnx/include/switch/services/i2c.h:
+C:/devkitPro/libnx/include/switch/services/gpio.h:
+C:/devkitPro/libnx/include/switch/services/uart.h:
+C:/devkitPro/libnx/include/switch/services/bpc.h:
+C:/devkitPro/libnx/include/switch/services/pcv.h:
+C:/devkitPro/libnx/include/switch/services/clkrst.h:
+C:/devkitPro/libnx/include/switch/services/fan.h:
+C:/devkitPro/libnx/include/switch/services/pgl.h:
+C:/devkitPro/libnx/include/switch/services/psm.h:
+C:/devkitPro/libnx/include/switch/services/spsm.h:
+C:/devkitPro/libnx/include/switch/services/fatal.h:
+C:/devkitPro/libnx/include/switch/services/usb.h:
+C:/devkitPro/libnx/include/switch/services/usbds.h:
+C:/devkitPro/libnx/include/switch/services/usbhs.h:
+C:/devkitPro/libnx/include/switch/services/hid.h:
+C:/devkitPro/libnx/include/switch/services/hidbus.h:
+C:/devkitPro/libnx/include/switch/services/hiddbg.h:
+C:/devkitPro/libnx/include/switch/services/hidsys.h:
+C:/devkitPro/libnx/include/switch/services/irs.h:
+C:/devkitPro/libnx/include/switch/services/pl.h:
+C:/devkitPro/libnx/include/switch/services/vi.h:
+C:/devkitPro/libnx/include/switch/services/nv.h:
+C:/devkitPro/libnx/include/switch/services/nifm.h:
+C:/devkitPro/libnx/include/switch/services/nim.h:
+C:/devkitPro/libnx/include/switch/services/ns.h:
+C:/devkitPro/libnx/include/switch/services/ldr.h:
+C:/devkitPro/libnx/include/switch/services/ro.h:
+C:/devkitPro/libnx/include/switch/services/tc.h:
+C:/devkitPro/libnx/include/switch/services/ts.h:
+C:/devkitPro/libnx/include/switch/services/ssl.h:
+C:/devkitPro/libnx/include/switch/services/lr.h:
+C:/devkitPro/libnx/include/switch/services/bt.h:
+C:/devkitPro/libnx/include/switch/services/btdrv.h:
+C:/devkitPro/libnx/include/switch/services/btm.h:
+C:/devkitPro/libnx/include/switch/services/btmu.h:
+C:/devkitPro/libnx/include/switch/services/btmsys.h:
+C:/devkitPro/libnx/include/switch/services/spl.h:
+C:/devkitPro/libnx/include/switch/services/ncm.h:
+C:/devkitPro/libnx/include/switch/services/psc.h:
+C:/devkitPro/libnx/include/switch/services/capsa.h:
+C:/devkitPro/libnx/include/switch/services/capsc.h:
+C:/devkitPro/libnx/include/switch/services/capsdc.h:
+C:/devkitPro/libnx/include/switch/services/capsu.h:
+C:/devkitPro/libnx/include/switch/services/capssc.h:
+C:/devkitPro/libnx/include/switch/services/capssu.h:
+C:/devkitPro/libnx/include/switch/services/capmtp.h:
+C:/devkitPro/libnx/include/switch/services/nfc.h:
+C:/devkitPro/libnx/include/switch/services/mii.h:
+C:/devkitPro/libnx/include/switch/services/wlaninf.h:
+C:/devkitPro/libnx/include/switch/services/pctl.h:
+C:/devkitPro/libnx/include/switch/services/grc.h:
+C:/devkitPro/libnx/include/switch/display/native_window.h:
+C:/devkitPro/libnx/include/switch/nvidia/graphic_buffer.h:
+C:/devkitPro/libnx/include/switch/display/types.h:
+C:/devkitPro/libnx/include/switch/nvidia/types.h:
+C:/devkitPro/libnx/include/switch/display/binder.h:
+C:/devkitPro/libnx/include/switch/display/buffer_producer.h:
+C:/devkitPro/libnx/include/switch/nvidia/fence.h:
+C:/devkitPro/libnx/include/switch/nvidia/ioctl.h:
+C:/devkitPro/libnx/include/switch/services/friends.h:
+C:/devkitPro/libnx/include/switch/services/notif.h:
+C:/devkitPro/libnx/include/switch/services/miiimg.h:
+C:/devkitPro/libnx/include/switch/services/ldn.h:
+C:/devkitPro/libnx/include/switch/services/lp2p.h:
+C:/devkitPro/libnx/include/switch/services/news.h:
+C:/devkitPro/libnx/include/switch/services/ins.h:
+C:/devkitPro/libnx/include/switch/services/ectx.h:
+C:/devkitPro/libnx/include/switch/services/avm.h:
+C:/devkitPro/libnx/include/switch/services/mm.h:
+C:/devkitPro/libnx/include/switch/display/parcel.h:
+C:/devkitPro/libnx/include/switch/display/framebuffer.h:
+C:/devkitPro/libnx/include/switch/nvidia/map.h:
+C:/devkitPro/libnx/include/switch/nvidia/address_space.h:
+C:/devkitPro/libnx/include/switch/nvidia/channel.h:
+C:/devkitPro/libnx/include/switch/nvidia/gpu.h:
+C:/devkitPro/libnx/include/switch/nvidia/gpu_channel.h:
+C:/devkitPro/libnx/include/switch/audio/driver.h:
+C:/devkitPro/libnx/include/switch/applets/libapplet.h:
+C:/devkitPro/libnx/include/switch/applets/album_la.h:
+C:/devkitPro/libnx/include/switch/applets/friends_la.h:
+C:/devkitPro/libnx/include/switch/applets/hid_la.h:
+C:/devkitPro/libnx/include/switch/applets/mii_la.h:
+C:/devkitPro/libnx/include/switch/applets/nfp_la.h:
+C:/devkitPro/libnx/include/switch/applets/nifm_la.h:
+C:/devkitPro/libnx/include/switch/applets/pctlauth.h:
+C:/devkitPro/libnx/include/switch/applets/psel.h:
+C:/devkitPro/libnx/include/switch/applets/swkbd.h:
+C:/devkitPro/libnx/include/switch/applets/web.h:
+C:/devkitPro/libnx/include/switch/runtime/env.h:
+C:/devkitPro/libnx/include/switch/runtime/hosversion.h:
+C:/devkitPro/libnx/include/switch/runtime/diag.h:
+C:/devkitPro/libnx/include/switch/runtime/nxlink.h:
+C:/devkitPro/libnx/include/switch/runtime/resolver.h:
+C:/devkitPro/libnx/include/switch/runtime/pad.h:
+C:/devkitPro/libnx/include/switch/runtime/ringcon.h:
+C:/devkitPro/libnx/include/switch/runtime/btdev.h:
+C:/devkitPro/libnx/include/switch/runtime/util/utf.h:
+C:/devkitPro/libnx/include/switch/runtime/devices/console.h:
+C:/devkitPro/libnx/include/switch/runtime/devices/usb_comms.h:
+C:/devkitPro/libnx/include/switch/runtime/devices/fs_dev.h:
+C:/devkitPro/libnx/include/switch/runtime/devices/romfs_dev.h:
+C:/devkitPro/libnx/include/switch/runtime/devices/socket.h:
+C:/devkitPro/libnx/include/switch/crypto/aes.h:
+C:/devkitPro/libnx/include/switch/crypto/aes_cbc.h:
+C:/devkitPro/libnx/include/switch/crypto/aes_ctr.h:
+C:/devkitPro/libnx/include/switch/crypto/aes_xts.h:
+C:/devkitPro/libnx/include/switch/crypto/cmac.h:
+C:/devkitPro/libnx/include/switch/crypto/sha1.h:
+C:/devkitPro/libnx/include/switch/crypto/hmac.h:
+C:/devkitPro/libnx/include/switch/crypto/crc.h:
+C:/devkitPro/portlibs/switch/include/EGL/egl.h:
+C:/devkitPro/portlibs/switch/include/EGL/eglplatform.h:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glad/include/KHR/khrplatform.h:
+C:/devkitPro/portlibs/switch/include/EGL/eglext.h:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glad/include/glad/glad.h:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Engine.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/window.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Texture.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/ObjLoader.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/glm.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/_fixes.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/setup.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/simd/platform.h:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/fwd.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/qualifier.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/setup.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/vec2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec2.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/compute_vector_relational.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool2_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float2_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double2_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int2_sized.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/scalar_int_sized.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/setup.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint2_sized.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/scalar_uint_sized.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/vec3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec3.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/compute_vector_decl.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/_vectorize.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool3_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float3_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double3_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int3_sized.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint3_sized.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/vec4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec4.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool4_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float4_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double4_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int4_sized.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint4_sized.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat2x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x2.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/matrix.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat2x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x3.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x3_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x3_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat2x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat2x4.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x4_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x4_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat3x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x2.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x2_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x2_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat3x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x3.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/common.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_common.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/vector_relational.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_vector_relational.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/compute_common.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec1.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_vec1.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x3_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x3_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat3x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat3x4.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double3x4_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float3x4_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat4x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x2.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x2_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x2_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat4x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x3.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x3_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x3.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x3_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/mat4x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_mat4x4.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/geometric.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_geometric.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/exponential.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_exponential.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double4x4_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x4.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float4x4_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_matrix.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_double2x2_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x2.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_float2x2_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/trigonometric.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_trigonometric.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/packing.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_packing.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_half.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_half.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/integer.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/func_integer.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Mesh.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Vertex.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/VertexAttributes.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Material.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/ObjItem.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Input.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/JobSystem.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Camera.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/matrix_transform.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_projection.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/constants.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/scalar_constants.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/scalar_constants.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/constants.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_projection.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_clip_space.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_clip_space.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_transform.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_transform.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/matrix_transform.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Sprite.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Terrain.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderLightsSystem.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Shader.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Program.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/TransformComponent.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/RenderComponent.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/LightComponent.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Ecs.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/MovementComponent.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/type_ptr.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/quaternion.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_relational.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_relational.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_float.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_common.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_geometric.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_geometric.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_common.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_float.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_quat.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_relational.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_relational.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/type_quat.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_float_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_double.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_double_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_trigonometric.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_trigonometric.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_transform.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/quaternion_transform.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/quaternion.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/epsilon.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/detail/setup.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/epsilon.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/vec1.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool1.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_bool1_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float1.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_float1_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double1.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_double1_precision.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int1.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_int1_sized.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint1.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint1_sized.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/type_ptr.inl:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/ShadowMapSystem.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderSystem.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderDefferredSystem.hpp:
+C:/Dvd/MotoresGrafica/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderPbrSystem.hpp:

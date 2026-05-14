@@ -1,8 +1,7 @@
 #include <MotArda/Texture.hpp>
-#include <MotArda/Logger.hpp>
 #include <MotArda/Debug.hpp>
+#include <cstdio>
 #include <string>
-#include <iostream>
 #include <cmath>
 #include <algorithm>
 
@@ -16,7 +15,7 @@ namespace MTRD {
         unsigned char* data = stbi_load(route, &width, &height, &channels, 0);
 
         if (!data) {
-            MTRD::Logger::error("Error cargando textura: {}\n", route);
+            printf("Error cargando textura: %s\n", route);
 
             id_ = GL_INVALID_INDEX;
             return;

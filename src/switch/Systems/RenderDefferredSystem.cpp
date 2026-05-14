@@ -2,9 +2,9 @@
 #include <MotArda/Debug.hpp>
 #include <MotArda/Mesh.hpp>
 #include <MotArda/Material.hpp>
+#include <cstdio>
 #include <string>
 #include <vector>
-#include <MotArda/Logger.hpp>
 
 namespace MTRD {
     RenderDefferredSystem::RenderDefferredSystem(
@@ -89,7 +89,7 @@ namespace MTRD {
         glNamedFramebufferRenderbuffer(gBufferFBO, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 
         if (glCheckNamedFramebufferStatus(gBufferFBO, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            MTRD::Logger::error("Framebuffer not complete!");
+            printf("Framebuffer not complete!\n");
             std::abort();
         }
 

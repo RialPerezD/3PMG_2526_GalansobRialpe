@@ -638,11 +638,15 @@
     Online:
         Too many extensions
 */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glad/glad.h>
+
+// Soporte para EGL en Switch
+#ifdef __SWITCH__
+#include <EGL/egl.h>
+#endif
 
 static void* get_proc(const char *namez);
 
@@ -655,6 +659,8 @@ static HMODULE libGL;
 
 typedef void* (APIENTRYP PFNWGLGETPROCADDRESSPROC_PRIVATE)(const char*);
 static PFNWGLGETPROCADDRESSPROC_PRIVATE gladGetProcAddressPtr;
+
+#define GLAD_GLAPI_EXPORT_BUILD
 
 #ifdef _MSC_VER
 #ifdef __has_include
@@ -684,7 +690,6 @@ int open_gl(void) {
         return gladGetProcAddressPtr != NULL;
     }
 #endif
-
     return 0;
 }
 
@@ -696,7 +701,11 @@ void close_gl(void) {
     }
 }
 #else
-#include <dlfcn.h>
+// --- SECCION MODIFICADA PARA SWITCH ---
+#ifndef __SWITCH__
+    #include <dlfcn.h>
+#endif
+
 static void* libGL;
 
 #if !defined(__APPLE__) && !defined(__HAIKU__)
@@ -706,7 +715,9 @@ static PFNGLXGETPROCADDRESSPROC_PRIVATE gladGetProcAddressPtr;
 
 static
 int open_gl(void) {
-#ifdef __APPLE__
+#ifdef __SWITCH__
+    return 1; // En Switch no abrimos librerías externas
+#elif defined(__APPLE__)
     static const char *NAMES[] = {
         "../Frameworks/OpenGL.framework/OpenGL",
         "/Library/Frameworks/OpenGL.framework/OpenGL",
@@ -717,6 +728,7 @@ int open_gl(void) {
     static const char *NAMES[] = {"libGL.so.1", "libGL.so"};
 #endif
 
+#ifndef __SWITCH__
     unsigned int index = 0;
     for(index = 0; index < (sizeof(NAMES) / sizeof(NAMES[0])); index++) {
         libGL = dlopen(NAMES[index], RTLD_NOW | RTLD_GLOBAL);
@@ -731,22 +743,28 @@ int open_gl(void) {
 #endif
         }
     }
-
+#endif
     return 0;
 }
 
 static
 void close_gl(void) {
+#ifndef __SWITCH__
     if(libGL != NULL) {
         dlclose(libGL);
         libGL = NULL;
     }
+#endif
 }
 #endif
 
 static
 void* get_proc(const char *namez) {
     void* result = NULL;
+    
+#ifdef __SWITCH__
+    result = (void*)eglGetProcAddress(namez);
+#else
     if(libGL == NULL) return NULL;
 
 #if !defined(__APPLE__) && !defined(__HAIKU__)
@@ -761,7 +779,7 @@ void* get_proc(const char *namez) {
         result = dlsym(libGL, namez);
 #endif
     }
-
+#endif
     return result;
 }
 
@@ -770,7 +788,9 @@ int gladLoadGL(void) {
 
     if(open_gl()) {
         status = gladLoadGLLoader(&get_proc);
+#ifndef __SWITCH__
         close_gl();
+#endif
     }
 
     return status;

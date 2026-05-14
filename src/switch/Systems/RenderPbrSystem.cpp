@@ -1,6 +1,6 @@
 #include <MotArda/Systems/RenderPbrSystem.hpp>
 #include <MotArda/Debug.hpp>
-#include <MotArda/Logger.hpp>
+#include <cstdio>
 
 namespace MTRD {
     RenderPbrSystem::RenderPbrSystem(
@@ -92,7 +92,7 @@ namespace MTRD {
         glNamedFramebufferRenderbuffer(gBufferFBO, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 
         if (glCheckNamedFramebufferStatus(gBufferFBO, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            MTRD::Logger::error("PBR Framebuffer not complete!");
+            printf("PBR Framebuffer not complete!\n");
             std::abort();
         }
 

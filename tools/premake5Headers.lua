@@ -144,6 +144,7 @@ workspace "MotArda"
 
 			"src/win64/*.cpp", "include/MotArda/win64/*.hpp",
 			"src/win64/Systems/*.cpp", "include/MotArda/win64/Systems/*.hpp",
+			"src/win64/Components/*.cpp", "include/win64/MotArda/Components/*.hpp",
 
 			"deps/glad/src/glad.c", "deps/glad/include/glad/glad.h",
 			"deps/imgui/*.cpp",

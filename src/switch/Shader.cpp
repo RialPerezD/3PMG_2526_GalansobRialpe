@@ -1,11 +1,10 @@
 #include <MotArda/Shader.hpp>
 #include <MotArda/Debug.hpp>
-#include <MotArda/Logger.hpp>
 
+#include <cstdio>
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <iostream>
 
 namespace MTRD {
 
@@ -30,10 +29,10 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetShaderInfoLog(vertexShader, sizeof(infoLog), NULL, infoLog);
-                MTRD::Logger::error("ERROR::SHADER::VERTEX::LINKING_FAILED\n%s\n", infoLog);
+                printf("ERROR::SHADER::VERTEX::LINKING_FAILED\n%s\n", infoLog);
             }
             else {
-                MTRD::Logger::info("Vertex %s shader compiled successfully.\n", filename.filename().string().c_str());
+                printf("Vertex %s shader compiled successfully.\n", filename.filename().string().c_str());
             }
         }
 
@@ -65,10 +64,10 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetShaderInfoLog(geometryShader, sizeof(infoLog), NULL, infoLog);
-                MTRD::Logger::error("ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n%s\n", infoLog);   
+                printf("ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n%s\n", infoLog);   
             }
             else {
-                MTRD::Logger::info("Geometry %s shader compiled successfully.\n", filename.filename().string().c_str());
+                printf("Geometry %s shader compiled successfully.\n", filename.filename().string().c_str());
             }
             glCheckError();
         }
@@ -97,10 +96,10 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetShaderInfoLog(fragmentShader, sizeof(infoLog), NULL, infoLog);
-                MTRD::Logger::error("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
+                printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
             }
             else {
-                MTRD::Logger::info("Fragment %s shader compiled successfully.\n", filename.filename().string().c_str());
+                printf("Fragment %s shader compiled successfully.\n", filename.filename().string().c_str());
             }
         }
 

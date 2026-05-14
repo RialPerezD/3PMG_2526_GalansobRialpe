@@ -5,7 +5,7 @@
 #include <cmath>
 #include <vector>
 
-#include "../../deps/glm-master/glm/ext/scalar_constants.hpp"
+#include <glm/ext/scalar_constants.hpp>
 
 namespace MTRD {
 
@@ -157,7 +157,7 @@ namespace MTRD {
         whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank_white.jpg";
         materials.push_back(whiteMaterial);
 
-        return std::move(ObjItem(std::move(meshes), materials));
+        return ObjItem(std::move(meshes), materials);
     }
 
 
