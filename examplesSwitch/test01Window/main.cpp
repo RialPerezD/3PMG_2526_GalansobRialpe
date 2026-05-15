@@ -59,6 +59,10 @@ int main(int argc, char* argv[])
     if (!maybeEng.has_value()) return EXIT_FAILURE;
     auto& eng = maybeEng.value();
 
+    while (1) {
+        printf("Estoy vivo\n");
+    }
+
     // --- Camera ---
     MTRD::Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0.f, 0.f, 0.5f));

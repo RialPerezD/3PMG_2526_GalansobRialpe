@@ -40,7 +40,7 @@ ARCH    :=  -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 
 LIBS    := -lEGL -lglapi -ldrm_nouveau -lnx
 
-CFLAGS  :=  -g -Wall -O2 -ffunction-sections $(ARCH) -D__SWITCH__
+CFLAGS  :=  -g -Wall -O0 -ffunction-sections $(ARCH) -D__SWITCH__ -DENABLE_NXLINK
 CFLAGS  +=  $(INCLUDE)
 
 CXXFLAGS    := $(CFLAGS) -fexceptions 
@@ -103,7 +103,6 @@ else
 DEPENDS :=  $(OFILES:.o=.d)
 
 all : $(OUTPUT).nro
-	@rm -f $(OUTPUT).elf $(OUTPUT).nacp
 	@echo "Build finished: $(notdir $(OUTPUT)).nro"
 
 $(OUTPUT).nro : $(OUTPUT).elf $(OUTPUT).nacp
@@ -123,4 +122,4 @@ $(OFILES_SRC) : $(HFILES_BIN)
 
 endif
 
-CXXFLAGS += -frtti
+CXXFLAGS += -frtti -gdwarf-4
