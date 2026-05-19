@@ -21,6 +21,8 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
 
     auto& eng = maybeEng.value();
+    MTRD::Logger::init("testMouse", MTRD::Logger::Level::Debug);
+
 
     MTRD::Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0, 5, 15));
@@ -102,6 +104,7 @@ int MTRD::main() {
             MTRD::Logger::info("Raycast hit: ({}, {}, {})", hitPoint.x, hitPoint.y, hitPoint.z);
         }
 
+        MTRD::Logger::shutdown();
         eng.RenderScene();
 
         eng.windowEndFrame();

@@ -21,6 +21,8 @@ int MTRD::main() {
     auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda OBJ Viewer");
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
+    MTRD::Logger::init("testLoadObj", MTRD::Logger::Level::Debug);
+
     // --- *** ---
 
     // --- Camera ---
@@ -110,6 +112,7 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.rotate(-10.0f, 0.0f);
         // --- *** ---
 
+        MTRD::Logger::shutdown();
         eng.RenderScene();
 
 

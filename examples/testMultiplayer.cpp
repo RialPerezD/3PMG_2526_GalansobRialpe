@@ -28,6 +28,8 @@ int MTRD::main() {
     auto maybeEng = MotardaEng::createEngine(800, 600, "MotArda Multiplayer");
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
+    MTRD::Logger::init("testMultiplayer", MTRD::Logger::Level::Debug);
+
 
     eng.SetDebugMode(true);
     eng.SetRenderType(MotardaEng::RenderType::Base);
@@ -151,6 +153,7 @@ int MTRD::main() {
         ImGui::End();
 
         netSys.Process();
+        MTRD::Logger::shutdown();
         eng.RenderScene();
         eng.windowEndFrame();
     }

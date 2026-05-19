@@ -25,6 +25,9 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
 
     auto& eng = maybeEng.value();
+    MTRD::Logger::init("testPhysx", MTRD::Logger::Level::Debug);
+
+
     // --- *** ---
 
 
@@ -160,6 +163,7 @@ int MTRD::main() {
         // --- *** ---
 
         // Generate shadow map
+        MTRD::Logger::shutdown();
         eng.RenderScene();
         // --- *** ---
 

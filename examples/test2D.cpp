@@ -33,6 +33,8 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
 
     auto& eng = maybeEng.value();
+    MTRD::Logger::init("test2D", MTRD::Logger::Level::Debug);
+
     eng.getCamera().setPosition({ 0, 0, 20 });
     eng.getCamera().setTarget({ 0, 0, 0 });
     eng.SetDebugMode(true);
@@ -122,6 +124,7 @@ int MTRD::main() {
             }
             animTimer = 0;
         }
+        MTRD::Logger::shutdown();
 
         eng.RenderScene();
         eng.windowEndFrame();

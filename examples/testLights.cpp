@@ -219,6 +219,8 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
 
     auto& eng = maybeEng.value();
+    MTRD::Logger::init("testPbr", MTRD::Logger::Level::Debug);
+
     // --- *** ---
 
 
@@ -309,6 +311,8 @@ int MTRD::main() {
         lightComp->spotLights[2].position_ = glm::vec3(-posX * 0.68f, 0.0f, posY * 0.68f) + spotLigthCenter;
         
         // Generate shadow map
+        MTRD::Logger::shutdown();
+
         eng.RenderScene();
         // --- *** ---
 

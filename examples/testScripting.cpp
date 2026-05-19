@@ -129,6 +129,8 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
     g_engine = &eng;
+    MTRD::Logger::init("testScripting", MTRD::Logger::Level::Debug);
+
     // --- *** ---
  
     // --- Camera ---
@@ -357,6 +359,7 @@ int MTRD::main() {
         }
         // --- *** ---
 
+        MTRD::Logger::shutdown();
 
         eng.RenderScene();
 

@@ -192,6 +192,7 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
 
     auto& eng = maybeEng.value();
+    MTRD::Logger::init("testPbr", MTRD::Logger::Level::Debug);
 
     MTRD::Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0, 1, 20));
@@ -261,6 +262,7 @@ int MTRD::main() {
             lightComp->spotLights[idx + 2].position_ = glm::vec3(-posX * 0.68f, 0.0f, posY * 0.68f) + currentCenter;
         }
 
+        MTRD::Logger::shutdown();
         eng.RenderScene();
         eng.windowEndFrame();
     }
