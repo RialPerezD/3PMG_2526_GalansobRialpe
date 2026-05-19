@@ -57,9 +57,13 @@ namespace MTRD {
         materialId_(other.materialId_),
         debug_(other.debug_),
         meshSize(other.meshSize),
-        name_(std::move(other.name_)) {
+        name_(std::move(other.name_)),
+        aabbMin(other.aabbMin),
+        aabbMax(other.aabbMax) {
         other.vao = 0;
         other.gluintVertexBuffer = 0;
+        other.aabbMin = glm::vec3(0.0f);
+        other.aabbMax = glm::vec3(0.0f);
     }
 
 
@@ -75,9 +79,13 @@ namespace MTRD {
             debug_ = other.debug_;
             meshSize = other.meshSize;
             name_ = std::move(other.name_);
+            aabbMin = other.aabbMin;
+            aabbMax = other.aabbMax;
 
             other.vao = 0;
             other.gluintVertexBuffer = 0;
+            other.aabbMin = glm::vec3(0.0f);
+            other.aabbMax = glm::vec3(0.0f);
         }
         return *this;
     }

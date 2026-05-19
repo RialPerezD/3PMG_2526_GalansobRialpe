@@ -210,18 +210,18 @@ namespace MTRD {
             lutData[i * 3 + 2] = (unsigned char)(glm::clamp(color.b, 0.0f, 1.0f) * 255.0f);
         }
 
-        GLuint lutTexture;
-        glCreateTextures(GL_TEXTURE_2D, 1, &lutTexture);
-        glTextureStorage2D(lutTexture, 1, GL_RGB8, LUT_SIZE, 1);
-        glTextureSubImage2D(lutTexture, 0, 0, 0, LUT_SIZE, 1, GL_RGB, GL_UNSIGNED_BYTE, lutData.data());
-        glTextureParameteri(lutTexture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTextureParameteri(lutTexture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTextureParameteri(lutTexture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTextureParameteri(lutTexture, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        lutTexture;
+        glCreateTextures(GL_TEXTURE_2D, 1, &lutTexture.id_);
+        glTextureStorage2D(lutTexture.id_, 1, GL_RGB8, LUT_SIZE, 1);
+        glTextureSubImage2D(lutTexture.id_, 0, 0, 0, LUT_SIZE, 1, GL_RGB, GL_UNSIGNED_BYTE, lutData.data());
+        glTextureParameteri(lutTexture.id_, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(lutTexture.id_, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTextureParameteri(lutTexture.id_, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTextureParameteri(lutTexture.id_, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         Material terrainMat;
         terrainMat.name = "terrain_diffuse";
-        terrainMat.diffuseTexID = lutTexture;
+        terrainMat.diffuseTexID = lutTexture.getId();
         terrainMat.useHeightLUT = true;
         terrainMat.maxHeight = maxHeight;
         terrainMat.specular = glm::vec3(0.0f);

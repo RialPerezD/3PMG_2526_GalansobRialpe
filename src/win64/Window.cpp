@@ -8,6 +8,7 @@
 #include <iostream>
 #include <filesystem>
 #include <algorithm>
+#include <MotArda/Logger.hpp>
 
 namespace MTRD {
     Window::~Window() {
@@ -84,7 +85,8 @@ namespace MTRD {
         GLFWwindow* glfw_window = glfwCreateWindow(width, height, windowName, NULL, NULL);
 
         if (glfw_window == nullptr) {
-            return std::nullopt;
+            MTRD::Logger::error("Error creating Window, exiting program.");
+            std::abort();
         }
 
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);

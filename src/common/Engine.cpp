@@ -8,10 +8,8 @@
 #include <MotArda/Systems/RenderPbrSystem.hpp>
 #ifndef __SWITCH__
 #include <MotArda/Logger.hpp>
-#include <MotArda/Logger.hpp>
 #endif
 
-#include <memory>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -25,7 +23,10 @@ namespace MTRD {
         const char* windowName
     ) {
         auto w = Window::windowCreate(width, height, windowName);
-        if (!w) return std::nullopt;
+        if (!w) {
+            MTRD::Logger::error("Error creating Engine, exiting program.");
+            std::abort();
+        }
 
         Input input_ = Input::inputCreate(w.value());
 
@@ -199,25 +200,6 @@ namespace MTRD {
         }
 
         return objItemsList;
-    }
-
-
-    const char* MotardaEng::loadShaderFile(const char* filename) {
-        std::ifstream file(filename);
-        if (!file.is_open()) {
-#ifndef __SWITCH__
-            MTRD::Logger::error("No se pudo abrir el archivo");
-#endif
-            return nullptr;
-        }
-
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-
-        static std::string shaderSource;
-        shaderSource = buffer.str();
-
-        return shaderSource.c_str();
     }
 
 

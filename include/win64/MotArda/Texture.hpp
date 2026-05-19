@@ -8,6 +8,9 @@ namespace MTRD {
         GLuint id_ = GL_INVALID_INDEX;
 
     public:
+        friend class Terrain;
+
+        Texture();
         Texture(const char* route, bool debug = false);
 
         ~Texture();

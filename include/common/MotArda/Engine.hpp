@@ -173,13 +173,6 @@ namespace MTRD {
         * and finally, we move "item" into the first list of objects.
         */
         std::vector<std::shared_ptr<ObjItem>> loadObjs(const std::vector <const char*>& routes);
-        /**
-        * @brief loadObjs.
-        * @param const char* filename Name of the shader.
-        * @return Returns a pointer containing the shader source code.
-        * @details Loads the contents of a shader file and returns it as a string.
-        */
-        const char* loadShaderFile(const char* filename);
 
         std::unique_ptr<Mesh> createMesh(const std::vector<Vertex>& vertices, const std::string& name);
 
