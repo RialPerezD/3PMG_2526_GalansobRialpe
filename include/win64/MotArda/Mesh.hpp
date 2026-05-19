@@ -27,8 +27,8 @@ namespace MTRD {
         
 
         ~Mesh();
-        Mesh(Mesh&& other);
-        Mesh& operator=(Mesh&& other);
+        Mesh(Mesh&& other) noexcept;
+        Mesh& operator=(Mesh&& other) noexcept;
         Mesh(const Mesh&) = delete;
         Mesh& operator=(const Mesh&) = delete;
 

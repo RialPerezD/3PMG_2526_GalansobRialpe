@@ -199,7 +199,7 @@ namespace MTRD {
     private:
 
 
-        explicit Window(GLFWwindow* glfwWindow, GLFWwindow* glfwSecondaryWindow, bool debug);
+        explicit Window(GLFWwindow* glfwWindow, GLFWwindow* glfwSecondaryWindow, int width, int height, bool debug);
 
         void checkErrors();
 

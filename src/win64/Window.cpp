@@ -33,10 +33,13 @@ namespace MTRD {
         windowWidth_(right.windowWidth_),
         windowHeight_(right.windowHeight_),
         debug_(right.debug_),
-        lastFrameTime_(right.lastFrameTime_)
+        lastFrameTime_(right.lastFrameTime_),
+        textureCache(std::move(right.textureCache))
     {
         right.glfw_window = nullptr;
         right.glfw_secondary_window = nullptr;
+        right.windowWidth_ = 0;
+        right.windowHeight_ = 0;
     }
 
 
@@ -47,9 +50,11 @@ namespace MTRD {
     }
 
 
-    Window::Window(GLFWwindow* glfwWindow, GLFWwindow* glfwSecondaryWindow, bool debug) :
+    Window::Window(GLFWwindow* glfwWindow, GLFWwindow* glfwSecondaryWindow, int width, int height, bool debug) :
         glfw_window(glfwWindow),
         glfw_secondary_window(glfwSecondaryWindow),
+        windowWidth_(width),
+        windowHeight_(height),
         debug_(debug)
     {
         glfwMakeContextCurrent(glfw_window);
@@ -92,7 +97,7 @@ namespace MTRD {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         GLFWwindow* glfw_secondary_window = glfwCreateWindow(1, 1, "", nullptr, glfw_window);
 
-        std::optional<Window> wind = std::make_optional(Window{ glfw_window, glfw_secondary_window, debug });
+        std::optional<Window> wind = std::make_optional(Window{ glfw_window, glfw_secondary_window, width, height, debug });
         wind.value().windowWidth_ = width;
         wind.value().windowHeight_ = height;
         wind.value().debug_ = debug;

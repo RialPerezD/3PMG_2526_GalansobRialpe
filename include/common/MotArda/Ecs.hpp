@@ -2,7 +2,6 @@
 
 #include <MotArda/Components/TransformComponent.hpp>
 #include <MotArda/Components/RenderComponent.hpp>
-#include <MotArda/Components/MovementComponent.hpp>
 #ifndef __SWITCH__
 #include <MotArda/Components/NetworkComponent.hpp>
 #endif

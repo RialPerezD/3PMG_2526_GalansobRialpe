@@ -3,10 +3,10 @@
 namespace MTRD {
     ObjItem::~ObjItem() = default;
 
-    ObjItem::ObjItem(ObjItem&& other)
+    ObjItem::ObjItem(ObjItem&& other) noexcept
         : meshes(std::move(other.meshes)), materials(std::move(other.materials)) {}
 
-    ObjItem& ObjItem::operator=(ObjItem&& other) {
+    ObjItem& ObjItem::operator=(ObjItem&& other) noexcept {
         if (this != &other) {
             meshes = std::move(other.meshes);
             materials = std::move(other.materials);

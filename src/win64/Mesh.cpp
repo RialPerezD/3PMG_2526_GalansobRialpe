@@ -51,7 +51,7 @@ namespace MTRD {
     }
 
 
-    Mesh::Mesh(Mesh&& other)
+    Mesh::Mesh(Mesh&& other) noexcept
         : vao(other.vao),
         gluintVertexBuffer(other.gluintVertexBuffer),
         materialId_(other.materialId_),
@@ -67,7 +67,7 @@ namespace MTRD {
     }
 
 
-    Mesh& Mesh::operator=(Mesh&& other) {
+    Mesh& Mesh::operator=(Mesh&& other) noexcept {
         if (this != &other) {
             if (vao != 0 && vao != GL_INVALID_INDEX) {
                 glDeleteBuffers(1, &gluintVertexBuffer);

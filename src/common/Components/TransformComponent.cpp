@@ -1,10 +1,10 @@
 #include <MotArda/Components/TransformComponent.hpp>
 
-MTRD::TransformComponent::TransformComponent(){
-    position = { 0,0,0 };
-    scale = { 0,0,0 };
-    rotation = { 0,0,0 };
-    angleRotationRadians = 0;
+MTRD::TransformComponent::TransformComponent()
+    : position(0.0f, 0.0f, 0.0f),
+    scale(0.0f, 0.0f, 0.0f),
+    rotation(0.0f, 0.0f, 0.0f),
+    angleRotationRadians(0.0f) {
 }
 
 

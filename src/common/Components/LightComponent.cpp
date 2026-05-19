@@ -52,6 +52,7 @@ namespace MTRD {
         , constant_(1.0f)
         , linear_(0.09f)
         , quadratic_(0.032f)
+        , wRatio_(0.0f)
     {
     }
 

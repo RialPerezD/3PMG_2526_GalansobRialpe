@@ -13,8 +13,8 @@ namespace MTRD {
 
         ObjItem() = default;
         ~ObjItem();
-        ObjItem(ObjItem&& other);
-        ObjItem& operator=(ObjItem&& other);
+        ObjItem(ObjItem&& other) noexcept;
+        ObjItem& operator=(ObjItem&& other) noexcept;
         ObjItem(const ObjItem&) = delete;
         ObjItem& operator=(const ObjItem&) = delete;
         ObjItem(std::vector<std::unique_ptr<Mesh>> m, std::vector<Material> mat);

@@ -59,6 +59,10 @@ namespace MTRD {
         * @details Default destructor
         */
         ~Camera() = default;
+        Camera(const Camera&) = default;
+        Camera& operator=(const Camera&) = default;
+        Camera(Camera&&) = default;
+        Camera& operator=(Camera&&) = default;
 
 
         static Camera& CreateCamera(float ratio);

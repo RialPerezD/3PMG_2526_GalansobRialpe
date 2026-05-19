@@ -45,7 +45,6 @@ int MTRD::main() {
     ECSManager& ecs = eng.getEcs();
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
-    ecs.AddComponentType<MTRD::MovementComponent>();
 
     size_t entity = ecs.AddEntity();
     // --- *** ---
