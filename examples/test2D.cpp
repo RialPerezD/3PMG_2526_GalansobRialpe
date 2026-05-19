@@ -36,8 +36,8 @@ int MTRD::main() {
 
     eng.getCamera().setPosition({ 0, 0, 20 });
     eng.getCamera().setTarget({ 0, 0, 0 });
-    eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Bidimensional);
+    eng.setDebugMode(true);
+    eng.setRenderType(MotardaEng::RenderType::Bidimensional);
     eng.windowSetErrorCallback(error_callback);
 
 
@@ -126,11 +126,11 @@ int MTRD::main() {
             animTimer = 0;
         }
 
-        eng.RenderScene();
+        eng.renderScene();
         eng.windowEndFrame();
     }
 
-    eng.EndDebugger();
+    eng.endDebugger();
 
     return 0;
 }

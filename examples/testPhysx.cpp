@@ -37,8 +37,8 @@ int MTRD::main() {
 
 
     // --- Setup engine info ---
-	eng.SetDebugMode(true);
-	eng.SetRenderType(MotardaEng::RenderType::Base);
+	eng.setDebugMode(true);
+	eng.setRenderType(MotardaEng::RenderType::Base);
     // Enable physx
 	eng.hasPhysx(true);
     eng.windowSetErrorCallback(error_callback);
@@ -141,13 +141,13 @@ int MTRD::main() {
         // --- *** ---
 
         // Generate shadow map
-        eng.RenderScene();
+        eng.renderScene();
         // --- *** ---
 
         eng.windowEndFrame();
     }
 
-    eng.EndDebugger();
+    eng.endDebugger();
 
     return 0;
 }

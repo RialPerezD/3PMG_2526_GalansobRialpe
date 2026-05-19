@@ -66,7 +66,7 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::SetDebugMode(bool debug) {
+    void MotardaEng::setDebugMode(bool debug) {
         debug_ = debug;
         window_.setDebugMode(debug);
     }
@@ -245,7 +245,7 @@ namespace MTRD {
     }
 
 
-    std::unique_ptr<Terrain> MotardaEng::CreateTerrain(float width, float depth, float maxHeight, int seed, int textureId, bool debug) {
+    std::unique_ptr<Terrain> MotardaEng::createTerrain(float width, float depth, float maxHeight, int seed, int textureId, bool debug) {
         
         if(seed == -1) {
             seed = std::rand();
@@ -344,7 +344,7 @@ namespace MTRD {
     #endif
 
 
-    void MotardaEng::SetRenderType(RenderType type) {
+    void MotardaEng::setRenderType(RenderType type) {
         actualRenderType_ = type;
 
         switch (type) {
@@ -362,7 +362,7 @@ namespace MTRD {
             renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
             break;
         case RenderType::DeferredWithLights:
-            defferredSystem_ = std::make_unique<RenderDefferredSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
+            defferredSystem_ = std::make_unique<RenderDeferredSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
             shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
             break;
         case RenderType::Pbr:
@@ -373,7 +373,7 @@ namespace MTRD {
     }
 
 
-    void MotardaEng::RenderScene() {
+    void MotardaEng::renderScene() {
         vp_ = camera_.getViewProj();
 
         switch (actualRenderType_) {
@@ -471,7 +471,7 @@ namespace MTRD {
             // --- *** ---
         #endif
     }
-    void MotardaEng::EndDebugger() {
+    void MotardaEng::endDebugger() {
         #ifndef __SWITCH__
             MTRD::Logger::shutdown();
         #endif

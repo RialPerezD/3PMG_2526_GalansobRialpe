@@ -195,8 +195,8 @@ int MTRD::main() {
 
 
     // --- Setup engine info ---
-	eng.SetDebugMode(true);
-	eng.SetRenderType(MotardaEng::RenderType::LightsWithShadows);
+	eng.setDebugMode(true);
+	eng.setRenderType(MotardaEng::RenderType::LightsWithShadows);
     eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
@@ -273,13 +273,13 @@ int MTRD::main() {
         lightComp->spotLights[2].position_ = glm::vec3(-posX * 0.68f, 0.0f, posY * 0.68f) + spotLigthCenter;
         
         // Generate shadow map
-        eng.RenderScene();
+        eng.renderScene();
         // --- *** ---
 
         eng.windowEndFrame();
     }
 
-    eng.EndDebugger();
+    eng.endDebugger();
 
     return 0;
 }

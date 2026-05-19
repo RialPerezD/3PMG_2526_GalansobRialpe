@@ -29,8 +29,8 @@ int MTRD::main() {
 
     // --- Setup Engigne ---
 
-    eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Base);
+    eng.setDebugMode(true);
+    eng.setRenderType(MotardaEng::RenderType::Base);
     eng.windowSetErrorCallback(error_callback);
 
     // --- Create drawable entitys ---
@@ -91,7 +91,7 @@ int MTRD::main() {
     while (!eng.windowShouldClose()) {
 
         eng.windowInitFrame();
-        eng.RenderScene();
+        eng.renderScene();
 
         // --- Input to move camera ---
         if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
@@ -107,7 +107,7 @@ int MTRD::main() {
         eng.windowEndFrame();
     }
 
-    eng.EndDebugger();
+    eng.endDebugger();
 
     return 0;
 }

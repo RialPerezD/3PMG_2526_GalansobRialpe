@@ -139,8 +139,8 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Setup Engine ---
-    eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Base);
+    eng.setDebugMode(true);
+    eng.setRenderType(MotardaEng::RenderType::Base);
     eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
@@ -360,7 +360,7 @@ int MTRD::main() {
 
         MTRD::Logger::shutdown();
 
-        eng.RenderScene();
+        eng.renderScene();
 
 
         // --- Input to move player ---
@@ -375,7 +375,7 @@ int MTRD::main() {
         eng.windowEndFrame();
     }
 
-    eng.EndDebugger();
+    eng.endDebugger();
 
     return 0;
 }

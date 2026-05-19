@@ -1,4 +1,4 @@
-#include <MotArda/Systems/RenderDefferredSystem.hpp>
+#include <MotArda/Systems/RenderDeferredSystem.hpp>
 #include <MotArda/Debug.hpp>
 #include <MotArda/Mesh.hpp>
 #include <MotArda/Material.hpp>
@@ -7,7 +7,7 @@
 #include <MotArda/Logger.hpp>
 
 namespace MTRD {
-    RenderDefferredSystem::RenderDefferredSystem(
+    RenderDeferredSystem::RenderDeferredSystem(
         glm::mat4x4& vp,
         glm::mat4x4& model,
         glm::vec3& viewPos,
@@ -40,7 +40,7 @@ namespace MTRD {
         InitGBuffer();
     }
 
-    RenderDefferredSystem::~RenderDefferredSystem() {
+    RenderDeferredSystem::~RenderDeferredSystem() {
         if (gBufferInitialized) {
             glDeleteFramebuffers(1, &gBufferFBO);
             glDeleteTextures(1, &gPosition);
@@ -50,15 +50,15 @@ namespace MTRD {
         }
     }
 
-    void RenderDefferredSystem::SetShadowMaps(const std::vector<GLuint>& depthMaps) {
+    void RenderDeferredSystem::SetShadowMaps(const std::vector<GLuint>& depthMaps) {
         depthMaps_ = depthMaps;
     }
 
-    void RenderDefferredSystem::SetShadowCubemaps(const std::vector<GLuint>& depthCubemaps) {
+    void RenderDeferredSystem::SetShadowCubemaps(const std::vector<GLuint>& depthCubemaps) {
         depthCubemaps_ = depthCubemaps;
     }
 
-    void RenderDefferredSystem::InitGBuffer() {
+    void RenderDeferredSystem::InitGBuffer() {
         glCreateFramebuffers(1, &gBufferFBO);
 
         glCreateTextures(GL_TEXTURE_2D, 1, &gPosition);
@@ -96,7 +96,7 @@ namespace MTRD {
         gBufferInitialized = true;
     }
 
-    void RenderDefferredSystem::Resize(int width, int height) {
+    void RenderDeferredSystem::Resize(int width, int height) {
         windowWidth_ = width;
         windowHeight_ = height;
 
@@ -112,7 +112,7 @@ namespace MTRD {
         InitGBuffer();
     }
 
-    void RenderDefferredSystem::GeometryPass(ECSManager& ecs, glm::mat4x4& model) {
+    void RenderDeferredSystem::GeometryPass(ECSManager& ecs, glm::mat4x4& model) {
         glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBO);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
@@ -161,7 +161,7 @@ namespace MTRD {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void RenderDefferredSystem::LightingPass(ECSManager& ecs, bool hasShadows) {
+    void RenderDeferredSystem::LightingPass(ECSManager& ecs, bool hasShadows) {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT);
         glDisable(GL_DEPTH_TEST);
@@ -268,7 +268,7 @@ namespace MTRD {
         glDisable(GL_BLEND);
     }
 
-    void RenderDefferredSystem::RenderQuad() {
+    void RenderDeferredSystem::RenderQuad() {
         static unsigned int quadVAO = 0;
         static unsigned int quadVBO = 0;
 
@@ -302,7 +302,7 @@ namespace MTRD {
         glBindVertexArray(0);
     }
 
-    void RenderDefferredSystem::Render(ECSManager& ecs, glm::mat4x4& model, bool hasShadows) {
+    void RenderDeferredSystem::Render(ECSManager& ecs, glm::mat4x4& model, bool hasShadows) {
         glViewport(0, 0, windowWidth_, windowHeight_);
         GeometryPass(ecs, model);
         LightingPass(ecs, hasShadows);

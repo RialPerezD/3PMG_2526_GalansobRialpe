@@ -14,9 +14,9 @@
 #include <vector>
 
 namespace MTRD {
-    class RenderDefferredSystem {
+    class RenderDeferredSystem {
     public:
-        RenderDefferredSystem(
+        RenderDeferredSystem(
             glm::mat4x4& vp,
             glm::mat4x4& model,
             glm::vec3& viewPos,
@@ -24,7 +24,7 @@ namespace MTRD {
             int windowWidth = 800,
             int windowHeight = 600);
 
-        ~RenderDefferredSystem();
+        ~RenderDeferredSystem();
 
         void Render(
             ECSManager& ecs,

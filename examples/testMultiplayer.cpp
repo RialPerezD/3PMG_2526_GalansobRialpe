@@ -7,7 +7,7 @@
 #include <MotArda/Components/NetworkComponent.hpp>
 #include <MotArda/Components/TransformComponent.hpp>
 #include <MotArda/Components/RenderComponent.hpp>
-#include <MotArda/SimplePacketReciver.hpp>
+#include <MotArda/SimplePacketReceiver.hpp>
 
 #include <cstdlib>
 #include <ctime>
@@ -29,8 +29,8 @@ int MTRD::main() {
     auto& eng = maybeEng.value();
 
 
-    eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Base);
+    eng.setDebugMode(true);
+    eng.setRenderType(MotardaEng::RenderType::Base);
 
     Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0, 5, 10));
@@ -77,7 +77,7 @@ int MTRD::main() {
             randomX, randomZ);
     }
 
-    SimplePacketReciver simplPacRec(&objItemList, &ecs, player);
+    SimplePacketReceiver simplPacRec(&objItemList, &ecs, player);
 
     NetworkManager netMgr;
     if (IS_SERVER) {
@@ -86,7 +86,7 @@ int MTRD::main() {
         if (!netMgr.InitClient(SERVER_IP, PORT)) return 1;
     }
 
-    NetworkSystem netSys(ecs, netMgr, std::bind(&MTRD::SimplePacketReciver::OnReceivePacket, &simplPacRec, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    NetworkSystem netSys(ecs, netMgr, std::bind(&MTRD::SimplePacketReceiver::OnReceivePacket, &simplPacRec, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
     netSys.SetChatCallback([&chatMessages](uint32_t senderId, const MTRD::ChatPayload& payload) {
         std::string fullMsg = "Player " + std::to_string(senderId) + ": " + payload.text;
@@ -150,11 +150,11 @@ int MTRD::main() {
         ImGui::End();
 
         netSys.Process();
-        eng.RenderScene();
+        eng.renderScene();
         eng.windowEndFrame();
     }
 
-    eng.EndDebugger();
+    eng.endDebugger();
     netMgr.Shutdown();
     return 0;
 }

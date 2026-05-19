@@ -30,8 +30,8 @@ int MTRD::main() {
 
     // --- Setup Engigne ---
 
-    eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Base);
+    eng.setDebugMode(true);
+    eng.setRenderType(MotardaEng::RenderType::Base);
     eng.windowSetErrorCallback(error_callback);
 
     // --- Load Objs ---
@@ -105,12 +105,12 @@ int MTRD::main() {
         if (eng.inputIsKeyPressed(Input::Keyboard::T)) camera.rotate(-10.0f, 0.0f);
         // --- *** ---
 
-        eng.RenderScene();
+        eng.renderScene();
 
         eng.windowEndFrame();
     }
 
-    eng.EndDebugger();
+    eng.endDebugger();
 
     return 0;
 }

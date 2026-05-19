@@ -34,8 +34,8 @@ int MTRD::main() {
     auto& eng = maybeEng.value();
 
     // --- Configuracion basica ---
-    eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Base);
+    eng.setDebugMode(true);
+    eng.setRenderType(MotardaEng::RenderType::Base);
     eng.getCamera().setPosition(glm::vec3(0, 5, 10));
     eng.getCamera().setTarget(glm::vec3(0, 0, 0));
 
@@ -273,7 +273,7 @@ int MTRD::main() {
             }
         }
 
-        eng.RenderScene();
+        eng.renderScene();
         eng.windowEndFrame();
     }
 

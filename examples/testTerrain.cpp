@@ -32,11 +32,11 @@ int MTRD::main() {
     float orbitAngle = 0.0f;
     float orbitDistance = 15.0f;
 
-    eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::LightsWithShadows);
+    eng.setDebugMode(true);
+    eng.setRenderType(MotardaEng::RenderType::LightsWithShadows);
     eng.windowSetErrorCallback(error_callback);
 
-    std::unique_ptr<MTRD::Terrain> terrain = eng.CreateTerrain(100, 100, 40);
+    std::unique_ptr<MTRD::Terrain> terrain = eng.createTerrain(100, 100, 40);
 
     std::vector<std::shared_ptr<ObjItem>> objItemList;
     objItemList.push_back(eng.generateSphere(0.5f, 100, 100, 0));
@@ -133,11 +133,11 @@ int MTRD::main() {
             if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -20.0f);
         }
 
-        eng.RenderScene();
+        eng.renderScene();
         eng.windowEndFrame();
     }
 
-    eng.EndDebugger();
+    eng.endDebugger();
 
     return 0;
 }

@@ -28,8 +28,8 @@ int MTRD::main() {
     camera.setTarget(glm::vec3(0.0f, 0.0f, 0.0f));
     float movSpeed = 0.1f;
 
-    eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Base);
+    eng.setDebugMode(true);
+    eng.setRenderType(MotardaEng::RenderType::Base);
     eng.hasPhysx(true);
     eng.windowSetErrorCallback(error_callback);
 
@@ -102,12 +102,12 @@ int MTRD::main() {
             MTRD::Logger::info("Raycast hit: ({}, {}, {})", hitPoint.x, hitPoint.y, hitPoint.z);
         }
 
-        eng.RenderScene();
+        eng.renderScene();
 
         eng.windowEndFrame();
     }
 
-    eng.EndDebugger();
+    eng.endDebugger();
 
     return 0;
 }

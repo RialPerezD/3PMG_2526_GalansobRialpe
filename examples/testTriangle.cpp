@@ -24,7 +24,7 @@ int MTRD::main() {
     camera.setTarget(glm::vec3(0.f, 0.f, 0.f));
 
     // --- Setup Engigne ---
-    eng.SetDebugMode(true);
+    eng.setDebugMode(true);
 
     /* You can set the render type to : 
         Base,
@@ -33,7 +33,7 @@ int MTRD::main() {
 	    Bidimensional,
 	    DeferredWithLights
     */
-    eng.SetRenderType(MotardaEng::RenderType::Base);
+    eng.setRenderType(MotardaEng::RenderType::Base);
     eng.windowSetErrorCallback(error_callback);
 
     // --- Create drawable entitys ---
@@ -98,7 +98,7 @@ int MTRD::main() {
 
         eng.windowInitFrame();
         // Render the scene depending the Render type setted before
-        eng.RenderScene();
+        eng.renderScene();
 
         eng.windowEndFrame();
     }

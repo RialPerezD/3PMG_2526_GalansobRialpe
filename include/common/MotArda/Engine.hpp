@@ -14,7 +14,7 @@
 #include <MotArda/Systems/RenderLightsSystem.hpp>
 #include <MotArda/Systems/ShadowMapSystem.hpp>
 #include <MotArda/Systems/RenderSystem.hpp>
-#include <MotArda/Systems/RenderDefferredSystem.hpp>
+#include <MotArda/Systems/RenderDeferredSystem.hpp>
 #include <MotArda/Systems/RenderPbrSystem.hpp>
 
 #include <optional>
@@ -72,7 +72,7 @@ namespace MTRD {
         // --- *** ---
 
         // --- Functions ---
-        void SetDebugMode(bool debug);
+        void setDebugMode(bool debug);
 
         /**
         * TODO write online documentation
@@ -180,7 +180,7 @@ namespace MTRD {
         std::shared_ptr<ObjItem> generatePlane(float width, float height, int texureId = 0, bool debug = true);
         std::shared_ptr<ObjItem> generateSphere(float radius, int segments, int rings, int texureId = 0, bool debug = true);
 
-        std::unique_ptr<Terrain> CreateTerrain(
+        std::unique_ptr<Terrain> createTerrain(
             float width,
             float depth,
             float maxHeight,
@@ -216,14 +216,14 @@ namespace MTRD {
             Pbr
         };
 
-        void SetRenderType(RenderType type);
+        void setRenderType(RenderType type);
 
-        void RenderScene();
+        void renderScene();
 
         // --- *** ---
 
         // --- Debugger ---
-        void EndDebugger();
+        void endDebugger();
         // --- *** ---
 
     private:
@@ -259,7 +259,7 @@ namespace MTRD {
         std::unique_ptr<RenderSystem> renderSystem_;
         std::unique_ptr<RenderLightsSystem> renderLightsSystem_;
         std::unique_ptr<ShadowMapSystem> shadowSystem_;
-        std::unique_ptr<RenderDefferredSystem> defferredSystem_;
+        std::unique_ptr<RenderDeferredSystem> defferredSystem_;
         std::unique_ptr<RenderPbrSystem> pbrSystem_;
         RenderType actualRenderType_ = RenderType::Base;
 

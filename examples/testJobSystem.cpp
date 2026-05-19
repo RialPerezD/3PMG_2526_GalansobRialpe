@@ -30,8 +30,8 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Setup Engine ---
-    eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::Base);
+    eng.setDebugMode(true);
+    eng.setRenderType(MotardaEng::RenderType::Base);
     eng.windowSetErrorCallback(error_callback);
     // --- *** ---
 
@@ -121,7 +121,7 @@ int MTRD::main() {
         else if (eng.inputIsKeyPressed(Input::Keyboard::X)) t->scale += scaSpeed;
         // --- *** ---
         
-        eng.RenderScene();
+        eng.renderScene();
 
         // --- Cambiar objeto si es necesario ---
         if (needChangeObj) {
@@ -173,7 +173,7 @@ int MTRD::main() {
         eng.windowEndFrame();
     }
 
-    eng.EndDebugger();
+    eng.endDebugger();
 
     return 0;
 }

@@ -162,8 +162,8 @@ int MTRD::main() {
     camera.setTarget(glm::vec3(0.0f, -5.0f, 0.0f));
     float movSpeed = 0.5f;
 
-    eng.SetDebugMode(true);
-    eng.SetRenderType(MotardaEng::RenderType::DeferredWithLights);
+    eng.setDebugMode(true);
+    eng.setRenderType(MotardaEng::RenderType::DeferredWithLights);
     eng.windowSetErrorCallback(error_callback);
 
     std::vector<std::shared_ptr<ObjItem>> objItemList;
@@ -224,11 +224,11 @@ int MTRD::main() {
             lightComp->spotLights[idx + 2].position_ = glm::vec3(-posX * 0.68f, 0.0f, posY * 0.68f) + currentCenter;
         }
 
-        eng.RenderScene();
+        eng.renderScene();
         eng.windowEndFrame();
     }
 
-    eng.EndDebugger();
+    eng.endDebugger();
 
     return 0;
 }

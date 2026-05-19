@@ -1,4 +1,4 @@
-#include <MotArda/SimplePacketReciver.hpp>
+#include <MotArda/SimplePacketReceiver.hpp>
 #include <MotArda/Systems/NetworkSystem.hpp>
 #include <MotArda/Logger.hpp>
 #include <MotArda/Components/NetworkComponent.hpp>
@@ -7,13 +7,13 @@
 
 namespace MTRD {
 
-    SimplePacketReciver::SimplePacketReciver()
+    SimplePacketReceiver::SimplePacketReceiver()
         : ecsPtr(nullptr),
         objItemListPtr(nullptr),
         localPlayerEntity(SIZE_MAX) {
     }
 
-    SimplePacketReciver::SimplePacketReciver(
+    SimplePacketReceiver::SimplePacketReceiver(
         std::vector<std::shared_ptr<MTRD::ObjItem>>* objItemListPtr,
         ECSManager* ecsPtr,
         size_t localPlayerEntity
@@ -23,7 +23,7 @@ namespace MTRD {
         this->localPlayerEntity = localPlayerEntity;
     }
 
-    void SimplePacketReciver::OnReceivePacket(uint32_t senderID, const void* data, size_t size) {
+    void SimplePacketReceiver::OnReceivePacket(uint32_t senderID, const void* data, size_t size) {
         if (!ecsPtr || !data) return;
 
         // 1. Manejar asignación de ID local (paquetes crudos del NetworkManager de 4 bytes)

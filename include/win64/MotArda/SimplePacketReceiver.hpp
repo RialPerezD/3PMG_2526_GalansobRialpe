@@ -8,10 +8,10 @@
 #include <vector>
 
 namespace MTRD {
-	class SimplePacketReciver {
+	class SimplePacketReceiver {
 	public:
-		SimplePacketReciver();
-		SimplePacketReciver(
+		SimplePacketReceiver();
+		SimplePacketReceiver(
 			std::vector<std::shared_ptr<MTRD::ObjItem>>* objItemListPtr,
 			ECSManager* ecsPtr,
 			size_t localPlayerEntity
