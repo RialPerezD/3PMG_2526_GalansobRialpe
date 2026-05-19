@@ -33,7 +33,7 @@ namespace MTRD {
                 MTRD::Logger::error("ERROR::SHADER::VERTEX::LINKING_FAILED {}\n", infoLog);
             }
             else {
-                MTRD::Logger::info("Vertex %s shader compiled successfully.\n", filename.filename().string().c_str());
+                MTRD::Logger::info("Vertex {} shader compiled successfully.\n", filename.filename().string().c_str());
             }
         }
 
@@ -68,7 +68,7 @@ namespace MTRD {
                 MTRD::Logger::error("ERROR::SHADER::GEOMETRY::COMPILATION_FAILED {}\n", infoLog);   
             }
             else {
-                MTRD::Logger::info("Geometry %s shader compiled successfully.\n", filename.filename().string().c_str());
+                MTRD::Logger::info("Geometry {} shader compiled successfully.\n", filename.filename().string().c_str());
             }
             glCheckError();
         }
@@ -100,7 +100,7 @@ namespace MTRD {
                 MTRD::Logger::error("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED {}\n", infoLog);
             }
             else {
-                MTRD::Logger::info("Fragment %s shader compiled successfully.\n", filename.filename().string().c_str());
+                MTRD::Logger::info("Fragment {} shader compiled successfully.\n", filename.filename().string().c_str());
             }
         }
 
