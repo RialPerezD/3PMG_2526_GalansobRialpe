@@ -299,7 +299,7 @@ namespace MTRD {
 
         TransformComponent* t = ecs_.AddComponent<TransformComponent>(spriteId);
         t->position = glm::vec3(0, 0, 0.1f * deep);
-        t->scale = glm::vec3(size * 0.05f);
+        t->scale = glm::vec3(size);
         t->rotation = glm::vec3(1, 0, 0);
         t->angleRotationRadians = 1.5708f;
 

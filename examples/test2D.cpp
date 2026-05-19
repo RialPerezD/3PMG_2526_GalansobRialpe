@@ -50,8 +50,10 @@ int MTRD::main() {
     GLuint marioTex = textureList[0].getId();
     GLuint bgTex = textureList[1].getId();
 
-    Sprite bg = eng.generateSprite(bgTex, -16, 12);
-    ecs.GetComponent<TransformComponent>(bg.getId())->position = { 0, 0, -2.0f };
+    Sprite bg = eng.generateSprite(bgTex, 16, 12);
+    auto* bgt = ecs.GetComponent<TransformComponent>(bg.getId());
+    bgt->position = { 0, 0, -2.0f };
+    bgt->scale = {15.0f, 15.0f, 15.0f};
 
     Sprite mario = eng.generateSpriteSheet(marioTex, -1, 64, 32, 4, 2, 5);
     auto* mTrans = ecs.GetComponent<TransformComponent>(mario.getId());
