@@ -30,7 +30,7 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetShaderInfoLog(vertexShader, sizeof(infoLog), NULL, infoLog);
-                MTRD::Logger::error("ERROR::SHADER::VERTEX::LINKING_FAILED\n%s\n", infoLog);
+                MTRD::Logger::error("ERROR::SHADER::VERTEX::LINKING_FAILED {}\n", infoLog);
             }
             else {
                 MTRD::Logger::info("Vertex %s shader compiled successfully.\n", filename.filename().string().c_str());
@@ -65,7 +65,7 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetShaderInfoLog(geometryShader, sizeof(infoLog), NULL, infoLog);
-                MTRD::Logger::error("ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n%s\n", infoLog);   
+                MTRD::Logger::error("ERROR::SHADER::GEOMETRY::COMPILATION_FAILED {}\n", infoLog);   
             }
             else {
                 MTRD::Logger::info("Geometry %s shader compiled successfully.\n", filename.filename().string().c_str());
@@ -97,7 +97,7 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetShaderInfoLog(fragmentShader, sizeof(infoLog), NULL, infoLog);
-                MTRD::Logger::error("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
+                MTRD::Logger::error("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED {}\n", infoLog);
             }
             else {
                 MTRD::Logger::info("Fragment %s shader compiled successfully.\n", filename.filename().string().c_str());
