@@ -111,7 +111,7 @@ namespace MTRD {
                 if (mesh->name_.size() > 8 && mesh->name_.substr(0, 8) == "terrain_") {
                     int gx, gz, nc, lodLevel;
                     float cx, cz;
-                    if (std::sscanf(mesh->name_.c_str(), "terrain_%d_%d_nc%d_lod%d_wx%f_wz%f",
+                    if (sscanf_s(mesh->name_.c_str(), "terrain_%d_%d_nc%d_lod%d_wx%f_wz%f",
                         &gx, &gz, &nc, &lodLevel, &cx, &cz) == 6) {
                         if (camGridX == -1) {
                             float denomX = (float)gx + 0.5f - (float)nc * 0.5f;

@@ -35,11 +35,9 @@ namespace MTRD {
             else {
                 MTRD::Logger::info("Vertex {} shader compiled successfully.\n", filename.filename().string().c_str());
             }
-        }
-
-        if (debug) {
             glCheckError();
         }
+
         return Shader{ vertexShader };
     }
 

@@ -1,7 +1,7 @@
 #ifndef __SWITCH__
 #include <enet/enet.h>
 #endif
-#include <Motarda/Engine.hpp>
+#include <MotArda/Engine.hpp>
 #include <MotArda/window.hpp>
 #include <MotArda/Geometries.hpp>
 #include <MotArda/Terrain.hpp>

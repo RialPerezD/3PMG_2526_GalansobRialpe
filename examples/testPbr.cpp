@@ -11,7 +11,6 @@
 
 static void error_callback([[maybe_unused]] int error, const char* description) {
     MTRD::Logger::error("Glfw error: {}\n", description);
-
 }
 
 size_t lightEntity;
