@@ -16,6 +16,18 @@
 
 namespace MTRD {
 
+    static fnl_state InitNoise(int seed) {
+        fnl_state noise = fnlCreateState();
+        noise.seed = seed;
+        noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
+        noise.fractal_type = FNL_FRACTAL_FBM;
+        noise.octaves = 5;
+        noise.lacunarity = 2.0f;
+        noise.gain = 0.5f;
+        noise.frequency = 0.01f;
+        return noise;
+    }
+
     static float SampleHeight(fnl_state& noise, float maxHeight, float worldX, float worldZ) {
         float rawNoise = fnlGetNoise2D(&noise, worldX, worldZ);
         float normalizedNoise = (rawNoise + 1.0f) * 0.5f;
@@ -61,14 +73,7 @@ namespace MTRD {
         int textureId,
         bool debug
     ) {
-        fnl_state noise = fnlCreateState();
-        noise.seed = seed_;
-        noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
-        noise.fractal_type = FNL_FRACTAL_FBM;
-        noise.octaves = 5;
-        noise.lacunarity = 2.0f;
-        noise.gain = 0.5f;
-        noise.frequency = 0.01f;
+        fnl_state noise = InitNoise(seed_);
 
         const float lakeLevel = maxHeight * 0.20f;
         const float grassLevel = maxHeight * 0.35f;
@@ -234,14 +239,7 @@ namespace MTRD {
     }
 
     float Terrain::GetHeightAt(float worldX, float worldZ) {
-        fnl_state noise = fnlCreateState();
-        noise.seed = seed_;
-        noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
-        noise.fractal_type = FNL_FRACTAL_FBM;
-        noise.octaves = 5;
-        noise.lacunarity = 2.0f;
-        noise.gain = 0.5f;
-        noise.frequency = 0.01f;
+        fnl_state noise = InitNoise(seed_);
 
         float rawNoise = fnlGetNoise2D(&noise, worldX, worldZ);
         float normalizedNoise = (rawNoise + 1.0f) * 0.5f;
