@@ -20,7 +20,7 @@ int MTRD::main() {
     constexpr bool IS_SERVER = true;
     constexpr uint16_t PORT = 1234;
     constexpr const char* SERVER_IP = "127.0.0.1";
-    constexpr float meshIdSelector = 0;
+    constexpr size_t meshIdSelector = 0;
 
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 
@@ -73,7 +73,7 @@ int MTRD::main() {
         assert(meshIdSelector < objItemList.size());
         render->objitem_ = objItemList[meshIdSelector];
 
-        MTRD::Logger::info("Player created at ({:.2f}, {:.2f}), waiting for networkID...", 
+        MTRD::Logger::info("Player created at ({:.2f}, {:.2f}), waiting for networkID...",
             randomX, randomZ);
     }
 
@@ -99,7 +99,7 @@ int MTRD::main() {
     while (!eng.windowShouldClose()) {
         eng.windowInitFrame();
 
-        if (!IS_SERVER && player != SIZE_MAX) {
+        if constexpr (!IS_SERVER && player != SIZE_MAX) {
             auto* transform = ecs.GetComponent<MTRD::TransformComponent>(player);
             if (transform) {
                 if (eng.inputIsKeyPressed(Input::Keyboard::W)) transform->position.z -= 0.1f;
@@ -116,7 +116,6 @@ int MTRD::main() {
         ImGui::EndChild();
 
         ImGui::PushItemWidth(-60);
-        bool pressedEnter = (ImGui::IsItemFocused() && ImGui::IsKeyPressed(ImGuiKey_Enter));
         if (ImGui::InputText("Message", tempBuffer, IM_ARRAYSIZE(tempBuffer), ImGuiInputTextFlags_EnterReturnsTrue) || ImGui::Button("Send")) {
             if (tempBuffer[0] != '\0') {
                 struct FullChatPacket {
@@ -132,7 +131,7 @@ int MTRD::main() {
 
                 packet.header.type = MessageType::Chat;
                 packet.header.senderId = myID;
-                strncpy(packet.payload.text, tempBuffer, 255);
+                strncpy_s(packet.payload.text, tempBuffer, 255);
                 packet.payload.text[255] = '\0';
 
                 if (IS_SERVER) {

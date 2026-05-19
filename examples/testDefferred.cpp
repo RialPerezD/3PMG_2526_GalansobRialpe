@@ -9,7 +9,7 @@
 
 #include <memory>
 
-static void error_callback(int error, const char* description) {
+static void error_callback([[maybe_unused]] int error, const char* description) {
     MTRD::Logger::error("Glfw error: {}\n", description);
 
 }
@@ -129,7 +129,7 @@ void GeneratePointLightEntitys(ECSManager& ecs, std::vector<std::shared_ptr<MTRD
     }
 }
 
-void GeneratePointLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng) {
+void GeneratePointLights(MTRD::LightComponent* lightComp) {
     lightComp->pointLights.push_back(
         MTRD::PointLight(
             glm::vec3(0.0f, 1.0f, 0.0f) + pointLigthCenter,
@@ -139,7 +139,7 @@ void GeneratePointLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng)
     );
 }
 
-void GenerateDirectionalLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng) {
+void GenerateDirectionalLights(MTRD::LightComponent* lightComp) {
     lightComp->directionalLights.push_back(
         MTRD::DirectionalLight(
             glm::vec3(-1.0f, -1.0f, 0.0f),
@@ -182,8 +182,8 @@ int MTRD::main() {
 
     MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
     GenerateSpotLights(lightComp, eng);
-    GenerateDirectionalLights(lightComp, eng);
-    GeneratePointLights(lightComp, eng);
+    GenerateDirectionalLights(lightComp);
+    GeneratePointLights(lightComp);
 
     float radio = 10.f;
     float velocidad = 1.f;

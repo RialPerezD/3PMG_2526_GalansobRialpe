@@ -10,7 +10,7 @@
 #include <memory>
 
 
-static void error_callback(int error, const char* description) {
+static void error_callback([[maybe_unused]] int error, const char* description) {
     MTRD::Logger::error("Glfw error: {}\n", description);
 }
 
@@ -56,7 +56,7 @@ void GeneratePointLightEntitys(ECSManager& ecs, std::vector<std::shared_ptr<MTRD
 }
 
 
-void GeneratePointLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng) {
+void GeneratePointLights(MTRD::LightComponent* lightComp) {
     lightComp->pointLights.push_back(
         MTRD::PointLight(
             glm::vec3(0.0f, 1.0f, 0.0f),
@@ -125,7 +125,8 @@ int MTRD::main() {
     // --- Lights ---
     // hacer que la maya tenga un booleano para si hace hace sombras o no
     MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
-    GeneratePointLights(lightComp, eng);
+    ecs.AddComponent<MTRD::TransformComponent>(lightEntity);
+    GeneratePointLights(lightComp);
     // --- *** ---
 
 

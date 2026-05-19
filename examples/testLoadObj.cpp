@@ -11,7 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-static void error_callback(int error, const char* description) {
+static void error_callback([[maybe_unused]] int error, const char* description) {
     MTRD::Logger::error("Glfw error: {}\n", description);
 }
 
@@ -50,12 +50,7 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Drawable transforms additions ---
-    float ratio = eng.windowGetSizeRatio();
     float movSpeed = 0.05f;
-    float scaSpeed = 0.01f;
-
-    bool needChangeObj = false;
-    int objIndex = 1;
     // --- *** ---
 
     MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(entity);
