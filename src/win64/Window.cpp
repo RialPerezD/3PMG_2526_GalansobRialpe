@@ -58,7 +58,11 @@ namespace MTRD {
         debug_(debug)
     {
         glfwMakeContextCurrent(glfw_window);
-        gladLoadGL();
+        
+        if (!gladLoadGL()) {
+            MTRD::Logger::error("Error initializing GLAD / OpenGL context, exiting program.");
+            std::abort();
+        }
 
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
@@ -214,17 +218,18 @@ namespace MTRD {
 
 
 // Entry point for window:
-int main()
-{
+int main() {
     // Initializes the GLFW library and prepares it for use.
+    if (!glfwInit()) {
+        return -1;
+    }
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-    glfwInit();
 
     // Calls the main implemented by the usser
-    MTRD::main();
+    int result = MTRD::main();
 
     // Ileans up and releases all resources used by the GLFW library.
     glfwTerminate();
 
-    return 0;
+    return result;
 }

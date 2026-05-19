@@ -7,8 +7,7 @@
 #include <memory>
 
 
-static void error_callback(int error, const char* description)
-{
+static void error_callback([[maybe_unused]] int error, const char* description){
     MTRD::Logger::error("Glfw error: {}\n", description);
 
 }
@@ -23,7 +22,6 @@ int MTRD::main() {
     MTRD::Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0.f, 0.f, 0.5f));
     camera.setTarget(glm::vec3(0.f, 0.f, 0.f));
-    float movSpeed = 0.1f;
 
     // --- Setup Engigne ---
     eng.SetDebugMode(true);

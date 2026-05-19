@@ -8,7 +8,7 @@
 
 #include <memory>
 
-static void error_callback(int error, const char* description) {
+static void error_callback([[maybe_unused]] int error, const char* description) {
     MTRD::Logger::error("Glfw error: {}\n", description);
 
 }

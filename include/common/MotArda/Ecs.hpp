@@ -80,6 +80,11 @@ class ECSManager {
     * @details Allows generic handling of all component types without knowing T at runtime.
     */
     std::unordered_map<std::size_t, std::unique_ptr<ECSListBase>> component_map_;
+    
+    /**
+    * @brief Counter to generate unique entity IDs per ECS instance.
+    */
+    size_t next_id = 0;
 
 public:
     /**
@@ -147,7 +152,6 @@ void ECSManager::AddComponentType() {
 
 
 inline size_t ECSManager::AddEntity() {
-    static size_t next_id = 0;
     return next_id++;
 }
 

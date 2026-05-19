@@ -23,7 +23,7 @@ namespace MTRD {
             Shader::FragmentFromFile("../assets/shaders/textured_lights_obj_fragment.txt", debug),
             debug }
             , viewPos_(viewPos),
-            vp_(vp),
+        vp_(vp),
         windowWidth_(windowWidth),
         windowHeight_(windowHeight) {
         attributes = {
@@ -60,7 +60,7 @@ namespace MTRD {
             const glm::mat4& vp = vp_;
             frustum.planes[0].normal = glm::vec3(vp[0][3] + vp[0][0], vp[1][3] + vp[1][0], vp[2][3] + vp[2][0]);
             frustum.planes[0].d = vp[3][3] + vp[3][0];
-            frustum.planes[1].normal = glm::vec3(vp[0][3] - vp[0][0], vp[1][3] - vp[1][0], vp[2][3] - vp[2][0]);
+            frustum.planes[1].normal = glm::vec3(vp[0][3] - vp[0][0], vp[1][3] - vp[1][2], vp[2][3] - vp[2][0]);
             frustum.planes[1].d = vp[3][3] - vp[3][0];
             frustum.planes[2].normal = glm::vec3(vp[0][3] + vp[0][1], vp[1][3] + vp[1][1], vp[2][3] + vp[2][1]);
             frustum.planes[2].d = vp[3][3] + vp[3][1];
@@ -180,7 +180,8 @@ namespace MTRD {
         size_t loc = glGetUniformLocation(program.programId_, "diffuseTexture");
         program.SetupAtributeLocations(attributes);
 
-        auto lightEntities = ecs.GetEntitiesWithComponents<LightComponent>();
+        // Corregido: Pedimos explícitamente entidades que tengan LightComponent Y TransformComponent
+        auto lightEntities = ecs.GetEntitiesWithComponents<LightComponent, TransformComponent>();
         LightComponent* light = nullptr;
         if (!lightEntities.empty()) {
             light = ecs.GetComponent<LightComponent>(lightEntities[0]);

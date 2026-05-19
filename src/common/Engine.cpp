@@ -167,7 +167,7 @@ namespace MTRD {
         glm::vec3 rayWorld = glm::vec3(invView * rayEye);
         rayWorld = glm::normalize(rayWorld);
 
-#ifndef __SWITCH__
+        #ifndef __SWITCH__
         if (hasPhysx_ && physx_.initialized) {
             glm::vec3 hitPosition;
             void* hitActor;
@@ -175,7 +175,7 @@ namespace MTRD {
                 return hitPosition;
             }
         }
-#endif
+        #endif
 
         return camera_.getPosition() + rayWorld * maxDistance;
     }
@@ -325,7 +325,7 @@ namespace MTRD {
     }
 
 
-#ifndef __SWITCH__
+    #ifndef __SWITCH__
     void MotardaEng::createPhysxActor(
         MTRD::PhysxComponent& p,
         MTRD::TransformComponent& t
@@ -341,7 +341,7 @@ namespace MTRD {
             physx_.init();
         }
     }
-#endif
+    #endif
 
 
     void MotardaEng::SetRenderType(RenderType type) {
