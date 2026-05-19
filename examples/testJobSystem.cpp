@@ -17,10 +17,6 @@ static void error_callback(int error, const char* description) {
 }
 
 int MTRD::main() {
-
-    // --- Create Logger ---
-    MTRD::Logger::init("testJobSystem", MTRD::Logger::Level::Debug);
-
     // --- Create engine ---
     auto maybeEng = MTRD::MotardaEng::createEngine(800, 600, "Motarda OBJ Viewer");
     if (!maybeEng.has_value()) return 1;
@@ -50,17 +46,13 @@ int MTRD::main() {
     ECSManager& ecs = eng.getEcs();
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
-    ecs.AddComponentType<MTRD::MovementComponent>();
 
     size_t entity = ecs.AddEntity();
     // --- *** ---
 
-    // --- Drawable transforms additions ---
-    float ratio = eng.windowGetSizeRatio();
     // The speed at which the object will move and scale
     float movSpeed = 0.05f;
     float scaSpeed = 0.001f;
-    float scale = 0.025f;
 
     // This bool is used to change the displayed mesh
     bool needChangeObj = false;
@@ -92,7 +84,6 @@ int MTRD::main() {
         eng.windowInitFrame();
 
         if (!objsLoaded) {
-            //printf("Cargando maya...\n");
             MTRD::Logger::debug("Cargando maya...\n");
             eng.windowEndFrame();
             continue;
@@ -165,14 +156,12 @@ int MTRD::main() {
 
             while (!objsLoaded) {
                 eng.windowEndFrame();
-                //printf("Cargando maya %d...\n", objIndex);
                 MTRD::Logger::debug("Cargando maya {}...\n", objIndex);
 
 
                 eng.windowInitFrame();
             }
 
-            //printf("Maya %d cargada\n", objIndex);
             MTRD::Logger::debug("Maya cargada\n");
 
             r->objitem_ = ObjList[0];
@@ -183,8 +172,8 @@ int MTRD::main() {
         }
         eng.windowEndFrame();
     }
-    
-    MTRD::Logger::shutdown();
+
+    eng.EndDebugger();
 
     return 0;
 }

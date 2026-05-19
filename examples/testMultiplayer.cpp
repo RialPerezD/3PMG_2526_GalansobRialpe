@@ -7,7 +7,6 @@
 #include <MotArda/Components/NetworkComponent.hpp>
 #include <MotArda/Components/TransformComponent.hpp>
 #include <MotArda/Components/RenderComponent.hpp>
-#include <MotArda/Components/MovementComponent.hpp>
 #include <MotArda/SimplePacketReciver.hpp>
 
 #include <cstdlib>
@@ -28,7 +27,6 @@ int MTRD::main() {
     auto maybeEng = MotardaEng::createEngine(800, 600, "MotArda Multiplayer");
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
-    MTRD::Logger::init("testMultiplayer", MTRD::Logger::Level::Debug);
 
 
     eng.SetDebugMode(true);
@@ -153,11 +151,11 @@ int MTRD::main() {
         ImGui::End();
 
         netSys.Process();
-        MTRD::Logger::shutdown();
         eng.RenderScene();
         eng.windowEndFrame();
     }
 
+    eng.EndDebugger();
     netMgr.Shutdown();
     return 0;
 }

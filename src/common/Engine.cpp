@@ -28,6 +28,10 @@ namespace MTRD {
             std::abort();
         }
 
+        #ifndef __SWITCH__
+        MTRD::Logger::init("Debugger", MTRD::Logger::Level::Debug);
+        #endif
+
         Input input_ = Input::inputCreate(w.value());
 
         JobSystem js;
@@ -42,17 +46,20 @@ namespace MTRD {
         input_{ std::move(input) },
         jobSystem_{ std::move(js) },
         debug_(true),
-#ifndef __SWITCH__
+
+        #ifndef __SWITCH__
         online_(false),
-#endif
+        #endif
+
         camera_(Camera::CreateCamera(windowGetSizeRatio())),
         vp_(glm::mat4(1.0f)),
         model_(glm::mat4(1.0f)),
         initialized2D(false),
         basePlane_(generatePlane(20, 20))
-#ifndef __SWITCH__
+
+        #ifndef __SWITCH__
         , hasPhysx_(false)
-#endif
+        #endif
     {
         input_.generateAsciiMap();
         input_.setWindow(&window_);
@@ -462,6 +469,11 @@ namespace MTRD {
                 }
             }
             // --- *** ---
+        #endif
+    }
+    void MotardaEng::EndDebugger() {
+        #ifndef __SWITCH__
+            MTRD::Logger::shutdown();
         #endif
     }
 }

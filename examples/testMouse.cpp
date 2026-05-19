@@ -21,7 +21,6 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
 
     auto& eng = maybeEng.value();
-    MTRD::Logger::init("testMouse", MTRD::Logger::Level::Debug);
 
 
     MTRD::Camera& camera = eng.getCamera();
@@ -43,7 +42,6 @@ int MTRD::main() {
     ECSManager& ecs = eng.getEcs();
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
-    ecs.AddComponentType<MTRD::MovementComponent>();
     ecs.AddComponentType<MTRD::LightComponent>();
     ecs.AddComponentType<MTRD::PhysxComponent>();
 
@@ -104,11 +102,12 @@ int MTRD::main() {
             MTRD::Logger::info("Raycast hit: ({}, {}, {})", hitPoint.x, hitPoint.y, hitPoint.z);
         }
 
-        MTRD::Logger::shutdown();
         eng.RenderScene();
 
         eng.windowEndFrame();
     }
+
+    eng.EndDebugger();
 
     return 0;
 }

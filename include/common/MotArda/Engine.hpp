@@ -198,10 +198,11 @@ namespace MTRD {
         const Camera& getCamera() const noexcept { return camera_; }
         ECSManager& getEcs() noexcept { return ecs_; }
         const ECSManager& getEcs() const noexcept { return ecs_; }
-#ifndef __SWITCH__
+
+        #ifndef __SWITCH__
         void createPhysxActor(MTRD::PhysxComponent& p, MTRD::TransformComponent& t);
         void hasPhysx(bool has);
-#endif
+        #endif
 
         // --- *** ---
 
@@ -219,7 +220,11 @@ namespace MTRD {
 
         void RenderScene();
 
-        //------------
+        // --- *** ---
+
+        // --- Debugger ---
+        void EndDebugger();
+        // --- *** ---
 
     private:
         /**
@@ -231,18 +236,19 @@ namespace MTRD {
         */
         MotardaEng(Window window, Input input, JobSystem js);
 
-        // --- 1. Recursos base del sistema (Se inicializan primero) ---
+        // --- Recursos base del sistema (Se inicializan primero) ---
         Window window_;
         Input input_;
         JobSystem jobSystem_;
 
-        // --- 2. Estado basico del motor ---
+        // --- Estado basico del motor ---
         bool debug_;
-#ifndef __SWITCH__
-        bool online_;
-#endif
 
-        // --- 3. Sistemas logicos y ECS ---
+        #ifndef __SWITCH__
+        bool online_;
+        #endif
+
+        // --- Sistemas logicos y ECS ---
         Camera camera_;
         ECSManager ecs_;
 
@@ -260,10 +266,10 @@ namespace MTRD {
         bool initialized2D;
         std::shared_ptr<ObjItem> basePlane_;
 
-#ifndef __SWITCH__
+        #ifndef __SWITCH__
         bool hasPhysx_;
         PhysxMaster physx_;
-#endif
+        #endif
         // --- *** ---
 
         std::vector<Sprite> sprites_;

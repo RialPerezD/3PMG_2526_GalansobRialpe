@@ -22,8 +22,6 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
 
     auto& eng = maybeEng.value();
-    MTRD::Logger::init("testTerrain", MTRD::Logger::Level::Debug);
-
 
     MTRD::Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0, 50, 30));
@@ -49,7 +47,6 @@ int MTRD::main() {
 
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
-    ecs.AddComponentType<MTRD::MovementComponent>();
     ecs.AddComponentType<MTRD::LightComponent>();
 
     size_t lightEntity = ecs.AddEntity();
@@ -134,11 +131,12 @@ int MTRD::main() {
             if (eng.inputIsKeyPressed(Input::Keyboard::F)) camera.rotate(0.0f, 20.0f);
             if (eng.inputIsKeyPressed(Input::Keyboard::G)) camera.rotate(0.0f, -20.0f);
         }
-        MTRD::Logger::shutdown();
 
         eng.RenderScene();
         eng.windowEndFrame();
     }
+
+    eng.EndDebugger();
 
     return 0;
 }

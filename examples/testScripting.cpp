@@ -129,7 +129,6 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
     g_engine = &eng;
-    MTRD::Logger::init("testScripting", MTRD::Logger::Level::Debug);
 
     // --- *** ---
  
@@ -375,6 +374,8 @@ int MTRD::main() {
 
         eng.windowEndFrame();
     }
+
+    eng.EndDebugger();
 
     return 0;
 }

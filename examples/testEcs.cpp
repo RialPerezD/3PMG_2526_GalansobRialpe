@@ -54,7 +54,6 @@ int MTRD::main() {
 
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
-    ecs.AddComponentType<MTRD::MovementComponent>();
 
     // Create an entity (in this case, the player) that will be used to determine
     // what the ECS values are added to.
@@ -91,6 +90,8 @@ int MTRD::main() {
 
         eng.windowEndFrame();
     }
+
+    eng.EndDebugger();
 
     return 0;
 }

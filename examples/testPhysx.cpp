@@ -25,9 +25,6 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
 
     auto& eng = maybeEng.value();
-    MTRD::Logger::init("testPhysx", MTRD::Logger::Level::Debug);
-
-
     // --- *** ---
 
 
@@ -61,7 +58,6 @@ int MTRD::main() {
     ECSManager& ecs = eng.getEcs();
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
-    ecs.AddComponentType<MTRD::MovementComponent>();
     ecs.AddComponentType<MTRD::LightComponent>();
     // New component to the ECS
     ecs.AddComponentType<MTRD::PhysxComponent>();
@@ -80,12 +76,6 @@ int MTRD::main() {
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
     r->objitem_ = objItemList[0];
 
-    MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
-    m->position = glm::vec3(0);
-    m->rotation = glm::vec3(0, 0, 1);
-    m->scale = glm::vec3(0.0f);
-    m->shouldConstantMove = false;
-
     MTRD::PhysxComponent* p = ecs.AddComponent<MTRD::PhysxComponent>(player);
     p->shapeType = MTRD::PhysxShapeType::Sphere;
     p->radius = 0.5f;
@@ -102,12 +92,6 @@ int MTRD::main() {
 
     r = ecs.AddComponent<MTRD::RenderComponent>(floor);
     r->objitem_ = objItemList[1];
-
-    m = ecs.AddComponent<MTRD::MovementComponent>(floor);
-    m->position = glm::vec3(0);
-    m->rotation = glm::vec3(0, 0, 1);
-    m->scale = glm::vec3(0.0f);
-    m->shouldConstantMove = false;
 
     // Physx component for the floor
     MTRD::PhysxComponent* floorPhysx = ecs.AddComponent<MTRD::PhysxComponent>(floor);
@@ -127,12 +111,6 @@ int MTRD::main() {
 
         r = ecs.AddComponent<MTRD::RenderComponent>(spheres[i]);
         r->objitem_ = objItemList[0];
-
-        m = ecs.AddComponent<MTRD::MovementComponent>(spheres[i]);
-        m->position = glm::vec3(0);
-        m->rotation = glm::vec3(0, 0, 1);
-        m->scale = glm::vec3(0.0f);
-        m->shouldConstantMove = false;
 
         // Physx component for the spheres
         p = ecs.AddComponent<MTRD::PhysxComponent>(spheres[i]);
@@ -163,12 +141,13 @@ int MTRD::main() {
         // --- *** ---
 
         // Generate shadow map
-        MTRD::Logger::shutdown();
         eng.RenderScene();
         // --- *** ---
 
         eng.windowEndFrame();
     }
+
+    eng.EndDebugger();
 
     return 0;
 }

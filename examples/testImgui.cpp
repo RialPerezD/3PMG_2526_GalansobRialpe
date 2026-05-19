@@ -32,12 +32,6 @@ void GeneratePointLightEntitys(ECSManager& ecs, std::vector<std::shared_ptr<MTRD
     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
     r->objitem_ = objItemList[0];
 
-    MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(player);
-    m->position = glm::vec3(0);
-    m->rotation = glm::vec3(0, 0, 1);
-    m->scale = glm::vec3(0.0f);
-    m->shouldConstantMove = false;
-
 
     t = ecs.AddComponent<MTRD::TransformComponent>(floor);
     t->position = glm::vec3(0, -3, 0);
@@ -47,12 +41,6 @@ void GeneratePointLightEntitys(ECSManager& ecs, std::vector<std::shared_ptr<MTRD
 
     r = ecs.AddComponent<MTRD::RenderComponent>(floor);
     r->objitem_ = objItemList[1];
-
-    m = ecs.AddComponent<MTRD::MovementComponent>(floor);
-    m->position = glm::vec3(0);
-    m->rotation = glm::vec3(0, 0, 1);
-    m->scale = glm::vec3(0.0f);
-    m->shouldConstantMove = false;
 
 
     for (int i = 0; i < 4; i++) {
@@ -64,12 +52,6 @@ void GeneratePointLightEntitys(ECSManager& ecs, std::vector<std::shared_ptr<MTRD
 
         r = ecs.AddComponent<MTRD::RenderComponent>(cubes[i]);
         r->objitem_ = objItemList[2];
-
-        m = ecs.AddComponent<MTRD::MovementComponent>(cubes[i]);
-        m->position = glm::vec3(0);
-        m->rotation = glm::vec3(0, 0, 1);
-        m->scale = glm::vec3(0.0f);
-        m->shouldConstantMove = false;
     }
 }
 
@@ -133,7 +115,6 @@ int MTRD::main() {
     ECSManager& ecs = eng.getEcs();
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
-    ecs.AddComponentType<MTRD::MovementComponent>();
     ecs.AddComponentType<MTRD::LightComponent>();
     ecs.AddComponentType<MTRD::PhysxComponent>();
 
@@ -185,6 +166,8 @@ int MTRD::main() {
 
         eng.windowEndFrame();
     }
+
+    eng.EndDebugger();
 
     return 0;
 }
