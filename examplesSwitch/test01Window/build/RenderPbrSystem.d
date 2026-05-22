@@ -5,7 +5,7 @@ RenderPbrSystem.o: \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glad/include/glad/glad.h \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glad/include/KHR/khrplatform.h \
  D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Program.hpp \
- D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Window.hpp \
+ D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/window.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Texture.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/ObjLoader.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/glm.hpp \
@@ -329,7 +329,6 @@ RenderPbrSystem.o: \
  D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/RenderComponent.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/LightComponent.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Ecs.hpp \
- D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/MovementComponent.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/matrix_transform.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_projection.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/constants.hpp \
@@ -385,7 +384,7 @@ D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Shader.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glad/include/glad/glad.h:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glad/include/KHR/khrplatform.h:
 D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Program.hpp:
-D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Window.hpp:
+D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/window.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Texture.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/ObjLoader.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/glm.hpp:
@@ -709,7 +708,6 @@ D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/TransformCom
 D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/RenderComponent.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/LightComponent.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Ecs.hpp:
-D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/MovementComponent.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/matrix_transform.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/matrix_projection.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/constants.hpp:

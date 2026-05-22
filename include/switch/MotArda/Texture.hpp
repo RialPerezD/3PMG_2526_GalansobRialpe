@@ -5,9 +5,12 @@
 namespace MTRD {
     class Texture {
     private:
-        GLuint id_ = GL_INVALID_INDEX;
+        GLuint id_;
 
     public:
+        friend class Terrain;
+
+        Texture();
         Texture(const char* route, bool debug = false);
 
         ~Texture();

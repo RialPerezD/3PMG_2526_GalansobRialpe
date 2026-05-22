@@ -11,6 +11,9 @@ namespace MTRD {
     Shader Shader::VertexFromFile(std::filesystem::path filename, bool debug) {
         std::ifstream file(filename);
         if (!file.is_open()) {
+            fprintf(stderr, "No se pudo abrir el archivo: %s \n", filename.string());
+            fflush(stderr);
+
             throw std::runtime_error("No se pudo abrir el archivo: " + filename.string());
         }
 
@@ -29,10 +32,12 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetShaderInfoLog(vertexShader, sizeof(infoLog), NULL, infoLog);
-                printf("ERROR::SHADER::VERTEX::LINKING_FAILED\n%s\n", infoLog);
+                fprintf(stderr, "ERROR::SHADER::VERTEX::LINKING_FAILED\n%s\n", infoLog);
+                fflush(stderr);
             }
             else {
-                printf("Vertex %s shader compiled successfully.\n", filename.filename().string().c_str());
+                fprintf(stderr, "Vertex %s shader compiled successfully.\n", filename.filename().string().c_str());
+                fflush(stderr);
             }
         }
 
@@ -64,10 +69,12 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetShaderInfoLog(geometryShader, sizeof(infoLog), NULL, infoLog);
-                printf("ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n%s\n", infoLog);   
+                fprintf(stderr, "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n%s\n", infoLog);   
+                fflush(stderr);
             }
             else {
-                printf("Geometry %s shader compiled successfully.\n", filename.filename().string().c_str());
+                fprintf(stderr, "Geometry %s shader compiled successfully.\n", filename.filename().string().c_str());
+                fflush(stderr);
             }
             glCheckError();
         }
@@ -78,6 +85,9 @@ namespace MTRD {
     Shader Shader::FragmentFromFile(std::filesystem::path filename, bool debug) {
         std::ifstream file(filename);
         if (!file.is_open()) {
+            fprintf(stderr, "No se pudo abrir el archivo: %s \n", filename.string());
+            fflush(stderr);
+            
             throw std::runtime_error("No se pudo abrir el archivo: " + filename.string());
         }
 
@@ -96,10 +106,12 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetShaderInfoLog(fragmentShader, sizeof(infoLog), NULL, infoLog);
-                printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
+                fprintf(stderr, "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
+                fflush(stderr);
             }
             else {
-                printf("Fragment %s shader compiled successfully.\n", filename.filename().string().c_str());
+                fprintf(stderr, "Fragment %s shader compiled successfully.\n", filename.filename().string().c_str());
+                fflush(stderr);
             }
         }
 

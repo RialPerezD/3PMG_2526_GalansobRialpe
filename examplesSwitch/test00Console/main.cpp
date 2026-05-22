@@ -1,51 +1,52 @@
-// Include the most common headers from the C standard library
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <MotArda/Engine.hpp>
+#include <MotArda/Ecs.hpp>
+#include <MotArda/Camera.hpp>
+#include <MotArda/Systems/RenderSystem.hpp>
 
-// Include the main libnx system header, for Switch development
+#include <memory>
+
 #include <switch.h>
+#include <unistd.h>
 
-// Main program entrypoint
+static int s_nxlinkSock = -1;
+
+extern "C" void userAppInit() {
+    if (R_SUCCEEDED(socketInitializeDefault())) {
+        s_nxlinkSock = nxlinkStdio();
+        if (s_nxlinkSock < 0) {
+            socketExit();
+        }
+    }else{
+        printf("fallo");
+    }
+}
+
+extern "C" void userAppExit() {
+    if (s_nxlinkSock >= 0) {
+        close(s_nxlinkSock);
+        socketExit();
+        s_nxlinkSock = -1;
+    }
+}
+
 int main(int argc, char* argv[])
 {
-    // This example uses a text console, as a simple way to output text to the screen.
-    // If you want to write a software-rendered graphics application,
-    //   take a look at the graphics/simplegfx example, which uses the libnx Framebuffer API instead.
-    // If on the other hand you want to write an OpenGL based application,
-    //   take a look at the graphics/opengl set of examples, which uses EGL instead.
-    consoleInit(NULL);
+    auto maybeEng = MTRD::MotardaEng::createEngine(1280, 720, "Motarda triangle Switch");
 
-    // Configure our supported input layout: a single player with standard controller styles
-    padConfigureInput(1, HidNpadStyleSet_NpadStandard);
+    if (maybeEng.has_value()) {
+        auto& eng = maybeEng.value();
 
-    // Initialize the default gamepad (which reads handheld mode inputs as well as the first connected controller)
-    PadState pad;
-    padInitializeDefault(&pad);
+        // The main loop will run until the user closes the window
+        while (!eng.windowShouldClose()) {
+            // Creates a new frame
+            eng.windowInitFrame();
 
-    // Other initialization goes here. As a demonstration, we print hello world.
-    printf("Console Test!\n");
+            // Ends the frame
+            eng.windowEndFrame();
+        }
 
-    // Main loop
-    while (appletMainLoop())
-    {
-        // Scan the gamepad. This should be done once for each frame
-        padUpdate(&pad);
-
-        // padGetButtonsDown returns the set of buttons that have been
-        // newly pressed in this frame compared to the previous one
-        u64 kDown = padGetButtonsDown(&pad);
-
-        if (kDown & HidNpadButton_Plus)
-            break; // break in order to return to hbmenu
-
-        // Your code goes here
-
-        // Update the console, sending a new frame to the display
-        consoleUpdate(NULL);
+        return 0;
     }
 
-    // Deinitialize and clean up resources used by the console (important!)
-    consoleExit(NULL);
-    return 0;
+    return 1;
 }

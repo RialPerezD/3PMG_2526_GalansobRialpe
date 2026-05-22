@@ -6,8 +6,8 @@ namespace MTRD {
 	RenderSystem::RenderSystem(glm::mat4x4& vp, glm::mat4x4& model, bool& debug)
 		: debug_(debug),
         program{
-			Shader::VertexFromFile("../assets/shaders/textured_obj_vertex.txt", debug),
-			Shader::FragmentFromFile("../assets/shaders/textured_obj_fragment.txt", debug),
+			Shader::VertexFromFile("romfs:/shadersSwitch/textured_obj_vertex.txt", debug),
+			Shader::FragmentFromFile("romfs:/shadersSwitch/textured_obj_fragment.txt", debug),
             debug}
 	{
         attributes = {

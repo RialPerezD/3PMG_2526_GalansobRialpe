@@ -15,10 +15,12 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetProgramInfoLog(programId_, sizeof(infoLog), NULL, infoLog);
-                printf("ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
+                fprintf(stderr, "ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
+                fflush(stderr);
             }
             else {
-                printf("Program linked successfully.\n");
+                fprintf(stderr, "Program linked successfully.\n");
+                fflush(stderr);
             }
         }
 
@@ -45,7 +47,8 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetProgramInfoLog(programId_, sizeof(infoLog), NULL, infoLog);
-                printf("ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
+                fprintf(stderr, "ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
+                fflush(stderr);
             }
         }
 

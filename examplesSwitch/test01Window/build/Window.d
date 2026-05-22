@@ -346,7 +346,6 @@ Window.o: D:/Clase/3PMG_2526_GalansobRialpe/src/switch/Window.cpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/RenderComponent.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/LightComponent.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Ecs.hpp \
- D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/MovementComponent.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/type_ptr.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/quaternion.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_relational.hpp \
@@ -386,7 +385,7 @@ Window.o: D:/Clase/3PMG_2526_GalansobRialpe/src/switch/Window.cpp \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/type_ptr.inl \
  D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/ShadowMapSystem.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderSystem.hpp \
- D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderDefferredSystem.hpp \
+ D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderDeferredSystem.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderPbrSystem.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Debug.hpp
 D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Engine.hpp:
@@ -736,7 +735,6 @@ D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/TransformCom
 D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/RenderComponent.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/LightComponent.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Ecs.hpp:
-D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Components/MovementComponent.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/type_ptr.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/quaternion.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_relational.hpp:
@@ -776,6 +774,6 @@ D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/ext/vector_uint1_sized.hpp
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/gtc/type_ptr.inl:
 D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/ShadowMapSystem.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderSystem.hpp:
-D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderDefferredSystem.hpp:
+D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderDeferredSystem.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Systems/RenderPbrSystem.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Debug.hpp:

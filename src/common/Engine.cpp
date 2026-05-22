@@ -23,14 +23,18 @@ namespace MTRD {
         const char* windowName
     ) {
         auto w = Window::windowCreate(width, height, windowName);
-        if (!w) {
-            MTRD::Logger::error("Error creating Engine, exiting program.");
-            std::abort();
-        }
 
         #ifndef __SWITCH__
         MTRD::Logger::init("Debugger", MTRD::Logger::Level::Debug);
         #endif
+
+        if (!w) {
+            #ifndef __SWITCH__
+            MTRD::Logger::error("Error creating Engine, exiting program.");
+            #endif
+
+            std::abort();
+        }
 
         Input input_ = Input::inputCreate(w.value());
 

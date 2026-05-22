@@ -3,7 +3,7 @@ Program.o: D:/Clase/3PMG_2526_GalansobRialpe/src/switch/Program.cpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Shader.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glad/include/glad/glad.h \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glad/include/KHR/khrplatform.h \
- D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Window.hpp \
+ D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/window.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Texture.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/ObjLoader.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/glm.hpp \
@@ -328,7 +328,7 @@ D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Program.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Shader.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glad/include/glad/glad.h:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glad/include/KHR/khrplatform.h:
-D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Window.hpp:
+D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/window.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Texture.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/ObjLoader.hpp:
 D:/Clase/3PMG_2526_GalansobRialpe/deps/glm-master/glm/glm.hpp:

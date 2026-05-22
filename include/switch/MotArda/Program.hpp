@@ -1,7 +1,7 @@
 #pragma once
 
 #include <MotArda/Shader.hpp>
-#include <MotArda/Window.hpp>
+#include <MotArda/window.hpp>
 
 #include <glad/glad.h>
 #include <vector>

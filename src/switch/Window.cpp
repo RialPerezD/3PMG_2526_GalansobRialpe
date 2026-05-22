@@ -39,7 +39,8 @@ namespace MTRD {
         windowWidth_(right.windowWidth_),
         windowHeight_(right.windowHeight_),
         debug_(right.debug_),
-        lastFrameTime_(right.lastFrameTime_)
+        lastFrameTime_(right.lastFrameTime_),
+        s_nxlinkSock(right.s_nxlinkSock)
     {
         right.s_display = nullptr;
         right.s_context = nullptr;
@@ -56,11 +57,13 @@ namespace MTRD {
         s_display(nullptr),
         s_context(nullptr),
         s_surface(nullptr),
+        s_nxlinkSock(-1),
         debug_(debug)
     {
     }
 
     bool Window::initEgl(NWindow* win) {
+
         s_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
         if (!s_display) {
             return false;

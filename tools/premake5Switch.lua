@@ -24,6 +24,10 @@ workspace "MotArda"
     includedirs {
         "include/common",
         "include/switch",
+        "deps/FastNoise/include",
+        "deps/stb_image/include",
+        "deps/tiny_obj/include",
+        "deps/imgui/",
         dkp .. "/libnx/include",
         dkp .. "/portlibs/switch/include"
     }

@@ -96,16 +96,15 @@ int MTRD::main() {
         velY += gravity;
         mTrans->position.y += velY;
 
-        bool onGround = false;
+        canJump = false;
         for (const auto& plat : platforms) {
             if (velY < 0 && checkGroundCollision(mTrans->position, plat, mW, mH)) {
                 mTrans->position.y = (plat.y + plat.height * 0.5f) + mH * 0.5f;
                 velY = 0;
-                onGround = true;
+                canJump = true;
                 break;
             }
         }
-        canJump = onGround;
 
         if(!moving && canJump){ mario.setFrame(side); }
 

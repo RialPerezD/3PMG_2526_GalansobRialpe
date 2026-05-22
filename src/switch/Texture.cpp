@@ -6,9 +6,13 @@
 #include <algorithm>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include <../include/stb_image.h>
+#include <stb_image.h>
 
 namespace MTRD {
+    Texture::Texture() {
+        id_ = GL_INVALID_INDEX;
+    }
+
     Texture::Texture(const char* route, bool debug_) {
         int width, height, channels;
         stbi_set_flip_vertically_on_load(true); // Invierte verticalmente para OpenGL

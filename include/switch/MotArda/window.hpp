@@ -72,6 +72,8 @@ namespace MTRD {
         bool initEgl(NWindow* win);
         void checkErrors();
 
+        int s_nxlinkSock;
+
         EGLDisplay s_display;
         EGLContext s_context;
         EGLSurface s_surface;
