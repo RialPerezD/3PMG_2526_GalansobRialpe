@@ -33,24 +33,87 @@ extern "C" void userAppExit() {
 
 int main(int argc, char* argv[])
 {
+    romfsInit();
     auto maybeEng = MTRD::MotardaEng::createEngine(1280, 720, "Motarda triangle Switch");
 
     if (maybeEng.has_value()) {
         auto& eng = maybeEng.value();
         eng.setDebugMode(true);
-        //eng.setRenderType(MTRD::MotardaEng::RenderType::Base);
-        
-        {
-            std::ofstream file("testeo.txt");
-            file<<"Hola\n";
-        }
+
+        { std::ofstream file("testeo.txt"); file << "inicio main\n"; }
+
+        eng.setRenderType(MTRD::MotardaEng::RenderType::Base);
+
+        MTRD::Camera& camera = eng.getCamera();
+        camera.setPosition(glm::vec3(0.f, 0.f, 0.5f));
+        camera.setTarget(glm::vec3(0.f, 0.f, 0.f));
+
+        // --- Create drawable entitys ---
+        ECSManager& ecs = eng.getEcs();
+        ecs.AddComponentType<MTRD::TransformComponent>();
+        ecs.AddComponentType<MTRD::RenderComponent>();
+
+        size_t entity = ecs.AddEntity();
+
+        MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(entity);
+        t->position = glm::vec3(0.0f);
+        t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
+        t->angleRotationRadians = -1;
+        t->scale = glm::vec3(0.05f);
+
+
+        //Set the vertex coordinates to create a custom geometry
+        std::vector<MTRD::Vertex> vertexList = {
+           {
+                { 1.0f,  0.0f, 0.f },
+                { 0.0f,  0.0f },
+                { 1.0f,  0.0f, 0.f }
+            },
+           {
+                { 0.0f,  1.5f, 0.f},
+                { 0.0f,  0.0f},
+                { 0.0f,  1.0f, 0.f}
+            },
+
+            {
+                {-1.0f,  0.0f, 0.f},
+                { 0.0f,  0.0f},
+                { 0.0f,  0.0f, 1.f}
+            }
+        };
+
+        std::vector<std::shared_ptr<MTRD::ObjItem>> ObjList;
+        ObjList.push_back(std::make_shared<MTRD::ObjItem>());
+
+        // Use createMesh(ListOfVertex, "NameOfTheMesh") to create a mesh with custom vertices
+        std::unique_ptr<MTRD::Mesh> TriangleMesh = eng.createMesh(vertexList, "triangle");
+
+        // Initialize material's values
+        MTRD::Material mat;
+        mat.diffuse = glm::vec3(1.0f);
+        mat.specular = glm::vec3(1.0f);
+        mat.shininess = 32.0f;
+        mat.loadeable = true;
+        mat.diffuseTexPath = "romfs:/textures/blank/blank.jpg";
+
+        ObjList[0]->materials.push_back(mat);
+        ObjList[0]->meshes.push_back(std::move(TriangleMesh));
+        ObjList[0]->meshes[0]->materialId_ = 0;
+
+        eng.windowLoadAllMaterials(ObjList);
+
+        MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
+        r->objitem_ = ObjList[0];
+        // --- *** ---
 
         // The main loop will run until the user closes the window
         while (!eng.windowShouldClose()) {
             // Creates a new frame
             eng.windowInitFrame();
 
-            //eng.renderScene();
+            if (eng.inputIsKeyPressed(Input::Keyboard::W)) camera.moveForward(movSpeed);
+
+            eng.renderScene();
 
             // Ends the frame
             eng.windowEndFrame();
@@ -59,5 +122,6 @@ int main(int argc, char* argv[])
         return 0;
     }
 
+    romfsExit();
     return 1;
 }

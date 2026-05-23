@@ -13,6 +13,7 @@
 #include <vector>
 #include <algorithm>
 #include <cassert>
+#include <fstream>
 
 
 /**
@@ -213,7 +214,6 @@ void ECSManager::RemoveComponent(size_t entity) {
 
 template<typename ... Components>
 inline std::vector<size_t> ECSManager::GetEntitiesWithComponents(){
-
     auto lists = std::make_tuple(GetComponentList<Components>()...);
     std::vector<size_t> result;
     auto& firstList = std::get<0>(lists);

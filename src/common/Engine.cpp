@@ -353,7 +353,9 @@ namespace MTRD {
 
         switch (type) {
         case RenderType::Base:
+            { std::ofstream file("testeo.txt", std::ios::app); file << "selector tipo\n"; }
             renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);
+            { std::ofstream file("testeo.txt", std::ios::app); file << "fin selector tipo\n"; }
             break;
         case RenderType::Lights:
             renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());

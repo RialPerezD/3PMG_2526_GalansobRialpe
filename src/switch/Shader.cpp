@@ -9,11 +9,10 @@
 namespace MTRD {
 
     Shader Shader::VertexFromFile(std::filesystem::path filename, bool debug) {
+        { std::ofstream file("testeo.txt", std::ios::app); file << "dentro shader carga\n"; }
         std::ifstream file(filename);
         if (!file.is_open()) {
-            fprintf(stderr, "No se pudo abrir el archivo: %s \n", filename.string());
-            fflush(stderr);
-
+            { std::ofstream file("testeo.txt", std::ios::app); file << "No se pudo abrir el archivo " << filename.string()<<"\n"; }
             throw std::runtime_error("No se pudo abrir el archivo: " + filename.string());
         }
 
@@ -32,18 +31,17 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetShaderInfoLog(vertexShader, sizeof(infoLog), NULL, infoLog);
-                fprintf(stderr, "ERROR::SHADER::VERTEX::LINKING_FAILED\n%s\n", infoLog);
-                fflush(stderr);
-            }
-            else {
-                fprintf(stderr, "Vertex %s shader compiled successfully.\n", filename.filename().string().c_str());
-                fflush(stderr);
+                { std::ofstream file("testeo.txt", std::ios::app); file << "ERROR::SHADER::VERTEX::LINKING_FAILED "<< infoLog<<"\n"; }
+            } else {
+                { std::ofstream file("testeo.txt", std::ios::app); file << "Vertex "<< filename.filename().string().c_str()<<" shader compiled successfully\n"; }
             }
         }
 
         if (debug) {
             glCheckError();
         }
+
+        { std::ofstream file("testeo.txt", std::ios::app); file << "fin shader carga\n"; }
         return Shader{ vertexShader };
     }
 
@@ -71,8 +69,7 @@ namespace MTRD {
                 glGetShaderInfoLog(geometryShader, sizeof(infoLog), NULL, infoLog);
                 fprintf(stderr, "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n%s\n", infoLog);   
                 fflush(stderr);
-            }
-            else {
+            } else {
                 fprintf(stderr, "Geometry %s shader compiled successfully.\n", filename.filename().string().c_str());
                 fflush(stderr);
             }
@@ -83,11 +80,10 @@ namespace MTRD {
 
 
     Shader Shader::FragmentFromFile(std::filesystem::path filename, bool debug) {
+        { std::ofstream file("testeo.txt", std::ios::app); file << "dentro fragment carga\n"; }
         std::ifstream file(filename);
         if (!file.is_open()) {
-            fprintf(stderr, "No se pudo abrir el archivo: %s \n", filename.string());
-            fflush(stderr);
-            
+            { std::ofstream file("testeo.txt", std::ios::app); file << "No se pudo abrir el archivo " << filename.string() << "\n"; }
             throw std::runtime_error("No se pudo abrir el archivo: " + filename.string());
         }
 
@@ -106,18 +102,16 @@ namespace MTRD {
             if (!success) {
                 char infoLog[512];
                 glGetShaderInfoLog(fragmentShader, sizeof(infoLog), NULL, infoLog);
-                fprintf(stderr, "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
-                fflush(stderr);
-            }
-            else {
-                fprintf(stderr, "Fragment %s shader compiled successfully.\n", filename.filename().string().c_str());
-                fflush(stderr);
+                { std::ofstream file("testeo.txt", std::ios::app); file << "ERROR::SHADER::VERTEX::LINKING_FAILED " << infoLog << "\n"; }
+            } else {
+                { std::ofstream file("testeo.txt", std::ios::app); file << "Vertex " << filename.filename().string().c_str() << " shader compiled successfully\n"; }
             }
         }
 
         if (debug) {
             glCheckError();
         }
+        { std::ofstream file("testeo.txt", std::ios::app); file << "fuera fragment carga\n"; }
         return Shader{ fragmentShader };
     }
 
