@@ -149,12 +149,24 @@ namespace MTRD {
 
         Material colorsMaterial;
         colorsMaterial.name = "blank";
+
+        #ifndef __SWITCH__
         colorsMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        #else
+		colorsMaterial.diffuseTexPath = "romfs:/textures/blank/blank.jpg";
+        #endif
+
         materials.push_back(colorsMaterial);
 
         Material whiteMaterial;
         whiteMaterial.name = "blank_White";
+
+        #ifndef __SWITCH__  
         whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank_white.jpg";
+        #else
+		whiteMaterial.diffuseTexPath = "romfs:/textures/blank/blank_white.jpg";
+        #endif
+
         materials.push_back(whiteMaterial);
 
         return ObjItem(std::move(meshes), materials);
@@ -171,12 +183,24 @@ namespace MTRD {
 
         Material colorsMaterial;
         colorsMaterial.name = "blank";
+
+        #ifndef __SWITCH__
         colorsMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        #else
+		colorsMaterial.diffuseTexPath = "romfs:/textures/blank/blank.jpg";
+        #endif
+
         materials.push_back(colorsMaterial);
 
         Material whiteMaterial;
         whiteMaterial.name = "blank_White";
+
+        #ifndef __SWITCH__
         whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank_white.jpg";
+        #else
+		whiteMaterial.diffuseTexPath = "romfs:/textures/blank/blank_white.jpg";
+        #endif
+
         materials.push_back(whiteMaterial);
 
         return ObjItem(std::move(meshes), materials);
@@ -193,12 +217,24 @@ namespace MTRD {
 
         Material colorsMaterial;
         colorsMaterial.name = "blank";
+
+        #ifndef __SWITCH__
         colorsMaterial.diffuseTexPath = "../assets/textures/blank/blank.jpg";
+        #else
+		colorsMaterial.diffuseTexPath = "romfs:/textures/blank/blank.jpg";
+        #endif
+
         materials.push_back(colorsMaterial);
 
         Material whiteMaterial;
         whiteMaterial.name = "blank_White";
+
+        #ifndef __SWITCH__
         whiteMaterial.diffuseTexPath = "../assets/textures/blank/blank_white.jpg";
+        #else
+		whiteMaterial.diffuseTexPath = "romfs:/textures/blank/blank_white.jpg";
+        #endif
+
         materials.push_back(whiteMaterial);
 
         return ObjItem(std::move(meshes), materials);

@@ -9,7 +9,6 @@
 namespace MTRD {
 
     Shader Shader::VertexFromFile(std::filesystem::path filename, bool debug) {
-        { std::ofstream file("testeo.txt", std::ios::app); file << "dentro shader carga\n"; }
         std::ifstream file(filename);
         if (!file.is_open()) {
             { std::ofstream file("testeo.txt", std::ios::app); file << "No se pudo abrir el archivo " << filename.string()<<"\n"; }
@@ -41,7 +40,6 @@ namespace MTRD {
             glCheckError();
         }
 
-        { std::ofstream file("testeo.txt", std::ios::app); file << "fin shader carga\n"; }
         return Shader{ vertexShader };
     }
 
@@ -80,7 +78,6 @@ namespace MTRD {
 
 
     Shader Shader::FragmentFromFile(std::filesystem::path filename, bool debug) {
-        { std::ofstream file("testeo.txt", std::ios::app); file << "dentro fragment carga\n"; }
         std::ifstream file(filename);
         if (!file.is_open()) {
             { std::ofstream file("testeo.txt", std::ios::app); file << "No se pudo abrir el archivo " << filename.string() << "\n"; }
@@ -111,7 +108,6 @@ namespace MTRD {
         if (debug) {
             glCheckError();
         }
-        { std::ofstream file("testeo.txt", std::ios::app); file << "fuera fragment carga\n"; }
         return Shader{ fragmentShader };
     }
 

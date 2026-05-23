@@ -203,7 +203,6 @@ int main(int argc, char* argv[])
         MTRD::Camera& camera = eng.getCamera();
         camera.setPosition(glm::vec3(0, 1, 20));
         camera.setTarget(glm::vec3(0.0f, -5.0f, 0.0f));
-        float movSpeed = 0.1f;
         // --- *** ---
 
 
