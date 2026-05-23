@@ -13,7 +13,8 @@ namespace MTRD {
         Chat,
         ConnectionStatus,
         Action,
-        CardPlay
+        CardPlay,
+        DealCards
     };
 
 #pragma pack(push, 1)
@@ -32,6 +33,17 @@ namespace MTRD {
     struct CardPayload {
         uint32_t suit;
         uint32_t value;
+    };
+     
+    // Payload with 3 cards (hand), suit and value
+    struct DealCardsPayload {
+        uint32_t suit[3];
+        uint32_t value[3];
+    };
+
+    struct DealCardsPacket {
+        NetMessage header;
+        DealCardsPayload payload;
     };
 
     struct CardPacket {
