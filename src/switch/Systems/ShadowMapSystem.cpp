@@ -5,13 +5,14 @@ namespace MTRD {
     ShadowMapSystem::ShadowMapSystem(glm::mat4& model, bool& debug)
         : debug_(debug),
         shadowProgram{
-            Shader::VertexFromFile("../assets/shaders/shadow_mapping_depth_vertex.txt", debug),
-            Shader::FragmentFromFile("../assets/shaders/shadow_mapping_depth_fragment.txt", debug),
+            Shader::VertexFromFile("romfs:/shadersSwitch/shadow_map_vertex.txt", debug),
+            Shader::FragmentFromFile("romfs:/shadersSwitch/shadow_map_fragment.txt", debug),
             debug
         },
         omniShadowProgram{
-            Shader::VertexFromFile("../assets/shaders/omni_shadow_mapping_depth_vertex.txt", debug),
-            Shader::FragmentFromFile("../assets/shaders/omni_shadow_mapping_depth_fragment.txt", debug),
+            Shader::VertexFromFile("romfs:/shadersSwitch/omni_shadow_vertex.txt", debug),
+            Shader::GeometryFromFile("romfs:/shadersSwitch/omni_shadow_geom.txt", debug),
+            Shader::FragmentFromFile("romfs:/shadersSwitch/omni_shadow_frag.txt", debug),
             debug
         } {
         (void)model;

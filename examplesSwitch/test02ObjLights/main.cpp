@@ -31,6 +31,163 @@ extern "C" void userAppExit() {
     }
 }
 
+
+// Light component identifier within the ECS
+size_t lightEntity;
+glm::vec3 spotLigthCenter = glm::vec3(10, 0, 0);
+glm::vec3 pointLigthCenter = glm::vec3(-10, 0, 0);
+
+// Create the structure that will be illuminated by the corresponding light.
+void GenerateSpotLightEntitys(ECSManager& ecs, std::vector<std::shared_ptr<MTRD::ObjItem>>& objItemList) {
+    size_t player = ecs.AddEntity();
+    size_t floor = ecs.AddEntity();
+    size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
+    lightEntity = ecs.AddEntity();
+
+    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
+    t->position = glm::vec3(0, -2.f, 0) + spotLigthCenter;
+    t->rotation = glm::vec3(0, 0, 0);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(1.f);
+
+    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
+    r->objitem_ = objItemList[0];
+
+
+    t = ecs.AddComponent<MTRD::TransformComponent>(floor);
+    t->position = glm::vec3(0, -3, 0) + spotLigthCenter;
+    t->rotation = glm::vec3(0, 0, 0);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(1.f);
+
+    r = ecs.AddComponent<MTRD::RenderComponent>(floor);
+    r->objitem_ = objItemList[1];
+
+
+    for (int i = 0; i < 4; i++) {
+        t = ecs.AddComponent<MTRD::TransformComponent>(cubes[i]);
+        t->position = glm::vec3(-5 * ((i % 2) * 2 - 1), -2.0f, -5 * ((i / 2) * 2 - 1)) + spotLigthCenter;
+        t->rotation = glm::vec3(0, 0, 0);
+        t->angleRotationRadians = -1;
+        t->scale = glm::vec3(1.f);
+
+        r = ecs.AddComponent<MTRD::RenderComponent>(cubes[i]);
+        r->objitem_ = objItemList[2];
+    }
+}
+
+
+void GenerateSpotLights(MTRD::LightComponent* lightComp, MTRD::MotardaEng& eng) {
+    lightComp->spotLights.push_back(
+        MTRD::SpotLight(
+            glm::vec3(0.0f, 0.0f, 0.0f) + spotLigthCenter,
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            5.0f,
+            1.f,
+            0.75f,
+            1.0f,
+            0.09f,
+            0.032f,
+            eng.windowGetSizeRatio()
+        )
+    );
+
+    lightComp->spotLights.push_back(
+        MTRD::SpotLight(
+            glm::vec3(0.0f, 0.0f, 0.0f) + spotLigthCenter,
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            5.0f,
+            1.0f,
+            0.75f,
+            1.0f,
+            0.09f,
+            0.032f,
+            eng.windowGetSizeRatio()
+        )
+    );
+
+    lightComp->spotLights.push_back(
+        MTRD::SpotLight(
+            glm::vec3(5.0f, 5.0f, 5.0f) + spotLigthCenter,
+            glm::vec3(0.0f, -1.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            7.0f,
+            1.0f,
+            0.85f,
+            1.0f,
+            0.09f,
+            0.032f,
+            eng.windowGetSizeRatio()
+        )
+    );
+}
+
+// Create the structure that will be illuminated by the corresponding light.
+void GeneratePointLightEntitys(ECSManager& ecs, std::vector<std::shared_ptr<MTRD::ObjItem>>& objItemList) {
+    size_t player = ecs.AddEntity();
+    size_t floor = ecs.AddEntity();
+    size_t cubes[4] = { ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity(), ecs.AddEntity() };
+    lightEntity = ecs.AddEntity();
+
+    MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(player);
+    t->position = glm::vec3(0, -2.f, 0) + pointLigthCenter;
+    t->rotation = glm::vec3(0, 0, 0);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(1.f);
+
+    MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(player);
+    r->objitem_ = objItemList[0];
+
+
+    t = ecs.AddComponent<MTRD::TransformComponent>(floor);
+    t->position = glm::vec3(0, -3, 0) + pointLigthCenter;
+    t->rotation = glm::vec3(0, 0, 0);
+    t->angleRotationRadians = -1;
+    t->scale = glm::vec3(1.f);
+
+    r = ecs.AddComponent<MTRD::RenderComponent>(floor);
+    r->objitem_ = objItemList[1];
+
+
+    for (int i = 0; i < 4; i++) {
+        t = ecs.AddComponent<MTRD::TransformComponent>(cubes[i]);
+        t->position = glm::vec3(-5 * ((i % 2) * 2 - 1), -2.0f, -5 * ((i / 2) * 2 - 1)) + pointLigthCenter;
+        t->rotation = glm::vec3(0, 0, 0);
+        t->angleRotationRadians = -1;
+        t->scale = glm::vec3(1.f);
+
+        r = ecs.AddComponent<MTRD::RenderComponent>(cubes[i]);
+        r->objitem_ = objItemList[2];
+    }
+}
+
+
+void GeneratePointLights(MTRD::LightComponent* lightComp) {
+    lightComp->pointLights.push_back(
+        MTRD::PointLight(
+            glm::vec3(0.0f, 1.0f, 0.0f) + pointLigthCenter,
+            glm::vec3(1.0f, 1.0f, 0.0f),
+            1.0f,
+            1.0f,
+            0.09f,
+            0.032f
+        )
+    );
+}
+
+
+void GenerateDirectionalLights(MTRD::LightComponent* lightComp) {
+    lightComp->directionalLights.push_back(
+        MTRD::DirectionalLight(
+            glm::vec3(-1.0f, -1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 1.0f),
+            0.05f
+        )
+    );
+}
+
 int main(int argc, char* argv[])
 {
     romfsInit();
@@ -42,87 +199,71 @@ int main(int argc, char* argv[])
 
         { std::ofstream file("testeo.txt"); file << "inicio main\n"; }
 
-        eng.setRenderType(MTRD::MotardaEng::RenderType::Base);
-
+        // --- Camera ---
         MTRD::Camera& camera = eng.getCamera();
-        camera.setPosition(glm::vec3(0.f, 0.f, 0.5f));
-        camera.setTarget(glm::vec3(0.f, 0.f, 0.f));
+        camera.setPosition(glm::vec3(0, 1, 20));
+        camera.setTarget(glm::vec3(0.0f, -5.0f, 0.0f));
+        float movSpeed = 0.1f;
+        // --- *** ---
 
-        // --- Create drawable triangles ---
+
+        // --- Setup engine info ---
+        eng.setDebugMode(true);
+        eng.setRenderType(MTRD::MotardaEng::RenderType::LightsWithShadows);
+        // --- *** ---
+
+
+        // --- Create Geometry to use in elements ---
+        std::vector<std::shared_ptr<MTRD::ObjItem>> objItemList;
+        objItemList.push_back(eng.generateSphere(0.5f, 20, 20, 1));
+        objItemList.push_back(eng.generatePlane(20, 20, 1));
+        objItemList.push_back(eng.generateCube(1));
+        eng.windowLoadAllMaterials(objItemList);
+        // --- *** ---
+
+
+        // --- Create drawable entitys ---
         ECSManager& ecs = eng.getEcs();
         ecs.AddComponentType<MTRD::TransformComponent>();
         ecs.AddComponentType<MTRD::RenderComponent>();
+        ecs.AddComponentType<MTRD::LightComponent>();
 
-        size_t triangle = ecs.AddEntity();
-
-        MTRD::TransformComponent* t = ecs.AddComponent<MTRD::TransformComponent>(triangle);
-        t->position = glm::vec3(0.0f);
-        t->rotation = glm::vec3(1.0f, 0.0f, 0.0f);
-        t->angleRotationRadians = -1;
-        t->scale = glm::vec3(0.05f);
-
-
-        //Set the vertex coordinates to create a custom geometry
-        std::vector<MTRD::Vertex> vertexList = {
-           {
-                { 1.0f,  0.0f, 0.f },
-                { 0.0f,  0.0f },
-                { 1.0f,  0.0f, 0.f }
-            },
-           {
-                { 0.0f,  1.5f, 0.f},
-                { 0.0f,  0.0f},
-                { 0.0f,  1.0f, 0.f}
-            },
-
-            {
-                {-1.0f,  0.0f, 0.f},
-                { 0.0f,  0.0f},
-                { 0.0f,  0.0f, 1.f}
-            }
-        };
-
-        std::vector<std::shared_ptr<MTRD::ObjItem>> ObjList;
-        ObjList.push_back(std::make_shared<MTRD::ObjItem>());
-
-        // Use createMesh(ListOfVertex, "NameOfTheMesh") to create a mesh with custom vertices
-        std::unique_ptr<MTRD::Mesh> TriangleMesh = eng.createMesh(vertexList, "triangle");
-
-        // Initialize material's values
-        MTRD::Material mat;
-        mat.diffuse = glm::vec3(1.0f);
-        mat.specular = glm::vec3(1.0f);
-        mat.shininess = 32.0f;
-        mat.loadeable = true;
-        mat.diffuseTexPath = "romfs:/textures/blank/blank.jpg";
-
-        ObjList[0]->materials.push_back(mat);
-        ObjList[0]->meshes.push_back(std::move(TriangleMesh));
-        ObjList[0]->meshes[0]->materialId_ = 0;
-
-        eng.windowLoadAllMaterials(ObjList);
-
-        MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(triangle);
-        r->objitem_ = ObjList[0];
+        GenerateSpotLightEntitys(ecs, objItemList);
+        GeneratePointLightEntitys(ecs, objItemList);
         // --- *** ---
 
-        MTRD::Input::StickPosition stickpos_;
-        float movSpeed = 0.001f;
 
-        auto trans = ecs.GetComponent<MTRD::TransformComponent>(triangle);
-        float tolerance = 0.0001f;
+        // --- Lights ---
+        MTRD::LightComponent* lightComp = ecs.AddComponent<MTRD::LightComponent>(lightEntity);
+        ecs.AddComponent<MTRD::TransformComponent>(lightEntity);
+        GenerateSpotLights(lightComp, eng);
+        GenerateDirectionalLights(lightComp);
+        GeneratePointLights(lightComp);
+        // --- *** ---
+
+        float radio = 10.f;
+        float velocidad = 1.f;
+        float timer = 0.0f;
 
         // The main loop will run until the user closes the window
         while (!eng.windowShouldClose()) {
             // Creates a new frame
             eng.windowInitFrame();
 
+            timer += eng.windowGetLastFrameTime();
 
-            stickpos_ = eng.inputGetLeftStickPosition();
-            if (stickpos_.x > tolerance) trans->position.x += movSpeed;
-            if (stickpos_.x < -tolerance) trans->position.x -= movSpeed;
-            if (stickpos_.y > tolerance) trans->position.y += movSpeed;
-            if (stickpos_.y < -tolerance) trans->position.y -= movSpeed;
+            float coseno = radio * cos(timer * velocidad);
+            float seno = radio * sin(timer * velocidad);
+
+
+            lightComp->spotLights[0].position_ = glm::vec3(coseno / 5, 0.0f, seno / 5) + spotLigthCenter;
+            lightComp->spotLights[0].direction_ = glm::normalize(glm::vec3(0, -2, 0) - lightComp->spotLights[0].position_ + spotLigthCenter);
+
+            lightComp->spotLights[1].position_ = glm::vec3(seno / 5, 0.0f, coseno / 5) + spotLigthCenter;
+            lightComp->spotLights[1].direction_ = glm::normalize(glm::vec3(0, -2, 0) - lightComp->spotLights[1].position_ + spotLigthCenter);
+
+            lightComp->spotLights[2].position_ = glm::vec3(-coseno * 0.68f, 0.0f, seno * 0.68f) + spotLigthCenter;
+
 
             eng.renderScene();
 

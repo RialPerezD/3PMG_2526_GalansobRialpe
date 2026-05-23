@@ -13,8 +13,8 @@ namespace MTRD {
         viewPos_(viewPos),
         vp_(vp),
         program{
-            Shader::VertexFromFile("../assets/shaders/lights_vertex.txt", debug),
-            Shader::FragmentFromFile("../assets/shaders/lights_fragment.txt", debug),
+            Shader::VertexFromFile("romfs:/shadersSwitch/textured_lights_obj_vertex.txt", debug),
+            Shader::FragmentFromFile("romfs:/shadersSwitch/textured_lights_obj_fragment.txt", debug),
             debug
         },
         windowWidth_(windowWidth),
