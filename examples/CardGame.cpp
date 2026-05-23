@@ -17,7 +17,7 @@
 
 using namespace MTRD;
 
-// SERVIDOR
+// CLIENTE
 
 enum class AppState {
     Menu,
@@ -199,27 +199,8 @@ int MTRD::main() {
             firstTime = false;
             eng.windowLoadAllMaterials(objItemList);
 
-            //for (auto& obj : objItemList) {
-            //    for (auto& mat : obj->materials) {
-            //        if (mat.diffuseTexID == -1 && mat.loadeable) {
-            //            mat.loadeable = false;
-            //        }
-            //    }
-            //}
-
             auto* rtable = ecs.GetComponent<MTRD::RenderComponent>(table);
-            rtable->objitem_ = objItemList[0];
-
-            auto cardMesh = eng.generateCube(0.6f);
-            cardGame.createCards(ecs, cardMesh, eng);
-
-            if (isServer) {
-                for (int suit = 0; suit < 4; ++suit)
-                    for (int num = 1; num <= 12; ++num)
-                        serverCardGame.cards.emplace_back(nullptr, 0, suit, num);
-                serverCardGame.shuffleDeck();
-                MTRD::Logger::info("Mazo del servidor inicializado\n");
-            }
+            if (rtable) rtable->objitem_ = objItemList[0];
         }
 
         // --- Menu ---
@@ -236,6 +217,11 @@ int MTRD::main() {
             if (ImGui::Button("MODO SERVIDOR", ImVec2(150, 40))) {
                 if (netMgr.InitServer(static_cast<uint16_t>(portInput), 32)) {
                     isServer = true;
+
+                    serverCardGame.initDeck();
+                    serverCardGame.shuffleDeck();
+                    MTRD::Logger::info("Mazo del servidor inicializado y barajado por consola (48 cartas)!\n");
+
                     simplPacRec = std::make_unique<SimplePacketReceiver>(&objItemList, &ecs, SIZE_MAX);
 
                     // Create netsys
@@ -268,12 +254,65 @@ int MTRD::main() {
             ImGui::Text("Nick: %s", nickBuffer);
             ImGui::Text("Modo: %s", isServer ? "Servidor" : "Cliente");
 
-            auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
-            if (netComp) {
-                if (netComp->networkID != 0)
-                    ImGui::Text("Tu ID de red: %u", netComp->networkID);
-                else
-                    ImGui::TextDisabled("Esperando ID del servidor...");
+            if (isServer) {
+                ImGui::Separator();
+                ImGui::Text("Contador conectados: %d", connectedPlayers);
+
+                // REPARTO INICIAL MANUAL (3 cartas)
+                if (ImGui::Button("REPARTIR CARTAS INICIALES", ImVec2(220, 40))) {
+                    if (!cardsDealt) {
+                        MTRD::Logger::info("Initial distribution from the server\n");
+
+                        DealCardsPacket initPacket;
+
+                        for (int i = 1; i <= 2; ++i) {
+                            initPacket.header.type = MessageType::DealCards;
+                            initPacket.header.senderId = 0; // Server ID
+                            initPacket.payload = serverCardGame.dealThreeCards();
+
+                            netMgr.SendPacket(static_cast<uint32_t>(i), &initPacket, sizeof(initPacket), true);
+                            MTRD::Logger::info("3 initial cards provided to the player ID: {}\n", i);
+                        }
+                        cardsDealt = true;
+                    }
+                    else {
+                        MTRD::Logger::info("The initial distribution has already been made\n");
+                    }
+                }
+
+                ImGui::Spacing();
+
+                // Robar una carta
+                if (ImGui::Button("ROBAR 1 CARTA", ImVec2(220, 40))) {
+                    if (cardsDealt) {
+                        MTRD::Logger::info("Server providing 1 card!\n");
+
+                        // 'static' mantiene el paquete a salvo en memoria de fondo
+                        DealCardsPacket drawPacket;
+
+                        for (int i = 1; i <= 2; ++i) {
+                            drawPacket.header.type = MessageType::DealCards;
+                            drawPacket.header.senderId = 0;
+                            drawPacket.payload = serverCardGame.dealOneCard(); // Send a packet with only 1 card
+
+                            netMgr.SendPacket(static_cast<uint32_t>(i), &drawPacket, sizeof(drawPacket), true);
+                            MTRD::Logger::info("1 card provided to the player ID: {}\n", i);
+                        }
+                    }
+                    else {
+                        MTRD::Logger::info("Cant draw without the initial 3 cards .\n");
+                    }
+                }
+            }
+            else {
+                // Información del cliente
+                auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
+                if (netComp) {
+                    if (netComp->networkID != 0)
+                        ImGui::Text("Tu ID de red: %u", netComp->networkID);
+                    else
+                        ImGui::TextDisabled("Esperando ID del servidor...");
+                }
             }
             ImGui::End();
         }
@@ -295,25 +334,26 @@ int MTRD::main() {
         // --- Running ---
         if (currentState == AppState::Running) {
 
-            // Init NetworkSysyem if still does not exist
-            if (!netSys) {
+            // Init NetworkSystem if still does not exist
+            if (!netSys && !isServer) {
                 netSys = std::make_unique<NetworkSystem>(ecs, netMgr,
                     [&](uint32_t senderID, const void* data, size_t size) {
-                        // Catch the card packet from the net callback
+                        bool intercepted = false;
+
+                        // Catch the card packet
                         if (!isServer && size == sizeof(DealCardsPacket)) {
                             const DealCardsPacket* deal = static_cast<const DealCardsPacket*>(data);
                             if (deal->header.type == MessageType::DealCards) {
-                                cardGame.drawSpecificCards(ecs, deal->payload);
-                                return;
+                                cardGame.receiveSpecificCards(deal->payload);
+                                intercepted = true;
                             }
                         }
 
-                        // Cualquier otro paquete se delega al receptor común (entidades remotas, chat, etc.)
-                        if (simplPacRec) {
+                        if (!intercepted && simplPacRec) {
                             simplPacRec->OnReceivePacket(senderID, data, size);
                         }
 
-                        // Add 1 when a player connects
+                        // Connected player counter
                         if (isServer && size == 0 && senderID != 0) {
                             connectedPlayers++;
                         }
@@ -330,32 +370,11 @@ int MTRD::main() {
                 }
             }
 
-            // Ejecutar la actualización del juego/red habitual
+            // Game/Net update
             if (netSys) {
                 if (!isServer && playerEntity != SIZE_MAX) {
                     ProcessPlayerInput(ecs, playerEntity, eng);
                     ProcessCardInput(ecs, playerEntity, netMgr, eng);
-                }
-
-                // Hardcoded amount of players required to start the game
-                const int requ_players = 2;
-
-                if (isServer && !cardsDealt && connectedPlayers >= requ_players) {
-                    MTRD::Logger::info("serverCardGame.cards.size() = {}\n", serverCardGame.cards.size());
-                    MTRD::Logger::info("¡Todos los jugadores conectados! Repartiendo cartas iniciales...\n");
-
-                    for (int i = 1; i <= requ_players; ++i) {
-                        DealCardsPacket packet;
-                        packet.header.type = MessageType::DealCards;
-                        packet.header.senderId = 0; // Server ID
-                        packet.payload = serverCardGame.dealThreeCards();
-
-                        // Send packet to the correct ID
-                        netMgr.SendPacket(static_cast<uint32_t>(i), &packet, sizeof(packet), true);
-                        MTRD::Logger::info("Cartas enviadas al cliente ID: {}\n", i);
-                    }
-
-                    cardsDealt = true;
                 }
 
                 UpdateRemoteScales(ecs, playerEntity);
@@ -363,26 +382,10 @@ int MTRD::main() {
             }
         }
 
-        if (eng.inputIsMouseButtonPressed(Input::MouseButton::Left)) {
-            glm::vec3 hitPoint = eng.raycastFromMouse(100.0f);
-            printf("Raycast hit: (%.2f, %.2f, %.2f)\n", hitPoint.x, hitPoint.y, hitPoint.z);
-
-            for (auto& card : cardGame.cards) {
-                auto* t = ecs.GetComponent<MTRD::TransformComponent>(card.entity);
-                if (!t) continue;
-                if (t->position.x > 9000.0f) continue;
-
-                glm::vec3 diff = hitPoint - t->position;
-                if (glm::length(diff) < 0.5f) {
-                    printf(">>> Carta pulsada: numero %d, palo %d\n", card.number, card.suit);
-                    break;
-                }
-            }
-        }
-
         eng.renderScene();
         eng.windowEndFrame();
     }
+
 
     netMgr.Shutdown();
     return 0;

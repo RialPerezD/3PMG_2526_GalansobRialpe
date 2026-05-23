@@ -1,50 +1,33 @@
 #include <MotArda/CardGame/CardGame.hpp>
-#include <MotArda/ObjItem.hpp>
-#include <MotArda/Ecs.hpp>
-#include <MotArda/Geometries.hpp>
+#include <MotArda/Logger.hpp>
+#include <iostream>
 
 namespace MTRD {
-    Card::Card(std::shared_ptr<ObjItem> mesh, size_t entity, int suit, int number)
-        : mesh(mesh), entity(entity), suit(suit), number(number) {
-    }
-    void CardGame::createCards(ECSManager& ecs, std::shared_ptr<ObjItem> cardMesh, MTRD::MotardaEng& eng) {
+
+    void CardGame::initDeck() {
+        cards.clear();
         for (int suit = 0; suit < 4; ++suit) {
             for (int num = 1; num <= 12; ++num) {
-                size_t entity = ecs.AddEntity();
-
-                auto* t = ecs.AddComponent<TransformComponent>(entity);
-                t->position = glm::vec3(9999.0f, 9999.0f, 9999.0f);
-                t->scale = glm::vec3(0.3f);
-                t->rotation = glm::vec3(0.0f);
-                t->angleRotationRadians = 0.0f;
-
-                auto* r = ecs.AddComponent<RenderComponent>(entity);
-                r->objitem_ = cardMesh;
-
-                auto* physx = ecs.AddComponent<PhysxComponent>(entity);
-                physx->shapeType = PhysxShapeType::Box;
-                physx->halfExtents = glm::vec3(0.3f, 0.05f, 0.3f);
-                physx->mass = 0.0f;
-                physx->isDynamic = false;
-                eng.createPhysxActor(*physx, *t);
-
-                cards.emplace_back(cardMesh, entity, suit, num);
+                cards.emplace_back(suit, num);
             }
         }
+        usedCards.assign(cards.size(), false);
     }
 
-    void CardGame::shuffleDeck()
-    {
+    void CardGame::shuffleDeck() {
         std::random_device rd;
         std::mt19937 g(rd());
         std::shuffle(cards.begin(), cards.end(), g);
-        usedCards.assign(cards.size(), false);
+        std::fill(usedCards.begin(), usedCards.end(), false);
     }
 
     DealCardsPayload CardGame::dealThreeCards() {
         DealCardsPayload payload;
+        // Limpiamos la estructura asegurando ceros
+        for (int i = 0; i < 3; ++i) { payload.suit[i] = 0; payload.value[i] = 0; }
+
         int count = 0;
-        for (int i = 0; i < cards.size() && count < 3; ++i) {
+        for (size_t i = 0; i < cards.size() && count < 3; ++i) {
             if (!usedCards[i]) {
                 payload.suit[count] = cards[i].suit;
                 payload.value[count] = cards[i].number;
@@ -55,34 +38,44 @@ namespace MTRD {
         return payload;
     }
 
-    void CardGame::drawSpecificCards(ECSManager& ecs, const DealCardsPayload& payload) {
-        glm::vec3 handPositions[3] = {
-            glm::vec3(-1.5f, 2.0f, 1.0f),
-            glm::vec3(0.0f, 2.0f, 0.0f),
-            glm::vec3(1.5f, 2.0f, 0.0f),
-        };
+    // --- NUEVA FUNCIÓN PARA SACAR SOLO 1 CARTA DEL MAZO ---
+    DealCardsPayload CardGame::dealOneCard() {
+        DealCardsPayload payload;
+        // Ponemos todo a 0 (0 significa vacío en el protocolo que diseñaremos)
+        for (int i = 0; i < 3; ++i) { payload.suit[i] = 0; payload.value[i] = 0; }
 
-        for (int i = 0; i < 3; ++i) {
-            for (auto& card : cards) {
-                if (card.suit == (int)payload.suit[i] && card.number == (int)payload.value[i]) {
-                    auto* t = ecs.GetComponent<TransformComponent>(card.entity);
-                    auto* physx = ecs.GetComponent<PhysxComponent>(card.entity);
-
-                    if (t) t->position = handPositions[i];
-                    if (physx && physx->actor) {
-                        physx::PxTransform pxT(physx::PxVec3(
-                            handPositions[i].x,
-                            handPositions[i].y,
-                            handPositions[i].z
-                        ));
-                        physx->actor->setGlobalPose(pxT);
-                    }
-
-                    playerHand.push_back(&card - &cards[0]);
-                    printf("Carta recibida: %d de %d\n", card.number, card.suit);
-                    break;
-                }
+        for (size_t i = 0; i < cards.size(); ++i) {
+            if (!usedCards[i]) {
+                payload.suit[0] = cards[i].suit;
+                payload.value[0] = cards[i].number; // Solo llenamos el primer slot
+                usedCards[i] = true;
+                break;
             }
         }
+        return payload;
+    }
+
+    // --- RECEPTOR MEJORADO QUE ACUMULA EN LA MANO LOCAL ---
+    void CardGame::receiveSpecificCards(const DealCardsPayload& payload) {
+        MTRD::Logger::info("--- NUEVAS CARTAS LLEGANDO POR RED ---");
+
+        for (int i = 0; i < 3; ++i) {
+            int s = static_cast<int>(payload.suit[i]);
+            int v = static_cast<int>(payload.value[i]);
+
+            // Si el valor es 0, ignoramos este slot (está vacío o es basura de red)
+            if (v <= 0 || v > 12) continue;
+
+            // Añadimos de verdad la carta al vector dinámico 'playerHand'
+            playerHand.emplace_back(s, v);
+            MTRD::Logger::info("-> Añadida a tu mano local: {} de {}", v, GetSuitName(s));
+        }
+
+        // Imprimimos el estado real actual de tu mano por consola
+        MTRD::Logger::info("--- ESTADO DE TU MANO ACTUAL (Total: {}) ---", playerHand.size());
+        for (size_t i = 0; i < playerHand.size(); ++i) {
+            MTRD::Logger::info("[{}] {} de {}", i + 1, playerHand[i].number, GetSuitName(playerHand[i].suit));
+        }
+        MTRD::Logger::info("--------------------------------------------");
     }
 }
