@@ -199,6 +199,14 @@ namespace MTRD {
         ECSManager& getEcs() noexcept { return ecs_; }
         const ECSManager& getEcs() const noexcept { return ecs_; }
 
+        #ifdef __SWITCH__
+        Input::StickPosition inputGetLeftStickPosition();
+        Input::StickPosition inputGetRightStickPosition();
+        bool inputIsTouching();
+        void inputGetTouchPosition(int& x, int& y);
+        int inputGetTouchCount();
+        #endif
+
         #ifndef __SWITCH__
         void createPhysxActor(MTRD::PhysxComponent& p, MTRD::TransformComponent& t);
         void hasPhysx(bool has);

@@ -28,7 +28,6 @@ namespace MTRD {
         ECSManager& ecs,
         glm::mat4x4& model
 	) {
-        { std::ofstream file("testeo.txt", std::ios::app); file << "inicio bloque render\n"; }
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
@@ -37,10 +36,8 @@ namespace MTRD {
         auto uvOffsetLoc = glGetUniformLocation(program.programId_, "uvOffset");
         auto uvScaleLoc = glGetUniformLocation(program.programId_, "uvScale");
         program.SetupAtributeLocations(attributes);
-        { std::ofstream file("testeo.txt", std::ios::app); file << "fin bloque render\n"; }
 
         for (size_t id : ecs.GetEntitiesWithComponents<RenderComponent, TransformComponent>()) {
-            { std::ofstream file("testeo.txt", std::ios::app); file << "6\n"; }
             RenderComponent* render = ecs.GetComponent<RenderComponent>(id);
             TransformComponent* transform = ecs.GetComponent<TransformComponent>(id);
 
@@ -83,6 +80,5 @@ namespace MTRD {
                 }
             }
         }
-        { std::ofstream file("testeo.txt", std::ios::app); file << "99\n"; }
 	}
 }

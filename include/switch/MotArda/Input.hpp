@@ -25,6 +25,11 @@ namespace MTRD {
             SHIFT, CONTROL, ALT, TAB
         };
 
+        struct StickPosition {
+            float x = 0;
+            float y = 0;
+        };
+
         static Input inputCreate(Window& window);
 
         ~Input();
@@ -49,6 +54,12 @@ namespace MTRD {
         void clearMouseBuffers();
         void clearBuffers();
 
+        static StickPosition getLeftStickPosition();
+        static StickPosition getRightStickPosition();
+        static bool isTouching();
+        static void getTouchPosition(int& x, int& y);
+        static int getTouchCount();
+
         static void poll();
 
         static std::vector<int> pressKey;
@@ -66,5 +77,13 @@ namespace MTRD {
         static PadState s_padState;
         static u64 s_prevButtons;
         static bool s_padInitialized;
+
+        static float s_leftStickX;
+        static float s_leftStickY;
+        static float s_rightStickX;
+        static float s_rightStickY;
+        static int s_touchX;
+        static int s_touchY;
+        static int s_touchCount;
     };
 }

@@ -108,6 +108,10 @@ namespace MTRD {
     void MotardaEng::windowInitFrame() {
         window_.viewportAndClear();
         window_.pollEvents();
+
+        #ifdef __SWITCH__
+        input_.poll();
+        #endif
     }
 
 
@@ -149,6 +153,28 @@ namespace MTRD {
     void MotardaEng::inputGetMousePosition(int& x, int& y) {
         input_.getMousePosition(x, y);
     }
+
+    #ifdef __SWITCH__
+    Input::StickPosition MotardaEng::inputGetLeftStickPosition() {
+        return Input::getLeftStickPosition();
+    }
+
+    Input::StickPosition MotardaEng::inputGetRightStickPosition() {
+        return Input::getRightStickPosition();
+    }
+
+    bool MotardaEng::inputIsTouching() {
+        return Input::isTouching();
+    }
+
+    void MotardaEng::inputGetTouchPosition(int& x, int& y) {
+        Input::getTouchPosition(x, y);
+    }
+
+    int MotardaEng::inputGetTouchCount() {
+        return Input::getTouchCount();
+    }
+    #endif
 
     glm::vec3 MotardaEng::raycastFromMouse(float maxDistance) {
         int mouseX, mouseY;
