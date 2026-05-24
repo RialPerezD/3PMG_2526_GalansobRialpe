@@ -33,13 +33,13 @@ static const glm::vec3 SLOT_POSITIONS[4] = {
     glm::vec3(5.0f, 0.0f, 0.0f),
 };
 static const glm::vec3 SLOT_SCALES[4] = {
-    glm::vec3(0.0003f),  // meshId 0 — tabla
+    glm::vec3(0.0003f),  // meshId 0 — table
     glm::vec3(0.0003f),  // meshId 1 — 86jfm
     glm::vec3(0.1f),     // meshId 2 — skull
     glm::vec3(0.1f),     // meshId 3 — plant
 };
 static const glm::vec3 REMOTE_SCALES[4] = {
-    glm::vec3(0.0003f),  // meshId 0 — tabla
+    glm::vec3(0.0003f),  // meshId 0 — table
     glm::vec3(0.0003f),  // meshId 1 — 86jfm
     glm::vec3(0.07f),    // meshId 2 — skull
     glm::vec3(0.1f),     // meshId 3 — plant
@@ -106,20 +106,53 @@ static void ProcessPlayerInput(ECSManager& ecs, size_t playerEntity, MTRD::Motar
 }
 
 // --- Envia una carta de prueba al pulsar C ---
-static void ProcessCardInput(ECSManager& ecs, size_t playerEntity, NetworkManager& netMgr, MTRD::MotardaEng& eng) {
-    if (!eng.inputIsKeyPressed(Input::Keyboard::C)) return;
+static bool keyWasPressed[4] = { false, false, false, false }; // anti-repeat por tecla
+
+static void ProcessCardInput(ECSManager& ecs, size_t playerEntity,
+    NetworkManager& netMgr, MTRD::MotardaEng& eng,
+    MTRD::CardGame& cardGame) {
 
     auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
     if (!netComp || netComp->networkID == 0) return;
 
-    MTRD::CardPacket packet;
-    packet.header.type = MTRD::MessageType::CardPlay;
-    packet.header.senderId = netComp->networkID;
-    packet.payload.suit = 0;
-    packet.payload.value = 5;
+    // Teclas 1, 2, 3 → slots de carta 0, 1, 2
+    Input::Keyboard keys[3] = {
+        Input::Keyboard::A,
+        Input::Keyboard::S,
+        Input::Keyboard::D
+    };
 
-    netMgr.SendPacket(0, &packet, sizeof(packet), true);
-    printf(">>> Carta enviada: %d de %d\n", packet.payload.value, packet.payload.suit);
+    for (int i = 0; i < 3; ++i) {
+        bool pressed = eng.inputIsKeyPressed(keys[i]);
+
+        if (pressed && !keyWasPressed[i]) {
+            keyWasPressed[i] = true;
+
+            if (i >= (int)cardGame.playerHand.size()) {
+                MTRD::Logger::info("The is no card in the slot {}\n", i + 1);
+                continue;
+            }
+
+            // Remove the card from the hand
+            MTRD::Card cardToPlay = cardGame.playerHand[i];
+            cardGame.playerHand.erase(cardGame.playerHand.begin() + i);
+
+            // Send to the server
+            MTRD::CardPacket packet;
+            packet.header.type = MTRD::MessageType::CardPlay;
+            packet.header.senderId = netComp->networkID;
+            packet.payload.suit = static_cast<uint32_t>(cardToPlay.suit);
+            packet.payload.value = static_cast<uint32_t>(cardToPlay.number);
+
+            netMgr.SendPacket(0, &packet, sizeof(packet), true);
+
+            MTRD::Logger::info(">>> Jugada: {} de {} (slot {})\n",
+                cardToPlay.number, MTRD::GetSuitName(cardToPlay.suit), i + 1);
+        }
+        else if (!pressed) {
+            keyWasPressed[i] = false;
+        }
+    }
 }
 
 int MTRD::main() {
@@ -228,6 +261,42 @@ int MTRD::main() {
                     netSys = std::make_unique<NetworkSystem>(ecs, netMgr,
                         [&](uint32_t senderID, const void* data, size_t size) {
                             if (simplPacRec) simplPacRec->OnReceivePacket(senderID, data, size);
+
+                            // Play cards
+                            if (size == sizeof(MTRD::CardPacket)) {
+                                const MTRD::CardPacket* cp = static_cast<const MTRD::CardPacket*>(data);
+                                if (cp->header.type == MTRD::MessageType::CardPlay) {
+                                    MTRD::Card played(
+                                        static_cast<int>(cp->payload.suit),
+                                        static_cast<int>(cp->payload.value)
+                                    );
+                                    serverCardGame.tableCards.push_back({ cp->header.senderId, played });
+
+                                    MTRD::Logger::info("Servidor: Player {} played {} of {}\n",
+                                        cp->header.senderId,
+                                        cp->payload.value,
+                                        MTRD::GetSuitName(cp->payload.suit));
+
+                                    if ((int)serverCardGame.tableCards.size() == connectedPlayers
+                                        && connectedPlayers > 1) {
+                                        int trump = 0;
+                                        uint32_t winnerID = serverCardGame.resolveBaza(trump);
+
+                                        MTRD::Logger::info("Baza ganada por jugador {}! Puntos: {}\n",
+                                            winnerID, serverCardGame.scores[winnerID]);
+
+                                        MTRD::CardResultPacket result;
+                                        result.header.type = MTRD::MessageType::CardResult;
+                                        result.header.senderId = 0;
+                                        result.payload.winnerID = winnerID;
+                                        result.payload.points = static_cast<uint32_t>(serverCardGame.scores[winnerID]);
+                                        result.payload.card1Suit = 0; result.payload.card1Value = 0;
+                                        result.payload.card2Suit = 0; result.payload.card2Value = 0;
+
+                                        netMgr.BroadcastPacket(&result, sizeof(result), true);
+                                    }
+                                }
+                            }
 
                             if (size == 0 && senderID != 0) {
                                 connectedPlayers++;
@@ -349,6 +418,16 @@ int MTRD::main() {
                             }
                         }
 
+                        if (!intercepted && size == sizeof(CardResultPacket)) {
+                            const CardResultPacket* res = static_cast<const CardResultPacket*>(data);
+                            if (res->header.type == MessageType::CardResult) {
+                                MTRD::Logger::info("--- RESULT OF BAZA ---");
+                                MTRD::Logger::info("Winner: player {} | Total points: {}",
+                                    res->payload.winnerID, res->payload.points);
+                                intercepted = true;
+                            }
+                        }
+
                         if (!intercepted && simplPacRec) {
                             simplPacRec->OnReceivePacket(senderID, data, size);
                         }
@@ -374,7 +453,7 @@ int MTRD::main() {
             if (netSys) {
                 if (!isServer && playerEntity != SIZE_MAX) {
                     ProcessPlayerInput(ecs, playerEntity, eng);
-                    ProcessCardInput(ecs, playerEntity, netMgr, eng);
+                    ProcessCardInput(ecs, playerEntity, netMgr, eng, cardGame);
                 }
 
                 UpdateRemoteScales(ecs, playerEntity);

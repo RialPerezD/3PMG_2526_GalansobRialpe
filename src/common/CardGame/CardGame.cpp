@@ -78,4 +78,52 @@ namespace MTRD {
         }
         MTRD::Logger::info("--------------------------------------------");
     }
+    uint32_t CardGame::resolveBaza(int triunfo)
+    {
+        if (tableCards.size() < 2) return 0;
+
+        // El primer jugador marca el palo de salida
+        int leadSuit = tableCards[0].card.suit;
+
+        uint32_t winnerID = tableCards[0].playerID;
+        const Card* winnerCard = &tableCards[0].card;
+        int winnerStrength = GetBriscaStrength(winnerCard->number);
+        bool winnerIsTriunfo = (winnerCard->suit == triunfo);
+
+        for (size_t i = 1; i < tableCards.size(); ++i) {
+            const Card& c = tableCards[i].card;
+            bool isTriunfo = (c.suit == triunfo);
+            int strength = GetBriscaStrength(c.number);
+
+            bool beats = false;
+            if (isTriunfo && !winnerIsTriunfo) {
+                beats = true;  // triunfo gana a cualquier otro palo
+            } else if (isTriunfo && winnerIsTriunfo) {
+                beats = (strength > winnerStrength);  // ambos triunfo || mayor fuerza
+            } else if (c.suit == leadSuit && !winnerIsTriunfo) {
+                beats = (strength > winnerStrength);  // mismo palo salida, mayor fuerza
+            }
+            // otro palo sin ser triunfo || no puede ganar
+
+            if (beats) {
+                winnerID = tableCards[i].playerID;
+                winnerCard = &tableCards[i].card;
+                winnerStrength = strength;
+                winnerIsTriunfo = isTriunfo;
+            }
+        }
+
+        // Sumar puntos al ganador
+        int totalPoints = 0;
+        for (auto& pc : tableCards)
+            totalPoints += GetBriscaPoints(pc.card.number);
+        if (winnerID < 5)
+        {
+            scores[winnerID] += totalPoints;
+        }
+
+        tableCards.clear();
+        return winnerID;
+    }
+    
 }
