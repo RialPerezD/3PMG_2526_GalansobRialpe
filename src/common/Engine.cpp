@@ -386,9 +386,7 @@ namespace MTRD {
             break;
         case RenderType::LightsWithShadows:
             renderLightsSystem_ = std::make_unique<RenderLightsSystem>(vp_, model_, camera_.getPosition(), debug_, window_.getWidth(), window_.getHeight());
-            { std::ofstream file("testeo.txt", std::ios::app); file << "light\n"; }
             shadowSystem_ = std::make_unique<ShadowMapSystem>(model_, debug_);
-            { std::ofstream file("testeo.txt", std::ios::app); file << "shadow\n"; }
             break;
         case RenderType::Bidimensional:
             renderSystem_ = std::make_unique<RenderSystem>(vp_, model_, debug_);

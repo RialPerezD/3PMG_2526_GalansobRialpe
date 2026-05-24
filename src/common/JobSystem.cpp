@@ -6,6 +6,7 @@ namespace MTRD {
         : data_{ std::make_unique<JobSystemData>() } {
         data_->stop_ = false;
         data_->threads = std::thread::hardware_concurrency();
+        if (data_->threads == 0) data_->threads = 1;
 
         for (size_t i = 0; i < data_->threads; ++i) {
             data_->workers_.emplace_back(&JobSystem::worker, data_.get());

@@ -1,5 +1,5 @@
 main.o: \
- D:/Clase/3PMG_2526_GalansobRialpe/examplesSwitch/test01Window/main.cpp \
+ D:/Clase/3PMG_2526_GalansobRialpe/examplesSwitch/test01WindowTriangleControllers/main.cpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/common/MotArda/Engine.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/window.hpp \
  D:/Clase/3PMG_2526_GalansobRialpe/include/switch/MotArda/Texture.hpp \

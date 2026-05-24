@@ -20,29 +20,61 @@ namespace MTRD {
         Window& window
     ) {
         tinyobj::ObjReader reader;
-        std::string sourcePath = "../assets/";
+        std::string sourcePath;
+
+        #ifndef __SWITCH__
+        sourcePath = "../assets/";
+        #else
+        sourcePath = "romfs:/";
+        #endif
 
         std::filesystem::path filePathObj(filepath);
         std::string filenameNoExt = filePathObj.stem().string();
         std::string objPath = sourcePath + "objs/" + filenameNoExt + "/" + filepath;
 
-        if (!reader.ParseFromFile(objPath)) {
-#ifndef __SWITCH__
-            MTRD::Logger::error("Error al cargar el archivo .obj: {}", filepath);
-#endif
-
+        #ifdef __SWITCH__
+        std::ifstream objFile(objPath);
+        if (!objFile.is_open()) {
+            { std::ofstream file("testeo.txt", std::ios::app); file << "No se pudo abrir el archivo " << objPath << "\n"; }
             return std::nullopt;
         }
+        std::stringstream objBuf;
+        objBuf << objFile.rdbuf();
+        std::string objContent = objBuf.str();
+
+        std::string mtlPath = sourcePath + "objs/" + filenameNoExt + "/" + filenameNoExt + ".mtl";
+        std::ifstream mtlFile(mtlPath);
+        std::string mtlContent;
+        if (mtlFile.is_open()) {
+            std::stringstream mtlBuf;
+            mtlBuf << mtlFile.rdbuf();
+            mtlContent = mtlBuf.str();
+        }
+
+        if (!reader.ParseFromString(objContent, mtlContent)) {
+            { std::ofstream file("testeo.txt", std::ios::app); file << "No se pudo cargar el archivo " << filepath << "\n"; }
+            return std::nullopt;
+        }
+        #else
+        if (!reader.ParseFromFile(objPath)) {
+            MTRD::Logger::error("Error al cargar el archivo .obj: {}", filepath);
+            return std::nullopt;
+        }
+        #endif
 
         const tinyobj::attrib_t& attrib = reader.GetAttrib();
         const std::vector<tinyobj::shape_t>& shapes = reader.GetShapes();
         const std::vector<tinyobj::material_t>& materials = reader.GetMaterials();
 
-#ifndef __SWITCH__
+        #ifndef __SWITCH__
         if (!reader.Warning().empty()) {
             MTRD::Logger::warn("TinyObj Warning: {}", reader.Warning());
         }
-#endif
+        #else
+        if (!reader.Warning().empty()) {
+            { std::ofstream file("testeo.txt", std::ios::app); file << "TinyObj Warning: " << reader.Warning() << "\n"; }
+		}
+        #endif
 
         ObjLoader objLoader;
 
