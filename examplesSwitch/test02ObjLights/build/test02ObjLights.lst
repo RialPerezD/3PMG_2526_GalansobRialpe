@@ -3207,393 +3207,393 @@
 0000000000051484 0000000000000400 T MTRD::ShadowMapSystem::ShadowMapSystem(glm::mat<4, 4, float, (glm::qualifier)0>&, bool&)
 0000000000051484 0000000000000400 T MTRD::ShadowMapSystem::ShadowMapSystem(glm::mat<4, 4, float, (glm::qualifier)0>&, bool&)
 0000000000051884 00000000000001fc T MTRD::ShadowMapSystem::CreateShadowMapResource(unsigned int&, unsigned int&)
-0000000000051a80 00000000000001d8 T MTRD::ShadowMapSystem::CreateOmniShadowResource(unsigned int&, unsigned int&)
-0000000000051c58 000000000000002c W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::~_Vector_impl()
-0000000000051c58 000000000000002c W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::~_Vector_impl()
-0000000000051c84 0000000000000020 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_base()
-0000000000051c84 0000000000000020 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_base()
-0000000000051ca4 0000000000000020 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::vector()
-0000000000051ca4 0000000000000020 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::vector()
-0000000000051cc4 0000000000000e7c T MTRD::ShadowMapSystem::RenderShadowMap(ECSManager&, glm::mat<4, 4, float, (glm::qualifier)0>&)
-0000000000052b40 0000000000000458 T MTRD::ShadowMapSystem::DrawCall(ECSManager&, glm::mat<4, 4, float, (glm::qualifier)0>&, MTRD::Program&)
-0000000000052f98 0000000000000034 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})::_Terminator::~_Terminator()
-0000000000052f98 0000000000000034 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})::_Terminator::~_Terminator()
-0000000000052fcc 0000000000000084 W void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})
-0000000000053050 0000000000000038 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::_Vector_impl()
-0000000000053050 0000000000000038 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::_Vector_impl()
-0000000000053088 0000000000000050 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~_Vector_base()
-0000000000053088 0000000000000050 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~_Vector_base()
-00000000000530d8 000000000000005c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~vector()
-00000000000530d8 000000000000005c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~vector()
-0000000000053134 0000000000000034 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::push_back(glm::mat<4, 4, float, (glm::qualifier)0>&&)
-0000000000053168 0000000000000068 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::operator[](unsigned long)
-00000000000531d0 000000000000002c W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl_data::_Vector_impl_data()
-00000000000531d0 000000000000002c W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl_data::_Vector_impl_data()
-00000000000531fc 0000000000000014 W std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::~__new_allocator()
-00000000000531fc 0000000000000014 W std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::~__new_allocator()
-0000000000053210 0000000000000058 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_deallocate(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long)
-0000000000053268 0000000000000014 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_get_Tp_allocator()
-000000000005327c 000000000000011c W glm::mat<4, 4, float, (glm::qualifier)0>& std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::emplace_back<glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>&&)
-0000000000053398 0000000000000038 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::size() const
-00000000000533d0 0000000000000018 W void std::_Destroy<glm::mat<4, 4, float, (glm::qualifier)0>*>(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*)
-00000000000533e8 0000000000000210 W void std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_realloc_append<glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>&&)
-00000000000535f8 0000000000000084 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::back()
-000000000005367c 0000000000000030 W std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::deallocate(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long)
-00000000000536ac 00000000000000d0 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_check_len(unsigned long, char const*) const
-000000000005377c 0000000000000030 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::end()
-00000000000537ac 000000000000002c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::begin()
-00000000000537d8 0000000000000050 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_allocate(unsigned long)
-0000000000053828 0000000000000044 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::_Guard_alloc(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long, std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >&)
-0000000000053828 0000000000000044 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::_Guard_alloc(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long, std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >&)
-000000000005386c 000000000000004c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::~_Guard_alloc()
-000000000005386c 000000000000004c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::~_Guard_alloc()
-00000000000538b8 0000000000000034 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_S_relocate(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
-00000000000538ec 0000000000000058 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::empty() const
-0000000000053944 0000000000000020 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::max_size() const
-0000000000053964 0000000000000054 W glm::mat<4, 4, float, (glm::qualifier)0>* std::__relocate_a<glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
-00000000000539b8 000000000000002c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::begin() const
-00000000000539e4 0000000000000030 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::end() const
-0000000000053a14 0000000000000054 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_S_max_size(std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > const&)
-0000000000053a68 0000000000000014 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_get_Tp_allocator() const
-0000000000053a7c 000000000000007c W std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::allocate(unsigned long, void const*)
-0000000000053af8 0000000000000070 W std::enable_if<std::__is_bitwise_relocatable<glm::mat<4, 4, float, (glm::qualifier)0>, void>::value, glm::mat<4, 4, float, (glm::qualifier)0>*>::type std::__relocate_a_1<glm::mat<4, 4, float, (glm::qualifier)0>, glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
-0000000000053b68 0000000000000008 t open_gl
-0000000000053b70 0000000000000028 t get_proc
-0000000000053b98 0000000000000034 T gladLoadGL
-0000000000053bcc 000000000000017c t get_exts
-0000000000053d48 0000000000000090 t free_exts
-0000000000053dd8 0000000000000198 t has_ext
-0000000000053f70 0000000000000630 t load_GL_VERSION_1_0
-00000000000545a0 00000000000001d0 t load_GL_VERSION_1_1
-0000000000054770 00000000000000b0 t load_GL_VERSION_1_2
-0000000000054820 0000000000000150 t load_GL_VERSION_1_3
-0000000000054970 0000000000000150 t load_GL_VERSION_1_4
-0000000000054ac0 0000000000000290 t load_GL_VERSION_1_5
-0000000000054d50 0000000000000bd0 t load_GL_VERSION_2_0
-0000000000055920 00000000000000f0 t load_GL_VERSION_2_1
-0000000000055a10 0000000000000ab0 t load_GL_VERSION_3_0
-00000000000564c0 0000000000000210 t load_GL_VERSION_3_1
-00000000000566d0 0000000000000290 t load_GL_VERSION_3_2
-0000000000056960 0000000000000770 t load_GL_VERSION_3_3
-00000000000570d0 00000000000005f0 t load_GL_VERSION_4_0
-00000000000576c0 0000000000000b50 t load_GL_VERSION_4_1
-0000000000058210 00000000000001b0 t load_GL_VERSION_4_2
-00000000000583c0 00000000000005b0 t load_GL_VERSION_4_3
-0000000000058970 0000000000000150 t load_GL_VERSION_4_4
-0000000000058ac0 0000000000000f70 t load_GL_VERSION_4_5
-0000000000059a30 00000000000000b0 t load_GL_VERSION_4_6
-0000000000059ae0 0000000000000050 t load_GL_3DFX_tbuffer
-0000000000059b30 00000000000000b0 t load_GL_AMD_debug_output
-0000000000059be0 00000000000000b0 t load_GL_AMD_draw_buffers_blend
-0000000000059c90 0000000000000070 t load_GL_AMD_framebuffer_multisample_advanced
-0000000000059d00 00000000000000b0 t load_GL_AMD_framebuffer_sample_positions
-0000000000059db0 0000000000000470 t load_GL_AMD_gpu_shader_int64
-000000000005a220 0000000000000050 t load_GL_AMD_interleaved_elements
-000000000005a270 0000000000000070 t load_GL_AMD_multi_draw_indirect
-000000000005a2e0 0000000000000090 t load_GL_AMD_name_gen_delete
-000000000005a370 0000000000000050 t load_GL_AMD_occlusion_query_event
-000000000005a3c0 0000000000000190 t load_GL_AMD_performance_monitor
-000000000005a550 0000000000000050 t load_GL_AMD_sample_positions
-000000000005a5a0 0000000000000070 t load_GL_AMD_sparse_texture
-000000000005a610 0000000000000050 t load_GL_AMD_stencil_operation_extended
-000000000005a660 0000000000000070 t load_GL_AMD_vertex_shader_tessellator
-000000000005a6d0 00000000000000d0 t load_GL_APPLE_element_array
-000000000005a7a0 0000000000000130 t load_GL_APPLE_fence
-000000000005a8d0 0000000000000070 t load_GL_APPLE_flush_buffer_range
-000000000005a940 0000000000000090 t load_GL_APPLE_object_purgeable
-000000000005a9d0 0000000000000070 t load_GL_APPLE_texture_range
-000000000005aa40 00000000000000b0 t load_GL_APPLE_vertex_array_object
-000000000005aaf0 0000000000000090 t load_GL_APPLE_vertex_array_range
-000000000005ab80 0000000000000110 t load_GL_APPLE_vertex_program_evaluators
-000000000005ac90 00000000000000d0 t load_GL_ARB_ES2_compatibility
-000000000005ad60 0000000000000050 t load_GL_ARB_ES3_1_compatibility
-000000000005adb0 0000000000000050 t load_GL_ARB_ES3_2_compatibility
-000000000005ae00 0000000000000090 t load_GL_ARB_base_instance
-000000000005ae90 0000000000000230 t load_GL_ARB_bindless_texture
-000000000005b0c0 0000000000000070 t load_GL_ARB_blend_func_extended
-000000000005b130 0000000000000050 t load_GL_ARB_buffer_storage
-000000000005b180 0000000000000050 t load_GL_ARB_cl_event
-000000000005b1d0 0000000000000070 t load_GL_ARB_clear_buffer_object
-000000000005b240 0000000000000070 t load_GL_ARB_clear_texture
-000000000005b2b0 0000000000000050 t load_GL_ARB_clip_control
-000000000005b300 0000000000000050 t load_GL_ARB_color_buffer_float
-000000000005b350 0000000000000070 t load_GL_ARB_compute_shader
-000000000005b3c0 0000000000000050 t load_GL_ARB_compute_variable_group_size
-000000000005b410 0000000000000050 t load_GL_ARB_copy_buffer
-000000000005b460 0000000000000050 t load_GL_ARB_copy_image
-000000000005b4b0 00000000000000b0 t load_GL_ARB_debug_output
-000000000005b560 0000000000000c50 t load_GL_ARB_direct_state_access
-000000000005c1b0 0000000000000050 t load_GL_ARB_draw_buffers
-000000000005c200 00000000000000b0 t load_GL_ARB_draw_buffers_blend
-000000000005c2b0 00000000000000b0 t load_GL_ARB_draw_elements_base_vertex
-000000000005c360 0000000000000070 t load_GL_ARB_draw_indirect
-000000000005c3d0 0000000000000070 t load_GL_ARB_draw_instanced
-000000000005c440 0000000000000290 t load_GL_ARB_fragment_program
-000000000005c6d0 0000000000000070 t load_GL_ARB_framebuffer_no_attachments
-000000000005c740 00000000000002b0 t load_GL_ARB_framebuffer_object
-000000000005c9f0 00000000000000b0 t load_GL_ARB_geometry_shader4
-000000000005caa0 0000000000000090 t load_GL_ARB_get_program_binary
-000000000005cb30 0000000000000070 t load_GL_ARB_get_texture_sub_image
-000000000005cba0 0000000000000050 t load_GL_ARB_gl_spirv
-000000000005cbf0 0000000000000270 t load_GL_ARB_gpu_shader_fp64
-000000000005ce60 00000000000004b0 t load_GL_ARB_gpu_shader_int64
-000000000005d310 0000000000000470 t load_GL_ARB_imaging
-000000000005d780 0000000000000070 t load_GL_ARB_indirect_parameters
-000000000005d7f0 0000000000000050 t load_GL_ARB_instanced_arrays
-000000000005d840 0000000000000050 t load_GL_ARB_internalformat_query
-000000000005d890 0000000000000050 t load_GL_ARB_internalformat_query2
-000000000005d8e0 00000000000000f0 t load_GL_ARB_invalidate_subdata
-000000000005d9d0 0000000000000070 t load_GL_ARB_map_buffer_range
-000000000005da40 00000000000000d0 t load_GL_ARB_matrix_palette
-000000000005db10 00000000000000f0 t load_GL_ARB_multi_bind
-000000000005dc00 0000000000000070 t load_GL_ARB_multi_draw_indirect
-000000000005dc70 0000000000000050 t load_GL_ARB_multisample
-000000000005dcc0 0000000000000470 t load_GL_ARB_multitexture
-000000000005e130 0000000000000130 t load_GL_ARB_occlusion_query
-000000000005e260 0000000000000050 t load_GL_ARB_parallel_shader_compile
-000000000005e2b0 0000000000000070 t load_GL_ARB_point_parameters
-000000000005e320 0000000000000050 t load_GL_ARB_polygon_offset_clamp
-000000000005e370 00000000000000f0 t load_GL_ARB_program_interface_query
-000000000005e460 0000000000000050 t load_GL_ARB_provoking_vertex
-000000000005e4b0 00000000000002b0 t load_GL_ARB_robustness
-000000000005e760 0000000000000090 t load_GL_ARB_sample_locations
-000000000005e7f0 0000000000000050 t load_GL_ARB_sample_shading
-000000000005e840 00000000000001f0 t load_GL_ARB_sampler_objects
-000000000005ea30 00000000000007d0 t load_GL_ARB_separate_shader_objects
-000000000005f200 0000000000000050 t load_GL_ARB_shader_atomic_counters
-000000000005f250 0000000000000070 t load_GL_ARB_shader_image_load_store
-000000000005f2c0 0000000000000510 t load_GL_ARB_shader_objects
-000000000005f7d0 0000000000000050 t load_GL_ARB_shader_storage_buffer_object
-000000000005f820 0000000000000130 t load_GL_ARB_shader_subroutine
-000000000005f950 00000000000000f0 t load_GL_ARB_shading_language_include
-000000000005fa40 0000000000000090 t load_GL_ARB_sparse_buffer
-000000000005fad0 0000000000000050 t load_GL_ARB_sparse_texture
-000000000005fb20 0000000000000110 t load_GL_ARB_sync
-000000000005fc30 0000000000000070 t load_GL_ARB_tessellation_shader
-000000000005fca0 0000000000000050 t load_GL_ARB_texture_barrier
-000000000005fcf0 0000000000000050 t load_GL_ARB_texture_buffer_object
-000000000005fd40 0000000000000050 t load_GL_ARB_texture_buffer_range
-000000000005fd90 0000000000000110 t load_GL_ARB_texture_compression
-000000000005fea0 00000000000000b0 t load_GL_ARB_texture_multisample
-000000000005ff50 0000000000000090 t load_GL_ARB_texture_storage
-000000000005ffe0 0000000000000070 t load_GL_ARB_texture_storage_multisample
-0000000000060050 0000000000000050 t load_GL_ARB_texture_view
-00000000000600a0 0000000000000090 t load_GL_ARB_timer_query
-0000000000060130 0000000000000110 t load_GL_ARB_transform_feedback2
-0000000000060240 00000000000000b0 t load_GL_ARB_transform_feedback3
-00000000000602f0 0000000000000070 t load_GL_ARB_transform_feedback_instanced
-0000000000060360 00000000000000b0 t load_GL_ARB_transpose_matrix
-0000000000060410 0000000000000170 t load_GL_ARB_uniform_buffer_object
-0000000000060580 00000000000000b0 t load_GL_ARB_vertex_array_object
-0000000000060630 0000000000000170 t load_GL_ARB_vertex_attrib_64bit
-00000000000607a0 00000000000000f0 t load_GL_ARB_vertex_attrib_binding
-0000000000060890 0000000000000170 t load_GL_ARB_vertex_blend
-0000000000060a00 0000000000000190 t load_GL_ARB_vertex_buffer_object
-0000000000060b90 00000000000007f0 t load_GL_ARB_vertex_program
-0000000000061380 00000000000005f0 t load_GL_ARB_vertex_shader
-0000000000061970 00000000000004f0 t load_GL_ARB_vertex_type_2_10_10_10_rev
-0000000000061e60 00000000000001b0 t load_GL_ARB_viewport_array
-0000000000062010 0000000000000230 t load_GL_ARB_window_pos
-0000000000062240 0000000000000050 t load_GL_ATI_draw_buffers
-0000000000062290 0000000000000090 t load_GL_ATI_element_array
-0000000000062320 00000000000000b0 t load_GL_ATI_envmap_bumpmap
-00000000000623d0 00000000000001f0 t load_GL_ATI_fragment_shader
-00000000000625c0 0000000000000070 t load_GL_ATI_map_object_buffer
-0000000000062630 0000000000000070 t load_GL_ATI_pn_triangles
-00000000000626a0 0000000000000070 t load_GL_ATI_separate_stencil
-0000000000062710 00000000000001b0 t load_GL_ATI_vertex_array_object
-00000000000628c0 0000000000000090 t load_GL_ATI_vertex_attrib_array_object
-0000000000062950 00000000000005d0 t load_GL_ATI_vertex_streams
-0000000000062f20 0000000000000070 t load_GL_EXT_EGL_image_storage
-0000000000062f90 0000000000000090 t load_GL_EXT_bindable_uniform
-0000000000063020 0000000000000050 t load_GL_EXT_blend_color
-0000000000063070 0000000000000050 t load_GL_EXT_blend_equation_separate
-00000000000630c0 0000000000000050 t load_GL_EXT_blend_func_separate
-0000000000063110 0000000000000050 t load_GL_EXT_blend_minmax
-0000000000063160 0000000000000070 t load_GL_EXT_color_subtable
-00000000000631d0 0000000000000070 t load_GL_EXT_compiled_vertex_array
-0000000000063240 00000000000001d0 t load_GL_EXT_convolution
-0000000000063410 00000000000002f0 t load_GL_EXT_coordinate_frame
-0000000000063700 00000000000000d0 t load_GL_EXT_copy_texture
-00000000000637d0 0000000000000070 t load_GL_EXT_cull_vertex
-0000000000063840 0000000000000070 t load_GL_EXT_debug_label
-00000000000638b0 0000000000000090 t load_GL_EXT_debug_marker
-0000000000063940 0000000000000050 t load_GL_EXT_depth_bounds_test
-0000000000063990 0000000000002010 t load_GL_EXT_direct_state_access
-00000000000659a0 00000000000000f0 t load_GL_EXT_draw_buffers2
-0000000000065a90 0000000000000070 t load_GL_EXT_draw_instanced
-0000000000065b00 0000000000000050 t load_GL_EXT_draw_range_elements
-0000000000065b50 0000000000000070 t load_GL_EXT_external_buffer
-0000000000065bc0 00000000000000d0 t load_GL_EXT_fog_coord
-0000000000065c90 0000000000000050 t load_GL_EXT_framebuffer_blit
-0000000000065ce0 0000000000000070 t load_GL_EXT_framebuffer_blit_layers
-0000000000065d50 0000000000000050 t load_GL_EXT_framebuffer_multisample
-0000000000065da0 0000000000000250 t load_GL_EXT_framebuffer_object
-0000000000065ff0 0000000000000050 t load_GL_EXT_geometry_shader4
-0000000000066040 0000000000000070 t load_GL_EXT_gpu_program_parameters
-00000000000660b0 0000000000000470 t load_GL_EXT_gpu_shader4
-0000000000066520 0000000000000170 t load_GL_EXT_histogram
-0000000000066690 0000000000000050 t load_GL_EXT_index_func
-00000000000666e0 0000000000000050 t load_GL_EXT_index_material
-0000000000066730 0000000000000090 t load_GL_EXT_light_texture
-00000000000667c0 0000000000000290 t load_GL_EXT_memory_object
-0000000000066a50 0000000000000050 t load_GL_EXT_memory_object_fd
-0000000000066aa0 0000000000000070 t load_GL_EXT_memory_object_win32
-0000000000066b10 00000000000000b0 t load_GL_EXT_mesh_shader
-0000000000066bc0 0000000000000070 t load_GL_EXT_multi_draw_arrays
-0000000000066c30 0000000000000070 t load_GL_EXT_multisample
-0000000000066ca0 00000000000000b0 t load_GL_EXT_paletted_texture
-0000000000066d50 00000000000000f0 t load_GL_EXT_pixel_transform
-0000000000066e40 0000000000000070 t load_GL_EXT_point_parameters
-0000000000066eb0 0000000000000050 t load_GL_EXT_polygon_offset
-0000000000066f00 0000000000000050 t load_GL_EXT_polygon_offset_clamp
-0000000000066f50 0000000000000050 t load_GL_EXT_provoking_vertex
-0000000000066fa0 0000000000000050 t load_GL_EXT_raster_multisample
-0000000000066ff0 0000000000000250 t load_GL_EXT_secondary_color
-0000000000067240 0000000000000150 t load_GL_EXT_semaphore
-0000000000067390 0000000000000050 t load_GL_EXT_semaphore_fd
-00000000000673e0 0000000000000070 t load_GL_EXT_semaphore_win32
-0000000000067450 0000000000000610 t load_GL_EXT_separate_shader_objects
-0000000000067a60 0000000000000050 t load_GL_EXT_shader_framebuffer_fetch_non_coherent
-0000000000067ab0 0000000000000070 t load_GL_EXT_shader_image_load_store
-0000000000067b20 0000000000000050 t load_GL_EXT_stencil_clear_tag
-0000000000067b70 0000000000000050 t load_GL_EXT_stencil_two_side
-0000000000067bc0 0000000000000070 t load_GL_EXT_subtexture
-0000000000067c30 0000000000000070 t load_GL_EXT_texture3D
-0000000000067ca0 0000000000000050 t load_GL_EXT_texture_array
-0000000000067cf0 0000000000000050 t load_GL_EXT_texture_buffer_object
-0000000000067d40 00000000000000f0 t load_GL_EXT_texture_integer
-0000000000067e30 00000000000000f0 t load_GL_EXT_texture_object
-0000000000067f20 0000000000000050 t load_GL_EXT_texture_perturb_normal
-0000000000067f70 00000000000000f0 t load_GL_EXT_texture_storage
-0000000000068060 0000000000000070 t load_GL_EXT_timer_query
-00000000000680d0 0000000000000110 t load_GL_EXT_transform_feedback
-00000000000681e0 0000000000000150 t load_GL_EXT_vertex_array
-0000000000068330 0000000000000170 t load_GL_EXT_vertex_attrib_64bit
-00000000000684a0 0000000000000570 t load_GL_EXT_vertex_shader
-0000000000068a10 0000000000000090 t load_GL_EXT_vertex_weighting
-0000000000068aa0 0000000000000070 t load_GL_EXT_win32_keyed_mutex
-0000000000068b10 0000000000000050 t load_GL_EXT_window_rectangles
-0000000000068b60 0000000000000050 t load_GL_EXT_x11_sync_object
-0000000000068bb0 0000000000000050 t load_GL_GREMEDY_frame_terminator
-0000000000068c00 0000000000000050 t load_GL_GREMEDY_string_marker
-0000000000068c50 00000000000000f0 t load_GL_HP_image_transform
-0000000000068d40 0000000000000070 t load_GL_IBM_multimode_draw_arrays
-0000000000068db0 0000000000000050 t load_GL_IBM_static_data
-0000000000068e00 0000000000000130 t load_GL_IBM_vertex_array_lists
-0000000000068f30 0000000000000050 t load_GL_INGR_blend_func_separate
-0000000000068f80 0000000000000050 t load_GL_INTEL_framebuffer_CMAA
-0000000000068fd0 0000000000000090 t load_GL_INTEL_map_texture
-0000000000069060 00000000000000b0 t load_GL_INTEL_parallel_arrays
-0000000000069110 0000000000000170 t load_GL_INTEL_performance_query
-0000000000069280 0000000000000050 t load_GL_KHR_blend_equation_advanced
-00000000000692d0 00000000000002f0 t load_GL_KHR_debug
-00000000000695c0 0000000000000050 t load_GL_KHR_parallel_shader_compile
-0000000000069610 0000000000000170 t load_GL_KHR_robustness
-0000000000069780 0000000000000070 t load_GL_MESA_framebuffer_flip_y
-00000000000697f0 0000000000000050 t load_GL_MESA_resize_buffers
-0000000000069840 0000000000000330 t load_GL_MESA_window_pos
-0000000000069b70 0000000000000070 t load_GL_NVX_conditional_render
-0000000000069be0 00000000000000f0 t load_GL_NVX_gpu_multicast2
-0000000000069cd0 0000000000000090 t load_GL_NVX_linked_gpu_multicast
-0000000000069d60 00000000000000b0 t load_GL_NVX_progress_fence
-0000000000069e10 0000000000000050 t load_GL_NV_alpha_to_coverage_dither_control
-0000000000069e60 0000000000000070 t load_GL_NV_bindless_multi_draw_indirect
-0000000000069ed0 0000000000000070 t load_GL_NV_bindless_multi_draw_indirect_count
-0000000000069f40 00000000000001d0 t load_GL_NV_bindless_texture
-000000000006a110 0000000000000070 t load_GL_NV_blend_equation_advanced
-000000000006a180 0000000000000050 t load_GL_NV_clip_space_w_scaling
-000000000006a1d0 0000000000000250 t load_GL_NV_command_list
-000000000006a420 0000000000000070 t load_GL_NV_conditional_render
-000000000006a490 0000000000000050 t load_GL_NV_conservative_raster
-000000000006a4e0 0000000000000050 t load_GL_NV_conservative_raster_dilate
-000000000006a530 0000000000000050 t load_GL_NV_conservative_raster_pre_snap_triangles
-000000000006a580 0000000000000050 t load_GL_NV_copy_image
-000000000006a5d0 0000000000000090 t load_GL_NV_depth_buffer_float
-000000000006a660 0000000000000050 t load_GL_NV_draw_texture
-000000000006a6b0 00000000000000d0 t load_GL_NV_draw_vulkan_image
-000000000006a780 0000000000000150 t load_GL_NV_evaluators
-000000000006a8d0 0000000000000090 t load_GL_NV_explicit_multisample
-000000000006a960 0000000000000110 t load_GL_NV_fence
-000000000006aa70 0000000000000050 t load_GL_NV_fragment_coverage_to_color
-000000000006aac0 00000000000000f0 t load_GL_NV_fragment_program
-000000000006abb0 00000000000000b0 t load_GL_NV_framebuffer_mixed_samples
-000000000006ac60 0000000000000050 t load_GL_NV_framebuffer_multisample_coverage
-000000000006acb0 00000000000000b0 t load_GL_NV_geometry_program4
-000000000006ad60 00000000000001b0 t load_GL_NV_gpu_multicast
-000000000006af10 0000000000000230 t load_GL_NV_gpu_program4
-000000000006b140 0000000000000070 t load_GL_NV_gpu_program5
-000000000006b1b0 0000000000000450 t load_GL_NV_gpu_shader5
-000000000006b600 00000000000005f0 t load_GL_NV_half_float
-000000000006bbf0 0000000000000050 t load_GL_NV_internalformat_sample_query
-000000000006bc40 00000000000000f0 t load_GL_NV_memory_attachment
-000000000006bd30 00000000000000b0 t load_GL_NV_memory_object_sparse
-000000000006bde0 00000000000000b0 t load_GL_NV_mesh_shader
-000000000006be90 0000000000000110 t load_GL_NV_occlusion_query
-000000000006bfa0 0000000000000090 t load_GL_NV_parameter_buffer_object
-000000000006c030 0000000000000a90 t load_GL_NV_path_rendering
-000000000006cac0 0000000000000070 t load_GL_NV_pixel_data_range
-000000000006cb30 0000000000000070 t load_GL_NV_point_sprite
-000000000006cba0 00000000000000f0 t load_GL_NV_present_video
-000000000006cc90 0000000000000070 t load_GL_NV_primitive_restart
-000000000006cd00 0000000000000050 t load_GL_NV_query_resource
-000000000006cd50 0000000000000090 t load_GL_NV_query_resource_tag
-000000000006cde0 00000000000001d0 t load_GL_NV_register_combiners
-000000000006cfb0 0000000000000070 t load_GL_NV_register_combiners2
-000000000006d020 0000000000000090 t load_GL_NV_sample_locations
-000000000006d0b0 0000000000000070 t load_GL_NV_scissor_exclusive
-000000000006d120 00000000000001f0 t load_GL_NV_shader_buffer_load
-000000000006d310 0000000000000110 t load_GL_NV_shading_rate_image
-000000000006d420 0000000000000050 t load_GL_NV_texture_barrier
-000000000006d470 00000000000000f0 t load_GL_NV_texture_multisample
-000000000006d560 0000000000000090 t load_GL_NV_timeline_semaphore
-000000000006d5f0 00000000000001b0 t load_GL_NV_transform_feedback
-000000000006d7a0 0000000000000110 t load_GL_NV_transform_feedback2
-000000000006d8b0 0000000000000170 t load_GL_NV_vdpau_interop
-000000000006da20 0000000000000050 t load_GL_NV_vdpau_interop2
-000000000006da70 0000000000000070 t load_GL_NV_vertex_array_range
-000000000006dae0 0000000000000290 t load_GL_NV_vertex_attrib_integer_64bit
-000000000006dd70 00000000000001b0 t load_GL_NV_vertex_buffer_unified_memory
-000000000006df20 0000000000000830 t load_GL_NV_vertex_program
-000000000006e750 0000000000000310 t load_GL_NV_vertex_program4
-000000000006ea60 00000000000001b0 t load_GL_NV_video_capture
-000000000006ec10 0000000000000050 t load_GL_NV_viewport_swizzle
-000000000006ec60 00000000000002f0 t load_GL_OES_byte_coordinates
-000000000006ef50 0000000000000d90 t load_GL_OES_fixed_point
-000000000006fce0 0000000000000050 t load_GL_OES_query_matrix
-000000000006fd30 00000000000000f0 t load_GL_OES_single_precision
-000000000006fe20 0000000000000070 t load_GL_OVR_multiview
-000000000006fe90 0000000000000050 t load_GL_PGI_misc_hints
-000000000006fee0 0000000000000070 t load_GL_SGIS_detail_texture
-000000000006ff50 0000000000000070 t load_GL_SGIS_fog_function
-000000000006ffc0 0000000000000070 t load_GL_SGIS_multisample
-0000000000070030 00000000000000f0 t load_GL_SGIS_pixel_texture
-0000000000070120 0000000000000070 t load_GL_SGIS_point_parameters
-0000000000070190 0000000000000070 t load_GL_SGIS_sharpen_texture
-0000000000070200 0000000000000070 t load_GL_SGIS_texture4D
-0000000000070270 0000000000000050 t load_GL_SGIS_texture_color_mask
-00000000000702c0 0000000000000070 t load_GL_SGIS_texture_filter4
-0000000000070330 00000000000000f0 t load_GL_SGIX_async
-0000000000070420 0000000000000050 t load_GL_SGIX_flush_raster
-0000000000070470 0000000000000270 t load_GL_SGIX_fragment_lighting
-00000000000706e0 0000000000000050 t load_GL_SGIX_framezoom
-0000000000070730 0000000000000050 t load_GL_SGIX_igloo_interface
-0000000000070780 00000000000000f0 t load_GL_SGIX_instruments
-0000000000070870 00000000000000f0 t load_GL_SGIX_list_priority
-0000000000070960 0000000000000050 t load_GL_SGIX_pixel_texture
-00000000000709b0 00000000000000b0 t load_GL_SGIX_polynomial_ffd
-0000000000070a60 0000000000000050 t load_GL_SGIX_reference_plane
-0000000000070ab0 00000000000000b0 t load_GL_SGIX_sprite
-0000000000070b60 0000000000000050 t load_GL_SGIX_tag_sample_buffer
-0000000000070bb0 0000000000000110 t load_GL_SGI_color_table
-0000000000070cc0 0000000000000050 t load_GL_SUNX_constant_data
-0000000000070d10 0000000000000130 t load_GL_SUN_global_alpha
-0000000000070e40 0000000000000050 t load_GL_SUN_mesh_array
-0000000000070e90 0000000000000110 t load_GL_SUN_triangle_list
-0000000000070fa0 0000000000000530 t load_GL_SUN_vertex
-00000000000714d0 0000000000004418 t find_extensionsGL
-00000000000758e8 00000000000005fc t find_coreGL
-0000000000075ee4 0000000000000b18 T gladLoadGLLoader
+0000000000051a80 00000000000001d4 T MTRD::ShadowMapSystem::CreateOmniShadowResource(unsigned int&, unsigned int&)
+0000000000051c54 000000000000002c W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::~_Vector_impl()
+0000000000051c54 000000000000002c W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::~_Vector_impl()
+0000000000051c80 0000000000000020 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_base()
+0000000000051c80 0000000000000020 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_base()
+0000000000051ca0 0000000000000020 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::vector()
+0000000000051ca0 0000000000000020 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::vector()
+0000000000051cc0 0000000000000e7c T MTRD::ShadowMapSystem::RenderShadowMap(ECSManager&, glm::mat<4, 4, float, (glm::qualifier)0>&)
+0000000000052b3c 0000000000000458 T MTRD::ShadowMapSystem::DrawCall(ECSManager&, glm::mat<4, 4, float, (glm::qualifier)0>&, MTRD::Program&)
+0000000000052f94 0000000000000034 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})::_Terminator::~_Terminator()
+0000000000052f94 0000000000000034 W std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})::_Terminator::~_Terminator()
+0000000000052fc8 0000000000000084 W void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})
+000000000005304c 0000000000000038 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::_Vector_impl()
+000000000005304c 0000000000000038 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::_Vector_impl()
+0000000000053084 0000000000000050 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~_Vector_base()
+0000000000053084 0000000000000050 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~_Vector_base()
+00000000000530d4 000000000000005c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~vector()
+00000000000530d4 000000000000005c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~vector()
+0000000000053130 0000000000000034 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::push_back(glm::mat<4, 4, float, (glm::qualifier)0>&&)
+0000000000053164 0000000000000068 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::operator[](unsigned long)
+00000000000531cc 000000000000002c W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl_data::_Vector_impl_data()
+00000000000531cc 000000000000002c W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl_data::_Vector_impl_data()
+00000000000531f8 0000000000000014 W std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::~__new_allocator()
+00000000000531f8 0000000000000014 W std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::~__new_allocator()
+000000000005320c 0000000000000058 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_deallocate(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long)
+0000000000053264 0000000000000014 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_get_Tp_allocator()
+0000000000053278 000000000000011c W glm::mat<4, 4, float, (glm::qualifier)0>& std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::emplace_back<glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>&&)
+0000000000053394 0000000000000038 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::size() const
+00000000000533cc 0000000000000018 W void std::_Destroy<glm::mat<4, 4, float, (glm::qualifier)0>*>(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*)
+00000000000533e4 0000000000000210 W void std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_realloc_append<glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>&&)
+00000000000535f4 0000000000000084 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::back()
+0000000000053678 0000000000000030 W std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::deallocate(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long)
+00000000000536a8 00000000000000d0 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_check_len(unsigned long, char const*) const
+0000000000053778 0000000000000030 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::end()
+00000000000537a8 000000000000002c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::begin()
+00000000000537d4 0000000000000050 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_allocate(unsigned long)
+0000000000053824 0000000000000044 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::_Guard_alloc(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long, std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >&)
+0000000000053824 0000000000000044 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::_Guard_alloc(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long, std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >&)
+0000000000053868 000000000000004c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::~_Guard_alloc()
+0000000000053868 000000000000004c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::~_Guard_alloc()
+00000000000538b4 0000000000000034 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_S_relocate(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
+00000000000538e8 0000000000000058 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::empty() const
+0000000000053940 0000000000000020 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::max_size() const
+0000000000053960 0000000000000054 W glm::mat<4, 4, float, (glm::qualifier)0>* std::__relocate_a<glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
+00000000000539b4 000000000000002c W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::begin() const
+00000000000539e0 0000000000000030 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::end() const
+0000000000053a10 0000000000000054 W std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_S_max_size(std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > const&)
+0000000000053a64 0000000000000014 W std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_get_Tp_allocator() const
+0000000000053a78 000000000000007c W std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::allocate(unsigned long, void const*)
+0000000000053af4 0000000000000070 W std::enable_if<std::__is_bitwise_relocatable<glm::mat<4, 4, float, (glm::qualifier)0>, void>::value, glm::mat<4, 4, float, (glm::qualifier)0>*>::type std::__relocate_a_1<glm::mat<4, 4, float, (glm::qualifier)0>, glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
+0000000000053b64 0000000000000008 t open_gl
+0000000000053b6c 0000000000000028 t get_proc
+0000000000053b94 0000000000000034 T gladLoadGL
+0000000000053bc8 000000000000017c t get_exts
+0000000000053d44 0000000000000090 t free_exts
+0000000000053dd4 0000000000000198 t has_ext
+0000000000053f6c 0000000000000630 t load_GL_VERSION_1_0
+000000000005459c 00000000000001d0 t load_GL_VERSION_1_1
+000000000005476c 00000000000000b0 t load_GL_VERSION_1_2
+000000000005481c 0000000000000150 t load_GL_VERSION_1_3
+000000000005496c 0000000000000150 t load_GL_VERSION_1_4
+0000000000054abc 0000000000000290 t load_GL_VERSION_1_5
+0000000000054d4c 0000000000000bd0 t load_GL_VERSION_2_0
+000000000005591c 00000000000000f0 t load_GL_VERSION_2_1
+0000000000055a0c 0000000000000ab0 t load_GL_VERSION_3_0
+00000000000564bc 0000000000000210 t load_GL_VERSION_3_1
+00000000000566cc 0000000000000290 t load_GL_VERSION_3_2
+000000000005695c 0000000000000770 t load_GL_VERSION_3_3
+00000000000570cc 00000000000005f0 t load_GL_VERSION_4_0
+00000000000576bc 0000000000000b50 t load_GL_VERSION_4_1
+000000000005820c 00000000000001b0 t load_GL_VERSION_4_2
+00000000000583bc 00000000000005b0 t load_GL_VERSION_4_3
+000000000005896c 0000000000000150 t load_GL_VERSION_4_4
+0000000000058abc 0000000000000f70 t load_GL_VERSION_4_5
+0000000000059a2c 00000000000000b0 t load_GL_VERSION_4_6
+0000000000059adc 0000000000000050 t load_GL_3DFX_tbuffer
+0000000000059b2c 00000000000000b0 t load_GL_AMD_debug_output
+0000000000059bdc 00000000000000b0 t load_GL_AMD_draw_buffers_blend
+0000000000059c8c 0000000000000070 t load_GL_AMD_framebuffer_multisample_advanced
+0000000000059cfc 00000000000000b0 t load_GL_AMD_framebuffer_sample_positions
+0000000000059dac 0000000000000470 t load_GL_AMD_gpu_shader_int64
+000000000005a21c 0000000000000050 t load_GL_AMD_interleaved_elements
+000000000005a26c 0000000000000070 t load_GL_AMD_multi_draw_indirect
+000000000005a2dc 0000000000000090 t load_GL_AMD_name_gen_delete
+000000000005a36c 0000000000000050 t load_GL_AMD_occlusion_query_event
+000000000005a3bc 0000000000000190 t load_GL_AMD_performance_monitor
+000000000005a54c 0000000000000050 t load_GL_AMD_sample_positions
+000000000005a59c 0000000000000070 t load_GL_AMD_sparse_texture
+000000000005a60c 0000000000000050 t load_GL_AMD_stencil_operation_extended
+000000000005a65c 0000000000000070 t load_GL_AMD_vertex_shader_tessellator
+000000000005a6cc 00000000000000d0 t load_GL_APPLE_element_array
+000000000005a79c 0000000000000130 t load_GL_APPLE_fence
+000000000005a8cc 0000000000000070 t load_GL_APPLE_flush_buffer_range
+000000000005a93c 0000000000000090 t load_GL_APPLE_object_purgeable
+000000000005a9cc 0000000000000070 t load_GL_APPLE_texture_range
+000000000005aa3c 00000000000000b0 t load_GL_APPLE_vertex_array_object
+000000000005aaec 0000000000000090 t load_GL_APPLE_vertex_array_range
+000000000005ab7c 0000000000000110 t load_GL_APPLE_vertex_program_evaluators
+000000000005ac8c 00000000000000d0 t load_GL_ARB_ES2_compatibility
+000000000005ad5c 0000000000000050 t load_GL_ARB_ES3_1_compatibility
+000000000005adac 0000000000000050 t load_GL_ARB_ES3_2_compatibility
+000000000005adfc 0000000000000090 t load_GL_ARB_base_instance
+000000000005ae8c 0000000000000230 t load_GL_ARB_bindless_texture
+000000000005b0bc 0000000000000070 t load_GL_ARB_blend_func_extended
+000000000005b12c 0000000000000050 t load_GL_ARB_buffer_storage
+000000000005b17c 0000000000000050 t load_GL_ARB_cl_event
+000000000005b1cc 0000000000000070 t load_GL_ARB_clear_buffer_object
+000000000005b23c 0000000000000070 t load_GL_ARB_clear_texture
+000000000005b2ac 0000000000000050 t load_GL_ARB_clip_control
+000000000005b2fc 0000000000000050 t load_GL_ARB_color_buffer_float
+000000000005b34c 0000000000000070 t load_GL_ARB_compute_shader
+000000000005b3bc 0000000000000050 t load_GL_ARB_compute_variable_group_size
+000000000005b40c 0000000000000050 t load_GL_ARB_copy_buffer
+000000000005b45c 0000000000000050 t load_GL_ARB_copy_image
+000000000005b4ac 00000000000000b0 t load_GL_ARB_debug_output
+000000000005b55c 0000000000000c50 t load_GL_ARB_direct_state_access
+000000000005c1ac 0000000000000050 t load_GL_ARB_draw_buffers
+000000000005c1fc 00000000000000b0 t load_GL_ARB_draw_buffers_blend
+000000000005c2ac 00000000000000b0 t load_GL_ARB_draw_elements_base_vertex
+000000000005c35c 0000000000000070 t load_GL_ARB_draw_indirect
+000000000005c3cc 0000000000000070 t load_GL_ARB_draw_instanced
+000000000005c43c 0000000000000290 t load_GL_ARB_fragment_program
+000000000005c6cc 0000000000000070 t load_GL_ARB_framebuffer_no_attachments
+000000000005c73c 00000000000002b0 t load_GL_ARB_framebuffer_object
+000000000005c9ec 00000000000000b0 t load_GL_ARB_geometry_shader4
+000000000005ca9c 0000000000000090 t load_GL_ARB_get_program_binary
+000000000005cb2c 0000000000000070 t load_GL_ARB_get_texture_sub_image
+000000000005cb9c 0000000000000050 t load_GL_ARB_gl_spirv
+000000000005cbec 0000000000000270 t load_GL_ARB_gpu_shader_fp64
+000000000005ce5c 00000000000004b0 t load_GL_ARB_gpu_shader_int64
+000000000005d30c 0000000000000470 t load_GL_ARB_imaging
+000000000005d77c 0000000000000070 t load_GL_ARB_indirect_parameters
+000000000005d7ec 0000000000000050 t load_GL_ARB_instanced_arrays
+000000000005d83c 0000000000000050 t load_GL_ARB_internalformat_query
+000000000005d88c 0000000000000050 t load_GL_ARB_internalformat_query2
+000000000005d8dc 00000000000000f0 t load_GL_ARB_invalidate_subdata
+000000000005d9cc 0000000000000070 t load_GL_ARB_map_buffer_range
+000000000005da3c 00000000000000d0 t load_GL_ARB_matrix_palette
+000000000005db0c 00000000000000f0 t load_GL_ARB_multi_bind
+000000000005dbfc 0000000000000070 t load_GL_ARB_multi_draw_indirect
+000000000005dc6c 0000000000000050 t load_GL_ARB_multisample
+000000000005dcbc 0000000000000470 t load_GL_ARB_multitexture
+000000000005e12c 0000000000000130 t load_GL_ARB_occlusion_query
+000000000005e25c 0000000000000050 t load_GL_ARB_parallel_shader_compile
+000000000005e2ac 0000000000000070 t load_GL_ARB_point_parameters
+000000000005e31c 0000000000000050 t load_GL_ARB_polygon_offset_clamp
+000000000005e36c 00000000000000f0 t load_GL_ARB_program_interface_query
+000000000005e45c 0000000000000050 t load_GL_ARB_provoking_vertex
+000000000005e4ac 00000000000002b0 t load_GL_ARB_robustness
+000000000005e75c 0000000000000090 t load_GL_ARB_sample_locations
+000000000005e7ec 0000000000000050 t load_GL_ARB_sample_shading
+000000000005e83c 00000000000001f0 t load_GL_ARB_sampler_objects
+000000000005ea2c 00000000000007d0 t load_GL_ARB_separate_shader_objects
+000000000005f1fc 0000000000000050 t load_GL_ARB_shader_atomic_counters
+000000000005f24c 0000000000000070 t load_GL_ARB_shader_image_load_store
+000000000005f2bc 0000000000000510 t load_GL_ARB_shader_objects
+000000000005f7cc 0000000000000050 t load_GL_ARB_shader_storage_buffer_object
+000000000005f81c 0000000000000130 t load_GL_ARB_shader_subroutine
+000000000005f94c 00000000000000f0 t load_GL_ARB_shading_language_include
+000000000005fa3c 0000000000000090 t load_GL_ARB_sparse_buffer
+000000000005facc 0000000000000050 t load_GL_ARB_sparse_texture
+000000000005fb1c 0000000000000110 t load_GL_ARB_sync
+000000000005fc2c 0000000000000070 t load_GL_ARB_tessellation_shader
+000000000005fc9c 0000000000000050 t load_GL_ARB_texture_barrier
+000000000005fcec 0000000000000050 t load_GL_ARB_texture_buffer_object
+000000000005fd3c 0000000000000050 t load_GL_ARB_texture_buffer_range
+000000000005fd8c 0000000000000110 t load_GL_ARB_texture_compression
+000000000005fe9c 00000000000000b0 t load_GL_ARB_texture_multisample
+000000000005ff4c 0000000000000090 t load_GL_ARB_texture_storage
+000000000005ffdc 0000000000000070 t load_GL_ARB_texture_storage_multisample
+000000000006004c 0000000000000050 t load_GL_ARB_texture_view
+000000000006009c 0000000000000090 t load_GL_ARB_timer_query
+000000000006012c 0000000000000110 t load_GL_ARB_transform_feedback2
+000000000006023c 00000000000000b0 t load_GL_ARB_transform_feedback3
+00000000000602ec 0000000000000070 t load_GL_ARB_transform_feedback_instanced
+000000000006035c 00000000000000b0 t load_GL_ARB_transpose_matrix
+000000000006040c 0000000000000170 t load_GL_ARB_uniform_buffer_object
+000000000006057c 00000000000000b0 t load_GL_ARB_vertex_array_object
+000000000006062c 0000000000000170 t load_GL_ARB_vertex_attrib_64bit
+000000000006079c 00000000000000f0 t load_GL_ARB_vertex_attrib_binding
+000000000006088c 0000000000000170 t load_GL_ARB_vertex_blend
+00000000000609fc 0000000000000190 t load_GL_ARB_vertex_buffer_object
+0000000000060b8c 00000000000007f0 t load_GL_ARB_vertex_program
+000000000006137c 00000000000005f0 t load_GL_ARB_vertex_shader
+000000000006196c 00000000000004f0 t load_GL_ARB_vertex_type_2_10_10_10_rev
+0000000000061e5c 00000000000001b0 t load_GL_ARB_viewport_array
+000000000006200c 0000000000000230 t load_GL_ARB_window_pos
+000000000006223c 0000000000000050 t load_GL_ATI_draw_buffers
+000000000006228c 0000000000000090 t load_GL_ATI_element_array
+000000000006231c 00000000000000b0 t load_GL_ATI_envmap_bumpmap
+00000000000623cc 00000000000001f0 t load_GL_ATI_fragment_shader
+00000000000625bc 0000000000000070 t load_GL_ATI_map_object_buffer
+000000000006262c 0000000000000070 t load_GL_ATI_pn_triangles
+000000000006269c 0000000000000070 t load_GL_ATI_separate_stencil
+000000000006270c 00000000000001b0 t load_GL_ATI_vertex_array_object
+00000000000628bc 0000000000000090 t load_GL_ATI_vertex_attrib_array_object
+000000000006294c 00000000000005d0 t load_GL_ATI_vertex_streams
+0000000000062f1c 0000000000000070 t load_GL_EXT_EGL_image_storage
+0000000000062f8c 0000000000000090 t load_GL_EXT_bindable_uniform
+000000000006301c 0000000000000050 t load_GL_EXT_blend_color
+000000000006306c 0000000000000050 t load_GL_EXT_blend_equation_separate
+00000000000630bc 0000000000000050 t load_GL_EXT_blend_func_separate
+000000000006310c 0000000000000050 t load_GL_EXT_blend_minmax
+000000000006315c 0000000000000070 t load_GL_EXT_color_subtable
+00000000000631cc 0000000000000070 t load_GL_EXT_compiled_vertex_array
+000000000006323c 00000000000001d0 t load_GL_EXT_convolution
+000000000006340c 00000000000002f0 t load_GL_EXT_coordinate_frame
+00000000000636fc 00000000000000d0 t load_GL_EXT_copy_texture
+00000000000637cc 0000000000000070 t load_GL_EXT_cull_vertex
+000000000006383c 0000000000000070 t load_GL_EXT_debug_label
+00000000000638ac 0000000000000090 t load_GL_EXT_debug_marker
+000000000006393c 0000000000000050 t load_GL_EXT_depth_bounds_test
+000000000006398c 0000000000002010 t load_GL_EXT_direct_state_access
+000000000006599c 00000000000000f0 t load_GL_EXT_draw_buffers2
+0000000000065a8c 0000000000000070 t load_GL_EXT_draw_instanced
+0000000000065afc 0000000000000050 t load_GL_EXT_draw_range_elements
+0000000000065b4c 0000000000000070 t load_GL_EXT_external_buffer
+0000000000065bbc 00000000000000d0 t load_GL_EXT_fog_coord
+0000000000065c8c 0000000000000050 t load_GL_EXT_framebuffer_blit
+0000000000065cdc 0000000000000070 t load_GL_EXT_framebuffer_blit_layers
+0000000000065d4c 0000000000000050 t load_GL_EXT_framebuffer_multisample
+0000000000065d9c 0000000000000250 t load_GL_EXT_framebuffer_object
+0000000000065fec 0000000000000050 t load_GL_EXT_geometry_shader4
+000000000006603c 0000000000000070 t load_GL_EXT_gpu_program_parameters
+00000000000660ac 0000000000000470 t load_GL_EXT_gpu_shader4
+000000000006651c 0000000000000170 t load_GL_EXT_histogram
+000000000006668c 0000000000000050 t load_GL_EXT_index_func
+00000000000666dc 0000000000000050 t load_GL_EXT_index_material
+000000000006672c 0000000000000090 t load_GL_EXT_light_texture
+00000000000667bc 0000000000000290 t load_GL_EXT_memory_object
+0000000000066a4c 0000000000000050 t load_GL_EXT_memory_object_fd
+0000000000066a9c 0000000000000070 t load_GL_EXT_memory_object_win32
+0000000000066b0c 00000000000000b0 t load_GL_EXT_mesh_shader
+0000000000066bbc 0000000000000070 t load_GL_EXT_multi_draw_arrays
+0000000000066c2c 0000000000000070 t load_GL_EXT_multisample
+0000000000066c9c 00000000000000b0 t load_GL_EXT_paletted_texture
+0000000000066d4c 00000000000000f0 t load_GL_EXT_pixel_transform
+0000000000066e3c 0000000000000070 t load_GL_EXT_point_parameters
+0000000000066eac 0000000000000050 t load_GL_EXT_polygon_offset
+0000000000066efc 0000000000000050 t load_GL_EXT_polygon_offset_clamp
+0000000000066f4c 0000000000000050 t load_GL_EXT_provoking_vertex
+0000000000066f9c 0000000000000050 t load_GL_EXT_raster_multisample
+0000000000066fec 0000000000000250 t load_GL_EXT_secondary_color
+000000000006723c 0000000000000150 t load_GL_EXT_semaphore
+000000000006738c 0000000000000050 t load_GL_EXT_semaphore_fd
+00000000000673dc 0000000000000070 t load_GL_EXT_semaphore_win32
+000000000006744c 0000000000000610 t load_GL_EXT_separate_shader_objects
+0000000000067a5c 0000000000000050 t load_GL_EXT_shader_framebuffer_fetch_non_coherent
+0000000000067aac 0000000000000070 t load_GL_EXT_shader_image_load_store
+0000000000067b1c 0000000000000050 t load_GL_EXT_stencil_clear_tag
+0000000000067b6c 0000000000000050 t load_GL_EXT_stencil_two_side
+0000000000067bbc 0000000000000070 t load_GL_EXT_subtexture
+0000000000067c2c 0000000000000070 t load_GL_EXT_texture3D
+0000000000067c9c 0000000000000050 t load_GL_EXT_texture_array
+0000000000067cec 0000000000000050 t load_GL_EXT_texture_buffer_object
+0000000000067d3c 00000000000000f0 t load_GL_EXT_texture_integer
+0000000000067e2c 00000000000000f0 t load_GL_EXT_texture_object
+0000000000067f1c 0000000000000050 t load_GL_EXT_texture_perturb_normal
+0000000000067f6c 00000000000000f0 t load_GL_EXT_texture_storage
+000000000006805c 0000000000000070 t load_GL_EXT_timer_query
+00000000000680cc 0000000000000110 t load_GL_EXT_transform_feedback
+00000000000681dc 0000000000000150 t load_GL_EXT_vertex_array
+000000000006832c 0000000000000170 t load_GL_EXT_vertex_attrib_64bit
+000000000006849c 0000000000000570 t load_GL_EXT_vertex_shader
+0000000000068a0c 0000000000000090 t load_GL_EXT_vertex_weighting
+0000000000068a9c 0000000000000070 t load_GL_EXT_win32_keyed_mutex
+0000000000068b0c 0000000000000050 t load_GL_EXT_window_rectangles
+0000000000068b5c 0000000000000050 t load_GL_EXT_x11_sync_object
+0000000000068bac 0000000000000050 t load_GL_GREMEDY_frame_terminator
+0000000000068bfc 0000000000000050 t load_GL_GREMEDY_string_marker
+0000000000068c4c 00000000000000f0 t load_GL_HP_image_transform
+0000000000068d3c 0000000000000070 t load_GL_IBM_multimode_draw_arrays
+0000000000068dac 0000000000000050 t load_GL_IBM_static_data
+0000000000068dfc 0000000000000130 t load_GL_IBM_vertex_array_lists
+0000000000068f2c 0000000000000050 t load_GL_INGR_blend_func_separate
+0000000000068f7c 0000000000000050 t load_GL_INTEL_framebuffer_CMAA
+0000000000068fcc 0000000000000090 t load_GL_INTEL_map_texture
+000000000006905c 00000000000000b0 t load_GL_INTEL_parallel_arrays
+000000000006910c 0000000000000170 t load_GL_INTEL_performance_query
+000000000006927c 0000000000000050 t load_GL_KHR_blend_equation_advanced
+00000000000692cc 00000000000002f0 t load_GL_KHR_debug
+00000000000695bc 0000000000000050 t load_GL_KHR_parallel_shader_compile
+000000000006960c 0000000000000170 t load_GL_KHR_robustness
+000000000006977c 0000000000000070 t load_GL_MESA_framebuffer_flip_y
+00000000000697ec 0000000000000050 t load_GL_MESA_resize_buffers
+000000000006983c 0000000000000330 t load_GL_MESA_window_pos
+0000000000069b6c 0000000000000070 t load_GL_NVX_conditional_render
+0000000000069bdc 00000000000000f0 t load_GL_NVX_gpu_multicast2
+0000000000069ccc 0000000000000090 t load_GL_NVX_linked_gpu_multicast
+0000000000069d5c 00000000000000b0 t load_GL_NVX_progress_fence
+0000000000069e0c 0000000000000050 t load_GL_NV_alpha_to_coverage_dither_control
+0000000000069e5c 0000000000000070 t load_GL_NV_bindless_multi_draw_indirect
+0000000000069ecc 0000000000000070 t load_GL_NV_bindless_multi_draw_indirect_count
+0000000000069f3c 00000000000001d0 t load_GL_NV_bindless_texture
+000000000006a10c 0000000000000070 t load_GL_NV_blend_equation_advanced
+000000000006a17c 0000000000000050 t load_GL_NV_clip_space_w_scaling
+000000000006a1cc 0000000000000250 t load_GL_NV_command_list
+000000000006a41c 0000000000000070 t load_GL_NV_conditional_render
+000000000006a48c 0000000000000050 t load_GL_NV_conservative_raster
+000000000006a4dc 0000000000000050 t load_GL_NV_conservative_raster_dilate
+000000000006a52c 0000000000000050 t load_GL_NV_conservative_raster_pre_snap_triangles
+000000000006a57c 0000000000000050 t load_GL_NV_copy_image
+000000000006a5cc 0000000000000090 t load_GL_NV_depth_buffer_float
+000000000006a65c 0000000000000050 t load_GL_NV_draw_texture
+000000000006a6ac 00000000000000d0 t load_GL_NV_draw_vulkan_image
+000000000006a77c 0000000000000150 t load_GL_NV_evaluators
+000000000006a8cc 0000000000000090 t load_GL_NV_explicit_multisample
+000000000006a95c 0000000000000110 t load_GL_NV_fence
+000000000006aa6c 0000000000000050 t load_GL_NV_fragment_coverage_to_color
+000000000006aabc 00000000000000f0 t load_GL_NV_fragment_program
+000000000006abac 00000000000000b0 t load_GL_NV_framebuffer_mixed_samples
+000000000006ac5c 0000000000000050 t load_GL_NV_framebuffer_multisample_coverage
+000000000006acac 00000000000000b0 t load_GL_NV_geometry_program4
+000000000006ad5c 00000000000001b0 t load_GL_NV_gpu_multicast
+000000000006af0c 0000000000000230 t load_GL_NV_gpu_program4
+000000000006b13c 0000000000000070 t load_GL_NV_gpu_program5
+000000000006b1ac 0000000000000450 t load_GL_NV_gpu_shader5
+000000000006b5fc 00000000000005f0 t load_GL_NV_half_float
+000000000006bbec 0000000000000050 t load_GL_NV_internalformat_sample_query
+000000000006bc3c 00000000000000f0 t load_GL_NV_memory_attachment
+000000000006bd2c 00000000000000b0 t load_GL_NV_memory_object_sparse
+000000000006bddc 00000000000000b0 t load_GL_NV_mesh_shader
+000000000006be8c 0000000000000110 t load_GL_NV_occlusion_query
+000000000006bf9c 0000000000000090 t load_GL_NV_parameter_buffer_object
+000000000006c02c 0000000000000a90 t load_GL_NV_path_rendering
+000000000006cabc 0000000000000070 t load_GL_NV_pixel_data_range
+000000000006cb2c 0000000000000070 t load_GL_NV_point_sprite
+000000000006cb9c 00000000000000f0 t load_GL_NV_present_video
+000000000006cc8c 0000000000000070 t load_GL_NV_primitive_restart
+000000000006ccfc 0000000000000050 t load_GL_NV_query_resource
+000000000006cd4c 0000000000000090 t load_GL_NV_query_resource_tag
+000000000006cddc 00000000000001d0 t load_GL_NV_register_combiners
+000000000006cfac 0000000000000070 t load_GL_NV_register_combiners2
+000000000006d01c 0000000000000090 t load_GL_NV_sample_locations
+000000000006d0ac 0000000000000070 t load_GL_NV_scissor_exclusive
+000000000006d11c 00000000000001f0 t load_GL_NV_shader_buffer_load
+000000000006d30c 0000000000000110 t load_GL_NV_shading_rate_image
+000000000006d41c 0000000000000050 t load_GL_NV_texture_barrier
+000000000006d46c 00000000000000f0 t load_GL_NV_texture_multisample
+000000000006d55c 0000000000000090 t load_GL_NV_timeline_semaphore
+000000000006d5ec 00000000000001b0 t load_GL_NV_transform_feedback
+000000000006d79c 0000000000000110 t load_GL_NV_transform_feedback2
+000000000006d8ac 0000000000000170 t load_GL_NV_vdpau_interop
+000000000006da1c 0000000000000050 t load_GL_NV_vdpau_interop2
+000000000006da6c 0000000000000070 t load_GL_NV_vertex_array_range
+000000000006dadc 0000000000000290 t load_GL_NV_vertex_attrib_integer_64bit
+000000000006dd6c 00000000000001b0 t load_GL_NV_vertex_buffer_unified_memory
+000000000006df1c 0000000000000830 t load_GL_NV_vertex_program
+000000000006e74c 0000000000000310 t load_GL_NV_vertex_program4
+000000000006ea5c 00000000000001b0 t load_GL_NV_video_capture
+000000000006ec0c 0000000000000050 t load_GL_NV_viewport_swizzle
+000000000006ec5c 00000000000002f0 t load_GL_OES_byte_coordinates
+000000000006ef4c 0000000000000d90 t load_GL_OES_fixed_point
+000000000006fcdc 0000000000000050 t load_GL_OES_query_matrix
+000000000006fd2c 00000000000000f0 t load_GL_OES_single_precision
+000000000006fe1c 0000000000000070 t load_GL_OVR_multiview
+000000000006fe8c 0000000000000050 t load_GL_PGI_misc_hints
+000000000006fedc 0000000000000070 t load_GL_SGIS_detail_texture
+000000000006ff4c 0000000000000070 t load_GL_SGIS_fog_function
+000000000006ffbc 0000000000000070 t load_GL_SGIS_multisample
+000000000007002c 00000000000000f0 t load_GL_SGIS_pixel_texture
+000000000007011c 0000000000000070 t load_GL_SGIS_point_parameters
+000000000007018c 0000000000000070 t load_GL_SGIS_sharpen_texture
+00000000000701fc 0000000000000070 t load_GL_SGIS_texture4D
+000000000007026c 0000000000000050 t load_GL_SGIS_texture_color_mask
+00000000000702bc 0000000000000070 t load_GL_SGIS_texture_filter4
+000000000007032c 00000000000000f0 t load_GL_SGIX_async
+000000000007041c 0000000000000050 t load_GL_SGIX_flush_raster
+000000000007046c 0000000000000270 t load_GL_SGIX_fragment_lighting
+00000000000706dc 0000000000000050 t load_GL_SGIX_framezoom
+000000000007072c 0000000000000050 t load_GL_SGIX_igloo_interface
+000000000007077c 00000000000000f0 t load_GL_SGIX_instruments
+000000000007086c 00000000000000f0 t load_GL_SGIX_list_priority
+000000000007095c 0000000000000050 t load_GL_SGIX_pixel_texture
+00000000000709ac 00000000000000b0 t load_GL_SGIX_polynomial_ffd
+0000000000070a5c 0000000000000050 t load_GL_SGIX_reference_plane
+0000000000070aac 00000000000000b0 t load_GL_SGIX_sprite
+0000000000070b5c 0000000000000050 t load_GL_SGIX_tag_sample_buffer
+0000000000070bac 0000000000000110 t load_GL_SGI_color_table
+0000000000070cbc 0000000000000050 t load_GL_SUNX_constant_data
+0000000000070d0c 0000000000000130 t load_GL_SUN_global_alpha
+0000000000070e3c 0000000000000050 t load_GL_SUN_mesh_array
+0000000000070e8c 0000000000000110 t load_GL_SUN_triangle_list
+0000000000070f9c 0000000000000530 t load_GL_SUN_vertex
+00000000000714cc 0000000000004418 t find_extensionsGL
+00000000000758e4 00000000000005fc t find_coreGL
+0000000000075ee0 0000000000000b18 T gladLoadGLLoader
 0000000000076a00 0000000000000038 T eglGetError
 0000000000076a40 00000000000000bc t _eglSetFuncName
 0000000000076b00 0000000000000034 T eglQueryAPI
@@ -19620,7 +19620,7 @@
 0000000000697d08 a _DYNAMIC
 0000000000697e58 d __got_start__
 0000000000697e58 a _GLOBAL_OFFSET_TABLE_
-000000000069ca88 d __got_end__
+000000000069ca90 d __got_end__
 000000000069d000 d __data_start
 000000000069d000 0000000000000004 d s_nxlinkSock
 000000000069d008 000000000000000c D spotLigthCenter

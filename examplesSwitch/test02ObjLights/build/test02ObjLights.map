@@ -48798,808 +48798,808 @@ Linker script and memory map
                 0x0000000000051884      0x1fc ShadowMapSystem.o
                 0x0000000000051884                MTRD::ShadowMapSystem::CreateShadowMapResource(unsigned int&, unsigned int&)
  .text._ZN4MTRD15ShadowMapSystem24CreateOmniShadowResourceERjS1_
-                0x0000000000051a80      0x1d8 ShadowMapSystem.o
+                0x0000000000051a80      0x1d4 ShadowMapSystem.o
                 0x0000000000051a80                MTRD::ShadowMapSystem::CreateOmniShadowResource(unsigned int&, unsigned int&)
  .text._ZNSt12_Vector_baseIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE12_Vector_implD2Ev
-                0x0000000000051c58       0x2c ShadowMapSystem.o
-                0x0000000000051c58                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::~_Vector_impl()
-                0x0000000000051c58                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::~_Vector_impl()
+                0x0000000000051c54       0x2c ShadowMapSystem.o
+                0x0000000000051c54                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::~_Vector_impl()
+                0x0000000000051c54                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::~_Vector_impl()
  .text._ZNSt12_Vector_baseIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EEC2Ev
-                0x0000000000051c84       0x20 ShadowMapSystem.o
-                0x0000000000051c84                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_base()
-                0x0000000000051c84                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_base()
+                0x0000000000051c80       0x20 ShadowMapSystem.o
+                0x0000000000051c80                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_base()
+                0x0000000000051c80                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_base()
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EEC2Ev
-                0x0000000000051ca4       0x20 ShadowMapSystem.o
-                0x0000000000051ca4                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::vector()
-                0x0000000000051ca4                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::vector()
+                0x0000000000051ca0       0x20 ShadowMapSystem.o
+                0x0000000000051ca0                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::vector()
+                0x0000000000051ca0                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::vector()
  .text._ZN4MTRD15ShadowMapSystem15RenderShadowMapER10ECSManagerRN3glm3matILi4ELi4EfLNS3_9qualifierE0EEE
-                0x0000000000051cc4      0xe7c ShadowMapSystem.o
-                0x0000000000051cc4                MTRD::ShadowMapSystem::RenderShadowMap(ECSManager&, glm::mat<4, 4, float, (glm::qualifier)0>&)
+                0x0000000000051cc0      0xe7c ShadowMapSystem.o
+                0x0000000000051cc0                MTRD::ShadowMapSystem::RenderShadowMap(ECSManager&, glm::mat<4, 4, float, (glm::qualifier)0>&)
  .text._ZN4MTRD15ShadowMapSystem8DrawCallER10ECSManagerRN3glm3matILi4ELi4EfLNS3_9qualifierE0EEERNS_7ProgramE
-                0x0000000000052b40      0x458 ShadowMapSystem.o
-                0x0000000000052b40                MTRD::ShadowMapSystem::DrawCall(ECSManager&, glm::mat<4, 4, float, (glm::qualifier)0>&, MTRD::Program&)
+                0x0000000000052b3c      0x458 ShadowMapSystem.o
+                0x0000000000052b3c                MTRD::ShadowMapSystem::DrawCall(ECSManager&, glm::mat<4, 4, float, (glm::qualifier)0>&, MTRD::Program&)
  .text._ZZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE22__resize_and_overwriteIZNS_9to_stringEiEUlPcmE_EEvmT_EN11_TerminatorD2Ev
-                0x0000000000052f98       0x34 ShadowMapSystem.o
-                0x0000000000052f98                std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})::_Terminator::~_Terminator()
-                0x0000000000052f98                std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})::_Terminator::~_Terminator()
+                0x0000000000052f94       0x34 ShadowMapSystem.o
+                0x0000000000052f94                std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})::_Terminator::~_Terminator()
+                0x0000000000052f94                std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})::_Terminator::~_Terminator()
  .text._ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE22__resize_and_overwriteIZNS_9to_stringEiEUlPcmE_EEvmT_
-                0x0000000000052fcc       0x84 ShadowMapSystem.o
-                0x0000000000052fcc                void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})
+                0x0000000000052fc8       0x84 ShadowMapSystem.o
+                0x0000000000052fc8                void std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::__resize_and_overwrite<std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1}>(unsigned long, std::__cxx11::to_string(int)::{lambda(char*, unsigned long)#1})
  .text._ZNSt12_Vector_baseIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE12_Vector_implC2Ev
-                0x0000000000053050       0x38 ShadowMapSystem.o
-                0x0000000000053050                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::_Vector_impl()
-                0x0000000000053050                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::_Vector_impl()
+                0x000000000005304c       0x38 ShadowMapSystem.o
+                0x000000000005304c                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::_Vector_impl()
+                0x000000000005304c                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl::_Vector_impl()
  .text._ZNSt12_Vector_baseIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EED2Ev
-                0x0000000000053088       0x50 ShadowMapSystem.o
-                0x0000000000053088                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~_Vector_base()
-                0x0000000000053088                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~_Vector_base()
+                0x0000000000053084       0x50 ShadowMapSystem.o
+                0x0000000000053084                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~_Vector_base()
+                0x0000000000053084                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~_Vector_base()
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EED2Ev
-                0x00000000000530d8       0x5c ShadowMapSystem.o
-                0x00000000000530d8                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~vector()
-                0x00000000000530d8                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~vector()
+                0x00000000000530d4       0x5c ShadowMapSystem.o
+                0x00000000000530d4                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~vector()
+                0x00000000000530d4                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::~vector()
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE9push_backEOS3_
-                0x0000000000053134       0x34 ShadowMapSystem.o
-                0x0000000000053134                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::push_back(glm::mat<4, 4, float, (glm::qualifier)0>&&)
+                0x0000000000053130       0x34 ShadowMapSystem.o
+                0x0000000000053130                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::push_back(glm::mat<4, 4, float, (glm::qualifier)0>&&)
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EEixEm
-                0x0000000000053168       0x68 ShadowMapSystem.o
-                0x0000000000053168                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::operator[](unsigned long)
+                0x0000000000053164       0x68 ShadowMapSystem.o
+                0x0000000000053164                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::operator[](unsigned long)
  .text._ZNSt12_Vector_baseIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE17_Vector_impl_dataC2Ev
-                0x00000000000531d0       0x2c ShadowMapSystem.o
-                0x00000000000531d0                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl_data::_Vector_impl_data()
-                0x00000000000531d0                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl_data::_Vector_impl_data()
+                0x00000000000531cc       0x2c ShadowMapSystem.o
+                0x00000000000531cc                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl_data::_Vector_impl_data()
+                0x00000000000531cc                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Vector_impl_data::_Vector_impl_data()
  .text._ZNSt15__new_allocatorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEEED2Ev
-                0x00000000000531fc       0x14 ShadowMapSystem.o
-                0x00000000000531fc                std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::~__new_allocator()
-                0x00000000000531fc                std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::~__new_allocator()
+                0x00000000000531f8       0x14 ShadowMapSystem.o
+                0x00000000000531f8                std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::~__new_allocator()
+                0x00000000000531f8                std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::~__new_allocator()
  .text._ZNSt12_Vector_baseIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE13_M_deallocateEPS3_m
-                0x0000000000053210       0x58 ShadowMapSystem.o
-                0x0000000000053210                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_deallocate(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long)
+                0x000000000005320c       0x58 ShadowMapSystem.o
+                0x000000000005320c                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_deallocate(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long)
  .text._ZNSt12_Vector_baseIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE19_M_get_Tp_allocatorEv
-                0x0000000000053268       0x14 ShadowMapSystem.o
-                0x0000000000053268                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_get_Tp_allocator()
+                0x0000000000053264       0x14 ShadowMapSystem.o
+                0x0000000000053264                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_get_Tp_allocator()
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE12emplace_backIJS3_EEERS3_DpOT_
-                0x000000000005327c      0x11c ShadowMapSystem.o
-                0x000000000005327c                glm::mat<4, 4, float, (glm::qualifier)0>& std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::emplace_back<glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>&&)
+                0x0000000000053278      0x11c ShadowMapSystem.o
+                0x0000000000053278                glm::mat<4, 4, float, (glm::qualifier)0>& std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::emplace_back<glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>&&)
  .text._ZNKSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE4sizeEv
-                0x0000000000053398       0x38 ShadowMapSystem.o
-                0x0000000000053398                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::size() const
+                0x0000000000053394       0x38 ShadowMapSystem.o
+                0x0000000000053394                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::size() const
  .text._ZSt8_DestroyIPN3glm3matILi4ELi4EfLNS0_9qualifierE0EEEEvT_S5_
-                0x00000000000533d0       0x18 ShadowMapSystem.o
-                0x00000000000533d0                void std::_Destroy<glm::mat<4, 4, float, (glm::qualifier)0>*>(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*)
+                0x00000000000533cc       0x18 ShadowMapSystem.o
+                0x00000000000533cc                void std::_Destroy<glm::mat<4, 4, float, (glm::qualifier)0>*>(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*)
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE17_M_realloc_appendIJS3_EEEvDpOT_
-                0x00000000000533e8      0x210 ShadowMapSystem.o
-                0x00000000000533e8                void std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_realloc_append<glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>&&)
+                0x00000000000533e4      0x210 ShadowMapSystem.o
+                0x00000000000533e4                void std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_realloc_append<glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>&&)
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE4backEv
-                0x00000000000535f8       0x84 ShadowMapSystem.o
-                0x00000000000535f8                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::back()
+                0x00000000000535f4       0x84 ShadowMapSystem.o
+                0x00000000000535f4                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::back()
  .text._ZNSt15__new_allocatorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEEE10deallocateEPS3_m
-                0x000000000005367c       0x30 ShadowMapSystem.o
-                0x000000000005367c                std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::deallocate(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long)
+                0x0000000000053678       0x30 ShadowMapSystem.o
+                0x0000000000053678                std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::deallocate(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long)
  .text._ZNKSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE12_M_check_lenEmPKc
-                0x00000000000536ac       0xd0 ShadowMapSystem.o
-                0x00000000000536ac                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_check_len(unsigned long, char const*) const
+                0x00000000000536a8       0xd0 ShadowMapSystem.o
+                0x00000000000536a8                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_check_len(unsigned long, char const*) const
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE3endEv
-                0x000000000005377c       0x30 ShadowMapSystem.o
-                0x000000000005377c                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::end()
+                0x0000000000053778       0x30 ShadowMapSystem.o
+                0x0000000000053778                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::end()
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE5beginEv
-                0x00000000000537ac       0x2c ShadowMapSystem.o
-                0x00000000000537ac                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::begin()
+                0x00000000000537a8       0x2c ShadowMapSystem.o
+                0x00000000000537a8                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::begin()
  .text._ZNSt12_Vector_baseIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE11_M_allocateEm
-                0x00000000000537d8       0x50 ShadowMapSystem.o
-                0x00000000000537d8                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_allocate(unsigned long)
+                0x00000000000537d4       0x50 ShadowMapSystem.o
+                0x00000000000537d4                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_allocate(unsigned long)
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE12_Guard_allocC2EPS3_mRSt12_Vector_baseIS3_S4_E
-                0x0000000000053828       0x44 ShadowMapSystem.o
-                0x0000000000053828                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::_Guard_alloc(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long, std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >&)
-                0x0000000000053828                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::_Guard_alloc(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long, std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >&)
+                0x0000000000053824       0x44 ShadowMapSystem.o
+                0x0000000000053824                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::_Guard_alloc(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long, std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >&)
+                0x0000000000053824                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::_Guard_alloc(glm::mat<4, 4, float, (glm::qualifier)0>*, unsigned long, std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >&)
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE12_Guard_allocD2Ev
-                0x000000000005386c       0x4c ShadowMapSystem.o
-                0x000000000005386c                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::~_Guard_alloc()
-                0x000000000005386c                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::~_Guard_alloc()
+                0x0000000000053868       0x4c ShadowMapSystem.o
+                0x0000000000053868                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::~_Guard_alloc()
+                0x0000000000053868                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_Guard_alloc::~_Guard_alloc()
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE11_S_relocateEPS3_S6_S6_RS4_
-                0x00000000000538b8       0x34 ShadowMapSystem.o
-                0x00000000000538b8                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_S_relocate(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
+                0x00000000000538b4       0x34 ShadowMapSystem.o
+                0x00000000000538b4                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_S_relocate(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
  .text._ZNKSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE5emptyEv
-                0x00000000000538ec       0x58 ShadowMapSystem.o
-                0x00000000000538ec                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::empty() const
+                0x00000000000538e8       0x58 ShadowMapSystem.o
+                0x00000000000538e8                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::empty() const
  .text._ZNKSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE8max_sizeEv
-                0x0000000000053944       0x20 ShadowMapSystem.o
-                0x0000000000053944                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::max_size() const
+                0x0000000000053940       0x20 ShadowMapSystem.o
+                0x0000000000053940                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::max_size() const
  .text._ZSt12__relocate_aIPN3glm3matILi4ELi4EfLNS0_9qualifierE0EEES4_SaIS3_EET0_T_S7_S6_RT1_
-                0x0000000000053964       0x54 ShadowMapSystem.o
-                0x0000000000053964                glm::mat<4, 4, float, (glm::qualifier)0>* std::__relocate_a<glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
+                0x0000000000053960       0x54 ShadowMapSystem.o
+                0x0000000000053960                glm::mat<4, 4, float, (glm::qualifier)0>* std::__relocate_a<glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
  .text._ZNKSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE5beginEv
-                0x00000000000539b8       0x2c ShadowMapSystem.o
-                0x00000000000539b8                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::begin() const
+                0x00000000000539b4       0x2c ShadowMapSystem.o
+                0x00000000000539b4                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::begin() const
  .text._ZNKSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE3endEv
-                0x00000000000539e4       0x30 ShadowMapSystem.o
-                0x00000000000539e4                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::end() const
+                0x00000000000539e0       0x30 ShadowMapSystem.o
+                0x00000000000539e0                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::end() const
  .text._ZNSt6vectorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE11_S_max_sizeERKS4_
-                0x0000000000053a14       0x54 ShadowMapSystem.o
-                0x0000000000053a14                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_S_max_size(std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > const&)
+                0x0000000000053a10       0x54 ShadowMapSystem.o
+                0x0000000000053a10                std::vector<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_S_max_size(std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > const&)
  .text._ZNKSt12_Vector_baseIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEESaIS3_EE19_M_get_Tp_allocatorEv
-                0x0000000000053a68       0x14 ShadowMapSystem.o
-                0x0000000000053a68                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_get_Tp_allocator() const
+                0x0000000000053a64       0x14 ShadowMapSystem.o
+                0x0000000000053a64                std::_Vector_base<glm::mat<4, 4, float, (glm::qualifier)0>, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> > >::_M_get_Tp_allocator() const
  .text._ZNSt15__new_allocatorIN3glm3matILi4ELi4EfLNS0_9qualifierE0EEEE8allocateEmPKv
-                0x0000000000053a7c       0x7c ShadowMapSystem.o
-                0x0000000000053a7c                std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::allocate(unsigned long, void const*)
+                0x0000000000053a78       0x7c ShadowMapSystem.o
+                0x0000000000053a78                std::__new_allocator<glm::mat<4, 4, float, (glm::qualifier)0> >::allocate(unsigned long, void const*)
  .text._ZSt14__relocate_a_1IN3glm3matILi4ELi4EfLNS0_9qualifierE0EEES3_ENSt9enable_ifIXsrSt24__is_bitwise_relocatableIT_vE5valueEPS6_E4typeES8_S8_S8_RSaIT0_E
-                0x0000000000053af8       0x70 ShadowMapSystem.o
-                0x0000000000053af8                std::enable_if<std::__is_bitwise_relocatable<glm::mat<4, 4, float, (glm::qualifier)0>, void>::value, glm::mat<4, 4, float, (glm::qualifier)0>*>::type std::__relocate_a_1<glm::mat<4, 4, float, (glm::qualifier)0>, glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
- .text.open_gl  0x0000000000053b68        0x8 glad.o
+                0x0000000000053af4       0x70 ShadowMapSystem.o
+                0x0000000000053af4                std::enable_if<std::__is_bitwise_relocatable<glm::mat<4, 4, float, (glm::qualifier)0>, void>::value, glm::mat<4, 4, float, (glm::qualifier)0>*>::type std::__relocate_a_1<glm::mat<4, 4, float, (glm::qualifier)0>, glm::mat<4, 4, float, (glm::qualifier)0> >(glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, glm::mat<4, 4, float, (glm::qualifier)0>*, std::allocator<glm::mat<4, 4, float, (glm::qualifier)0> >&)
+ .text.open_gl  0x0000000000053b64        0x8 glad.o
  .text.get_proc
-                0x0000000000053b70       0x28 glad.o
+                0x0000000000053b6c       0x28 glad.o
  .text.gladLoadGL
-                0x0000000000053b98       0x34 glad.o
-                0x0000000000053b98                gladLoadGL
+                0x0000000000053b94       0x34 glad.o
+                0x0000000000053b94                gladLoadGL
  .text.get_exts
-                0x0000000000053bcc      0x17c glad.o
+                0x0000000000053bc8      0x17c glad.o
  .text.free_exts
-                0x0000000000053d48       0x90 glad.o
- .text.has_ext  0x0000000000053dd8      0x198 glad.o
+                0x0000000000053d44       0x90 glad.o
+ .text.has_ext  0x0000000000053dd4      0x198 glad.o
  .text.load_GL_VERSION_1_0
-                0x0000000000053f70      0x630 glad.o
+                0x0000000000053f6c      0x630 glad.o
  .text.load_GL_VERSION_1_1
-                0x00000000000545a0      0x1d0 glad.o
+                0x000000000005459c      0x1d0 glad.o
  .text.load_GL_VERSION_1_2
-                0x0000000000054770       0xb0 glad.o
+                0x000000000005476c       0xb0 glad.o
  .text.load_GL_VERSION_1_3
-                0x0000000000054820      0x150 glad.o
+                0x000000000005481c      0x150 glad.o
  .text.load_GL_VERSION_1_4
-                0x0000000000054970      0x150 glad.o
+                0x000000000005496c      0x150 glad.o
  .text.load_GL_VERSION_1_5
-                0x0000000000054ac0      0x290 glad.o
+                0x0000000000054abc      0x290 glad.o
  .text.load_GL_VERSION_2_0
-                0x0000000000054d50      0xbd0 glad.o
+                0x0000000000054d4c      0xbd0 glad.o
  .text.load_GL_VERSION_2_1
-                0x0000000000055920       0xf0 glad.o
+                0x000000000005591c       0xf0 glad.o
  .text.load_GL_VERSION_3_0
-                0x0000000000055a10      0xab0 glad.o
+                0x0000000000055a0c      0xab0 glad.o
  .text.load_GL_VERSION_3_1
-                0x00000000000564c0      0x210 glad.o
+                0x00000000000564bc      0x210 glad.o
  .text.load_GL_VERSION_3_2
-                0x00000000000566d0      0x290 glad.o
+                0x00000000000566cc      0x290 glad.o
  .text.load_GL_VERSION_3_3
-                0x0000000000056960      0x770 glad.o
+                0x000000000005695c      0x770 glad.o
  .text.load_GL_VERSION_4_0
-                0x00000000000570d0      0x5f0 glad.o
+                0x00000000000570cc      0x5f0 glad.o
  .text.load_GL_VERSION_4_1
-                0x00000000000576c0      0xb50 glad.o
+                0x00000000000576bc      0xb50 glad.o
  .text.load_GL_VERSION_4_2
-                0x0000000000058210      0x1b0 glad.o
+                0x000000000005820c      0x1b0 glad.o
  .text.load_GL_VERSION_4_3
-                0x00000000000583c0      0x5b0 glad.o
+                0x00000000000583bc      0x5b0 glad.o
  .text.load_GL_VERSION_4_4
-                0x0000000000058970      0x150 glad.o
+                0x000000000005896c      0x150 glad.o
  .text.load_GL_VERSION_4_5
-                0x0000000000058ac0      0xf70 glad.o
+                0x0000000000058abc      0xf70 glad.o
  .text.load_GL_VERSION_4_6
-                0x0000000000059a30       0xb0 glad.o
+                0x0000000000059a2c       0xb0 glad.o
  .text.load_GL_3DFX_tbuffer
-                0x0000000000059ae0       0x50 glad.o
+                0x0000000000059adc       0x50 glad.o
  .text.load_GL_AMD_debug_output
-                0x0000000000059b30       0xb0 glad.o
+                0x0000000000059b2c       0xb0 glad.o
  .text.load_GL_AMD_draw_buffers_blend
-                0x0000000000059be0       0xb0 glad.o
+                0x0000000000059bdc       0xb0 glad.o
  .text.load_GL_AMD_framebuffer_multisample_advanced
-                0x0000000000059c90       0x70 glad.o
+                0x0000000000059c8c       0x70 glad.o
  .text.load_GL_AMD_framebuffer_sample_positions
-                0x0000000000059d00       0xb0 glad.o
+                0x0000000000059cfc       0xb0 glad.o
  .text.load_GL_AMD_gpu_shader_int64
-                0x0000000000059db0      0x470 glad.o
+                0x0000000000059dac      0x470 glad.o
  .text.load_GL_AMD_interleaved_elements
-                0x000000000005a220       0x50 glad.o
+                0x000000000005a21c       0x50 glad.o
  .text.load_GL_AMD_multi_draw_indirect
-                0x000000000005a270       0x70 glad.o
+                0x000000000005a26c       0x70 glad.o
  .text.load_GL_AMD_name_gen_delete
-                0x000000000005a2e0       0x90 glad.o
+                0x000000000005a2dc       0x90 glad.o
  .text.load_GL_AMD_occlusion_query_event
-                0x000000000005a370       0x50 glad.o
+                0x000000000005a36c       0x50 glad.o
  .text.load_GL_AMD_performance_monitor
-                0x000000000005a3c0      0x190 glad.o
+                0x000000000005a3bc      0x190 glad.o
  .text.load_GL_AMD_sample_positions
-                0x000000000005a550       0x50 glad.o
+                0x000000000005a54c       0x50 glad.o
  .text.load_GL_AMD_sparse_texture
-                0x000000000005a5a0       0x70 glad.o
+                0x000000000005a59c       0x70 glad.o
  .text.load_GL_AMD_stencil_operation_extended
-                0x000000000005a610       0x50 glad.o
+                0x000000000005a60c       0x50 glad.o
  .text.load_GL_AMD_vertex_shader_tessellator
-                0x000000000005a660       0x70 glad.o
+                0x000000000005a65c       0x70 glad.o
  .text.load_GL_APPLE_element_array
-                0x000000000005a6d0       0xd0 glad.o
+                0x000000000005a6cc       0xd0 glad.o
  .text.load_GL_APPLE_fence
-                0x000000000005a7a0      0x130 glad.o
+                0x000000000005a79c      0x130 glad.o
  .text.load_GL_APPLE_flush_buffer_range
-                0x000000000005a8d0       0x70 glad.o
+                0x000000000005a8cc       0x70 glad.o
  .text.load_GL_APPLE_object_purgeable
-                0x000000000005a940       0x90 glad.o
+                0x000000000005a93c       0x90 glad.o
  .text.load_GL_APPLE_texture_range
-                0x000000000005a9d0       0x70 glad.o
+                0x000000000005a9cc       0x70 glad.o
  .text.load_GL_APPLE_vertex_array_object
-                0x000000000005aa40       0xb0 glad.o
+                0x000000000005aa3c       0xb0 glad.o
  .text.load_GL_APPLE_vertex_array_range
-                0x000000000005aaf0       0x90 glad.o
+                0x000000000005aaec       0x90 glad.o
  .text.load_GL_APPLE_vertex_program_evaluators
-                0x000000000005ab80      0x110 glad.o
+                0x000000000005ab7c      0x110 glad.o
  .text.load_GL_ARB_ES2_compatibility
-                0x000000000005ac90       0xd0 glad.o
+                0x000000000005ac8c       0xd0 glad.o
  .text.load_GL_ARB_ES3_1_compatibility
-                0x000000000005ad60       0x50 glad.o
+                0x000000000005ad5c       0x50 glad.o
  .text.load_GL_ARB_ES3_2_compatibility
-                0x000000000005adb0       0x50 glad.o
+                0x000000000005adac       0x50 glad.o
  .text.load_GL_ARB_base_instance
-                0x000000000005ae00       0x90 glad.o
+                0x000000000005adfc       0x90 glad.o
  .text.load_GL_ARB_bindless_texture
-                0x000000000005ae90      0x230 glad.o
+                0x000000000005ae8c      0x230 glad.o
  .text.load_GL_ARB_blend_func_extended
-                0x000000000005b0c0       0x70 glad.o
+                0x000000000005b0bc       0x70 glad.o
  .text.load_GL_ARB_buffer_storage
-                0x000000000005b130       0x50 glad.o
+                0x000000000005b12c       0x50 glad.o
  .text.load_GL_ARB_cl_event
-                0x000000000005b180       0x50 glad.o
+                0x000000000005b17c       0x50 glad.o
  .text.load_GL_ARB_clear_buffer_object
-                0x000000000005b1d0       0x70 glad.o
+                0x000000000005b1cc       0x70 glad.o
  .text.load_GL_ARB_clear_texture
-                0x000000000005b240       0x70 glad.o
+                0x000000000005b23c       0x70 glad.o
  .text.load_GL_ARB_clip_control
-                0x000000000005b2b0       0x50 glad.o
+                0x000000000005b2ac       0x50 glad.o
  .text.load_GL_ARB_color_buffer_float
-                0x000000000005b300       0x50 glad.o
+                0x000000000005b2fc       0x50 glad.o
  .text.load_GL_ARB_compute_shader
-                0x000000000005b350       0x70 glad.o
+                0x000000000005b34c       0x70 glad.o
  .text.load_GL_ARB_compute_variable_group_size
-                0x000000000005b3c0       0x50 glad.o
+                0x000000000005b3bc       0x50 glad.o
  .text.load_GL_ARB_copy_buffer
-                0x000000000005b410       0x50 glad.o
+                0x000000000005b40c       0x50 glad.o
  .text.load_GL_ARB_copy_image
-                0x000000000005b460       0x50 glad.o
+                0x000000000005b45c       0x50 glad.o
  .text.load_GL_ARB_debug_output
-                0x000000000005b4b0       0xb0 glad.o
+                0x000000000005b4ac       0xb0 glad.o
  .text.load_GL_ARB_direct_state_access
-                0x000000000005b560      0xc50 glad.o
+                0x000000000005b55c      0xc50 glad.o
  .text.load_GL_ARB_draw_buffers
-                0x000000000005c1b0       0x50 glad.o
+                0x000000000005c1ac       0x50 glad.o
  .text.load_GL_ARB_draw_buffers_blend
-                0x000000000005c200       0xb0 glad.o
+                0x000000000005c1fc       0xb0 glad.o
  .text.load_GL_ARB_draw_elements_base_vertex
-                0x000000000005c2b0       0xb0 glad.o
+                0x000000000005c2ac       0xb0 glad.o
  .text.load_GL_ARB_draw_indirect
-                0x000000000005c360       0x70 glad.o
+                0x000000000005c35c       0x70 glad.o
  .text.load_GL_ARB_draw_instanced
-                0x000000000005c3d0       0x70 glad.o
+                0x000000000005c3cc       0x70 glad.o
  .text.load_GL_ARB_fragment_program
-                0x000000000005c440      0x290 glad.o
+                0x000000000005c43c      0x290 glad.o
  .text.load_GL_ARB_framebuffer_no_attachments
-                0x000000000005c6d0       0x70 glad.o
+                0x000000000005c6cc       0x70 glad.o
  .text.load_GL_ARB_framebuffer_object
-                0x000000000005c740      0x2b0 glad.o
+                0x000000000005c73c      0x2b0 glad.o
  .text.load_GL_ARB_geometry_shader4
-                0x000000000005c9f0       0xb0 glad.o
+                0x000000000005c9ec       0xb0 glad.o
  .text.load_GL_ARB_get_program_binary
-                0x000000000005caa0       0x90 glad.o
+                0x000000000005ca9c       0x90 glad.o
  .text.load_GL_ARB_get_texture_sub_image
-                0x000000000005cb30       0x70 glad.o
+                0x000000000005cb2c       0x70 glad.o
  .text.load_GL_ARB_gl_spirv
-                0x000000000005cba0       0x50 glad.o
+                0x000000000005cb9c       0x50 glad.o
  .text.load_GL_ARB_gpu_shader_fp64
-                0x000000000005cbf0      0x270 glad.o
+                0x000000000005cbec      0x270 glad.o
  .text.load_GL_ARB_gpu_shader_int64
-                0x000000000005ce60      0x4b0 glad.o
+                0x000000000005ce5c      0x4b0 glad.o
  .text.load_GL_ARB_imaging
-                0x000000000005d310      0x470 glad.o
+                0x000000000005d30c      0x470 glad.o
  .text.load_GL_ARB_indirect_parameters
-                0x000000000005d780       0x70 glad.o
+                0x000000000005d77c       0x70 glad.o
  .text.load_GL_ARB_instanced_arrays
-                0x000000000005d7f0       0x50 glad.o
+                0x000000000005d7ec       0x50 glad.o
  .text.load_GL_ARB_internalformat_query
-                0x000000000005d840       0x50 glad.o
+                0x000000000005d83c       0x50 glad.o
  .text.load_GL_ARB_internalformat_query2
-                0x000000000005d890       0x50 glad.o
+                0x000000000005d88c       0x50 glad.o
  .text.load_GL_ARB_invalidate_subdata
-                0x000000000005d8e0       0xf0 glad.o
+                0x000000000005d8dc       0xf0 glad.o
  .text.load_GL_ARB_map_buffer_range
-                0x000000000005d9d0       0x70 glad.o
+                0x000000000005d9cc       0x70 glad.o
  .text.load_GL_ARB_matrix_palette
-                0x000000000005da40       0xd0 glad.o
+                0x000000000005da3c       0xd0 glad.o
  .text.load_GL_ARB_multi_bind
-                0x000000000005db10       0xf0 glad.o
+                0x000000000005db0c       0xf0 glad.o
  .text.load_GL_ARB_multi_draw_indirect
-                0x000000000005dc00       0x70 glad.o
+                0x000000000005dbfc       0x70 glad.o
  .text.load_GL_ARB_multisample
-                0x000000000005dc70       0x50 glad.o
+                0x000000000005dc6c       0x50 glad.o
  .text.load_GL_ARB_multitexture
-                0x000000000005dcc0      0x470 glad.o
+                0x000000000005dcbc      0x470 glad.o
  .text.load_GL_ARB_occlusion_query
-                0x000000000005e130      0x130 glad.o
+                0x000000000005e12c      0x130 glad.o
  .text.load_GL_ARB_parallel_shader_compile
-                0x000000000005e260       0x50 glad.o
+                0x000000000005e25c       0x50 glad.o
  .text.load_GL_ARB_point_parameters
-                0x000000000005e2b0       0x70 glad.o
+                0x000000000005e2ac       0x70 glad.o
  .text.load_GL_ARB_polygon_offset_clamp
-                0x000000000005e320       0x50 glad.o
+                0x000000000005e31c       0x50 glad.o
  .text.load_GL_ARB_program_interface_query
-                0x000000000005e370       0xf0 glad.o
+                0x000000000005e36c       0xf0 glad.o
  .text.load_GL_ARB_provoking_vertex
-                0x000000000005e460       0x50 glad.o
+                0x000000000005e45c       0x50 glad.o
  .text.load_GL_ARB_robustness
-                0x000000000005e4b0      0x2b0 glad.o
+                0x000000000005e4ac      0x2b0 glad.o
  .text.load_GL_ARB_sample_locations
-                0x000000000005e760       0x90 glad.o
+                0x000000000005e75c       0x90 glad.o
  .text.load_GL_ARB_sample_shading
-                0x000000000005e7f0       0x50 glad.o
+                0x000000000005e7ec       0x50 glad.o
  .text.load_GL_ARB_sampler_objects
-                0x000000000005e840      0x1f0 glad.o
+                0x000000000005e83c      0x1f0 glad.o
  .text.load_GL_ARB_separate_shader_objects
-                0x000000000005ea30      0x7d0 glad.o
+                0x000000000005ea2c      0x7d0 glad.o
  .text.load_GL_ARB_shader_atomic_counters
-                0x000000000005f200       0x50 glad.o
+                0x000000000005f1fc       0x50 glad.o
  .text.load_GL_ARB_shader_image_load_store
-                0x000000000005f250       0x70 glad.o
+                0x000000000005f24c       0x70 glad.o
  .text.load_GL_ARB_shader_objects
-                0x000000000005f2c0      0x510 glad.o
+                0x000000000005f2bc      0x510 glad.o
  .text.load_GL_ARB_shader_storage_buffer_object
-                0x000000000005f7d0       0x50 glad.o
+                0x000000000005f7cc       0x50 glad.o
  .text.load_GL_ARB_shader_subroutine
-                0x000000000005f820      0x130 glad.o
+                0x000000000005f81c      0x130 glad.o
  .text.load_GL_ARB_shading_language_include
-                0x000000000005f950       0xf0 glad.o
+                0x000000000005f94c       0xf0 glad.o
  .text.load_GL_ARB_sparse_buffer
-                0x000000000005fa40       0x90 glad.o
+                0x000000000005fa3c       0x90 glad.o
  .text.load_GL_ARB_sparse_texture
-                0x000000000005fad0       0x50 glad.o
+                0x000000000005facc       0x50 glad.o
  .text.load_GL_ARB_sync
-                0x000000000005fb20      0x110 glad.o
+                0x000000000005fb1c      0x110 glad.o
  .text.load_GL_ARB_tessellation_shader
-                0x000000000005fc30       0x70 glad.o
+                0x000000000005fc2c       0x70 glad.o
  .text.load_GL_ARB_texture_barrier
-                0x000000000005fca0       0x50 glad.o
+                0x000000000005fc9c       0x50 glad.o
  .text.load_GL_ARB_texture_buffer_object
-                0x000000000005fcf0       0x50 glad.o
+                0x000000000005fcec       0x50 glad.o
  .text.load_GL_ARB_texture_buffer_range
-                0x000000000005fd40       0x50 glad.o
+                0x000000000005fd3c       0x50 glad.o
  .text.load_GL_ARB_texture_compression
-                0x000000000005fd90      0x110 glad.o
+                0x000000000005fd8c      0x110 glad.o
  .text.load_GL_ARB_texture_multisample
-                0x000000000005fea0       0xb0 glad.o
+                0x000000000005fe9c       0xb0 glad.o
  .text.load_GL_ARB_texture_storage
-                0x000000000005ff50       0x90 glad.o
+                0x000000000005ff4c       0x90 glad.o
  .text.load_GL_ARB_texture_storage_multisample
-                0x000000000005ffe0       0x70 glad.o
+                0x000000000005ffdc       0x70 glad.o
  .text.load_GL_ARB_texture_view
-                0x0000000000060050       0x50 glad.o
+                0x000000000006004c       0x50 glad.o
  .text.load_GL_ARB_timer_query
-                0x00000000000600a0       0x90 glad.o
+                0x000000000006009c       0x90 glad.o
  .text.load_GL_ARB_transform_feedback2
-                0x0000000000060130      0x110 glad.o
+                0x000000000006012c      0x110 glad.o
  .text.load_GL_ARB_transform_feedback3
-                0x0000000000060240       0xb0 glad.o
+                0x000000000006023c       0xb0 glad.o
  .text.load_GL_ARB_transform_feedback_instanced
-                0x00000000000602f0       0x70 glad.o
+                0x00000000000602ec       0x70 glad.o
  .text.load_GL_ARB_transpose_matrix
-                0x0000000000060360       0xb0 glad.o
+                0x000000000006035c       0xb0 glad.o
  .text.load_GL_ARB_uniform_buffer_object
-                0x0000000000060410      0x170 glad.o
+                0x000000000006040c      0x170 glad.o
  .text.load_GL_ARB_vertex_array_object
-                0x0000000000060580       0xb0 glad.o
+                0x000000000006057c       0xb0 glad.o
  .text.load_GL_ARB_vertex_attrib_64bit
-                0x0000000000060630      0x170 glad.o
+                0x000000000006062c      0x170 glad.o
  .text.load_GL_ARB_vertex_attrib_binding
-                0x00000000000607a0       0xf0 glad.o
+                0x000000000006079c       0xf0 glad.o
  .text.load_GL_ARB_vertex_blend
-                0x0000000000060890      0x170 glad.o
+                0x000000000006088c      0x170 glad.o
  .text.load_GL_ARB_vertex_buffer_object
-                0x0000000000060a00      0x190 glad.o
+                0x00000000000609fc      0x190 glad.o
  .text.load_GL_ARB_vertex_program
-                0x0000000000060b90      0x7f0 glad.o
+                0x0000000000060b8c      0x7f0 glad.o
  .text.load_GL_ARB_vertex_shader
-                0x0000000000061380      0x5f0 glad.o
+                0x000000000006137c      0x5f0 glad.o
  .text.load_GL_ARB_vertex_type_2_10_10_10_rev
-                0x0000000000061970      0x4f0 glad.o
+                0x000000000006196c      0x4f0 glad.o
  .text.load_GL_ARB_viewport_array
-                0x0000000000061e60      0x1b0 glad.o
+                0x0000000000061e5c      0x1b0 glad.o
  .text.load_GL_ARB_window_pos
-                0x0000000000062010      0x230 glad.o
+                0x000000000006200c      0x230 glad.o
  .text.load_GL_ATI_draw_buffers
-                0x0000000000062240       0x50 glad.o
+                0x000000000006223c       0x50 glad.o
  .text.load_GL_ATI_element_array
-                0x0000000000062290       0x90 glad.o
+                0x000000000006228c       0x90 glad.o
  .text.load_GL_ATI_envmap_bumpmap
-                0x0000000000062320       0xb0 glad.o
+                0x000000000006231c       0xb0 glad.o
  .text.load_GL_ATI_fragment_shader
-                0x00000000000623d0      0x1f0 glad.o
+                0x00000000000623cc      0x1f0 glad.o
  .text.load_GL_ATI_map_object_buffer
-                0x00000000000625c0       0x70 glad.o
+                0x00000000000625bc       0x70 glad.o
  .text.load_GL_ATI_pn_triangles
-                0x0000000000062630       0x70 glad.o
+                0x000000000006262c       0x70 glad.o
  .text.load_GL_ATI_separate_stencil
-                0x00000000000626a0       0x70 glad.o
+                0x000000000006269c       0x70 glad.o
  .text.load_GL_ATI_vertex_array_object
-                0x0000000000062710      0x1b0 glad.o
+                0x000000000006270c      0x1b0 glad.o
  .text.load_GL_ATI_vertex_attrib_array_object
-                0x00000000000628c0       0x90 glad.o
+                0x00000000000628bc       0x90 glad.o
  .text.load_GL_ATI_vertex_streams
-                0x0000000000062950      0x5d0 glad.o
+                0x000000000006294c      0x5d0 glad.o
  .text.load_GL_EXT_EGL_image_storage
-                0x0000000000062f20       0x70 glad.o
+                0x0000000000062f1c       0x70 glad.o
  .text.load_GL_EXT_bindable_uniform
-                0x0000000000062f90       0x90 glad.o
+                0x0000000000062f8c       0x90 glad.o
  .text.load_GL_EXT_blend_color
-                0x0000000000063020       0x50 glad.o
+                0x000000000006301c       0x50 glad.o
  .text.load_GL_EXT_blend_equation_separate
-                0x0000000000063070       0x50 glad.o
+                0x000000000006306c       0x50 glad.o
  .text.load_GL_EXT_blend_func_separate
-                0x00000000000630c0       0x50 glad.o
+                0x00000000000630bc       0x50 glad.o
  .text.load_GL_EXT_blend_minmax
-                0x0000000000063110       0x50 glad.o
+                0x000000000006310c       0x50 glad.o
  .text.load_GL_EXT_color_subtable
-                0x0000000000063160       0x70 glad.o
+                0x000000000006315c       0x70 glad.o
  .text.load_GL_EXT_compiled_vertex_array
-                0x00000000000631d0       0x70 glad.o
+                0x00000000000631cc       0x70 glad.o
  .text.load_GL_EXT_convolution
-                0x0000000000063240      0x1d0 glad.o
+                0x000000000006323c      0x1d0 glad.o
  .text.load_GL_EXT_coordinate_frame
-                0x0000000000063410      0x2f0 glad.o
+                0x000000000006340c      0x2f0 glad.o
  .text.load_GL_EXT_copy_texture
-                0x0000000000063700       0xd0 glad.o
+                0x00000000000636fc       0xd0 glad.o
  .text.load_GL_EXT_cull_vertex
-                0x00000000000637d0       0x70 glad.o
+                0x00000000000637cc       0x70 glad.o
  .text.load_GL_EXT_debug_label
-                0x0000000000063840       0x70 glad.o
+                0x000000000006383c       0x70 glad.o
  .text.load_GL_EXT_debug_marker
-                0x00000000000638b0       0x90 glad.o
+                0x00000000000638ac       0x90 glad.o
  .text.load_GL_EXT_depth_bounds_test
-                0x0000000000063940       0x50 glad.o
+                0x000000000006393c       0x50 glad.o
  .text.load_GL_EXT_direct_state_access
-                0x0000000000063990     0x2010 glad.o
+                0x000000000006398c     0x2010 glad.o
  .text.load_GL_EXT_draw_buffers2
-                0x00000000000659a0       0xf0 glad.o
+                0x000000000006599c       0xf0 glad.o
  .text.load_GL_EXT_draw_instanced
-                0x0000000000065a90       0x70 glad.o
+                0x0000000000065a8c       0x70 glad.o
  .text.load_GL_EXT_draw_range_elements
-                0x0000000000065b00       0x50 glad.o
+                0x0000000000065afc       0x50 glad.o
  .text.load_GL_EXT_external_buffer
-                0x0000000000065b50       0x70 glad.o
+                0x0000000000065b4c       0x70 glad.o
  .text.load_GL_EXT_fog_coord
-                0x0000000000065bc0       0xd0 glad.o
+                0x0000000000065bbc       0xd0 glad.o
  .text.load_GL_EXT_framebuffer_blit
-                0x0000000000065c90       0x50 glad.o
+                0x0000000000065c8c       0x50 glad.o
  .text.load_GL_EXT_framebuffer_blit_layers
-                0x0000000000065ce0       0x70 glad.o
+                0x0000000000065cdc       0x70 glad.o
  .text.load_GL_EXT_framebuffer_multisample
-                0x0000000000065d50       0x50 glad.o
+                0x0000000000065d4c       0x50 glad.o
  .text.load_GL_EXT_framebuffer_object
-                0x0000000000065da0      0x250 glad.o
+                0x0000000000065d9c      0x250 glad.o
  .text.load_GL_EXT_geometry_shader4
-                0x0000000000065ff0       0x50 glad.o
+                0x0000000000065fec       0x50 glad.o
  .text.load_GL_EXT_gpu_program_parameters
-                0x0000000000066040       0x70 glad.o
+                0x000000000006603c       0x70 glad.o
  .text.load_GL_EXT_gpu_shader4
-                0x00000000000660b0      0x470 glad.o
+                0x00000000000660ac      0x470 glad.o
  .text.load_GL_EXT_histogram
-                0x0000000000066520      0x170 glad.o
+                0x000000000006651c      0x170 glad.o
  .text.load_GL_EXT_index_func
-                0x0000000000066690       0x50 glad.o
+                0x000000000006668c       0x50 glad.o
  .text.load_GL_EXT_index_material
-                0x00000000000666e0       0x50 glad.o
+                0x00000000000666dc       0x50 glad.o
  .text.load_GL_EXT_light_texture
-                0x0000000000066730       0x90 glad.o
+                0x000000000006672c       0x90 glad.o
  .text.load_GL_EXT_memory_object
-                0x00000000000667c0      0x290 glad.o
+                0x00000000000667bc      0x290 glad.o
  .text.load_GL_EXT_memory_object_fd
-                0x0000000000066a50       0x50 glad.o
+                0x0000000000066a4c       0x50 glad.o
  .text.load_GL_EXT_memory_object_win32
-                0x0000000000066aa0       0x70 glad.o
+                0x0000000000066a9c       0x70 glad.o
  .text.load_GL_EXT_mesh_shader
-                0x0000000000066b10       0xb0 glad.o
+                0x0000000000066b0c       0xb0 glad.o
  .text.load_GL_EXT_multi_draw_arrays
-                0x0000000000066bc0       0x70 glad.o
+                0x0000000000066bbc       0x70 glad.o
  .text.load_GL_EXT_multisample
-                0x0000000000066c30       0x70 glad.o
+                0x0000000000066c2c       0x70 glad.o
  .text.load_GL_EXT_paletted_texture
-                0x0000000000066ca0       0xb0 glad.o
+                0x0000000000066c9c       0xb0 glad.o
  .text.load_GL_EXT_pixel_transform
-                0x0000000000066d50       0xf0 glad.o
+                0x0000000000066d4c       0xf0 glad.o
  .text.load_GL_EXT_point_parameters
-                0x0000000000066e40       0x70 glad.o
+                0x0000000000066e3c       0x70 glad.o
  .text.load_GL_EXT_polygon_offset
-                0x0000000000066eb0       0x50 glad.o
+                0x0000000000066eac       0x50 glad.o
  .text.load_GL_EXT_polygon_offset_clamp
-                0x0000000000066f00       0x50 glad.o
+                0x0000000000066efc       0x50 glad.o
  .text.load_GL_EXT_provoking_vertex
-                0x0000000000066f50       0x50 glad.o
+                0x0000000000066f4c       0x50 glad.o
  .text.load_GL_EXT_raster_multisample
-                0x0000000000066fa0       0x50 glad.o
+                0x0000000000066f9c       0x50 glad.o
  .text.load_GL_EXT_secondary_color
-                0x0000000000066ff0      0x250 glad.o
+                0x0000000000066fec      0x250 glad.o
  .text.load_GL_EXT_semaphore
-                0x0000000000067240      0x150 glad.o
+                0x000000000006723c      0x150 glad.o
  .text.load_GL_EXT_semaphore_fd
-                0x0000000000067390       0x50 glad.o
+                0x000000000006738c       0x50 glad.o
  .text.load_GL_EXT_semaphore_win32
-                0x00000000000673e0       0x70 glad.o
+                0x00000000000673dc       0x70 glad.o
  .text.load_GL_EXT_separate_shader_objects
-                0x0000000000067450      0x610 glad.o
+                0x000000000006744c      0x610 glad.o
  .text.load_GL_EXT_shader_framebuffer_fetch_non_coherent
-                0x0000000000067a60       0x50 glad.o
+                0x0000000000067a5c       0x50 glad.o
  .text.load_GL_EXT_shader_image_load_store
-                0x0000000000067ab0       0x70 glad.o
+                0x0000000000067aac       0x70 glad.o
  .text.load_GL_EXT_stencil_clear_tag
-                0x0000000000067b20       0x50 glad.o
+                0x0000000000067b1c       0x50 glad.o
  .text.load_GL_EXT_stencil_two_side
-                0x0000000000067b70       0x50 glad.o
+                0x0000000000067b6c       0x50 glad.o
  .text.load_GL_EXT_subtexture
-                0x0000000000067bc0       0x70 glad.o
+                0x0000000000067bbc       0x70 glad.o
  .text.load_GL_EXT_texture3D
-                0x0000000000067c30       0x70 glad.o
+                0x0000000000067c2c       0x70 glad.o
  .text.load_GL_EXT_texture_array
-                0x0000000000067ca0       0x50 glad.o
+                0x0000000000067c9c       0x50 glad.o
  .text.load_GL_EXT_texture_buffer_object
-                0x0000000000067cf0       0x50 glad.o
+                0x0000000000067cec       0x50 glad.o
  .text.load_GL_EXT_texture_integer
-                0x0000000000067d40       0xf0 glad.o
+                0x0000000000067d3c       0xf0 glad.o
  .text.load_GL_EXT_texture_object
-                0x0000000000067e30       0xf0 glad.o
+                0x0000000000067e2c       0xf0 glad.o
  .text.load_GL_EXT_texture_perturb_normal
-                0x0000000000067f20       0x50 glad.o
+                0x0000000000067f1c       0x50 glad.o
  .text.load_GL_EXT_texture_storage
-                0x0000000000067f70       0xf0 glad.o
+                0x0000000000067f6c       0xf0 glad.o
  .text.load_GL_EXT_timer_query
-                0x0000000000068060       0x70 glad.o
+                0x000000000006805c       0x70 glad.o
  .text.load_GL_EXT_transform_feedback
-                0x00000000000680d0      0x110 glad.o
+                0x00000000000680cc      0x110 glad.o
  .text.load_GL_EXT_vertex_array
-                0x00000000000681e0      0x150 glad.o
+                0x00000000000681dc      0x150 glad.o
  .text.load_GL_EXT_vertex_attrib_64bit
-                0x0000000000068330      0x170 glad.o
+                0x000000000006832c      0x170 glad.o
  .text.load_GL_EXT_vertex_shader
-                0x00000000000684a0      0x570 glad.o
+                0x000000000006849c      0x570 glad.o
  .text.load_GL_EXT_vertex_weighting
-                0x0000000000068a10       0x90 glad.o
+                0x0000000000068a0c       0x90 glad.o
  .text.load_GL_EXT_win32_keyed_mutex
-                0x0000000000068aa0       0x70 glad.o
+                0x0000000000068a9c       0x70 glad.o
  .text.load_GL_EXT_window_rectangles
-                0x0000000000068b10       0x50 glad.o
+                0x0000000000068b0c       0x50 glad.o
  .text.load_GL_EXT_x11_sync_object
-                0x0000000000068b60       0x50 glad.o
+                0x0000000000068b5c       0x50 glad.o
  .text.load_GL_GREMEDY_frame_terminator
-                0x0000000000068bb0       0x50 glad.o
+                0x0000000000068bac       0x50 glad.o
  .text.load_GL_GREMEDY_string_marker
-                0x0000000000068c00       0x50 glad.o
+                0x0000000000068bfc       0x50 glad.o
  .text.load_GL_HP_image_transform
-                0x0000000000068c50       0xf0 glad.o
+                0x0000000000068c4c       0xf0 glad.o
  .text.load_GL_IBM_multimode_draw_arrays
-                0x0000000000068d40       0x70 glad.o
+                0x0000000000068d3c       0x70 glad.o
  .text.load_GL_IBM_static_data
-                0x0000000000068db0       0x50 glad.o
+                0x0000000000068dac       0x50 glad.o
  .text.load_GL_IBM_vertex_array_lists
-                0x0000000000068e00      0x130 glad.o
+                0x0000000000068dfc      0x130 glad.o
  .text.load_GL_INGR_blend_func_separate
-                0x0000000000068f30       0x50 glad.o
+                0x0000000000068f2c       0x50 glad.o
  .text.load_GL_INTEL_framebuffer_CMAA
-                0x0000000000068f80       0x50 glad.o
+                0x0000000000068f7c       0x50 glad.o
  .text.load_GL_INTEL_map_texture
-                0x0000000000068fd0       0x90 glad.o
+                0x0000000000068fcc       0x90 glad.o
  .text.load_GL_INTEL_parallel_arrays
-                0x0000000000069060       0xb0 glad.o
+                0x000000000006905c       0xb0 glad.o
  .text.load_GL_INTEL_performance_query
-                0x0000000000069110      0x170 glad.o
+                0x000000000006910c      0x170 glad.o
  .text.load_GL_KHR_blend_equation_advanced
-                0x0000000000069280       0x50 glad.o
+                0x000000000006927c       0x50 glad.o
  .text.load_GL_KHR_debug
-                0x00000000000692d0      0x2f0 glad.o
+                0x00000000000692cc      0x2f0 glad.o
  .text.load_GL_KHR_parallel_shader_compile
-                0x00000000000695c0       0x50 glad.o
+                0x00000000000695bc       0x50 glad.o
  .text.load_GL_KHR_robustness
-                0x0000000000069610      0x170 glad.o
+                0x000000000006960c      0x170 glad.o
  .text.load_GL_MESA_framebuffer_flip_y
-                0x0000000000069780       0x70 glad.o
+                0x000000000006977c       0x70 glad.o
  .text.load_GL_MESA_resize_buffers
-                0x00000000000697f0       0x50 glad.o
+                0x00000000000697ec       0x50 glad.o
  .text.load_GL_MESA_window_pos
-                0x0000000000069840      0x330 glad.o
+                0x000000000006983c      0x330 glad.o
  .text.load_GL_NVX_conditional_render
-                0x0000000000069b70       0x70 glad.o
+                0x0000000000069b6c       0x70 glad.o
  .text.load_GL_NVX_gpu_multicast2
-                0x0000000000069be0       0xf0 glad.o
+                0x0000000000069bdc       0xf0 glad.o
  .text.load_GL_NVX_linked_gpu_multicast
-                0x0000000000069cd0       0x90 glad.o
+                0x0000000000069ccc       0x90 glad.o
  .text.load_GL_NVX_progress_fence
-                0x0000000000069d60       0xb0 glad.o
+                0x0000000000069d5c       0xb0 glad.o
  .text.load_GL_NV_alpha_to_coverage_dither_control
-                0x0000000000069e10       0x50 glad.o
+                0x0000000000069e0c       0x50 glad.o
  .text.load_GL_NV_bindless_multi_draw_indirect
-                0x0000000000069e60       0x70 glad.o
+                0x0000000000069e5c       0x70 glad.o
  .text.load_GL_NV_bindless_multi_draw_indirect_count
-                0x0000000000069ed0       0x70 glad.o
+                0x0000000000069ecc       0x70 glad.o
  .text.load_GL_NV_bindless_texture
-                0x0000000000069f40      0x1d0 glad.o
+                0x0000000000069f3c      0x1d0 glad.o
  .text.load_GL_NV_blend_equation_advanced
-                0x000000000006a110       0x70 glad.o
+                0x000000000006a10c       0x70 glad.o
  .text.load_GL_NV_clip_space_w_scaling
-                0x000000000006a180       0x50 glad.o
+                0x000000000006a17c       0x50 glad.o
  .text.load_GL_NV_command_list
-                0x000000000006a1d0      0x250 glad.o
+                0x000000000006a1cc      0x250 glad.o
  .text.load_GL_NV_conditional_render
-                0x000000000006a420       0x70 glad.o
+                0x000000000006a41c       0x70 glad.o
  .text.load_GL_NV_conservative_raster
-                0x000000000006a490       0x50 glad.o
+                0x000000000006a48c       0x50 glad.o
  .text.load_GL_NV_conservative_raster_dilate
-                0x000000000006a4e0       0x50 glad.o
+                0x000000000006a4dc       0x50 glad.o
  .text.load_GL_NV_conservative_raster_pre_snap_triangles
-                0x000000000006a530       0x50 glad.o
+                0x000000000006a52c       0x50 glad.o
  .text.load_GL_NV_copy_image
-                0x000000000006a580       0x50 glad.o
+                0x000000000006a57c       0x50 glad.o
  .text.load_GL_NV_depth_buffer_float
-                0x000000000006a5d0       0x90 glad.o
+                0x000000000006a5cc       0x90 glad.o
  .text.load_GL_NV_draw_texture
-                0x000000000006a660       0x50 glad.o
+                0x000000000006a65c       0x50 glad.o
  .text.load_GL_NV_draw_vulkan_image
-                0x000000000006a6b0       0xd0 glad.o
+                0x000000000006a6ac       0xd0 glad.o
  .text.load_GL_NV_evaluators
-                0x000000000006a780      0x150 glad.o
+                0x000000000006a77c      0x150 glad.o
  .text.load_GL_NV_explicit_multisample
-                0x000000000006a8d0       0x90 glad.o
+                0x000000000006a8cc       0x90 glad.o
  .text.load_GL_NV_fence
-                0x000000000006a960      0x110 glad.o
+                0x000000000006a95c      0x110 glad.o
  .text.load_GL_NV_fragment_coverage_to_color
-                0x000000000006aa70       0x50 glad.o
+                0x000000000006aa6c       0x50 glad.o
  .text.load_GL_NV_fragment_program
-                0x000000000006aac0       0xf0 glad.o
+                0x000000000006aabc       0xf0 glad.o
  .text.load_GL_NV_framebuffer_mixed_samples
-                0x000000000006abb0       0xb0 glad.o
+                0x000000000006abac       0xb0 glad.o
  .text.load_GL_NV_framebuffer_multisample_coverage
-                0x000000000006ac60       0x50 glad.o
+                0x000000000006ac5c       0x50 glad.o
  .text.load_GL_NV_geometry_program4
-                0x000000000006acb0       0xb0 glad.o
+                0x000000000006acac       0xb0 glad.o
  .text.load_GL_NV_gpu_multicast
-                0x000000000006ad60      0x1b0 glad.o
+                0x000000000006ad5c      0x1b0 glad.o
  .text.load_GL_NV_gpu_program4
-                0x000000000006af10      0x230 glad.o
+                0x000000000006af0c      0x230 glad.o
  .text.load_GL_NV_gpu_program5
-                0x000000000006b140       0x70 glad.o
+                0x000000000006b13c       0x70 glad.o
  .text.load_GL_NV_gpu_shader5
-                0x000000000006b1b0      0x450 glad.o
+                0x000000000006b1ac      0x450 glad.o
  .text.load_GL_NV_half_float
-                0x000000000006b600      0x5f0 glad.o
+                0x000000000006b5fc      0x5f0 glad.o
  .text.load_GL_NV_internalformat_sample_query
-                0x000000000006bbf0       0x50 glad.o
+                0x000000000006bbec       0x50 glad.o
  .text.load_GL_NV_memory_attachment
-                0x000000000006bc40       0xf0 glad.o
+                0x000000000006bc3c       0xf0 glad.o
  .text.load_GL_NV_memory_object_sparse
-                0x000000000006bd30       0xb0 glad.o
+                0x000000000006bd2c       0xb0 glad.o
  .text.load_GL_NV_mesh_shader
-                0x000000000006bde0       0xb0 glad.o
+                0x000000000006bddc       0xb0 glad.o
  .text.load_GL_NV_occlusion_query
-                0x000000000006be90      0x110 glad.o
+                0x000000000006be8c      0x110 glad.o
  .text.load_GL_NV_parameter_buffer_object
-                0x000000000006bfa0       0x90 glad.o
+                0x000000000006bf9c       0x90 glad.o
  .text.load_GL_NV_path_rendering
-                0x000000000006c030      0xa90 glad.o
+                0x000000000006c02c      0xa90 glad.o
  .text.load_GL_NV_pixel_data_range
-                0x000000000006cac0       0x70 glad.o
+                0x000000000006cabc       0x70 glad.o
  .text.load_GL_NV_point_sprite
-                0x000000000006cb30       0x70 glad.o
+                0x000000000006cb2c       0x70 glad.o
  .text.load_GL_NV_present_video
-                0x000000000006cba0       0xf0 glad.o
+                0x000000000006cb9c       0xf0 glad.o
  .text.load_GL_NV_primitive_restart
-                0x000000000006cc90       0x70 glad.o
+                0x000000000006cc8c       0x70 glad.o
  .text.load_GL_NV_query_resource
-                0x000000000006cd00       0x50 glad.o
+                0x000000000006ccfc       0x50 glad.o
  .text.load_GL_NV_query_resource_tag
-                0x000000000006cd50       0x90 glad.o
+                0x000000000006cd4c       0x90 glad.o
  .text.load_GL_NV_register_combiners
-                0x000000000006cde0      0x1d0 glad.o
+                0x000000000006cddc      0x1d0 glad.o
  .text.load_GL_NV_register_combiners2
-                0x000000000006cfb0       0x70 glad.o
+                0x000000000006cfac       0x70 glad.o
  .text.load_GL_NV_sample_locations
-                0x000000000006d020       0x90 glad.o
+                0x000000000006d01c       0x90 glad.o
  .text.load_GL_NV_scissor_exclusive
-                0x000000000006d0b0       0x70 glad.o
+                0x000000000006d0ac       0x70 glad.o
  .text.load_GL_NV_shader_buffer_load
-                0x000000000006d120      0x1f0 glad.o
+                0x000000000006d11c      0x1f0 glad.o
  .text.load_GL_NV_shading_rate_image
-                0x000000000006d310      0x110 glad.o
+                0x000000000006d30c      0x110 glad.o
  .text.load_GL_NV_texture_barrier
-                0x000000000006d420       0x50 glad.o
+                0x000000000006d41c       0x50 glad.o
  .text.load_GL_NV_texture_multisample
-                0x000000000006d470       0xf0 glad.o
+                0x000000000006d46c       0xf0 glad.o
  .text.load_GL_NV_timeline_semaphore
-                0x000000000006d560       0x90 glad.o
+                0x000000000006d55c       0x90 glad.o
  .text.load_GL_NV_transform_feedback
-                0x000000000006d5f0      0x1b0 glad.o
+                0x000000000006d5ec      0x1b0 glad.o
  .text.load_GL_NV_transform_feedback2
-                0x000000000006d7a0      0x110 glad.o
+                0x000000000006d79c      0x110 glad.o
  .text.load_GL_NV_vdpau_interop
-                0x000000000006d8b0      0x170 glad.o
+                0x000000000006d8ac      0x170 glad.o
  .text.load_GL_NV_vdpau_interop2
-                0x000000000006da20       0x50 glad.o
+                0x000000000006da1c       0x50 glad.o
  .text.load_GL_NV_vertex_array_range
-                0x000000000006da70       0x70 glad.o
+                0x000000000006da6c       0x70 glad.o
  .text.load_GL_NV_vertex_attrib_integer_64bit
-                0x000000000006dae0      0x290 glad.o
+                0x000000000006dadc      0x290 glad.o
  .text.load_GL_NV_vertex_buffer_unified_memory
-                0x000000000006dd70      0x1b0 glad.o
+                0x000000000006dd6c      0x1b0 glad.o
  .text.load_GL_NV_vertex_program
-                0x000000000006df20      0x830 glad.o
+                0x000000000006df1c      0x830 glad.o
  .text.load_GL_NV_vertex_program4
-                0x000000000006e750      0x310 glad.o
+                0x000000000006e74c      0x310 glad.o
  .text.load_GL_NV_video_capture
-                0x000000000006ea60      0x1b0 glad.o
+                0x000000000006ea5c      0x1b0 glad.o
  .text.load_GL_NV_viewport_swizzle
-                0x000000000006ec10       0x50 glad.o
+                0x000000000006ec0c       0x50 glad.o
  .text.load_GL_OES_byte_coordinates
-                0x000000000006ec60      0x2f0 glad.o
+                0x000000000006ec5c      0x2f0 glad.o
  .text.load_GL_OES_fixed_point
-                0x000000000006ef50      0xd90 glad.o
+                0x000000000006ef4c      0xd90 glad.o
  .text.load_GL_OES_query_matrix
-                0x000000000006fce0       0x50 glad.o
+                0x000000000006fcdc       0x50 glad.o
  .text.load_GL_OES_single_precision
-                0x000000000006fd30       0xf0 glad.o
+                0x000000000006fd2c       0xf0 glad.o
  .text.load_GL_OVR_multiview
-                0x000000000006fe20       0x70 glad.o
+                0x000000000006fe1c       0x70 glad.o
  .text.load_GL_PGI_misc_hints
-                0x000000000006fe90       0x50 glad.o
+                0x000000000006fe8c       0x50 glad.o
  .text.load_GL_SGIS_detail_texture
-                0x000000000006fee0       0x70 glad.o
+                0x000000000006fedc       0x70 glad.o
  .text.load_GL_SGIS_fog_function
-                0x000000000006ff50       0x70 glad.o
+                0x000000000006ff4c       0x70 glad.o
  .text.load_GL_SGIS_multisample
-                0x000000000006ffc0       0x70 glad.o
+                0x000000000006ffbc       0x70 glad.o
  .text.load_GL_SGIS_pixel_texture
-                0x0000000000070030       0xf0 glad.o
+                0x000000000007002c       0xf0 glad.o
  .text.load_GL_SGIS_point_parameters
-                0x0000000000070120       0x70 glad.o
+                0x000000000007011c       0x70 glad.o
  .text.load_GL_SGIS_sharpen_texture
-                0x0000000000070190       0x70 glad.o
+                0x000000000007018c       0x70 glad.o
  .text.load_GL_SGIS_texture4D
-                0x0000000000070200       0x70 glad.o
+                0x00000000000701fc       0x70 glad.o
  .text.load_GL_SGIS_texture_color_mask
-                0x0000000000070270       0x50 glad.o
+                0x000000000007026c       0x50 glad.o
  .text.load_GL_SGIS_texture_filter4
-                0x00000000000702c0       0x70 glad.o
+                0x00000000000702bc       0x70 glad.o
  .text.load_GL_SGIX_async
-                0x0000000000070330       0xf0 glad.o
+                0x000000000007032c       0xf0 glad.o
  .text.load_GL_SGIX_flush_raster
-                0x0000000000070420       0x50 glad.o
+                0x000000000007041c       0x50 glad.o
  .text.load_GL_SGIX_fragment_lighting
-                0x0000000000070470      0x270 glad.o
+                0x000000000007046c      0x270 glad.o
  .text.load_GL_SGIX_framezoom
-                0x00000000000706e0       0x50 glad.o
+                0x00000000000706dc       0x50 glad.o
  .text.load_GL_SGIX_igloo_interface
-                0x0000000000070730       0x50 glad.o
+                0x000000000007072c       0x50 glad.o
  .text.load_GL_SGIX_instruments
-                0x0000000000070780       0xf0 glad.o
+                0x000000000007077c       0xf0 glad.o
  .text.load_GL_SGIX_list_priority
-                0x0000000000070870       0xf0 glad.o
+                0x000000000007086c       0xf0 glad.o
  .text.load_GL_SGIX_pixel_texture
-                0x0000000000070960       0x50 glad.o
+                0x000000000007095c       0x50 glad.o
  .text.load_GL_SGIX_polynomial_ffd
-                0x00000000000709b0       0xb0 glad.o
+                0x00000000000709ac       0xb0 glad.o
  .text.load_GL_SGIX_reference_plane
-                0x0000000000070a60       0x50 glad.o
+                0x0000000000070a5c       0x50 glad.o
  .text.load_GL_SGIX_sprite
-                0x0000000000070ab0       0xb0 glad.o
+                0x0000000000070aac       0xb0 glad.o
  .text.load_GL_SGIX_tag_sample_buffer
-                0x0000000000070b60       0x50 glad.o
+                0x0000000000070b5c       0x50 glad.o
  .text.load_GL_SGI_color_table
-                0x0000000000070bb0      0x110 glad.o
+                0x0000000000070bac      0x110 glad.o
  .text.load_GL_SUNX_constant_data
-                0x0000000000070cc0       0x50 glad.o
+                0x0000000000070cbc       0x50 glad.o
  .text.load_GL_SUN_global_alpha
-                0x0000000000070d10      0x130 glad.o
+                0x0000000000070d0c      0x130 glad.o
  .text.load_GL_SUN_mesh_array
-                0x0000000000070e40       0x50 glad.o
+                0x0000000000070e3c       0x50 glad.o
  .text.load_GL_SUN_triangle_list
-                0x0000000000070e90      0x110 glad.o
+                0x0000000000070e8c      0x110 glad.o
  .text.load_GL_SUN_vertex
-                0x0000000000070fa0      0x530 glad.o
+                0x0000000000070f9c      0x530 glad.o
  .text.find_extensionsGL
-                0x00000000000714d0     0x4418 glad.o
+                0x00000000000714cc     0x4418 glad.o
  .text.find_coreGL
-                0x00000000000758e8      0x5fc glad.o
+                0x00000000000758e4      0x5fc glad.o
  .text.gladLoadGLLoader
-                0x0000000000075ee4      0xb18 glad.o
-                0x0000000000075ee4                gladLoadGLLoader
- *fill*         0x00000000000769fc        0x4 
+                0x0000000000075ee0      0xb18 glad.o
+                0x0000000000075ee0                gladLoadGLLoader
+ *fill*         0x00000000000769f8        0x8 
  .text.eglGetError
                 0x0000000000076a00       0x38 D:/SwitchDevkit/portlibs/switch/lib\libEGL.a(main_eglapi.c.o)
                 0x0000000000076a00                eglGetError
@@ -111955,18 +111955,18 @@ Linker script and memory map
  .dynamic       0x0000000000697d08      0x150 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic/crti.o
                 0x0000000000697d08                _DYNAMIC
 
-.got            0x0000000000697e58     0x4c18
+.got            0x0000000000697e58     0x4c20
  *(.got)
- .got           0x0000000000697e58     0x4c18 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic/crti.o
+ .got           0x0000000000697e58     0x4c20 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic/crti.o
                 0x0000000000697e58                _GLOBAL_OFFSET_TABLE_
  *(.igot)
 
-.got.plt        0x000000000069ca70       0x18
+.got.plt        0x000000000069ca78       0x18
  *(.got.plt)
- .got.plt       0x000000000069ca70       0x18 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic/crti.o
+ .got.plt       0x000000000069ca78       0x18 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic/crti.o
  *(.igot.plt)
                 0x0000000000697e58                PROVIDE (__got_start__ = ADDR (.got))
-                0x000000000069ca88                PROVIDE (__got_end__ = (ADDR (.got.plt) + SIZEOF (.got.plt)))
+                0x000000000069ca90                PROVIDE (__got_end__ = (ADDR (.got.plt) + SIZEOF (.got.plt)))
                 0x000000000069d000                . = ALIGN (0x1000)
                 0x000000000069d000                PROVIDE (__data_start = .)
 
@@ -117748,7 +117748,7 @@ Linker script and memory map
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x0000000000000000   0x5080dd
+.debug_info     0x0000000000000000   0x508117
  *(.debug_info)
  .debug_info    0x0000000000000000    0x65997 main.o
  .debug_info    0x0000000000065997     0x6238 Camera.o
@@ -117775,82 +117775,82 @@ Linker script and memory map
  .debug_info    0x00000000002a48f4    0x4b918 RenderLightsSystem.o
  .debug_info    0x00000000002f020c    0x273c5 RenderPbrSystem.o
  .debug_info    0x00000000003175d1    0x37f43 RenderSystem.o
- .debug_info    0x000000000034f514    0x4dd47 ShadowMapSystem.o
- .debug_info    0x000000000039d25b    0x2ce75 glad.o
- .debug_info    0x00000000003ca0d0      0x850 D:/SwitchDevkit/portlibs/switch/lib\libdrm_nouveau.a(bufctx.o)
- .debug_info    0x00000000003ca920     0x24d7 D:/SwitchDevkit/portlibs/switch/lib\libdrm_nouveau.a(nouveau.o)
- .debug_info    0x00000000003ccdf7     0x27e3 D:/SwitchDevkit/portlibs/switch/lib\libdrm_nouveau.a(pushbuf.o)
- .debug_info    0x00000000003cf5da      0x945 D:/SwitchDevkit/portlibs/switch/lib\libdrm_nouveau.a(bomap.o)
- .debug_info    0x00000000003cff1f      0xa6e D:/SwitchDevkit/libnx/lib\libnx.a(mutex.o)
- .debug_info    0x00000000003d098d    0x35f50 D:/SwitchDevkit/libnx/lib\libnx.a(applet.o)
- .debug_info    0x00000000004068dd     0x265b D:/SwitchDevkit/libnx/lib\libnx.a(fatal.o)
- .debug_info    0x0000000000408f38    0x1cfac D:/SwitchDevkit/libnx/lib\libnx.a(hid.o)
- .debug_info    0x0000000000425ee4     0x616e D:/SwitchDevkit/libnx/lib\libnx.a(nv.o)
- .debug_info    0x000000000042c052     0x485d D:/SwitchDevkit/libnx/lib\libnx.a(sm.o)
- .debug_info    0x00000000004308af      0xed2 D:/SwitchDevkit/libnx/lib\libnx.a(address_space.o)
- .debug_info    0x0000000000431781      0xf58 D:/SwitchDevkit/libnx/lib\libnx.a(fence.o)
- .debug_info    0x00000000004326d9      0xba7 D:/SwitchDevkit/libnx/lib\libnx.a(gpu.o)
- .debug_info    0x0000000000433280      0xea5 D:/SwitchDevkit/libnx/lib\libnx.a(gpu_channel.o)
- .debug_info    0x0000000000434125     0x103c D:/SwitchDevkit/libnx/lib\libnx.a(map.o)
- .debug_info    0x0000000000435161     0x1862 D:/SwitchDevkit/libnx/lib\libnx.a(nvchannel.o)
- .debug_info    0x00000000004369c3      0x7ed D:/SwitchDevkit/libnx/lib\libnx.a(nvhost-as-gpu.o)
- .debug_info    0x00000000004371b0      0x698 D:/SwitchDevkit/libnx/lib\libnx.a(nvhost-ctrl.o)
- .debug_info    0x0000000000437848      0xad7 D:/SwitchDevkit/libnx/lib\libnx.a(nvhost-ctrl-gpu.o)
- .debug_info    0x000000000043831f      0x66c D:/SwitchDevkit/libnx/lib\libnx.a(nvmap.o)
- .debug_info    0x000000000043898b      0xa3b D:/SwitchDevkit/libnx/lib\libnx.a(default_window.o)
- .debug_info    0x00000000004393c6     0x2c9c D:/SwitchDevkit/libnx/lib\libnx.a(native_window.o)
- .debug_info    0x000000000043c062      0x1e8 D:/SwitchDevkit/libnx/lib\libnx.a(alloc.o)
- .debug_info    0x000000000043c24a      0x197 D:/SwitchDevkit/libnx/lib\libnx.a(diag.o)
- .debug_info    0x000000000043c3e1      0x9b6 D:/SwitchDevkit/libnx/lib\libnx.a(env.o)
- .debug_info    0x000000000043cd97      0x133 D:/SwitchDevkit/libnx/lib\libnx.a(hosversion.o)
- .debug_info    0x000000000043ceca      0xcc8 D:/SwitchDevkit/libnx/lib\libnx.a(nxlink_stdio.o)
- .debug_info    0x000000000043db92      0xdde D:/SwitchDevkit/libnx/lib\libnx.a(pad.o)
- .debug_info    0x000000000043e970     0x3e30 D:/SwitchDevkit/libnx/lib\libnx.a(romfs_dev.o)
- .debug_info    0x00000000004427a0     0x5746 D:/SwitchDevkit/libnx/lib\libnx.a(socket.o)
- .debug_info    0x0000000000447ee6       0x23 D:/SwitchDevkit/libnx/lib\libnx.a(cache.o)
- .debug_info    0x0000000000447f09       0x23 D:/SwitchDevkit/libnx/lib\libnx.a(svc.o)
- .debug_info    0x0000000000447f2c       0x28 D:/SwitchDevkit/libnx/lib\libnx.a(readtp.o)
- .debug_info    0x0000000000447f54       0x29 D:/SwitchDevkit/libnx/lib\libnx.a(switch_crt0.o)
- .debug_info    0x0000000000447f7d      0x732 D:/SwitchDevkit/libnx/lib\libnx.a(event.o)
- .debug_info    0x00000000004486af      0x5cd D:/SwitchDevkit/libnx/lib\libnx.a(shmem.o)
- .debug_info    0x0000000000448c7c      0x95c D:/SwitchDevkit/libnx/lib\libnx.a(tmem.o)
- .debug_info    0x00000000004495d8     0x11e5 D:/SwitchDevkit/libnx/lib\libnx.a(virtmem.o)
- .debug_info    0x000000000044a7bd     0x100a D:/SwitchDevkit/libnx/lib\libnx.a(wait.o)
- .debug_info    0x000000000044b7c7     0x2e17 D:/SwitchDevkit/libnx/lib\libnx.a(apm.o)
- .debug_info    0x000000000044e5de     0xfeec D:/SwitchDevkit/libnx/lib\libnx.a(bsd.o)
- .debug_info    0x000000000045e4ca    0x25435 D:/SwitchDevkit/libnx/lib\libnx.a(fs.o)
- .debug_info    0x00000000004838ff     0x96cc D:/SwitchDevkit/libnx/lib\libnx.a(nifm.o)
- .debug_info    0x000000000048cfcb    0x15bf7 D:/SwitchDevkit/libnx/lib\libnx.a(ssl.o)
- .debug_info    0x00000000004a2bc2     0xb402 D:/SwitchDevkit/libnx/lib\libnx.a(vi.o)
- .debug_info    0x00000000004adfc4      0x3a0 D:/SwitchDevkit/libnx/lib\libnx.a(channel.o)
- .debug_info    0x00000000004ae364     0x3200 D:/SwitchDevkit/libnx/lib\libnx.a(binder.o)
- .debug_info    0x00000000004b1564     0x187d D:/SwitchDevkit/libnx/lib\libnx.a(buffer_producer.o)
- .debug_info    0x00000000004b2de1      0xcad D:/SwitchDevkit/libnx/lib\libnx.a(parcel.o)
- .debug_info    0x00000000004b3a8e      0x4fa D:/SwitchDevkit/libnx/lib\libnx.a(argv.o)
- .debug_info    0x00000000004b3f88      0x94b D:/SwitchDevkit/libnx/lib\libnx.a(dynamic.o)
- .debug_info    0x00000000004b48d3      0xd1d D:/SwitchDevkit/libnx/lib\libnx.a(init.o)
- .debug_info    0x00000000004b55f0     0x263b D:/SwitchDevkit/libnx/lib\libnx.a(newlib.o)
- .debug_info    0x00000000004b7c2b      0x1e1 D:/SwitchDevkit/libnx/lib\libnx.a(nxlink.o)
- .debug_info    0x00000000004b7e0c       0xdd D:/SwitchDevkit/libnx/lib\libnx.a(convert_errno.o)
- .debug_info    0x00000000004b7ee9     0x595a D:/SwitchDevkit/libnx/lib\libnx.a(fs_dev.o)
- .debug_info    0x00000000004bd843       0x96 D:/SwitchDevkit/libnx/lib\libnx.a(path_buf.o)
- .debug_info    0x00000000004bd8d9      0x177 D:/SwitchDevkit/libnx/lib\libnx.a(decode_utf8.o)
- .debug_info    0x00000000004bda50       0x23 D:/SwitchDevkit/libnx/lib\libnx.a(exception.o)
- .debug_info    0x00000000004bda73      0x395 D:/SwitchDevkit/libnx/lib\libnx.a(condvar.o)
- .debug_info    0x00000000004bde08      0x9b3 D:/SwitchDevkit/libnx/lib\libnx.a(random.o)
- .debug_info    0x00000000004be7bb     0x1ca4 D:/SwitchDevkit/libnx/lib\libnx.a(thread.o)
- .debug_info    0x00000000004c045f     0x12b1 D:/SwitchDevkit/libnx/lib\libnx.a(sessionmgr.o)
- .debug_info    0x00000000004c1710    0x341c1 D:/SwitchDevkit/libnx/lib\libnx.a(set.o)
- .debug_info    0x00000000004f58d1     0x7a37 D:/SwitchDevkit/libnx/lib\libnx.a(time.o)
- .debug_info    0x00000000004fd308      0x2fb D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(eqtf2.o)
- .debug_info    0x00000000004fd603     0x6a74 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(unwind-dw2.o)
- .debug_info    0x0000000000504077     0x3841 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(unwind-dw2-fde.o)
- .debug_info    0x00000000005078b8       0x48 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(__arm_za_disable.o)
- .debug_info    0x0000000000507900       0xe2 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(sfp-exceptions.o)
- .debug_info    0x00000000005079e2       0x93 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(__aarch64_have_sme.o)
- .debug_info    0x0000000000507a75       0x4b D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(__arm_tpidr2_save.o)
- .debug_info    0x0000000000507ac0      0x2f4 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(extenddftf2.o)
- .debug_info    0x0000000000507db4      0x329 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(trunctfdf2.o)
+ .debug_info    0x000000000034f514    0x4dd81 ShadowMapSystem.o
+ .debug_info    0x000000000039d295    0x2ce75 glad.o
+ .debug_info    0x00000000003ca10a      0x850 D:/SwitchDevkit/portlibs/switch/lib\libdrm_nouveau.a(bufctx.o)
+ .debug_info    0x00000000003ca95a     0x24d7 D:/SwitchDevkit/portlibs/switch/lib\libdrm_nouveau.a(nouveau.o)
+ .debug_info    0x00000000003cce31     0x27e3 D:/SwitchDevkit/portlibs/switch/lib\libdrm_nouveau.a(pushbuf.o)
+ .debug_info    0x00000000003cf614      0x945 D:/SwitchDevkit/portlibs/switch/lib\libdrm_nouveau.a(bomap.o)
+ .debug_info    0x00000000003cff59      0xa6e D:/SwitchDevkit/libnx/lib\libnx.a(mutex.o)
+ .debug_info    0x00000000003d09c7    0x35f50 D:/SwitchDevkit/libnx/lib\libnx.a(applet.o)
+ .debug_info    0x0000000000406917     0x265b D:/SwitchDevkit/libnx/lib\libnx.a(fatal.o)
+ .debug_info    0x0000000000408f72    0x1cfac D:/SwitchDevkit/libnx/lib\libnx.a(hid.o)
+ .debug_info    0x0000000000425f1e     0x616e D:/SwitchDevkit/libnx/lib\libnx.a(nv.o)
+ .debug_info    0x000000000042c08c     0x485d D:/SwitchDevkit/libnx/lib\libnx.a(sm.o)
+ .debug_info    0x00000000004308e9      0xed2 D:/SwitchDevkit/libnx/lib\libnx.a(address_space.o)
+ .debug_info    0x00000000004317bb      0xf58 D:/SwitchDevkit/libnx/lib\libnx.a(fence.o)
+ .debug_info    0x0000000000432713      0xba7 D:/SwitchDevkit/libnx/lib\libnx.a(gpu.o)
+ .debug_info    0x00000000004332ba      0xea5 D:/SwitchDevkit/libnx/lib\libnx.a(gpu_channel.o)
+ .debug_info    0x000000000043415f     0x103c D:/SwitchDevkit/libnx/lib\libnx.a(map.o)
+ .debug_info    0x000000000043519b     0x1862 D:/SwitchDevkit/libnx/lib\libnx.a(nvchannel.o)
+ .debug_info    0x00000000004369fd      0x7ed D:/SwitchDevkit/libnx/lib\libnx.a(nvhost-as-gpu.o)
+ .debug_info    0x00000000004371ea      0x698 D:/SwitchDevkit/libnx/lib\libnx.a(nvhost-ctrl.o)
+ .debug_info    0x0000000000437882      0xad7 D:/SwitchDevkit/libnx/lib\libnx.a(nvhost-ctrl-gpu.o)
+ .debug_info    0x0000000000438359      0x66c D:/SwitchDevkit/libnx/lib\libnx.a(nvmap.o)
+ .debug_info    0x00000000004389c5      0xa3b D:/SwitchDevkit/libnx/lib\libnx.a(default_window.o)
+ .debug_info    0x0000000000439400     0x2c9c D:/SwitchDevkit/libnx/lib\libnx.a(native_window.o)
+ .debug_info    0x000000000043c09c      0x1e8 D:/SwitchDevkit/libnx/lib\libnx.a(alloc.o)
+ .debug_info    0x000000000043c284      0x197 D:/SwitchDevkit/libnx/lib\libnx.a(diag.o)
+ .debug_info    0x000000000043c41b      0x9b6 D:/SwitchDevkit/libnx/lib\libnx.a(env.o)
+ .debug_info    0x000000000043cdd1      0x133 D:/SwitchDevkit/libnx/lib\libnx.a(hosversion.o)
+ .debug_info    0x000000000043cf04      0xcc8 D:/SwitchDevkit/libnx/lib\libnx.a(nxlink_stdio.o)
+ .debug_info    0x000000000043dbcc      0xdde D:/SwitchDevkit/libnx/lib\libnx.a(pad.o)
+ .debug_info    0x000000000043e9aa     0x3e30 D:/SwitchDevkit/libnx/lib\libnx.a(romfs_dev.o)
+ .debug_info    0x00000000004427da     0x5746 D:/SwitchDevkit/libnx/lib\libnx.a(socket.o)
+ .debug_info    0x0000000000447f20       0x23 D:/SwitchDevkit/libnx/lib\libnx.a(cache.o)
+ .debug_info    0x0000000000447f43       0x23 D:/SwitchDevkit/libnx/lib\libnx.a(svc.o)
+ .debug_info    0x0000000000447f66       0x28 D:/SwitchDevkit/libnx/lib\libnx.a(readtp.o)
+ .debug_info    0x0000000000447f8e       0x29 D:/SwitchDevkit/libnx/lib\libnx.a(switch_crt0.o)
+ .debug_info    0x0000000000447fb7      0x732 D:/SwitchDevkit/libnx/lib\libnx.a(event.o)
+ .debug_info    0x00000000004486e9      0x5cd D:/SwitchDevkit/libnx/lib\libnx.a(shmem.o)
+ .debug_info    0x0000000000448cb6      0x95c D:/SwitchDevkit/libnx/lib\libnx.a(tmem.o)
+ .debug_info    0x0000000000449612     0x11e5 D:/SwitchDevkit/libnx/lib\libnx.a(virtmem.o)
+ .debug_info    0x000000000044a7f7     0x100a D:/SwitchDevkit/libnx/lib\libnx.a(wait.o)
+ .debug_info    0x000000000044b801     0x2e17 D:/SwitchDevkit/libnx/lib\libnx.a(apm.o)
+ .debug_info    0x000000000044e618     0xfeec D:/SwitchDevkit/libnx/lib\libnx.a(bsd.o)
+ .debug_info    0x000000000045e504    0x25435 D:/SwitchDevkit/libnx/lib\libnx.a(fs.o)
+ .debug_info    0x0000000000483939     0x96cc D:/SwitchDevkit/libnx/lib\libnx.a(nifm.o)
+ .debug_info    0x000000000048d005    0x15bf7 D:/SwitchDevkit/libnx/lib\libnx.a(ssl.o)
+ .debug_info    0x00000000004a2bfc     0xb402 D:/SwitchDevkit/libnx/lib\libnx.a(vi.o)
+ .debug_info    0x00000000004adffe      0x3a0 D:/SwitchDevkit/libnx/lib\libnx.a(channel.o)
+ .debug_info    0x00000000004ae39e     0x3200 D:/SwitchDevkit/libnx/lib\libnx.a(binder.o)
+ .debug_info    0x00000000004b159e     0x187d D:/SwitchDevkit/libnx/lib\libnx.a(buffer_producer.o)
+ .debug_info    0x00000000004b2e1b      0xcad D:/SwitchDevkit/libnx/lib\libnx.a(parcel.o)
+ .debug_info    0x00000000004b3ac8      0x4fa D:/SwitchDevkit/libnx/lib\libnx.a(argv.o)
+ .debug_info    0x00000000004b3fc2      0x94b D:/SwitchDevkit/libnx/lib\libnx.a(dynamic.o)
+ .debug_info    0x00000000004b490d      0xd1d D:/SwitchDevkit/libnx/lib\libnx.a(init.o)
+ .debug_info    0x00000000004b562a     0x263b D:/SwitchDevkit/libnx/lib\libnx.a(newlib.o)
+ .debug_info    0x00000000004b7c65      0x1e1 D:/SwitchDevkit/libnx/lib\libnx.a(nxlink.o)
+ .debug_info    0x00000000004b7e46       0xdd D:/SwitchDevkit/libnx/lib\libnx.a(convert_errno.o)
+ .debug_info    0x00000000004b7f23     0x595a D:/SwitchDevkit/libnx/lib\libnx.a(fs_dev.o)
+ .debug_info    0x00000000004bd87d       0x96 D:/SwitchDevkit/libnx/lib\libnx.a(path_buf.o)
+ .debug_info    0x00000000004bd913      0x177 D:/SwitchDevkit/libnx/lib\libnx.a(decode_utf8.o)
+ .debug_info    0x00000000004bda8a       0x23 D:/SwitchDevkit/libnx/lib\libnx.a(exception.o)
+ .debug_info    0x00000000004bdaad      0x395 D:/SwitchDevkit/libnx/lib\libnx.a(condvar.o)
+ .debug_info    0x00000000004bde42      0x9b3 D:/SwitchDevkit/libnx/lib\libnx.a(random.o)
+ .debug_info    0x00000000004be7f5     0x1ca4 D:/SwitchDevkit/libnx/lib\libnx.a(thread.o)
+ .debug_info    0x00000000004c0499     0x12b1 D:/SwitchDevkit/libnx/lib\libnx.a(sessionmgr.o)
+ .debug_info    0x00000000004c174a    0x341c1 D:/SwitchDevkit/libnx/lib\libnx.a(set.o)
+ .debug_info    0x00000000004f590b     0x7a37 D:/SwitchDevkit/libnx/lib\libnx.a(time.o)
+ .debug_info    0x00000000004fd342      0x2fb D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(eqtf2.o)
+ .debug_info    0x00000000004fd63d     0x6a74 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(unwind-dw2.o)
+ .debug_info    0x00000000005040b1     0x3841 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(unwind-dw2-fde.o)
+ .debug_info    0x00000000005078f2       0x48 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(__arm_za_disable.o)
+ .debug_info    0x000000000050793a       0xe2 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(sfp-exceptions.o)
+ .debug_info    0x0000000000507a1c       0x93 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(__aarch64_have_sme.o)
+ .debug_info    0x0000000000507aaf       0x4b D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(__arm_tpidr2_save.o)
+ .debug_info    0x0000000000507afa      0x2f4 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(extenddftf2.o)
+ .debug_info    0x0000000000507dee      0x329 D:/SwitchDevkit/devkitA64/bin/../lib/gcc/aarch64-none-elf/15.2.0/pic\libgcc.a(trunctfdf2.o)
 
 .debug_abbrev   0x0000000000000000    0x27661
  *(.debug_abbrev)
@@ -118116,7 +118116,7 @@ Linker script and memory map
  .debug_str     0x00000000001a7c2c        0x0 RenderSystem.o
                                       0x6514f (size before relaxing)
  .debug_str     0x00000000001a7c2c        0x0 ShadowMapSystem.o
-                                      0x80aec (size before relaxing)
+                                      0x80b22 (size before relaxing)
  .debug_str     0x00000000001a7c2c        0x0 glad.o
                                       0x2c09f (size before relaxing)
  .debug_str     0x00000000001a7c2c        0x0 D:/SwitchDevkit/portlibs/switch/lib\libdrm_nouveau.a(bufctx.o)
