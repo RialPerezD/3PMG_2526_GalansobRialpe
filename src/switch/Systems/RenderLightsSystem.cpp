@@ -92,10 +92,12 @@ namespace MTRD {
 
             if (isOmni) {
                 GLuint shadowCube = (shadowMapIndex < depthCubemaps_.size()) ? depthCubemaps_[shadowMapIndex] : 0;
-                glBindTextureUnit(2, shadowCube);
+                glActiveTexture(GL_TEXTURE2);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, shadowCube);
             } else {
                 GLuint shadowTex = (shadowMapIndex < depthMaps_.size()) ? depthMaps_[shadowMapIndex] : 0;
-                glBindTextureUnit(1, shadowTex);
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D, shadowTex);
             }
 
             int camGridX = -1, camGridZ = -1;
@@ -147,7 +149,8 @@ namespace MTRD {
                     Material mat = render->objitem_->materials.at(mesh->materialId_);
                     if (!mat.loadeable) continue;
 
-                    glBindTextureUnit(0, mat.diffuseTexID);
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, mat.diffuseTexID);
                     glUniform1i((GLint)loc, 0);
 
                     glUniform3f(glGetUniformLocation(program.programId_, "DIFFUSE"), mat.diffuse.x, mat.diffuse.y, mat.diffuse.z);
@@ -155,6 +158,9 @@ namespace MTRD {
 
                     glUniform1i(glGetUniformLocation(program.programId_, "useHeightLUT"), mat.useHeightLUT);
                     glUniform1f(glGetUniformLocation(program.programId_, "maxHeight"), mat.maxHeight);
+
+                    glUniform2f(glGetUniformLocation(program.programId_, "uvOffset"), mat.uvOffset.x, mat.uvOffset.y);
+                    glUniform2f(glGetUniformLocation(program.programId_, "uvScale"), mat.uvScale.x, mat.uvScale.y);
                 }
 
                 if (mesh->vao == GL_INVALID_INDEX || mesh->vao == 0) {

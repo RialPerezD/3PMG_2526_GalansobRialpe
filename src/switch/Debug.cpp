@@ -1,6 +1,7 @@
 #include <MotArda/Debug.hpp>
 #include <cstdio>
 #include <string>
+#include <fstream>
 
 
 namespace MTRD {
@@ -19,7 +20,8 @@ namespace MTRD {
             case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
             case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
             }
-            printf("GL ERROR: %s | %s | (%d)\n", error.c_str(), file, line);
+
+            { std::ofstream logFile("testeo.txt", std::ios::app); logFile << "GL ERROR: " << error << " | " << file << " | (" << line << ")\n"; }
         }
         return errorCode;
     }
@@ -68,6 +70,6 @@ namespace MTRD {
             case GL_DEBUG_SEVERITY_NOTIFICATION: out += "Severity: notification"; break;
         }
 
-        printf("%s\n", out.c_str());
+        { std::ofstream file("testeo.txt", std::ios::app); file << "No se pudo abrir el archivo " << out.c_str() << "\n"; }
     }
 }

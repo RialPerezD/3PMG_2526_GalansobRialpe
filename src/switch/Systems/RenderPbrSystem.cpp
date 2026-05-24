@@ -56,46 +56,59 @@ namespace MTRD {
     }
 
     void RenderPbrSystem::InitGBuffer() {
-        glCreateFramebuffers(1, &gBufferFBO);
+        glGenFramebuffers(1, &gBufferFBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBO);
 
-        glCreateTextures(GL_TEXTURE_2D, 1, &gPosition);
-        glTextureStorage2D(gPosition, 1, GL_RGBA16F, windowWidth_, windowHeight_);
-        glTextureParameteri(gPosition, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTextureParameteri(gPosition, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTextureParameteri(gPosition, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTextureParameteri(gPosition, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glNamedFramebufferTexture(gBufferFBO, GL_COLOR_ATTACHMENT0, gPosition, 0);
+        glGenTextures(1, &gPosition);
+        glBindTexture(GL_TEXTURE_2D, gPosition);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth_, windowHeight_, 0, GL_RGBA, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
 
-        glCreateTextures(GL_TEXTURE_2D, 1, &gNormal);
-        glTextureStorage2D(gNormal, 1, GL_RGBA16F, windowWidth_, windowHeight_);
-        glTextureParameteri(gNormal, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTextureParameteri(gNormal, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glNamedFramebufferTexture(gBufferFBO, GL_COLOR_ATTACHMENT1, gNormal, 0);
+        glGenTextures(1, &gNormal);
+        glBindTexture(GL_TEXTURE_2D, gNormal);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windowWidth_, windowHeight_, 0, GL_RGBA, GL_FLOAT, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
 
-        glCreateTextures(GL_TEXTURE_2D, 1, &gAlbedoMetallic);
-        glTextureStorage2D(gAlbedoMetallic, 1, GL_RGBA8, windowWidth_, windowHeight_);
-        glTextureParameteri(gAlbedoMetallic, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTextureParameteri(gAlbedoMetallic, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glNamedFramebufferTexture(gBufferFBO, GL_COLOR_ATTACHMENT2, gAlbedoMetallic, 0);
+        glGenTextures(1, &gAlbedoMetallic);
+        glBindTexture(GL_TEXTURE_2D, gAlbedoMetallic);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, windowWidth_, windowHeight_, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoMetallic, 0);
 
-        glCreateTextures(GL_TEXTURE_2D, 1, &gRoughness);
-        glTextureStorage2D(gRoughness, 1, GL_R8, windowWidth_, windowHeight_);
-        glTextureParameteri(gRoughness, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTextureParameteri(gRoughness, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glNamedFramebufferTexture(gBufferFBO, GL_COLOR_ATTACHMENT3, gRoughness, 0);
+        glGenTextures(1, &gRoughness);
+        glBindTexture(GL_TEXTURE_2D, gRoughness);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, windowWidth_, windowHeight_, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gRoughness, 0);
 
         unsigned int attachments[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-        glNamedFramebufferDrawBuffers(gBufferFBO, 4, attachments);
+        glDrawBuffers(4, attachments);
 
-        glCreateRenderbuffers(1, &rboDepth);
-        glNamedRenderbufferStorage(rboDepth, GL_DEPTH_COMPONENT24, windowWidth_, windowHeight_);
-        glNamedFramebufferRenderbuffer(gBufferFBO, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+        glGenRenderbuffers(1, &rboDepth);
+        glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, windowWidth_, windowHeight_);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 
-        if (glCheckNamedFramebufferStatus(gBufferFBO, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             printf("PBR Framebuffer not complete!\n");
             std::abort();
         }
 
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         gBufferInitialized = true;
     }
 

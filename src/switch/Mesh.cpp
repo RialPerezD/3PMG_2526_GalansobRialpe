@@ -23,8 +23,9 @@ namespace MTRD {
         (void)window;
         (void)firstTime;
 
-        glCreateBuffers(1, &gluintVertexBuffer);
-        glNamedBufferData(gluintVertexBuffer, sizeof(Vertex) * meshSize, vertices.data(), GL_STATIC_DRAW);
+        glGenBuffers(1, &gluintVertexBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, gluintVertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshSize, vertices.data(), GL_STATIC_DRAW);
 
         if (debug_) {
             glCheckError();
@@ -80,7 +81,7 @@ namespace MTRD {
     }
 
     void Mesh::GenerateVao() {
-        glCreateVertexArrays(1, &vao);
+        glGenVertexArrays(1, &vao);
 
         if (debug_) {
             glCheckError();
@@ -89,22 +90,21 @@ namespace MTRD {
 
 
     void Mesh::SetVertexAtribs(const std::vector<VertexAttribute>& attributes) {
-        const GLuint bindingIndex = 0;
-        glVertexArrayVertexBuffer(vao, bindingIndex, gluintVertexBuffer, 0, sizeof(Vertex));
+        glBindVertexArray(vao);
+        glBindBuffer(GL_ARRAY_BUFFER, gluintVertexBuffer);
 
         for (int i = 0; i < attributes.size(); i++) {
             if (attributes[i].location < 0) continue;
 
-            glEnableVertexArrayAttrib(vao, attributes[i].location);
-            glVertexArrayAttribFormat(
-                vao,
+            glEnableVertexAttribArray(attributes[i].location);
+            glVertexAttribPointer(
                 attributes[i].location,
                 attributes[i].size,
                 GL_FLOAT,
                 GL_FALSE,
-                static_cast<GLuint>(attributes[i].offset)
+                sizeof(Vertex),
+                reinterpret_cast<void*>(static_cast<uintptr_t>(attributes[i].offset))
             );
-            glVertexArrayAttribBinding(vao, attributes[i].location, bindingIndex);
 
             if (debug_) {
                 glCheckError();

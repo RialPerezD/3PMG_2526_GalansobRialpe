@@ -4,6 +4,7 @@
 #include <string>
 #include <cmath>
 #include <algorithm>
+#include <fstream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -19,23 +20,24 @@ namespace MTRD {
         unsigned char* data = stbi_load(route, &width, &height, &channels, 0);
 
         if (!data) {
-            printf("Error cargando textura: %s\n", route);
+            { std::ofstream file("testeo.txt", std::ios::app); file << "No se pudo abrir el archivo " << route << "\n"; }
 
             id_ = GL_INVALID_INDEX;
             return;
         }
 
-        glCreateTextures(GL_TEXTURE_2D, 1, &id_);
+        glGenTextures(1, &id_);
+        glBindTexture(GL_TEXTURE_2D, id_);
 
         if (debug_) {
             glCheckError();
         }
 
         // Configuracion basica de la textura
-        glTextureParameteri(id_, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTextureParameteri(id_, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTextureParameteri(id_, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTextureParameteri(id_, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         if (debug_) {
             glCheckError();
@@ -62,11 +64,8 @@ namespace MTRD {
             break;
         }
 
-        GLsizei levels = static_cast<GLsizei>(std::log2(std::max(width, height))) + 1;
-
-        glTextureStorage2D(id_, levels, internalFormat, width, height);
-        glTextureSubImage2D(id_, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
-        glGenerateTextureMipmap(id_);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
 
         if (debug_) {
             glCheckError();
