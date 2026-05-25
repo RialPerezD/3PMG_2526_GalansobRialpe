@@ -19,42 +19,42 @@
 
 static const char* lua_program = R"(
 
-function update_player(movement)
+function update_player(transform)
     if Input.isKeyPressed(KEY_I) then
-        movement.position.y = movement.position.y + 0.1
+        transform.position.y = transform.position.y + 0.1
     end
     if Input.isKeyPressed(KEY_K) then
-        movement.position.y = movement.position.y - 0.1
+        transform.position.y = transform.position.y - 0.1
     end
     if Input.isKeyPressed(KEY_J) then
-        movement.position.x = movement.position.x - 0.1
+        transform.position.x = transform.position.x - 0.1
     end
     if Input.isKeyPressed(KEY_L) then
-        movement.position.x = movement.position.x + 0.1
+        transform.position.x = transform.position.x + 0.1
     end
 
     if Input.isKeyPressed(KEY_U) then
-        movement.angleRotationRadians = movement.angleRotationRadians + 0.05
+        transform.angleRotationRadians = transform.angleRotationRadians + 0.05
     end
     if Input.isKeyPressed(KEY_O) then
-        movement.angleRotationRadians = movement.angleRotationRadians - 0.05
+        transform.angleRotationRadians = transform.angleRotationRadians - 0.05
     end
 
     local scaleSpeed = 0.005
 
     if Input.isKeyPressed(KEY_N) then
-        movement.scale.x = movement.scale.x + scaleSpeed
-        movement.scale.y = movement.scale.y + scaleSpeed
-        movement.scale.z = movement.scale.z + scaleSpeed
+        transform.scale.x = transform.scale.x + scaleSpeed
+        transform.scale.y = transform.scale.y + scaleSpeed
+        transform.scale.z = transform.scale.z + scaleSpeed
     end
 
     if Input.isKeyPressed(KEY_M) then
-        movement.scale.x = movement.scale.x - scaleSpeed
-        movement.scale.y = movement.scale.y - scaleSpeed
-        movement.scale.z = movement.scale.z - scaleSpeed
+        transform.scale.x = transform.scale.x - scaleSpeed
+        transform.scale.y = transform.scale.y - scaleSpeed
+        transform.scale.z = transform.scale.z - scaleSpeed
     end
 
-    end
+end
 
 function update_camera(camera, speed)
     if Input.isKeyPressed(KEY_W) then
@@ -112,6 +112,12 @@ end
 
 )";
 
+// Estructura para guardar el movimiento autonomo de cada entidad de la grid
+struct EntityMotion {
+    glm::vec3 velocity;
+    glm::vec3 rotAxis;
+};
+
 static MTRD::MotardaEng* g_engine = nullptr;
 
 static void error_callback([[maybe_unused]] int error, const char* description) {
@@ -129,9 +135,8 @@ int MTRD::main() {
     if (!maybeEng.has_value()) return 1;
     auto& eng = maybeEng.value();
     g_engine = &eng;
-
     // --- *** ---
- 
+
     // --- Camera ---
     MTRD::Camera& camera = eng.getCamera();
     camera.setPosition(glm::vec3(0.f, 1.f, 5.f));
@@ -145,7 +150,7 @@ int MTRD::main() {
     // --- *** ---
 
     // --- Load Objs ---
-    std::vector <const char*> objsRoutes = {
+    std::vector<const char*> objsRoutes = {
         "indoor_plant_02.obj",
         "12140_Skull_v3_L2.obj"
     };
@@ -172,7 +177,7 @@ int MTRD::main() {
     // Vec3 binding
     lua.set_function("vec3", [](float x, float y, float z) {
         return glm::vec3(x, y, z);
-    });
+        });
 
     // Transform binding
     lua.new_usertype<MTRD::TransformComponent>(
@@ -182,16 +187,6 @@ int MTRD::main() {
         "angleRotationRadians", &MTRD::TransformComponent::angleRotationRadians,
         "scale", &MTRD::TransformComponent::scale
     );
-
-    // Movement binding
-    lua.new_usertype<MTRD::MovementComponent>(
-        "Movement",
-        "position", &MTRD::MovementComponent::position,
-        "rotation", &MTRD::MovementComponent::rotation,
-        "scale", &MTRD::MovementComponent::scale,
-        "angleRotationRadians", &MTRD::MovementComponent::angleRotationRadians
-    );
-
 
     // Render(vertex) binding
     lua.new_usertype<MTRD::Vertex>(
@@ -225,10 +220,9 @@ int MTRD::main() {
         return g_engine->inputIsKeyPressed(
             static_cast<Input::Keyboard>(key)
         );
-    };
+        };
 
     // Key constants
-
     lua["KEY_W"] = (int)Input::Keyboard::W;
     lua["KEY_S"] = (int)Input::Keyboard::S;
     lua["KEY_A"] = (int)Input::Keyboard::A;
@@ -249,8 +243,6 @@ int MTRD::main() {
     lua["KEY_N"] = (int)Input::Keyboard::N;
     lua["KEY_M"] = (int)Input::Keyboard::M;
 
-
-
     sol::load_result chunk = lua.load(lua_program);
     if (!chunk.valid()) {
         sol::error err = chunk;
@@ -259,13 +251,11 @@ int MTRD::main() {
     }
     chunk();
 
-
     // async obj load
     eng.enqueueTask([&]() {
         ObjList = eng.loadObjs(objsRoutes);
         objsLoaded = true;
-        }
-    );
+        });
     // --- *** ---
 
     // --- Drawable transform additions ---
@@ -273,26 +263,23 @@ int MTRD::main() {
     float movSpeed = 0.05f;
     // --- *** ---
 
-
     // --- Ecs ---
     ECSManager& ecs = eng.getEcs();
     ecs.AddComponentType<MTRD::TransformComponent>();
     ecs.AddComponentType<MTRD::RenderComponent>();
-    ecs.AddComponentType<MTRD::MovementComponent>();
     // --- *** ---
 
     float frameTime = 0;
     bool firstTime = true;
 
-
     sol::protected_function lua_update_player = lua["update_player"];
     sol::protected_function lua_update_camera = lua["update_camera"];
-   
-    // Camera and movSpeed exposed
 
+    // Camera and movSpeed exposed
     lua["camera"] = &camera;
     lua["cameraSpeed"] = movSpeed;
 
+    // --- Player entity ---
     size_t player = ecs.AddEntity();
 
     MTRD::TransformComponent* Pt = ecs.AddComponent<MTRD::TransformComponent>(player);
@@ -300,15 +287,12 @@ int MTRD::main() {
     Pt->rotation = glm::vec3(1, 0, 0);
     Pt->angleRotationRadians = -1;
     Pt->scale = glm::vec3(0.02f);
-
-    MTRD::MovementComponent* Pm = ecs.AddComponent<MTRD::MovementComponent>(player);
-    Pm->position = glm::vec3(0);
-    Pm->rotation = glm::vec3(0, 0, 1);
-    Pm->scale = glm::vec3(0.0f);
-    Pm->shouldConstantMove = false;
     // --- *** ---
 
-    // --- Main window bucle ---
+    // Movimientos autonomos de la grid (sustituye al MovementComponent)
+    std::vector<EntityMotion> gridMotions;
+
+    // --- Main window loop ---
     while (!eng.windowShouldClose()) {
 
         eng.windowInitFrame();
@@ -318,7 +302,8 @@ int MTRD::main() {
             eng.windowEndFrame();
             continue;
 
-        } else if (firstTime) {
+        }
+        else if (firstTime) {
             firstTime = false;
             eng.windowLoadAllMaterials(ObjList);
 
@@ -335,10 +320,11 @@ int MTRD::main() {
                     MTRD::RenderComponent* r = ecs.AddComponent<MTRD::RenderComponent>(entity);
                     r->objitem_ = ObjList[0];
 
-                    MTRD::MovementComponent* m = ecs.AddComponent<MTRD::MovementComponent>(entity);
-                    m->position = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0);
-                    m->rotation = glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1);
-                    m->scale = glm::vec3(0.0f);
+                    // Guardamos el movimiento autonomo en el vector local
+                    gridMotions.push_back({
+                        glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, 0),
+                        glm::vec3(std::rand() % 3 - 1, std::rand() % 3 - 1, std::rand() % 3 - 1)
+                        });
                 }
             }
 
@@ -362,10 +348,9 @@ int MTRD::main() {
 
         eng.renderScene();
 
-
-        // --- Input to move player ---
+        // --- Input to move player (pasa TransformComponent directamente) ---
         if (lua_update_player.valid()) {
-            sol::protected_function_result r = lua_update_player(Pm);
+            sol::protected_function_result r = lua_update_player(Pt);
             if (!r.valid()) {
                 sol::error err = r;
                 Logger::error("[Lua Error] {}", err.what());

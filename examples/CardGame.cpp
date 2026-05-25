@@ -220,6 +220,8 @@ int MTRD::main() {
     bool cardsDealt = false;
     MTRD::CardGame serverCardGame;
 
+    int clientPoints = 0;
+
     // --- Main loop ---
     while (!eng.windowShouldClose()) {
         eng.windowInitFrame();
@@ -277,8 +279,8 @@ int MTRD::main() {
                                         cp->payload.value,
                                         MTRD::GetSuitName(cp->payload.suit));
 
-                                    if ((int)serverCardGame.tableCards.size() == connectedPlayers
-                                        && connectedPlayers > 1) {
+                                    if ((int)serverCardGame.tableCards.size()/* == connectedPlayers
+                                        && connectedPlayers > 1*/ == 2) {
                                         int trump = 0;
                                         uint32_t winnerID = serverCardGame.resolveBaza(trump);
 
@@ -377,10 +379,27 @@ int MTRD::main() {
                 // Información del cliente
                 auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
                 if (netComp) {
-                    if (netComp->networkID != 0)
+                    if (netComp->networkID != 0) {
                         ImGui::Text("Tu ID de red: %u", netComp->networkID);
-                    else
+                        ImGui::Separator();
+
+                        // Show current hand
+                        ImGui::Text("Tu mano (%d cartas):", (int)cardGame.playerHand.size());
+                        for (size_t i = 0; i < cardGame.playerHand.size(); ++i) {
+                            ImGui::Text("  [%c] %d de %s",
+                                'A' + (char)i,                          // A, B, C
+                                cardGame.playerHand[i].number,
+                                MTRD::GetSuitName(cardGame.playerHand[i].suit).c_str());
+                        }
+
+                        ImGui::Separator();
+
+                        // Show points
+                        ImGui::Text("Puntos: %d", clientPoints);
+                    }
+                    else {
                         ImGui::TextDisabled("Esperando ID del servidor...");
+                    }
                 }
             }
             ImGui::End();
@@ -418,12 +437,20 @@ int MTRD::main() {
                             }
                         }
 
+                        // Y en el callback del cliente donde recibes CardResult
                         if (!intercepted && size == sizeof(CardResultPacket)) {
                             const CardResultPacket* res = static_cast<const CardResultPacket*>(data);
                             if (res->header.type == MessageType::CardResult) {
                                 MTRD::Logger::info("--- RESULT OF BAZA ---");
-                                MTRD::Logger::info("Winner: player {} | Total points: {}",
+                                MTRD::Logger::info("Winner: player {} | Points this round: {}",
                                     res->payload.winnerID, res->payload.points);
+
+                                // Si yo soy el ganador, actualizar mis puntos locales
+                                auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
+                                if (netComp && res->payload.winnerID == netComp->networkID) {
+                                    clientPoints = static_cast<int>(res->payload.points);
+                                    MTRD::Logger::info(">>> Eres el ganador de esta baza!\n");
+                                }
                                 intercepted = true;
                             }
                         }
