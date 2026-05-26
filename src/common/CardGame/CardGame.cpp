@@ -23,7 +23,6 @@ namespace MTRD {
 
     DealCardsPayload CardGame::dealThreeCards() {
         DealCardsPayload payload;
-        // Limpiamos la estructura asegurando ceros
         for (int i = 0; i < 3; ++i) { payload.suit[i] = 0; payload.value[i] = 0; }
 
         int count = 0;
@@ -38,16 +37,15 @@ namespace MTRD {
         return payload;
     }
 
-    // --- NUEVA FUNCIÓN PARA SACAR SOLO 1 CARTA DEL MAZO ---
     DealCardsPayload CardGame::dealOneCard() {
         DealCardsPayload payload;
-        // Ponemos todo a 0 (0 significa vacío en el protocolo que diseñaremos)
+
         for (int i = 0; i < 3; ++i) { payload.suit[i] = 0; payload.value[i] = 0; }
 
         for (size_t i = 0; i < cards.size(); ++i) {
             if (!usedCards[i]) {
                 payload.suit[0] = cards[i].suit;
-                payload.value[0] = cards[i].number; // Solo llenamos el primer slot
+                payload.value[0] = cards[i].number; // Solo lleno el primer slot
                 usedCards[i] = true;
                 break;
             }
@@ -55,7 +53,6 @@ namespace MTRD {
         return payload;
     }
 
-    // --- RECEPTOR MEJORADO QUE ACUMULA EN LA MANO LOCAL ---
     void CardGame::receiveSpecificCards(const DealCardsPayload& payload) {
         MTRD::Logger::info("--- NUEVAS CARTAS LLEGANDO POR RED ---");
 
@@ -63,15 +60,13 @@ namespace MTRD {
             int s = static_cast<int>(payload.suit[i]);
             int v = static_cast<int>(payload.value[i]);
 
-            // Si el valor es 0, ignoramos este slot (está vacío o es basura de red)
+            // If value is 0, ignore this slot
             if (v <= 0 || v > 12) continue;
 
-            // Añadimos de verdad la carta al vector dinámico 'playerHand'
             playerHand.emplace_back(s, v);
             MTRD::Logger::info("-> Añadida a tu mano local: {} de {}", v, GetSuitName(s));
         }
 
-        // Imprimimos el estado real actual de tu mano por consola
         MTRD::Logger::info("--- ESTADO DE TU MANO ACTUAL (Total: {}) ---", playerHand.size());
         for (size_t i = 0; i < playerHand.size(); ++i) {
             MTRD::Logger::info("[{}] {} de {}", i + 1, playerHand[i].number, GetSuitName(playerHand[i].suit));
@@ -113,7 +108,7 @@ namespace MTRD {
             }
         }
 
-        // Sumar puntos al ganador
+        // Add points to the winner
         int totalPoints = 0;
         for (auto& pc : tableCards)
             totalPoints += GetBriscaPoints(pc.card.number);

@@ -107,8 +107,8 @@ static void UpdateRemoteScales(ECSManager& ecs, size_t playerEntity) {
 //    }
 //}
 
-// --- Envia una carta de prueba al pulsar C ---
-static bool keyWasPressed[3] = { false, false, false }; // anti-repeat por tecla (corregido tamaño a 3 slots de carta)
+static bool keyWasPressed[3] = { false, false, false }; 
+static bool alreadyPlayedThisRound = false;
 
 static void ProcessCardInput(ECSManager& ecs, size_t playerEntity,
     NetworkManager& netMgr, MTRD::MotardaEng& eng,
@@ -116,6 +116,11 @@ static void ProcessCardInput(ECSManager& ecs, size_t playerEntity,
 
     auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
     if (!netComp || netComp->networkID == 0) return;
+
+    // Si ya has jugado en esta ronda, bloqueamos el input completamente
+    if (alreadyPlayedThisRound) {
+        return;
+    }
 
     // Teclas 1, 2, 3 → slots de carta 0, 1, 2
     Input::Keyboard keys[3] = {
@@ -131,9 +136,12 @@ static void ProcessCardInput(ECSManager& ecs, size_t playerEntity,
             keyWasPressed[i] = true;
 
             if (i >= (int)cardGame.playerHand.size()) {
-                MTRD::Logger::info("The is no card in the slot {}\n", i + 1);
+                MTRD::Logger::info("There is no card in the slot {}\n", i + 1);
                 continue;
             }
+
+            // Marcar que el jugador ya ha gastado su jugada de la ronda
+            alreadyPlayedThisRound = true;
 
             // Remove the card from the hand
             MTRD::Card cardToPlay = cardGame.playerHand[i];
@@ -150,6 +158,8 @@ static void ProcessCardInput(ECSManager& ecs, size_t playerEntity,
 
             MTRD::Logger::info(">>> Jugada: {} de {} (slot {})\n",
                 cardToPlay.number, MTRD::GetSuitName(cardToPlay.suit), i + 1);
+
+            break;
         }
         else if (!pressed) {
             keyWasPressed[i] = false;
@@ -502,10 +512,14 @@ int MTRD::main() {
                         // Y en el callback del cliente donde recibes CardResult
                         if (!intercepted && size == sizeof(CardResultPacket)) {
                             const CardResultPacket* res = static_cast<const CardResultPacket*>(data);
-                            if (res->header.type == MessageType::CardResult) {
+                            if (res->header.type == MTRD::MessageType::CardResult) {
                                 MTRD::Logger::info("--- RESULT OF BAZA ---");
                                 MTRD::Logger::info("Winner: player {} | Points this round: {}",
                                     res->payload.winnerID, res->payload.points);
+
+                                // --- AQUÍ DESBLOQUEAMOS EL INPUT DEL CLIENTE ---
+                                alreadyPlayedThisRound = false;
+                                MTRD::Logger::info("New round, you can play again!\n");
 
                                 // Si yo soy el ganador, actualizar mis puntos locales
                                 auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
