@@ -8,6 +8,16 @@
 
 namespace MTRD {
 
+    // State machine controled by the server
+    enum class ServerGameState {
+        Idle,
+        DealingInitial,
+        Jugando,
+        LeyendoBaza,
+        Robando,
+        EndGame
+    };
+
     struct Card {
         int suit;   // 0 Oros, 1 Copas, 2 Espadas, 3 Bastos
         int number; // 1 al 12
@@ -29,6 +39,10 @@ namespace MTRD {
         // Método del Cliente para recibir
         void receiveSpecificCards(const DealCardsPayload& payload);
 
+        // --- Gestión de la Máquina de Estados ---
+        inline ServerGameState GetState() const { return currentState; }
+        inline void SetState(ServerGameState newState) { currentState = newState; }
+
         std::vector<Card> cards;
         std::vector<Card> playerHand;
 
@@ -44,6 +58,7 @@ namespace MTRD {
 
     private:
         std::vector<bool> usedCards;
+        ServerGameState currentState = ServerGameState::Idle; // Inicialización del estado de juego en servidor
     };
 
     inline int GetBriscaPoints(int number) {

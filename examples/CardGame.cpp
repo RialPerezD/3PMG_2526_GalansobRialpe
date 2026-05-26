@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <random>
 
 using namespace MTRD;
 
@@ -98,16 +99,16 @@ static void UpdateRemoteScales(ECSManager& ecs, size_t playerEntity) {
 }
 
 // --- Procesa el input de movimiento del jugador local ---
-static void ProcessPlayerInput(ECSManager& ecs, size_t playerEntity, MTRD::MotardaEng& eng) {
-    auto* transform = ecs.GetComponent<MTRD::TransformComponent>(playerEntity);
-    if (transform) {
-        if (eng.inputIsKeyPressed(Input::Keyboard::W)) transform->position.z -= 0.1f;
-        if (eng.inputIsKeyPressed(Input::Keyboard::S)) transform->position.z += 0.1f;
-    }
-}
+//static void ProcessPlayerInput(ECSManager& ecs, size_t playerEntity, MTRD::MotardaEng& eng) {
+//    auto* transform = ecs.GetComponent<MTRD::TransformComponent>(playerEntity);
+//    if (transform) {
+//        if (eng.inputIsKeyPressed(Input::Keyboard::W)) transform->position.z -= 0.1f;
+//        if (eng.inputIsKeyPressed(Input::Keyboard::S)) transform->position.z += 0.1f;
+//    }
+//}
 
 // --- Envia una carta de prueba al pulsar C ---
-static bool keyWasPressed[4] = { false, false, false, false }; // anti-repeat por tecla
+static bool keyWasPressed[3] = { false, false, false }; // anti-repeat por tecla (corregido tamaño a 3 slots de carta)
 
 static void ProcessCardInput(ECSManager& ecs, size_t playerEntity,
     NetworkManager& netMgr, MTRD::MotardaEng& eng,
@@ -218,7 +219,6 @@ int MTRD::main() {
     MTRD::CardGame cardGame;
 
     int connectedPlayers = 0;
-    bool cardsDealt = false;
     MTRD::CardGame serverCardGame;
 
     int clientPoints = 0;
@@ -265,8 +265,8 @@ int MTRD::main() {
                         [&](uint32_t senderID, const void* data, size_t size) {
                             if (simplPacRec) simplPacRec->OnReceivePacket(senderID, data, size);
 
-                            // Play cards
-                            if (size == sizeof(MTRD::CardPacket)) {
+                            // Play cards (El servidor las procesa en orden solo dentro de la fase Jugando)
+                            if (size == sizeof(MTRD::CardPacket) && serverCardGame.GetState() == ServerGameState::Jugando) {
                                 const MTRD::CardPacket* cp = static_cast<const MTRD::CardPacket*>(data);
                                 if (cp->header.type == MTRD::MessageType::CardPlay) {
                                     MTRD::Card played(
@@ -278,30 +278,16 @@ int MTRD::main() {
                                     MTRD::Logger::info("Servidor: Player {} played {} of {}\n",
                                         cp->header.senderId,
                                         cp->payload.value,
-                                        MTRD::GetSuitName(cp->payload.suit));
+                                        MTRD::GetSuitName(cp->payload.suit).c_str());
 
+                                    // Si todos los jugadores conectados han echado carta, saltamos a leer la baza
                                     if ((int)serverCardGame.tableCards.size() == netMgr.GetConnectedCount()
-                                        && netMgr.GetConnectedCount() > 1/* == connectedPlayers
-                                        && connectedPlayers > 1*/) {
-                                        int trump = 0;
-                                        uint32_t winnerID = serverCardGame.resolveBaza(trump);
+                                        && netMgr.GetConnectedCount() > 0) {
 
-                                        MTRD::Logger::info("Baza ganada por jugador {}! Puntos: {}\n",
-                                            winnerID, serverCardGame.scores[winnerID]);
-
-                                        MTRD::CardResultPacket result;
-                                        result.header.type = MTRD::MessageType::CardResult;
-                                        result.header.senderId = 0;
-                                        result.payload.winnerID = winnerID;
-                                        result.payload.points = static_cast<uint32_t>(serverCardGame.scores[winnerID]);
-                                        result.payload.card1Suit = 0; result.payload.card1Value = 0;
-                                        result.payload.card2Suit = 0; result.payload.card2Value = 0;
-
-                                        netMgr.BroadcastPacket(&result, sizeof(result), true);
+                                        serverCardGame.SetState(ServerGameState::LeyendoBaza);
                                     }
                                 }
                             }
-
 
                             //Add players if someone logs in
                             if (size == 0 && senderID != 0 && !(senderID & 0x80000000)) {
@@ -339,49 +325,25 @@ int MTRD::main() {
                 ImGui::Separator();
                 ImGui::Text("Contador conectados: %d", netMgr.GetConnectedCount());
 
-                // REPARTO INICIAL MANUAL (3 cartas)
-                if (ImGui::Button("REPARTIR CARTAS INICIALES", ImVec2(220, 40))) {
-                    if (!cardsDealt) {
-                        MTRD::Logger::info("Initial distribution from the server\n");
+                // Debug del estado interno del bucle del juego en el servidor
+                const char* statusStr = "Inactivo";
+                ServerGameState currentStateEnum = serverCardGame.GetState();
+                if (currentStateEnum == ServerGameState::Idle) statusStr = "Esperando Inicio";
+                else if (currentStateEnum == ServerGameState::Jugando) statusStr = "Esperando cartas de jugadores";
+                else if (currentStateEnum == ServerGameState::LeyendoBaza) statusStr = "Resolviendo Baza...";
+                else if (currentStateEnum == ServerGameState::Robando) statusStr = "Repartiendo robo de turno...";
+                else if (currentStateEnum == ServerGameState::EndGame) statusStr = "¡Partida Finalizada!";
+                ImGui::Text("Estado Turno: %s", statusStr);
 
-                        DealCardsPacket initPacket;
-
-                        for (int i = 1; i <= netMgr.GetConnectedCount(); ++i) {
-                            initPacket.header.type = MessageType::DealCards;
-                            initPacket.header.senderId = 0; // Server ID
-                            initPacket.payload = serverCardGame.dealThreeCards();
-
-                            netMgr.SendPacket(static_cast<uint32_t>(i), &initPacket, sizeof(initPacket), true);
-                            MTRD::Logger::info("3 initial cards provided to the player ID: {}\n", i);
+                // El botón solo arranca el loop si estamos en reposo (Idle)
+                if (currentStateEnum == ServerGameState::Idle) {
+                    if (ImGui::Button("REPARTIR CARTAS INICIALES", ImVec2(220, 40))) {
+                        if (netMgr.GetConnectedCount() > 0) {
+                            serverCardGame.SetState(ServerGameState::DealingInitial);
                         }
-                        cardsDealt = true;
-                    }
-                    else {
-                        MTRD::Logger::info("The initial distribution has already been made\n");
-                    }
-                }
-
-                ImGui::Spacing();
-
-                // Robar una carta
-                if (ImGui::Button("ROBAR 1 CARTA", ImVec2(220, 40))) {
-                    if (cardsDealt) {
-                        MTRD::Logger::info("Server providing 1 card!\n");
-
-                        // 'static' mantiene el paquete a salvo en memoria de fondo
-                        DealCardsPacket drawPacket;
-
-                        for (int i = 1; i <= netMgr.GetConnectedCount(); ++i) {
-                            drawPacket.header.type = MessageType::DealCards;
-                            drawPacket.header.senderId = 0;
-                            drawPacket.payload = serverCardGame.dealOneCard(); // Send a packet with only 1 card
-
-                            netMgr.SendPacket(static_cast<uint32_t>(i), &drawPacket, sizeof(drawPacket), true);
-                            MTRD::Logger::info("1 card provided to the player ID: {}\n", i);
+                        else {
+                            MTRD::Logger::info("No se puede iniciar el bucle sin clientes conectados.\n");
                         }
-                    }
-                    else {
-                        MTRD::Logger::info("Cant draw without the initial 3 cards .\n");
                     }
                 }
             }
@@ -397,7 +359,7 @@ int MTRD::main() {
                         ImGui::Text("Tu mano (%d cartas):", (int)cardGame.playerHand.size());
                         for (size_t i = 0; i < cardGame.playerHand.size(); ++i) {
                             ImGui::Text("  [%c] %d de %s",
-                                'A' + (char)i,                         
+                                'A' + (char)i,
                                 cardGame.playerHand[i].number,
                                 MTRD::GetSuitName(cardGame.playerHand[i].suit).c_str());
                         }
@@ -427,6 +389,96 @@ int MTRD::main() {
 
             simplPacRec = std::make_unique<SimplePacketReceiver>(&objItemList, &ecs, playerEntity);
             currentState = AppState::Running;
+        }
+
+        // --- MÁQUINA DE ESTADOS LOGICA CENTRAL DEL SERVIDOR ---
+        if (isServer && currentState == AppState::Running) {
+            switch (serverCardGame.GetState()) {
+            case ServerGameState::DealingInitial: {
+                MTRD::Logger::info("Initial distribution from the server (3 cards)\n");
+                for (int i = 1; i <= netMgr.GetConnectedCount(); ++i) {
+                    DealCardsPacket initPacket;
+                    initPacket.header.type = MessageType::DealCards;
+                    initPacket.header.senderId = 0; // Server ID
+                    initPacket.payload = serverCardGame.dealThreeCards();
+
+                    netMgr.SendPacket(static_cast<uint32_t>(i), &initPacket, sizeof(initPacket), true);
+                    MTRD::Logger::info("3 initial cards provided to the player ID: {}\n", i);
+                }
+                // Una vez repartidas las iniciales, abrimos automáticamente la veda para que jueguen
+                serverCardGame.SetState(ServerGameState::Jugando);
+                break;
+            }
+            case ServerGameState::LeyendoBaza: {
+                MTRD::Logger::info("[SERVER] Procesando resolucion de baza...\n");
+                int trump = 0; // Cambiar si implementas mecánica de triunfo
+                uint32_t winnerID = serverCardGame.resolveBaza(trump);
+
+                MTRD::Logger::info("Baza ganada por jugador {}! Puntos: {}\n",
+                    winnerID, serverCardGame.scores[winnerID]);
+
+                CardResultPacket result;
+                result.header.type = MTRD::MessageType::CardResult;
+                result.header.senderId = 0;
+                result.payload.winnerID = winnerID;
+                result.payload.points = static_cast<uint32_t>(serverCardGame.scores[winnerID]);
+                result.payload.card1Suit = 0; result.payload.card1Value = 0;
+                result.payload.card2Suit = 0; result.payload.card2Value = 0;
+
+                netMgr.BroadcastPacket(&result, sizeof(result), true);
+
+                // Tras resolver la baza, pasamos automáticamente a la fase de robar
+                serverCardGame.SetState(ServerGameState::Robando);
+                break;
+            }
+            case ServerGameState::Robando: {
+                MTRD::Logger::info("[SERVER] Iniciando fase de robo de turno...\n");
+
+                // Comprobar si queda al menos una carta disponible en el mazo
+                bool hasCardsLeft = false;
+                for (size_t i = 0; i < serverCardGame.cards.size(); ++i) {
+                    // Accedemos a usedCards de forma pública indirecta o como estaba en tu lógica original
+                    // Nota: Si usedCards es privada en tu cabecera, puedes usar serverCardGame.cards con una función,
+                    // pero mantengo la lectura tal cual la tenías en tu cpp.
+                }
+
+                // Para respetar fielmente tu lógica con usedCards privada, usaremos un truco o asumo que se verifica en el servidor:
+                // Como moviste usedCards a private, una forma limpia es simular el flag o delegar. 
+                // Para compilar directo, asumo que comprueba si dealOneCard devuelve algo válido o añadimos la comprobación:
+                DealCardsPayload drawTest = serverCardGame.dealOneCard();
+
+                if (drawTest.value[0] != 0) {
+                    MTRD::Logger::info("Server providing 1 card to everyone!\n");
+                    for (int i = 1; i <= netMgr.GetConnectedCount(); ++i) {
+                        DealCardsPacket drawPacket;
+                        drawPacket.header.type = MessageType::DealCards;
+                        drawPacket.header.senderId = 0;
+
+                        if (i == 1) {
+                            drawPacket.payload = drawTest; // El jugador 1 recibe la que ya sacamos como test
+                        }
+                        else {
+                            drawPacket.payload = serverCardGame.dealOneCard();
+                        }
+
+                        netMgr.SendPacket(static_cast<uint32_t>(i), &drawPacket, sizeof(drawPacket), true);
+                        MTRD::Logger::info("1 card provided to the player ID: {}\n", i);
+                    }
+                    // Volvemos a esperar que jueguen carta en el nuevo turno
+                    serverCardGame.SetState(ServerGameState::Jugando);
+                }
+                else {
+                    MTRD::Logger::info("[SERVER] ¡Mazo vacío! No quedan más cartas para robar. Fin del juego.\n");
+                    serverCardGame.SetState(ServerGameState::EndGame);
+                }
+                break;
+            }
+            case ServerGameState::EndGame: {
+                // Loop en reposo al acabar la partida (Muestra puntuación final estática en logs)
+                break;
+            }
+            default: break;
+            }
         }
 
         // --- Running ---
@@ -489,7 +541,7 @@ int MTRD::main() {
             // Game/Net update
             if (netSys) {
                 if (!isServer && playerEntity != SIZE_MAX) {
-                    ProcessPlayerInput(ecs, playerEntity, eng);
+                    //ProcessPlayerInput(ecs, playerEntity, eng);
                     ProcessCardInput(ecs, playerEntity, netMgr, eng, cardGame);
                 }
 
@@ -502,7 +554,139 @@ int MTRD::main() {
         eng.windowEndFrame();
     }
 
-
     netMgr.Shutdown();
     return 0;
+}
+
+#include <MotArda/CardGame/CardGame.hpp>
+#include <MotArda/Logger.hpp>
+#include <iostream>
+
+namespace MTRD {
+
+    void CardGame::initDeck() {
+        cards.clear();
+        for (int suit = 0; suit < 4; ++suit) {
+            for (int num = 1; num <= 12; ++num) {
+                cards.emplace_back(suit, num);
+            }
+        }
+        usedCards.assign(cards.size(), false);
+    }
+
+    void CardGame::shuffleDeck() {
+        std::random_device rd;
+        std::mt19937 g(rd());
+        std::shuffle(cards.begin(), cards.end(), g);
+        std::fill(usedCards.begin(), usedCards.end(), false);
+    }
+
+    DealCardsPayload CardGame::dealThreeCards() {
+        DealCardsPayload payload;
+        // Limpiamos la estructura asegurando ceros
+        for (int i = 0; i < 3; ++i) { payload.suit[i] = 0; payload.value[i] = 0; }
+
+        int count = 0;
+        for (size_t i = 0; i < cards.size() && count < 3; ++i) {
+            if (!usedCards[i]) {
+                payload.suit[count] = cards[i].suit;
+                payload.value[count] = cards[i].number;
+                usedCards[i] = true;
+                count++;
+            }
+        }
+        return payload;
+    }
+
+    // --- NUEVA FUNCIÓN PARA SACAR SOLO 1 CARTA DEL MAZO ---
+    DealCardsPayload CardGame::dealOneCard() {
+        DealCardsPayload payload;
+        // Ponemos todo a 0 (0 significa vacío en el protocolo que diseñaremos)
+        for (int i = 0; i < 3; ++i) { payload.suit[i] = 0; payload.value[i] = 0; }
+
+        for (size_t i = 0; i < cards.size(); ++i) {
+            if (!usedCards[i]) {
+                payload.suit[0] = cards[i].suit;
+                payload.value[0] = cards[i].number; // Solo llenamos el primer slot
+                usedCards[i] = true;
+                break;
+            }
+        }
+        return payload;
+    }
+
+    // --- RECEPTOR MEJORADO QUE ACUMULA EN LA MANO LOCAL ---
+    void CardGame::receiveSpecificCards(const DealCardsPayload& payload) {
+        MTRD::Logger::info("--- NUEVAS CARTAS LLEGANDO POR RED ---");
+
+        for (int i = 0; i < 3; ++i) {
+            int s = static_cast<int>(payload.suit[i]);
+            int v = static_cast<int>(payload.value[i]);
+
+            // Si el valor es 0, ignoramos este slot (está vacío o es basura de red)
+            if (v <= 0 || v > 12) continue;
+
+            // Añadimos de verdad la carta al vector dinámico 'playerHand'
+            playerHand.emplace_back(s, v);
+            MTRD::Logger::info("-> Añadida a tu mano local: {} de {}", v, GetSuitName(s).c_str());
+        }
+
+        // Imprimimos el estado real actual de tu mano por consola
+        MTRD::Logger::info("--- ESTADO DE TU MANO ACTUAL (Total: {}) ---", playerHand.size());
+        for (size_t i = 0; i < playerHand.size(); ++i) {
+            MTRD::Logger::info("[{}] {} de {}", i + 1, playerHand[i].number, GetSuitName(playerHand[i].suit).c_str());
+        }
+        MTRD::Logger::info("--------------------------------------------");
+    }
+
+    uint32_t CardGame::resolveBaza(int triunfo)
+    {
+        if (tableCards.size() < 2) return 0;
+
+        // El primer jugador marca el palo de salida
+        int leadSuit = tableCards[0].card.suit;
+
+        uint32_t winnerID = tableCards[0].playerID;
+        const Card* winnerCard = &tableCards[0].card;
+        int winnerStrength = GetBriscaStrength(winnerCard->number);
+        bool winnerIsTriunfo = (winnerCard->suit == triunfo);
+
+        for (size_t i = 1; i < tableCards.size(); ++i) {
+            const Card& c = tableCards[i].card;
+            bool isTriunfo = (c.suit == triunfo);
+            int strength = GetBriscaStrength(c.number);
+
+            bool beats = false;
+            if (isTriunfo && !winnerIsTriunfo) {
+                beats = true;  // triunfo gana a cualquier otro palo
+            }
+            else if (isTriunfo && winnerIsTriunfo) {
+                beats = (strength > winnerStrength);  // ambos triunfo || mayor fuerza
+            }
+            else if (c.suit == leadSuit && !winnerIsTriunfo) {
+                beats = (strength > winnerStrength);  // mismo palo salida, mayor fuerza
+            }
+            // otro palo sin ser triunfo || no puede ganar
+
+            if (beats) {
+                winnerID = tableCards[i].playerID;
+                winnerCard = &tableCards[i].card;
+                winnerStrength = strength;
+                winnerIsTriunfo = isTriunfo;
+            }
+        }
+
+        // Sumar puntos al ganador
+        int totalPoints = 0;
+        for (auto& pc : tableCards)
+            totalPoints += GetBriscaPoints(pc.card.number);
+        if (winnerID < 5)
+        {
+            scores[winnerID] += totalPoints;
+        }
+
+        tableCards.clear();
+        return winnerID;
+    }
+
 }
