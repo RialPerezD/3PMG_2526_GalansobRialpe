@@ -74,15 +74,6 @@ namespace MTRD {
         // --- Functions ---
         void setDebugMode(bool debug);
 
-        /**
-        * TODO write online documentation
-        *
-        * OnlineSystem* ActivateOnlineMode(
-        * bool ImServer = true,
-        * const char* ip = "127.0.0.0",
-        * float port = 1234
-        * );*/
-
         bool windowShouldClose();
         /**
         * @brief windowGetTimer.
@@ -188,7 +179,6 @@ namespace MTRD {
             int textureId = 0,
             bool debug = false);
 
-        // TODO , poner en la documentacion que esto inserta un transform y un render components por defecto
         Sprite& generateSprite(GLuint textureIndex, float size, float deep = 0);
         Sprite& generateSpriteSheet(GLuint textureIndex, float size, int frameWidth, int frameHeight, int columns, int rows, float deep = 0);
         //------------

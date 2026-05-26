@@ -11,6 +11,7 @@
 #include <MotArda/Components/RenderComponent.hpp>
 #include <MotArda/SimplePacketReceiver.hpp>
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <memory>
@@ -279,8 +280,9 @@ int MTRD::main() {
                                         cp->payload.value,
                                         MTRD::GetSuitName(cp->payload.suit));
 
-                                    if ((int)serverCardGame.tableCards.size()/* == connectedPlayers
-                                        && connectedPlayers > 1*/ == 2) {
+                                    if ((int)serverCardGame.tableCards.size() == netMgr.GetConnectedCount()
+                                        && netMgr.GetConnectedCount() > 1/* == connectedPlayers
+                                        && connectedPlayers > 1*/) {
                                         int trump = 0;
                                         uint32_t winnerID = serverCardGame.resolveBaza(trump);
 
@@ -300,8 +302,16 @@ int MTRD::main() {
                                 }
                             }
 
-                            if (size == 0 && senderID != 0) {
+
+                            //Add players if someone logs in
+                            if (size == 0 && senderID != 0 && !(senderID & 0x80000000)) {
                                 connectedPlayers++;
+                                MTRD::Logger::info("Jugador {} conectado. Total: {}\n", senderID, connectedPlayers);
+                            }
+                            //Remove players if someone leaves the game
+                            if (size == 0 && (senderID & 0x80000000)) {
+                                if (connectedPlayers > 0) connectedPlayers--;
+                                MTRD::Logger::info("Jugador desconectado. Total: {}\n", connectedPlayers);
                             }
                         }
                     );
@@ -327,7 +337,7 @@ int MTRD::main() {
 
             if (isServer) {
                 ImGui::Separator();
-                ImGui::Text("Contador conectados: %d", connectedPlayers);
+                ImGui::Text("Contador conectados: %d", netMgr.GetConnectedCount());
 
                 // REPARTO INICIAL MANUAL (3 cartas)
                 if (ImGui::Button("REPARTIR CARTAS INICIALES", ImVec2(220, 40))) {
@@ -336,7 +346,7 @@ int MTRD::main() {
 
                         DealCardsPacket initPacket;
 
-                        for (int i = 1; i <= 2; ++i) {
+                        for (int i = 1; i <= netMgr.GetConnectedCount(); ++i) {
                             initPacket.header.type = MessageType::DealCards;
                             initPacket.header.senderId = 0; // Server ID
                             initPacket.payload = serverCardGame.dealThreeCards();
@@ -361,7 +371,7 @@ int MTRD::main() {
                         // 'static' mantiene el paquete a salvo en memoria de fondo
                         DealCardsPacket drawPacket;
 
-                        for (int i = 1; i <= 2; ++i) {
+                        for (int i = 1; i <= netMgr.GetConnectedCount(); ++i) {
                             drawPacket.header.type = MessageType::DealCards;
                             drawPacket.header.senderId = 0;
                             drawPacket.payload = serverCardGame.dealOneCard(); // Send a packet with only 1 card
@@ -387,7 +397,7 @@ int MTRD::main() {
                         ImGui::Text("Tu mano (%d cartas):", (int)cardGame.playerHand.size());
                         for (size_t i = 0; i < cardGame.playerHand.size(); ++i) {
                             ImGui::Text("  [%c] %d de %s",
-                                'A' + (char)i,                          // A, B, C
+                                'A' + (char)i,                         
                                 cardGame.playerHand[i].number,
                                 MTRD::GetSuitName(cardGame.playerHand[i].suit).c_str());
                         }
@@ -449,7 +459,7 @@ int MTRD::main() {
                                 auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
                                 if (netComp && res->payload.winnerID == netComp->networkID) {
                                     clientPoints = static_cast<int>(res->payload.points);
-                                    MTRD::Logger::info(">>> Eres el ganador de esta baza!\n");
+                                    MTRD::Logger::info("You are the winner of this Baza!\n");
                                 }
                                 intercepted = true;
                             }

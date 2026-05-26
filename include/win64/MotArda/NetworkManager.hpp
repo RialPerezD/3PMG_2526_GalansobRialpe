@@ -45,6 +45,8 @@ namespace MTRD {
         bool IsConnected() const;
         size_t GetPeerCount() const { return peers_.size(); }
 
+        int GetConnectedCount() const { return static_cast<int>(peers_.size()); }
+
     private:
         bool isServer_;
         ENetHost* host_;

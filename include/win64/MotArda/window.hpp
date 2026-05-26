@@ -52,9 +52,10 @@ namespace MTRD {
 
         /**
         * @brief windowCreate
-        * @param int width Horizontal size of the window.
-        * @param int height Vertical size of the window.
-        * @param const char* windowName Name for the window.
+        * @param width Horizontal size of the window.
+        * @param height Vertical size of the window.
+        * @param windowName Name for the window.
+        * @param debug Enables debug mode.
         * @return Returns "wind", the window we have just created.
         * @details First, it creates an unique ptr to store and create
         * the window. Then the window is moved to a new pointer, where

@@ -40,8 +40,7 @@ namespace MTRD {
     }
 
 
-    void//TODO crear ventana
-        JobSystem::worker(JobSystemData* data) {
+    void JobSystem::worker(JobSystemData* data) {
         while (true) {
             std::function<void()> task;
             {
@@ -52,7 +51,6 @@ namespace MTRD {
                     });
 
                 if (data->stop_ && data->tasks_.empty()){
-                    //borrar ventana
                     return;
                     }
                 task = std::move(data->tasks_.front());
