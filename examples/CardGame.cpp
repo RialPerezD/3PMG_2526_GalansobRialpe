@@ -279,6 +279,23 @@ int MTRD::main() {
 
             auto* rtable = ecs.GetComponent<MTRD::RenderComponent>(table);
             if (rtable) rtable->objitem_ = objItemList[0];
+
+            // Display all 48 cards on the table
+            int cardIdx = 4;
+            for (int suit = 0; suit < 4; suit++) {
+                for (int num = 0; num < 12; num++) {
+                    size_t cardEntity = ecs.AddEntity();
+                    auto* t = ecs.AddComponent<MTRD::TransformComponent>(cardEntity);
+                    float x = (num - 5.5f) * 0.1f;
+                    float z = 3.0f + (suit - 1.5f) * 0.5f;
+                    t->position = glm::vec3(x, 1.5f, z);
+                    t->scale = glm::vec3(1.0f);
+
+                    auto* r = ecs.AddComponent<MTRD::RenderComponent>(cardEntity);
+                    r->objitem_ = objItemList[cardIdx];
+                    cardIdx++;
+                }
+            }
         }
 
         // --- Menu ---
