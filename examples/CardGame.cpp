@@ -19,7 +19,7 @@
 
 using namespace MTRD;
 
-// CLIENTE
+// PLAYER
 
 enum class AppState {
     Menu,
@@ -29,29 +29,44 @@ enum class AppState {
 
 // --- Datos hardcodeados de cada slot de jugador ---
 static const glm::vec3 SLOT_POSITIONS[4] = {
-    glm::vec3(-5.0f, 0.0f, 3.0f),
-    glm::vec3(5.0f, 0.0f, 3.0f),
-    glm::vec3(-5.0f, 0.0f, 0.0f),
-    glm::vec3(5.0f, 0.0f, 0.0f),
+    glm::vec3(-3.5f, 0.0f, 3.0f),
+    glm::vec3(3.5f, 0.0f, 3.0f),
+    glm::vec3(0.0f, 0.0f, 6.0f),
+    glm::vec3(0.0f, 0.0f, -6.0f),
 };
 static const glm::vec3 SLOT_SCALES[4] = {
     glm::vec3(0.0003f),  // meshId 0 — table
     glm::vec3(0.0003f),  // meshId 1 — 86jfm
     glm::vec3(0.1f),     // meshId 2 — skull
-    glm::vec3(0.1f),     // meshId 3 — plant
+    glm::vec3(0.3f),     // meshId 3 — plant
 };
 static const glm::vec3 REMOTE_SCALES[4] = {
     glm::vec3(0.0003f),  // meshId 0 — table
     glm::vec3(0.0003f),  // meshId 1 — 86jfm
-    glm::vec3(0.07f),    // meshId 2 — skull
-    glm::vec3(0.1f),     // meshId 3 — plant
+    glm::vec3(0.1f),    // meshId 2 — skull
+    glm::vec3(0.3f),     // meshId 3 — plant
+};
+
+static const glm::vec3 CAMERA_POSITIONS[4] = {
+    glm::vec3(-3.5f, 5.0f, 3.0f),
+    glm::vec3(6.5f, 5.0f, 3.0f),
+    glm::vec3(0.0f, 4.0f,  9.0f),
+    glm::vec3(0.0f, 2.0f, -6.0f),
+};
+
+static const glm::vec3 CAMERA_TARGETS[4] = {
+    glm::vec3(3.5f, 0.0f, 3.0f),   // looking to each slot
+    glm::vec3(-3.5f, 0.0f, 3.0f),
+    glm::vec3(0.0f, 0.0f, -6.0f),
+    glm::vec3(0.0f, 0.0f, 6.0f),
 };
 
 // --- Asigna mesh, posicion y escala al jugador local cuando llega su ID ---
 static void AssignLocalPlayerMesh(
     ECSManager& ecs,
     size_t playerEntity,
-    std::vector<std::shared_ptr<ObjItem>>& objItemList)
+    std::vector<std::shared_ptr<ObjItem>>& objItemList,
+    MTRD::MotardaEng& eng)
 {
     auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
     if (!netComp || netComp->networkID == 0) return;
@@ -79,6 +94,12 @@ static void AssignLocalPlayerMesh(
     }
 
     netComp->meshId_ = static_cast<float>(objIdx);
+
+    int camSlot = netComp->networkID - 1;
+    if (camSlot >= 0 && camSlot < 4) {
+        eng.getCamera().setPosition(CAMERA_POSITIONS[camSlot]);
+        eng.getCamera().setTarget(CAMERA_TARGETS[camSlot]);
+    }
 }
 
 // --- Corrige la escala de todas las entidades remotas segun su meshId_ ---
@@ -98,16 +119,7 @@ static void UpdateRemoteScales(ECSManager& ecs, size_t playerEntity) {
     }
 }
 
-// --- Procesa el input de movimiento del jugador local ---
-//static void ProcessPlayerInput(ECSManager& ecs, size_t playerEntity, MTRD::MotardaEng& eng) {
-//    auto* transform = ecs.GetComponent<MTRD::TransformComponent>(playerEntity);
-//    if (transform) {
-//        if (eng.inputIsKeyPressed(Input::Keyboard::W)) transform->position.z -= 0.1f;
-//        if (eng.inputIsKeyPressed(Input::Keyboard::S)) transform->position.z += 0.1f;
-//    }
-//}
-
-static bool keyWasPressed[3] = { false, false, false }; 
+static bool keyWasPressed[3] = { false, false, false };
 static bool alreadyPlayedThisRound = false;
 
 static void ProcessCardInput(ECSManager& ecs, size_t playerEntity,
@@ -301,8 +313,39 @@ int MTRD::main() {
 
                             //Add players if someone logs in
                             if (size == 0 && senderID != 0 && !(senderID & 0x80000000)) {
-                                connectedPlayers++;
-                                MTRD::Logger::info("Jugador {} conectado. Total: {}\n", senderID, connectedPlayers);
+                                MTRD::Logger::info("Jugador {} conectado.\n", senderID);
+
+
+                                auto entities = ecs.GetEntitiesWithComponents
+                                    <MTRD::NetworkComponent, MTRD::TransformComponent >();
+
+                                for (size_t entity : entities) {
+                                    auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(entity);
+                                    auto* transform = ecs.GetComponent<MTRD::TransformComponent>(entity);
+                                    if (!netComp || !transform || netComp->networkID == 0) continue;
+                                    if (netComp->networkID == senderID) continue; // Dont send to myself
+
+                                    struct FullUpdatePacket {
+                                        MTRD::NetMessage header;
+                                        MTRD::EntityUpdatePayload payload;
+                                    } packet;
+
+                                    packet.header.type = MTRD::MessageType::EntityUpdate;
+                                    packet.header.senderId = netComp->networkID;
+                                    packet.payload.networkID = netComp->networkID;
+                                    packet.payload.meshId_ = netComp->meshId_;
+                                    packet.payload.posX = transform->position.x;
+                                    packet.payload.posY = transform->position.y;
+                                    packet.payload.posZ = transform->position.z;
+                                    packet.payload.rotX = transform->rotation.x;
+                                    packet.payload.rotY = transform->rotation.y;
+                                    packet.payload.rotZ = transform->rotation.z;
+
+                                    // Only send to the player that just joined
+                                    netMgr.SendPacket(senderID, &packet, sizeof(packet), true);
+                                    MTRD::Logger::info("Enviando estado de jugador {} al nuevo jugador {}\n",
+                                        netComp->networkID, senderID);
+                                }
                             }
                             //Remove players if someone leaves the game
                             if (size == 0 && (senderID & 0x80000000)) {
@@ -415,13 +458,13 @@ int MTRD::main() {
                     netMgr.SendPacket(static_cast<uint32_t>(i), &initPacket, sizeof(initPacket), true);
                     MTRD::Logger::info("3 initial cards provided to the player ID: {}\n", i);
                 }
-                // Una vez repartidas las iniciales, abrimos automáticamente la veda para que jueguen
+                // Change state to playing after the initial 3 cards
                 serverCardGame.SetState(ServerGameState::Jugando);
                 break;
             }
             case ServerGameState::LeyendoBaza: {
                 MTRD::Logger::info("[SERVER] Procesando resolucion de baza...\n");
-                int trump = 0; // Cambiar si implementas mecánica de triunfo
+                int trump = 0; // Trinfo
                 uint32_t winnerID = serverCardGame.resolveBaza(trump);
 
                 MTRD::Logger::info("Baza ganada por jugador {}! Puntos: {}\n",
@@ -547,7 +590,7 @@ int MTRD::main() {
             if (!meshAssigned && playerEntity != SIZE_MAX) {
                 auto* netComp = ecs.GetComponent<MTRD::NetworkComponent>(playerEntity);
                 if (netComp && netComp->networkID != 0) {
-                    AssignLocalPlayerMesh(ecs, playerEntity, objItemList);
+                    AssignLocalPlayerMesh(ecs, playerEntity, objItemList, eng);
                     meshAssigned = true;
                 }
             }
@@ -570,137 +613,4 @@ int MTRD::main() {
 
     netMgr.Shutdown();
     return 0;
-}
-
-#include <MotArda/CardGame/CardGame.hpp>
-#include <MotArda/Logger.hpp>
-#include <iostream>
-
-namespace MTRD {
-
-    void CardGame::initDeck() {
-        cards.clear();
-        for (int suit = 0; suit < 4; ++suit) {
-            for (int num = 1; num <= 12; ++num) {
-                cards.emplace_back(suit, num);
-            }
-        }
-        usedCards.assign(cards.size(), false);
-    }
-
-    void CardGame::shuffleDeck() {
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(cards.begin(), cards.end(), g);
-        std::fill(usedCards.begin(), usedCards.end(), false);
-    }
-
-    DealCardsPayload CardGame::dealThreeCards() {
-        DealCardsPayload payload;
-        // Limpiamos la estructura asegurando ceros
-        for (int i = 0; i < 3; ++i) { payload.suit[i] = 0; payload.value[i] = 0; }
-
-        int count = 0;
-        for (size_t i = 0; i < cards.size() && count < 3; ++i) {
-            if (!usedCards[i]) {
-                payload.suit[count] = cards[i].suit;
-                payload.value[count] = cards[i].number;
-                usedCards[i] = true;
-                count++;
-            }
-        }
-        return payload;
-    }
-
-    // --- NUEVA FUNCIÓN PARA SACAR SOLO 1 CARTA DEL MAZO ---
-    DealCardsPayload CardGame::dealOneCard() {
-        DealCardsPayload payload;
-        // Ponemos todo a 0 (0 significa vacío en el protocolo que diseñaremos)
-        for (int i = 0; i < 3; ++i) { payload.suit[i] = 0; payload.value[i] = 0; }
-
-        for (size_t i = 0; i < cards.size(); ++i) {
-            if (!usedCards[i]) {
-                payload.suit[0] = cards[i].suit;
-                payload.value[0] = cards[i].number; // Solo llenamos el primer slot
-                usedCards[i] = true;
-                break;
-            }
-        }
-        return payload;
-    }
-
-    // --- RECEPTOR MEJORADO QUE ACUMULA EN LA MANO LOCAL ---
-    void CardGame::receiveSpecificCards(const DealCardsPayload& payload) {
-        MTRD::Logger::info("--- NUEVAS CARTAS LLEGANDO POR RED ---");
-
-        for (int i = 0; i < 3; ++i) {
-            int s = static_cast<int>(payload.suit[i]);
-            int v = static_cast<int>(payload.value[i]);
-
-            // Si el valor es 0, ignoramos este slot (está vacío o es basura de red)
-            if (v <= 0 || v > 12) continue;
-
-            // Añadimos de verdad la carta al vector dinámico 'playerHand'
-            playerHand.emplace_back(s, v);
-            MTRD::Logger::info("-> Añadida a tu mano local: {} de {}", v, GetSuitName(s).c_str());
-        }
-
-        // Imprimimos el estado real actual de tu mano por consola
-        MTRD::Logger::info("--- ESTADO DE TU MANO ACTUAL (Total: {}) ---", playerHand.size());
-        for (size_t i = 0; i < playerHand.size(); ++i) {
-            MTRD::Logger::info("[{}] {} de {}", i + 1, playerHand[i].number, GetSuitName(playerHand[i].suit).c_str());
-        }
-        MTRD::Logger::info("--------------------------------------------");
-    }
-
-    uint32_t CardGame::resolveBaza(int triunfo)
-    {
-        if (tableCards.size() < 2) return 0;
-
-        // El primer jugador marca el palo de salida
-        int leadSuit = tableCards[0].card.suit;
-
-        uint32_t winnerID = tableCards[0].playerID;
-        const Card* winnerCard = &tableCards[0].card;
-        int winnerStrength = GetBriscaStrength(winnerCard->number);
-        bool winnerIsTriunfo = (winnerCard->suit == triunfo);
-
-        for (size_t i = 1; i < tableCards.size(); ++i) {
-            const Card& c = tableCards[i].card;
-            bool isTriunfo = (c.suit == triunfo);
-            int strength = GetBriscaStrength(c.number);
-
-            bool beats = false;
-            if (isTriunfo && !winnerIsTriunfo) {
-                beats = true;  // triunfo gana a cualquier otro palo
-            }
-            else if (isTriunfo && winnerIsTriunfo) {
-                beats = (strength > winnerStrength);  // ambos triunfo || mayor fuerza
-            }
-            else if (c.suit == leadSuit && !winnerIsTriunfo) {
-                beats = (strength > winnerStrength);  // mismo palo salida, mayor fuerza
-            }
-            // otro palo sin ser triunfo || no puede ganar
-
-            if (beats) {
-                winnerID = tableCards[i].playerID;
-                winnerCard = &tableCards[i].card;
-                winnerStrength = strength;
-                winnerIsTriunfo = isTriunfo;
-            }
-        }
-
-        // Sumar puntos al ganador
-        int totalPoints = 0;
-        for (auto& pc : tableCards)
-            totalPoints += GetBriscaPoints(pc.card.number);
-        if (winnerID < 5)
-        {
-            scores[winnerID] += totalPoints;
-        }
-
-        tableCards.clear();
-        return winnerID;
-    }
-
 }

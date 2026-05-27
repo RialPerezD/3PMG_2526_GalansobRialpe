@@ -92,13 +92,27 @@ namespace MTRD {
 
                 remoteEntities[payload->networkID] = entity;
                 MTRD::Logger::info("Created remote entity for client {}\n", payload->networkID);
-            } else {
+            }
+            else {
                 // Actualizar entidad existente
                 size_t entity = it->second;
                 auto* transform = ecsPtr->GetComponent<MTRD::TransformComponent>(entity);
                 if (transform) {
                     transform->position = { payload->posX, payload->posY, payload->posZ };
                     transform->rotation = { payload->rotX, payload->rotY, payload->rotZ };
+                }
+
+                auto* netComp = ecsPtr->GetComponent<MTRD::NetworkComponent>(entity);
+                if (netComp && netComp->meshId_ != payload->meshId_) {
+                    netComp->meshId_ = payload->meshId_;
+
+                    auto* render = ecsPtr->GetComponent<MTRD::RenderComponent>(entity);
+                    if (render && objItemListPtr) {
+                        size_t meshIdx = static_cast<size_t>(payload->meshId_);
+                        if (meshIdx < objItemListPtr->size()) {
+                            render->objitem_ = (*objItemListPtr)[meshIdx];
+                        }
+                    }
                 }
             }
             break;
