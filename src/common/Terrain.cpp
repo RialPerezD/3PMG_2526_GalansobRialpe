@@ -186,7 +186,7 @@ namespace MTRD {
         };
 
         const glm::vec3 lutColors[5] = {
-            glm::vec3(0.10f, 0.30f, 0.90f),
+            glm::vec3(0.35f, 0.22f, 0.12f),
             glm::vec3(0.30f, 0.65f, 0.20f),
             glm::vec3(0.15f, 0.40f, 0.10f),
             glm::vec3(0.60f, 0.60f, 0.58f),

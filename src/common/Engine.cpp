@@ -275,6 +275,12 @@ namespace MTRD {
     }
 
 
+    std::shared_ptr<ObjItem> MotardaEng::generateTree(const TreeGenerator::TreeProfile& profile, unsigned int seed, int textureId, bool debug) {
+        bool firstTime = false;
+        return std::make_shared<ObjItem>(TreeGenerator::GenerateTree(window_, profile, firstTime, seed, textureId, debug));
+    }
+
+
     std::unique_ptr<Terrain> MotardaEng::createTerrain(float width, float depth, float maxHeight, int seed, int textureId, bool debug) {
         
         if(seed == -1) {

@@ -130,9 +130,9 @@ namespace MTRD {
                         int ringDist = dx > dz ? dx : dz;
 
                         int desiredLod;
-                        if (ringDist <= 3) desiredLod = 0;
-                        else if (ringDist <= 7) desiredLod = 1;
-                        else if (ringDist <= 11) desiredLod = 2;
+                        if (ringDist <= 7) desiredLod = 0;
+                        else if (ringDist <= 12) desiredLod = 1;
+                        else if (ringDist <= 17) desiredLod = 2;
                         else desiredLod = 3;
 
                         if (lodLevel != desiredLod) continue;
@@ -180,7 +180,7 @@ namespace MTRD {
         size_t loc = glGetUniformLocation(program.programId_, "diffuseTexture");
         program.SetupAtributeLocations(attributes);
 
-        // Corregido: Pedimos explícitamente entidades que tengan LightComponent Y TransformComponent
+        // Corregido: Pedimos explï¿½citamente entidades que tengan LightComponent Y TransformComponent
         auto lightEntities = ecs.GetEntitiesWithComponents<LightComponent, TransformComponent>();
         LightComponent* light = nullptr;
         if (!lightEntities.empty()) {

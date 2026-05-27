@@ -7,6 +7,7 @@
 #include <MotArda/Camera.hpp>
 #include <MotArda/Sprite.hpp>
 #include <MotArda/Terrain.hpp>
+#include <MotArda/TreeGenerator.hpp>
 #ifndef __SWITCH__
 #include <MotArda/PhysxMaster.hpp>
 #endif
@@ -170,6 +171,7 @@ namespace MTRD {
         std::shared_ptr<ObjItem> generateCube(float size, int texureId = 0, bool debug = true);
         std::shared_ptr<ObjItem> generatePlane(float width, float height, int texureId = 0, bool debug = true);
         std::shared_ptr<ObjItem> generateSphere(float radius, int segments, int rings, int texureId = 0, bool debug = true);
+        std::shared_ptr<ObjItem> generateTree(const TreeGenerator::TreeProfile& profile, unsigned int seed = 12345, int textureId = 0, bool debug = false);
 
         std::unique_ptr<Terrain> createTerrain(
             float width,
