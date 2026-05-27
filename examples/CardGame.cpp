@@ -236,6 +236,8 @@ int MTRD::main() {
 
     bool firstTime = true;
     bool meshAssigned = false;
+    size_t handEntities[3] = { SIZE_MAX, SIZE_MAX, SIZE_MAX };
+    bool handSetup = false;
 
     // TABLE
     size_t table = ecs.AddEntity();
@@ -280,22 +282,7 @@ int MTRD::main() {
             auto* rtable = ecs.GetComponent<MTRD::RenderComponent>(table);
             if (rtable) rtable->objitem_ = objItemList[0];
 
-            // Display all 48 cards on the table
-            int cardIdx = 4;
-            for (int suit = 0; suit < 4; suit++) {
-                for (int num = 0; num < 12; num++) {
-                    size_t cardEntity = ecs.AddEntity();
-                    auto* t = ecs.AddComponent<MTRD::TransformComponent>(cardEntity);
-                    float x = (num - 5.5f) * 0.1f;
-                    float z = 3.0f + (suit - 1.5f) * 0.5f;
-                    t->position = glm::vec3(x, 1.5f, z);
-                    t->scale = glm::vec3(1.0f);
 
-                    auto* r = ecs.AddComponent<MTRD::RenderComponent>(cardEntity);
-                    r->objitem_ = objItemList[cardIdx];
-                    cardIdx++;
-                }
-            }
         }
 
         // --- Menu ---
@@ -635,6 +622,43 @@ int MTRD::main() {
             // Game/Net update
             if (netSys) {
                 if (!isServer && playerEntity != SIZE_MAX) {
+                    // Setup hand visual entities
+                    if (!handSetup) {
+                        handSetup = true;
+                        for (int i = 0; i < 3; i++) {
+                            handEntities[i] = ecs.AddEntity();
+                            auto* t = ecs.AddComponent<MTRD::TransformComponent>(handEntities[i]);
+                            t->position = glm::vec3((i - 1.0f) * 1.5f, 2.5f, 8.0f);
+                            t->scale = glm::vec3(0.0f);
+                            auto* r = ecs.AddComponent<MTRD::RenderComponent>(handEntities[i]);
+                            r->objitem_ = objItemList[4];
+                        }
+                    }
+                    // Sync hand card meshes every frame
+                    {
+                        glm::vec3 camPos = eng.getCamera().getPosition();
+                        glm::vec3 camFront = eng.getCamera().getFront();
+                        glm::vec3 camRight = glm::normalize(glm::cross(camFront, glm::vec3(0, 1, 0)));
+                        glm::vec3 camUp = glm::normalize(glm::cross(camRight, camFront));
+                        for (int i = 0; i < 3; i++) {
+                            auto* t = ecs.GetComponent<MTRD::TransformComponent>(handEntities[i]);
+                            auto* r = ecs.GetComponent<MTRD::RenderComponent>(handEntities[i]);
+                            if (i < (int)cardGame.playerHand.size()) {
+                                int suit = cardGame.playerHand[i].suit;
+                                int number = cardGame.playerHand[i].number;
+                                int meshIdx = 4 + suit * 12 + (number - 1);
+                                r->objitem_ = objItemList[meshIdx];
+                                t->scale = glm::vec3(2.0f);
+                                glm::vec3 cardPos = camPos + camFront * 1.5f - camUp * 0.5f + camRight * (i - 1.0f) * 0.25f;
+                                t->position = cardPos;
+                                glm::vec3 dirToCam = glm::normalize(camPos - cardPos);
+                                t->rotation = glm::vec3(0.0f, 1.0f, 0.0f);
+                                t->angleRotationRadians = atan2(dirToCam.x, dirToCam.z);
+                            } else {
+                                t->scale = glm::vec3(0.0f);
+                            }
+                        }
+                    }
                     //ProcessPlayerInput(ecs, playerEntity, eng);
                     ProcessCardInput(ecs, playerEntity, netMgr, eng, cardGame);
                 }
