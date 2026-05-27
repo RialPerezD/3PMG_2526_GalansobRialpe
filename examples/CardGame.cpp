@@ -27,6 +27,8 @@ enum class AppState {
     Running
 };
 
+std::vector<const char*> objsRoutes;
+
 // --- Datos hardcodeados de cada slot de jugador ---
 static const glm::vec3 SLOT_POSITIONS[4] = {
     glm::vec3(-3.5f, 0.0f, 3.0f),
@@ -179,6 +181,28 @@ static void ProcessCardInput(ECSManager& ecs, size_t playerEntity,
     }
 }
 
+
+void setUpAllObjs() {
+    objsRoutes = {
+        "tableRound.obj",
+        "86jfmjiufzv2.obj",
+        "12140_Skull_v3_L2.obj",
+        "indoor_plant_02.obj"
+    };
+
+    std::vector<const char*> cardTypes = {"Basto", "Copa", "Espada", "Oro"};
+
+    for(auto text : cardTypes) {
+        for (int i = 1; i < 13; i++) {
+            char buffer[50];
+            snprintf(buffer, sizeof(buffer), "%s%d.obj", text, i);
+            objsRoutes.push_back(strdup(buffer));
+        }
+    }
+
+}
+
+
 int MTRD::main() {
     static char nickBuffer[64] = "Jugador1";
     static char ipBuffer[64] = "127.0.0.1";
@@ -198,12 +222,8 @@ int MTRD::main() {
     eng.getCamera().setPosition(glm::vec3(0, 5, 10));
     eng.getCamera().setTarget(glm::vec3(0, 0, 0));
 
-    std::vector<const char*> objsRoutes = {
-        "tableRound.obj",
-        "86jfmjiufzv2.obj",
-        "12140_Skull_v3_L2.obj",
-        "indoor_plant_02.obj"
-    };
+    setUpAllObjs();
+
     std::atomic<bool> objsLoaded = false;
     std::vector<std::shared_ptr<ObjItem>> objItemList;
     objItemList.push_back(std::make_shared<ObjItem>());
