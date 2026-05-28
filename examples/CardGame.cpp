@@ -63,7 +63,35 @@ static const glm::vec3 CAMERA_TARGETS[4] = {
     glm::vec3(0.0f, 0.0f, 6.0f),
 };
 
-// --- Asigna mesh, posicion y escala al jugador local cuando llega su ID ---
+static const glm::vec3 SLOT_ROTATIONS[4] = {
+    glm::vec3(0.0f, 1.0f, 0.0f),
+    glm::vec3(1.0f, 0.0f, 0.0f),
+    glm::vec3(0.0f, 1.0f, 0.0f),
+    glm::vec3(0.0f, 1.0f, 0.0f),
+};
+
+static const float SLOT_ANGLES[4] = {
+    glm::radians(90.0f),
+    glm::radians(-90.0f),
+    glm::radians(90.0f),
+    glm::radians(-90.0f),
+};
+
+static const glm::vec3 REMOTE_ROTATIONS[4] = {
+    glm::vec3(0.0f, 1.0f, 0.0f),
+    glm::vec3(1.0f, 0.0f, 0.0f),
+    glm::vec3(0.0f, 1.0f, 0.0f),
+    glm::vec3(0.0f, 1.0f, 0.0f),
+};
+
+static const float REMOTE_ANGLES[4] = {
+    glm::radians(90.0f),
+    glm::radians(-90.0f),
+    glm::radians(90.0f),
+    glm::radians(-90.0f),
+};
+
+// --- Asign mesh, position and scale to the local player when their ID arrives
 static void AssignLocalPlayerMesh(
     ECSManager& ecs,
     size_t playerEntity,
@@ -87,6 +115,8 @@ static void AssignLocalPlayerMesh(
     if (t) {
         t->position = SLOT_POSITIONS[slot];
         t->scale = SLOT_SCALES[objIdx];
+        t->rotation = SLOT_ROTATIONS[slot];
+        t->angleRotationRadians = SLOT_ANGLES[slot];
     }
 
     ecs.AddComponent<MTRD::RenderComponent>(playerEntity);
@@ -117,6 +147,12 @@ static void UpdateRemoteScales(ECSManager& ecs, size_t playerEntity) {
             if (meshIdx < 4) {
                 t->scale = REMOTE_SCALES[meshIdx];
             }
+
+            int remoteSlot = static_cast<int>(netComp->networkID) - 1;
+            if (remoteSlot >= 0 && remoteSlot < 4) {
+                t->rotation = REMOTE_ROTATIONS[remoteSlot];
+                t->angleRotationRadians = REMOTE_ANGLES[remoteSlot];
+            }
         }
     }
 }
@@ -136,7 +172,7 @@ static void ProcessCardInput(ECSManager& ecs, size_t playerEntity,
         return;
     }
 
-    // Teclas 1, 2, 3 → slots de carta 0, 1, 2
+    // Keys A, S, D → cards slots 0, 1, 2
     Input::Keyboard keys[3] = {
         Input::Keyboard::A,
         Input::Keyboard::S,
@@ -154,7 +190,6 @@ static void ProcessCardInput(ECSManager& ecs, size_t playerEntity,
                 continue;
             }
 
-            // Marcar que el jugador ya ha gastado su jugada de la ronda
             alreadyPlayedThisRound = true;
 
             // Remove the card from the hand
@@ -190,7 +225,7 @@ void setUpAllObjs() {
         "indoor_plant_02.obj"
     };
 
-    std::vector<const char*> cardTypes = {"Basto", "Copa", "Espada", "Oro"};
+    std::vector<const char*> cardTypes = {"Oro", "Copa", "Espada", "Basto"};
 
     for(auto text : cardTypes) {
         for (int i = 1; i < 13; i++) {

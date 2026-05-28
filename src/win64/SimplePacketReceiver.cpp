@@ -99,7 +99,7 @@ namespace MTRD {
                 auto* transform = ecsPtr->GetComponent<MTRD::TransformComponent>(entity);
                 if (transform) {
                     transform->position = { payload->posX, payload->posY, payload->posZ };
-                    transform->rotation = { payload->rotX, payload->rotY, payload->rotZ };
+                    // transform->rotation = { payload->rotX, payload->rotY, payload->rotZ };
                 }
 
                 auto* netComp = ecsPtr->GetComponent<MTRD::NetworkComponent>(entity);
